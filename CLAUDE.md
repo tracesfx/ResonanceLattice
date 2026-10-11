@@ -28,10 +28,12 @@ feedback.
 - **Halo v1 (awaiting user feedback; user jumped to it ahead of Conductor/Virtuoso):** user picked option C "Eye" of
   `art_src/review/halo_options.png`. Sheet `art_src/review/halo_v1.png`; generator `art_src/gen/gen_halo.py` writes
   BOTH `rsl_halo.json` and the deco `rsl_halo_ring.json`.
-- **Conductor v1 (awaiting user feedback):** user picked option C "Split blade" of `art_src/review/conductor_options.png`
-  and "inner blades close" for the moving part. Sheet `art_src/review/conductor_v1.png`; generator
+- **Conductor** (option C "Split blade" of `conductor_options.png`, inner blades close). v1 rejected ("extremely bulky,
+  tin-foil like", gradients uncohesive, dots ≠ detail) → **v2** slim segmented spine (awaiting feedback). Generator
   `art_src/gen/gen_conductor.py` writes `rsl_conductor.json` + deco `rsl_conductor_blade_r.json` (+ `_l` mirror_of).
-- Next, in order: Tremolo + Halo + Conductor (feedback) → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
+- **Round 3 (awaiting feedback), sheet `art_src/review/sheet_v3.png`:** Conductor v2, Tremolo v3 (X-spars integral:
+  steel chords + gussets), Halo v2 (hollow well). Per-hull sheets `conductor_v2.png`, `tremolo_v3.png`, `halo_v2.png`.
+- Next, in order: round-3 feedback → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -77,6 +79,18 @@ shreds frigate/fighter swarms. Quest not designed yet.
    on the existing structure. Wing/rail ends are **sharp swept tips** (outer edge runs on to a point, inner edge
    slants into it), not blunt caps.
 7. **Seams are THE identifier** — very noticeable, never tree/branch shaped: use the lattice script.
+7b. **Review sheets (user, 2026-10-11):** every sheet shows Cadence, Tremolo, Halo and Conductor (+ the hull being worked
+   on if it's another one) and ONE vanilla reference:
+   `python art_src/preview.py out.png rsl_cadence rsl_tremolo rsl_halo rsl_conductor --peers onslaught`.
+7c. **Intricate, not bulky (Conductor v1 feedback):** a big hull must be built from many distinct structural parts
+   (segmented prongs/wings with clamps, housings, exposed machinery gaps), never one broad envelope. Tiny dots
+   (surface_detail specks, lights, stray glow bits) are SECONDARY and never substitute for detail.
+7d. **Gradients are used tastefully, at the extremities only** (edges/tips of swept wings, vanes, barbs; near the stern),
+   as on Cadence/Staccato. Dark-blue gradients spread over the main plates read as "tinfoil / blue metal", not a
+   livery. The livery must be one cohesive idea per hull, with crisp painted shapes doing most of the work.
+7e. **Integral, purposeful structure (Tremolo/Halo feedback):** connecting parts must look like load-bearing parts of
+   the hull, not auxiliary add-ons; no flat single-colour filler platforms (Halo's grey inner platform was rejected:
+   hollow it out, keep only what is needed, e.g. the fighter bays).
 8. When a silhouette doesn't converge after ~2 tries, sketch 2–3 flat options (`art_src/gen/cadence_options.py`
    pattern) and ask the user to pick, instead of guessing further.
 
@@ -124,18 +138,22 @@ shreds frigate/fighter swarms. Quest not designed yet.
   seam, 3 spokes + hub (hollow centre shows the core); alternate segments navy so rotation reads. In game it needs an
   EveryFrameWeaponEffectPlugin to spin it (faster while the system is on). Livery: "Stillwater" broken concentric
   ripple arcs + flank gradient deepening outward + prong gradients + engine cross-bands.
-- **Conductor** 254×410, mass 52,808 (capital band 45,219–146,692): ONE solid blade split only at the bow (not a
-  second Tremolo): two short spear prongs with deep swept teeth on the outer edge, open slot (inner faces x=±16, open
-  to y 77–84) holding the baked-in spinal Harmonic Driver barrel (muzzle brake, coil collars) rooted in a long raised
-  breech cradle carrying the core diamond → shoulders → forward-swept crossguard wings (emitter leading edges, large
-  turrets) → waist slanting in → flare tooth → stern slanting in → swept engine fins → gunmetal engine block with tail
-  tooth. Inner emitter blades = deco `rsl_conductor_blade_r/_l` (18×180, pivot at centre = blade root, slots
-  WS0010/WS0011 at (±21,118), angle 0, deco_alt_angle ±7 → the tips fold in to just touch the barrel while
-  Sympathetic Strike charges; needs an EveryFrameWeaponEffectPlugin). WS0001 = spinal LARGE ENERGY hardpoint at the
-  muzzle (the barrel is in the hull sprite; the weapon sprite should be muzzle/charge FX only). Livery "tempered
-  blade": prongs deepen to the tips, crossguards gradient to the tip + one bold band along the leading edge, shoulders/
-  midship deepen outward + steep irregular splinter (reads as chevrons), waist deepens to the flanks, stern forward
-  "fermata" chevron bands + gradient, fins gradient.
+- **Conductor v2** 264×476 (SCALE 1.07), mass 46,214 (capital band floor 45,219 — removing area needs SCALE up):
+  slim segmented spine built from distinct parts: two stepped spear prongs (tip/mid/root + gunmetal clamps, slate
+  inner faces) joined by a muzzle yoke that braces the baked-in Harmonic Driver barrel (the slot is an open window)
+  → long breech cradle with 4 coil rings, capacitor housings (resonator cells) and the core diamond → forward-swept
+  crossguard wings (root housing, 2 segments, tip blade, clamps, emitter leading edges, built like the Cadence barb
+  with C(t, s)) → slim waist with strakes → tapering stern; engine nacelles sweep out and aft from a 60 px root (open
+  V notch behind, like fletching) → gunmetal engine block. Blades `rsl_conductor_blade_r/_l` 18×192 at (±21,140)×SCALE,
+  deco_alt_angle ±7. WS0001 spinal LARGE ENERGY hardpoint at the muzzle (weapon sprite = FX only). Livery "dipped
+  tips + spine stripe": crisp navy caps + a second dip band on prong tips, navy wing caps with the only wing gradient
+  leading into them, a bold navy stripe each side of the keel, stern + nacelles deepen aft. Weak: wing segments
+  still read a little boxy.
+- **Tremolo v3:** X-spars made integral: chords are brushed steel at hull-plate height (RO 4.6, RW 3.6, SW 15) with
+  gunmetal Warren webbing, rooted in long steel gussets faired into the hulls' inner faces (chord glow runs on across
+  the gussets into the hull, root nodes), gunmetal collars where gusset meets girder.
+- **Halo v2:** well floor cut open (finish `cutouts`) between 12 brushed-steel radial struts (4.4 px), hub collar
+  around the core; the flank flight decks/bay hatches, lip and bearing race unchanged.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)
@@ -206,8 +224,9 @@ skill's scripts folder.
 - **Curve-fill holes only work when the hole lies fully inside ONE outline** (render.py now carries `holes` into
   tiers too). A hole crossing a plate edge or a sym_poly pair gets filled as an extra shape. For the Halo well the
   ring is a separate sprite, so the well parts are simply stacked ABOVE full plates instead.
-- `inset()` in gen_tremolo.py has the sign inverted for its winding (plates come out ~1.5 px OUTSET); fixed in
-  gen_halo.py only. Tremolo was left untouched (awaiting feedback): fix it when Tremolo is next re-rendered.
+- `inset()` sign bug (plates ~1.5 px OUTSET) is fixed in all generators (Tremolo since v3; its mirror-diff dropped to 58).
+- `finish.py` spec key `"cutouts": [poly, ...]` (spec coords, no mirroring) zeroes alpha/emit/height at 4x before
+  inking: real openings through stacked parts (Halo well windows). `.ship` bounds still follow the outer contour.
 - Never call `bmesh.ops.*` per part in kit.py (O(n²) → a cruiser hung 10+ min). Build primitives vertex by vertex.
 - Symmetry traps (fixed 2026-10-11): (1) per-plate tint used Object Info Random → mirror twins differed; now a
   white-noise hash of the plate centre's (|x|, y) (parts get origin_set to their bounds centre) and the material

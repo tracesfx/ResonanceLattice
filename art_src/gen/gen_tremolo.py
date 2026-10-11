@@ -6,7 +6,9 @@ Direction chosen by the user (2026-10-11, option A of art_src/review/tremolo_opt
   a catamaran of two narrow hulls. Each hull: stepped spear bow with an inner mandible tooth -> shoulder steps ->
   sponson with a sharp forward-out tooth -> notch -> mid section -> engine block flaring into a swept aft tip.
   A forward bridge with the lattice core joins the hulls behind the open fork; glowing X-spars (open girders: twin
-  glowing rails + rungs, no hub at the crossing) and a cross bar span the open gap aft. Real empty space: the fork between the bows and the truss windows.
+  steel chords with glow lines + gunmetal Warren webbing, no hub at the crossing) and a cross bar span the open gap
+  aft. v3 (user: the X looked auxiliary): broader girders at hull-plate height, rooted in long steel gussets faired
+  into the hulls' inner faces, with the chord seams running on across the gussets into the hull. Real empty space: the fork between the bows and the truss windows.
 Plates are made from the frame outline (inset + clipped to bands), so the gaps between them expose machinery.
 """
 import json
@@ -33,7 +35,7 @@ def area(poly):
 
 def inset(poly, k, miter=3.0):
     """Offset a simple polygon inward by k (miter joins, clamped at sharp tips)."""
-    s = 1 if area(poly) > 0 else -1
+    s = -1 if area(poly) > 0 else 1          # (fixed 2026-10-11: was outsetting by k)
     n, out = len(poly), []
     for i in range(n):
         (x0, y0), (x1, y1), (x2, y2) = poly[i - 1], poly[i], poly[(i + 1) % n]
@@ -122,7 +124,7 @@ HY = 199                                          # cross bar
 # ------------------------------------------------------------------ silhouette
 frame("f_hull", sym_poly=[P(*p) for p in HULL])
 frame("f_bridge", half=BRIDGE)
-SW = 11                                           # X girder width (twin rails + rungs)
+SW = 15                                           # X girder width (twin chords + webbing)
 frame("f_spar_x1", poly=bar(XA, XB, SW))
 frame("f_spar_x2", poly=bar((-XA[0], XA[1]), (-XB[0], XB[1]), SW))
 frame("f_spar_h", sym_poly=[P(52, HY - 3), P(52, HY + 3), P(12, HY + 3), P(12, HY - 3)])
@@ -168,7 +170,7 @@ plate("br_edge", "slate", [6.4, 8.2], bevel=0.4, sym_poly=[P(6, 88.4), P(14.4, 9
       cuts=[{"pts": [P(8, 90.6), P(14, 93.2), P(36, 102.6)], "w": 1.0, "depth": 1.4, "glow": True, "sym": True}])
 plate("br_spine", "slate", [6.8, 8.4], half=[P(0, 92), P(3.6, 94), P(4, 150), P(2, 154), P(0, 155)],
       tier={"inset": 0.7, "dz": 0.4, "mat": "ivory2"})
-RO, RW_ = 3.5, 2.8                                # girder rail offset from the spar's centre line, rail width
+RO, RW_ = 4.6, 3.6                                # girder chord offset from the spar's centre line, chord width
 mir = lambda pts: [P(-x, y) for x, y in pts]
 
 
@@ -195,25 +197,39 @@ for k, o in enumerate((-RO, RO)):
             P(*spar_pt(T0, o + RW_ / 2))]
     line = [P(*spar_pt(T0 + 0.03, o)), P(*spar_pt(T1 - 0.03, o))]
     glow_cut = lambda pts: [{"pts": pts, "w": 0.8, "depth": 1.2, "glow": True}]
-    plate("gx1_rail%d" % k, "slate", [4.8, 6.4], bevel=0.3, poly=rail, cuts=glow_cut(line))
-    plate("gx2_rail%d" % k, "slate", [4.8, 6.4], bevel=0.3, poly=mir(rail), cuts=glow_cut(mir(line)))
+    plate("gx1_rail%d" % k, "ivory2", [5.0, 6.9], bevel=0.35, poly=rail, cuts=glow_cut(line))
+    plate("gx2_rail%d" % k, "ivory2", [5.0, 6.9], bevel=0.35, poly=mir(rail), cuts=glow_cut(mir(line)))
 # Warren-truss bracing between the rails (zig-zag struts), none near the crossing
 k = 0
-for t_a, t_b in ((0.03, 0.43), (0.57, 0.97)):
+for t_a, t_b in ((0.15, 0.43), (0.57, 0.85)):
     m = 8
     for q in range(m):
         ta, tb = t_a + (t_b - t_a) * q / m, t_a + (t_b - t_a) * (q + 1) / m
         oa, ob = (-RO, RO) if q % 2 == 0 else (RO, -RO)
-        plate("gx_brace%d" % k, "ivory", [4.2, 5.9], bevel=0.25, sym_poly=bar(spar_pt(ta, oa), spar_pt(tb, ob), 1.3))
+        plate("gx_brace%d" % k, "slate", [4.2, 5.9], bevel=0.25, sym_poly=bar(spar_pt(ta, oa), spar_pt(tb, ob), 1.6))
         k += 1
 D1 = (XB[0] - XA[0], XB[1] - XA[1])
 RAIL_X = [isect(spar_pt(0, o1), D1, (-spar_pt(0, o2)[0], spar_pt(0, o2)[1]), (-D1[0], D1[1]))
           for o1 in (-RO, RO) for o2 in (-RO, RO)]
 plate("s_h", "slate", [4.4, 6.0], bevel=0.4, sym_poly=[P(13, HY - 1.8), P(49, HY - 1.8), P(49, HY + 1.8), P(13, HY + 1.8)],
       cuts=[{"pts": [P(15, HY), P(46, HY)], "w": 0.9, "depth": 1.3, "glow": True, "sym": True}])
-for k, (y, h) in enumerate(((175, 7), (HY, 4), (223, 7))):       # spar root clamps on the inner hull edge
-    plate("clamp%d" % k, "slate", [6.2, 8.4], bevel=0.4,
-          sym_poly=[P(46.6, y - h), P(53.5, y - h - 1.4), P(53.5, y + h + 1.4), P(46.6, y + h)])
+# spar root gussets: long steel knees faired into the hull's inner face, so the X reads as load-bearing structure
+# grown out of the hulls (user: the spars looked auxiliary). The chord glow lines run on across them into the hull.
+GA = [P(53, 157), P(47.4, 157), P(*spar_pt(0.16, RO + RW_ / 2 + 1.2)), P(*spar_pt(0.16, -RO - RW_ / 2 - 1.2)),
+      P(47.4, 195), P(53, 195)]
+GB = [P(-53, 203), P(-47.6, 203), P(*spar_pt(0.84, RO + RW_ / 2 + 1.2)), P(*spar_pt(0.84, -RO - RW_ / 2 - 1.2)),
+      P(-48.6, 241), P(-53, 241)]
+for k, (G, t0, t1) in enumerate(((GA, 0.03, 0.15), (GB, 0.85, 0.97))):
+    plate("gusset%d" % k, "ivory", [5.4, 7.6], bevel=0.45, sym_poly=G,
+          tier={"inset": 1.2, "dz": 0.5, "mat": "ivory",
+                "cuts": [{"pts": [P(*spar_pt(t0, o)), P(*spar_pt(t1, o))], "w": 0.9, "depth": 1.3, "glow": True,
+                          "sym": True} for o in (-RO, RO)]})
+for k, t in enumerate((0.16, 0.84)):                               # gunmetal collar where gusset meets girder
+    plate("gcollar%d" % k, "slate", [6.0, 8.0], bevel=0.3,
+          sym_poly=[P(*spar_pt(t - 0.012, -RO - RW_ / 2 - 1.6)), P(*spar_pt(t - 0.012, RO + RW_ / 2 + 1.6)),
+                    P(*spar_pt(t + 0.012, RO + RW_ / 2 + 1.6)), P(*spar_pt(t + 0.012, -RO - RW_ / 2 - 1.6))])
+plate("clamp_h", "slate", [6.2, 8.4], bevel=0.4, sym_poly=[P(46.6, HY - 5), P(53.5, HY - 6.4), P(53.5, HY + 6.4),
+                                                          P(46.6, HY + 5)])
 for k, y in enumerate((102, 132)):                                # bridge root clamps
     plate("bclamp%d" % k, "slate", [6.2, 8.4], bevel=0.4,
           sym_poly=[P(41.5, y - 3), P(48, y - 4), P(48, y + 4), P(41.5, y + 3)])
@@ -234,6 +250,8 @@ details = [
     {"type": "conduit", "pos": [0, 0], "pts": [P(55, 204), P(55, 222), P(60, 228), P(60, 246)], "w": 1.1,
      "sym": True},
     *[{"type": "node", "pos": P(*q), "r": 1.9} for q in RAIL_X],                  # X-spar rail crossings
+    {"type": "node", "pos": P(51, 176), "r": 2.2, "sym": True},                   # spar roots on the hull
+    {"type": "node", "pos": P(51, 222), "r": 2.2, "sym": True},
     {"type": "cell", "pos": [72, 176], "size": [7.6, 18], "n": 4, "v": 1.4, "sym": True},
     {"type": "cell", "pos": [56, 74], "size": [6, 14], "n": 3, "v": 1.3, "sym": True},
     {"type": "vent", "pos": [0, 110], "w": 8, "n": 4, "step": 1.3},

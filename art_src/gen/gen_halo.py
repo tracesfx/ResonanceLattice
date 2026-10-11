@@ -11,6 +11,9 @@ Direction chosen by the user (2026-10-11, option C of art_src/review/halo_option
   The ring (deco, rotates about its image centre) has 6 armoured segments with swept teeth (show the spin
   direction), bay hatches, a glowing seam, 3 spokes to a hub; alternate segments are painted dark blue so the
   rotation reads at 1x.
+v2 (user: "the grey, flat-coloured platform inside is ugly; make it partially hollow, keep the parts the fighter
+  bays need"): the well floor is cut open between the 12 radial struts (real empty space under the spinning ring);
+  struts, hub collar, core, lip, bearing race and the flank flight decks with their bay hatches stay.
 Livery: "Stillwater" ripples: broken concentric dark-blue arcs radiating from the well over the flanks, flank
 gradients deepening outward, prong gradients deepening to the tips, cross-bands on the engine block.
 The ring is its own sprite, so the well needs no real depth: plates run under it and the dark well floor, ribs and
@@ -220,11 +223,10 @@ hs.plate("spine_b", "slate", [6.8, 8.6], half=[P(0, 30), P(2.6, 32), P(3.2, 54),
 hs.plate("spine_s", "slate", [6.6, 8.4], half=[P(0, 293), P(5, 296), P(5.4, 340), P(3, 372), P(0, 374)],
          tier={"inset": 0.8, "dz": 0.4, "mat": "ivory2", "cuts": [glow([P(0, 300), P(0, 366)], 1.1, 1.6, False)]})
 # well floor: dark plate (no greebles), static radial ribs and a glow ring that flicker through the spinning ring
-hs.plate("well_floor", "graphite", [7.0, 7.4], bevel=0.3, poly=circle(WC, 95),
-         cuts=ring_cuts(WC, 46, 1.0, 0.6))
+hs.plate("well_floor", "graphite", [7.0, 7.4], bevel=0.3, poly=circle(WC, 95))
 for k, a in enumerate((15, 45, 75)):
-    hs.plate("rib%d" % k, "slate", [7.4, 8.0], bevel=0.25, sym_poly=bar(pol(WC, 24, a), pol(WC, 88, a), 3.2))
-    hs.plate("ribu%d" % k, "slate", [7.4, 8.0], bevel=0.25, sym_poly=bar(pol(WC, 24, -a), pol(WC, 88, -a), 3.2))
+    hs.plate("rib%d" % k, "ivory2", [7.4, 8.4], bevel=0.3, sym_poly=bar(pol(WC, 24, a), pol(WC, 89, a), 4.4))
+    hs.plate("ribu%d" % k, "ivory2", [7.4, 8.4], bevel=0.3, sym_poly=bar(pol(WC, 24, -a), pol(WC, 89, -a), 4.4))
 hs.plate("well_lip", "slate", [7.4, 8.4], bevel=0.3, poly=circle(WC, 94), holes=[{"poly": circle(WC, 88)}])
 # bearing race around the well + clamps
 hs.plate("race", "slate", [8.0, 9.8], bevel=0.4, poly=circle(WC, 106), holes=[{"poly": circle(WC, 93)}],
@@ -235,6 +237,18 @@ for k, a in enumerate(CLAMP_A):
     hs.plate("clamp%d" % k, "slate", [8.6, 10.6], bevel=0.4, sym_poly=quad_at(WC, a, 101, 113, 5))
 for k, a in enumerate((-90, 90)):
     hs.plate("clampc%d" % k, "slate", [8.6, 10.6], bevel=0.4, poly=quad_at(WC, a, 101, 113, 6))
+# the well is HOLLOW (user: the flat grey inner platform was ugly): open sectors between the 12 radial struts are cut
+# out of the finished sprite (finish.py "cutouts"), leaving struts, inner hub collar, lip and bearing race.
+hs.plate("hub_collar", "slate", [7.4, 8.6], bevel=0.3, poly=circle(WC, 27), holes=[{"poly": circle(WC, 19.5)}],
+         tier={"inset": 0.8, "dz": 0.3, "mat": "ivory2"})
+
+
+def sector(c, a, r0, r1, d0, d1):
+    """Open window between two struts centred on angle a: inner arc r0 (half-angle d0), outer arc r1 (d1)."""
+    return arc(c, r1, a - d1, a + d1, 6) + list(reversed(arc(c, r0, a - d0, a + d0, 3)))
+
+
+CUTOUTS = [sector(WC, 30 * k, 28.5, 86.5, 15 - 7.6, 15 - 2.6) for k in range(12)]
 # lattice core under the ring hub
 hs.plate("core", "slate", [7.4, 9.2], bevel=0.4, poly=[P(*pol(WC, 19, 30 + 60 * i)) for i in range(6)],
          tier={"inset": 1.5, "dz": 0.4, "mat": "ivory2"})
@@ -316,7 +330,7 @@ hull = {"id": "rsl_halo", "name": "Halo", "hullSize": "CAPITAL_SHIP", "size": [W
         "greebles": {"layers": FRAMES, "z0": 3.0, "zmax": 3.9, "density": 1.0,
                      "seed": 61},
         "surface_detail": {"layers": ["h_head", "h_flank1", "h_flank2", "h_stern"], "density": 0.022, "seed": 29},
-        "details": details, "slots": slots, "engines": engines, "livery": livery,
+        "details": details, "slots": slots, "engines": engines, "livery": livery, "cutouts": CUTOUTS,
         "ship": {"builtInMods": ["expanded_deck_crew", "hardened_subsystems"]}}
 
 # ================================================================== ring deco (pivot = image centre)

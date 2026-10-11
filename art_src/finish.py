@@ -157,6 +157,16 @@ def finish(spec, rdir, mod, params):
     h = np.asarray(him).astype(np.float32)
     h = h / (65535.0 if h.max() > 255 else 255.0) * ZMAX
     mat = np.rint(np.asarray(load(rdir, "matid", "L")).astype(np.float32) / 255 * 10).astype(np.int32)
+    # --- cutouts: real openings through stacked parts (e.g. the Halo's hollow well); spec coordinates, no mirroring
+    if spec.get("cutouts"):
+        cut = np.zeros(mat.shape, np.float32)
+        for poly in spec["cutouts"]:
+            cut = np.maximum(cut, _shape_mask({"type": "poly", "poly": poly, "sym": False}, W, H)[0])
+        keep = 1 - cut
+        col = col * keep[..., None]
+        emit = emit * keep[..., None]
+        h = h * keep
+        mat = np.where(cut > 0.5, 0, mat)
     A4 = col[..., 3]
     rgb4 = col[..., :3]
     solid = A4 > 0.5
