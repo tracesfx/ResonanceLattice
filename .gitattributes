@@ -1,0 +1,9 @@
+# Keep text files LF everywhere so diffs stay small (Python on Windows otherwise flips line endings).
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary
+*.ogg binary
+*.wav binary
+*.jar binary
+*.zip binary

@@ -1,0 +1,22 @@
+{
+    "id": "resonance_lattice",
+    "name": "Resonance Lattice",
+    "author": "Unknown",
+    "version": "0.1.0",
+    "description": "TODO(scaffold): one or two sentences shown in the launcher.",
+    "gameVersion": "0.98a-RC7",
+    "jars": [
+        "jars/ResonanceLattice.jar"
+    ],
+    "modPlugin": "rsl.RslModPlugin",
+    "dependencies": [
+        {
+            "id": "lw_lazylib",
+            "name": "LazyLib"
+        },
+        {
+            "id": "MagicLib",
+            "name": "MagicLib"
+        }
+    ]
+}
