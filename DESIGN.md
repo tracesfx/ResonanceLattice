@@ -69,7 +69,7 @@ All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats com
 - **Built-ins:** `auxiliarythrusters`.
 
 ### 5. Cadence — cruiser
-- **Look:** an arrowhead: a long stepped needle bow, a faceted head, and two long accelerator rails swept back from the shoulders as the arrowhead's barbs (attached along a long root; large forward hardpoints at the rail roots, turret blisters on the barbs). It reads as precise and martial. *(Silhouette chosen by the user, 2026-10-11.)*
+- **Look:** an arrowhead: a long stepped needle bow, a faceted head, and two long accelerator rails swept back from the shoulders as the arrowhead's barbs (attached along a long root, ending in sharp swept tips; large forward hardpoints at the rail roots, turrets on the rails). It reads as precise and martial. *(Silhouette chosen by the user, 2026-10-11.)*
 - **System, "Crescendo" (6s):** each consecutive energy hit adds rate of fire (up to +100%), and flux cost rises with it. Overtone: at max stacks, every energy weapon fires one *Fortissimo* shot together, then the ship soft-vents.
 - **Built-ins:** `dedicated_targeting_core`.
 

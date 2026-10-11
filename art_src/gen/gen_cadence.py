@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from scale_spec import walk  # noqa: E402
 
-SCALE = 1.08        # final size factor (keeps the cruiser in the vanilla pixel-mass band)
+SCALE = 1.10        # final size factor (keeps the cruiser in the vanilla pixel-mass band)
 
 r = lambda v: round(v, 2)
 
@@ -85,20 +85,16 @@ BODY = [P(0, 0), P(1.8, 8), P(2.6, 20), P(5, 24), P(5.6, 38), P(8.4, 42), P(9, 5
         P(14.5, 268), P(10.5, 278), P(0, 278)]
 TF = 0.66                                    # the barb is attached up to here; free beyond (arrowhead notch)
 WEB = [P(26, 99), CP(0.04, -RW / 2 + 0.5), CP(TF, -RW / 2 + 0.5), P(26.6, 176)]
+TIP = 1.14                                   # sharp swept-wing tip (user, 2026-10-11): no blunt cap, no tip thruster
 RAIL = [CP(0, -RW / 2), CP(0, RW / 2 - 2), CP(0.02, RW / 2), CP(0.36, RW / 2), CP(0.37, RW / 2 + 2.2),
-        CP(0.70, RW / 2 + 2.2), CP(0.71, RW / 2 + 4), CP(0.95, RW / 2 + 4), CP(1.0, RW / 2 - 4), CP(0.99, -RW / 2)]
-BL1 = C(0.30, RW / 2 + 6.5) + (7.4,)
-BL2 = C(0.62, RW / 2 + 8.4) + (6.4,)
+        CP(0.70, RW / 2 + 2.2), CP(0.71, RW / 2 + 4), CP(TIP, RW / 2 + 4.6), CP(0.80, -RW / 2)]
 POD = [P(29, 224), P(36, 222), P(41, 230), P(42, 252), P(36.5, 260), P(30.5, 258)]
 
 # ------------------------------------------------------------------ silhouette
 frame("f_body", half=BODY)
 frame("f_web", sym_poly=WEB)
 frame("f_rail", sym_poly=RAIL)
-frame("f_blister1", sym_poly=octa(*BL1))
-frame("f_blister2", sym_poly=octa(*BL2))
 frame("f_pod", sym_poly=POD)
-frame("f_tipthruster", sym_poly=[CP(0.93, -RW / 2 + 1), CP(0.93, RW / 2 - 6), CP(1.04, RW / 2 - 6), CP(1.04, -RW / 2 + 1)])
 frame("f_vane", sym_poly=[P(12.4, 62), P(17.5, 60), P(20, 64), P(16.4, 70)])         # small forward canards
 
 # ------------------------------------------------------------------ plates
@@ -122,17 +118,18 @@ plate("spine", "slate", [6.8, 8.4], half=[P(0, 92), P(4.6, 95), P(5, 192), P(3, 
       tier={"inset": 0.8, "dz": 0.45, "mat": "ivory2"})
 plate("web", "ivory2", PL, sym_poly=shrink(WEB, 1.4), tier={"inset": 1.3, "dz": 0.5, "mat": "slate"})
 # barb: three raised segments stepping outward + a gunmetal tip
-for k, (t0, t1, so) in enumerate(((0.0, 0.355, RW / 2), (0.375, 0.69, RW / 2 + 2.2), (0.71, 0.92, RW / 2 + 4))):
+for k, (t0, t1, so) in enumerate(((0.0, 0.355, RW / 2), (0.375, 0.69, RW / 2 + 2.2))):
     tier = {"inset": 1.3, "dz": 0.6, "mat": "ivory"}
     tier["cuts"] = [{"pts": [CP(t0 + 0.03, 0.6), CP(t1 - 0.03, 0.6)], "w": 1.6, "depth": 2.2, "glow": True, "sym": True}]
     plate("rail%d" % k, "ivory", RL, sym_poly=seg(t0 + 0.004, t1, -RW / 2 + 1.2, so - 1.2), tier=tier)
-plate("rail_tip", "slate", RL, sym_poly=[CP(0.935, -RW / 2 + 1.2), CP(0.935, RW / 2 + 2.6), CP(0.975, RW / 2 - 1),
-                                        CP(0.985, -RW / 2 + 1.2)], tier={"inset": 1.0, "dz": 0.4, "mat": "ivory2"})
+# last segment = the swept tip blade (tapers to the point)
+plate("rail2", "ivory", RL, sym_poly=[CP(0.715, -RW / 2 + 1.3), CP(0.715, RW / 2 + 2.8), CP(TIP - 0.03, RW / 2 + 3.4),
+                                      CP(0.81, -RW / 2 + 1.3)],
+      tier={"inset": 1.2, "dz": 0.5, "mat": "ivory",
+            "cuts": [{"pts": [CP(0.74, 4.6), CP(1.0, 7.4)], "w": 1.4, "depth": 2.0, "glow": True, "sym": True}]})
 for k, t in enumerate((0.365, 0.70)):                   # gunmetal clamps between barb segments
     plate("clamp%d" % k, "slate", [6.4, 8.6], bevel=0.4,
           sym_poly=[CP(t - 0.014, -RW / 2 - 1), CP(t - 0.014, RW / 2 + 3), CP(t + 0.014, RW / 2 + 3), CP(t + 0.014, -RW / 2 - 1)])
-plate("blister1", "ivory2", [5.2, 7.4], sym_poly=shrink(octa(*BL1), 1.0), tier={"inset": 1.4, "dz": 0.5, "mat": "slate"})
-plate("blister2", "ivory2", [5.2, 7.4], sym_poly=shrink(octa(*BL2), 1.0), tier={"inset": 1.3, "dz": 0.5, "mat": "slate"})
 plate("aft", "ivory", PL, half=[P(0, 199.6), P(22.6, 202.6), P(22.6, 214.6), P(27.6, 222.6), P(29.2, 240), P(0, 240)],
       tier={"inset": 1.6, "dz": 0.6, "mat": "ivory",
             "cuts": [{"pts": [P(-20, 226), P(0, 222), P(20, 226)], "w": 0.55, "depth": 0.5}]})
@@ -150,7 +147,7 @@ details = [
     {"type": "conduit", "pos": [0, 0], "pts": [P(5, 150), P(26, 150), CP(0.52, -2.4)], "w": 1.3, "sym": True},
     {"type": "node", "pos": CP(0.52, 0.6), "r": 2.4, "sym": True},
     {"type": "node", "pos": CP(0.20, 0.6), "r": 2.2, "sym": True},
-    {"type": "node", "pos": CP(0.82, 0.6), "r": 2.2, "sym": True},
+    {"type": "node", "pos": CP(0.80, 4.2), "r": 2.0, "sym": True},
     {"type": "cell", "pos": [12, 124], "size": [6.4, 16], "n": 4, "v": 1.4, "sym": True},
     {"type": "cell", "pos": [12, 176], "size": [6.6, 18], "n": 4, "v": 1.5, "sym": True},
     {"type": "cell", "pos": P(33, 132), "size": [5.6, 12], "n": 3, "v": 1.3, "sym": True},
@@ -162,7 +159,7 @@ details = [
     {"type": "block", "pos": [14, 80], "size": [2.6, 5], "h": 0.5, "mat": "steel", "sym": True},
     {"type": "block", "pos": [8, 230], "size": [3, 7], "h": 0.4, "mat": "steel", "sym": True},
     {"type": "hatch", "pos": P(31, 156), "r": 1.8, "sym": True},
-    {"type": "light", "pos": CP(0.99, 2), "r": 0.6, "sym": True},
+    {"type": "light", "pos": CP(TIP - 0.08, RW / 2 + 2.4), "r": 0.6, "sym": True},
     {"type": "light", "pos": P(18.6, 61), "r": 0.5, "sym": True},
     {"type": "mark", "pos": [0, 0], "pts": [P(8.4, 96), P(8.4, 102)], "w": 0.7, "sym": True},
     {"type": "mark", "pos": [0, 0], "pts": [P(10.2, 96), P(10.2, 102)], "w": 0.7, "sym": True},
@@ -170,21 +167,23 @@ details = [
 slots = [
     {"id": "WS0001", "pos": CP(0.07, 0.4), "size": "LARGE", "type": "ENERGY", "mount": "HARDPOINT", "angle": 0, "arc": 10, "sym": True},
     {"id": "WS0003", "pos": [0, 80], "size": "MEDIUM", "type": "HYBRID", "mount": "TURRET", "angle": 0, "arc": 270},
-    {"id": "WS0004", "pos": P(*BL1[:2]), "size": "MEDIUM", "type": "ENERGY", "mount": "TURRET", "angle": 45, "arc": 240, "sym": True},
-    {"id": "WS0006", "pos": P(*BL2[:2]), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 90, "arc": 220, "sym": True},
+    {"id": "WS0004", "pos": CP(0.29, 0.6), "size": "MEDIUM", "type": "ENERGY", "mount": "TURRET", "angle": 45, "arc": 240, "sym": True},
+    {"id": "WS0006", "pos": CP(0.60, 1.0), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 90, "arc": 220, "sym": True},
     {"id": "WS0008", "pos": P(16, 160), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 60, "arc": 240, "sym": True},
     {"id": "WS0010", "pos": P(35.4, 240), "size": "SMALL", "type": "MISSILE", "mount": "TURRET", "angle": 150, "arc": 180, "sym": True},
 ]
 engines = [{"pos": [0, 276], "width": 10}, {"pos": [17.5, 266], "width": 7, "sym": True},
-           {"pos": P(35, 259), "width": 6, "length": 22, "sym": True},
-           {"pos": CP(1.03, -2.4), "width": 4, "length": 14, "sym": True}]
+           {"pos": P(35, 259), "width": 6, "length": 22, "sym": True}]
 # livery: dark-blue splinter chevrons angled with the barbs (they read as the arrowhead's fletching), a dark-blue
 # gradient deepening towards the barb tips, gunmetal needle tip. No yellow (user, 2026-10-11).
 ang = math.degrees(math.atan2(N[1], N[0])) + 180
 livery = [
+    {"type": "gradient", "color": "navy", "a": [0, 150], "b": [0, 276], "a0": 0.0, "a1": 0.75},
+    {"type": "gradient", "color": "navy", "a": [0, 112], "b": [0, 40], "a0": 0.0, "a1": 0.6},
+    {"type": "gradient", "color": "navy", "poly": WEB, "a": [26, 120], "b": [44, 170], "a0": 0.15, "a1": 0.7},
     {"type": "splinter", "color": "navy", "colors": [None, "navy"], "alpha": 0.6, "angle": 62, "period": 22,
      "poly": BODY[:1] + [P(30, 0)] + [P(30, 278)] + [P(0, 278)]},
-    {"type": "gradient", "color": "navy", "poly": RAIL, "a": list(C(0.3)), "b": list(C(1.0)), "a0": 0.0, "a1": 0.9},
+    {"type": "gradient", "color": "navy", "poly": RAIL, "a": list(C(0.3)), "b": list(C(TIP)), "a0": 0.0, "a1": 0.9},
     {"type": "poly", "color": "gunmetal", "sym": False, "poly": [P(-2.6, 0), P(2.6, 0), P(2.6, 12), P(-2.6, 12)]},
 ]
 for part in (layers, details, slots, engines, livery):
