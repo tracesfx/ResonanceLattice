@@ -37,6 +37,7 @@ A refugee research polity, provisionally "the Choir", grew out of a Domain-era h
 | 6 | Destroyer | **Refrain** | Compact hull with hinged armor vanes | Escort/guardian | ~120×150 | ~10 |
 | 7 | Destroyer | **Staccato** | Needle with forward-swept wings | Flanker/striker | ~130×160 | ~12 |
 | 8 | Frigate | **Grace Note** | Dart with split tail fins | Stance-switch interceptor | ~70×90 | ~6 |
+| 9 | Capital (unique, 2 stages: Unsung 55 DP → 80 DP) | **Virtuoso** | Rapier: needle prow between twin lance barrels, swept blade wings that flare open in Bravura | Player-piloted duelist flagship | ~170×360 | 80 |
 
 All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats come from `vanilla_baselines.py peers` before any data is written.
 
@@ -89,6 +90,143 @@ All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats com
   - Overtone: switching stance releases an EMP pulse.
 - **Built-ins:** `hiressensors`.
 
+### 9. Virtuoso — unique capital (player flagship)
+*Added 2026-10-11 at the user's request. One per campaign, obtained from a quest (quest NOT designed yet; hook below).
+It comes in two stages: the **Virtuoso (Unsung)** prototype (55 DP), given near the start of the questline, is
+upgraded into the full **Virtuoso** (80 DP) near its end. The section below describes the full ship; the
+"Two stages" part lists what the prototype lacks.*
+
+**Intent:** a streamlined capital the player pilots themselves. It feels faster and hits harder than any capital,
+and pays for it with **80 DP** (above Ziggurat's 75, the vanilla maximum). Its strength should be comparable to the
+Ziggurat, and come from the same kind of place: not from raw hull, armour or slot count, but from a **dominant
+system**, **high dissipation**, a **phase-like evasion layer**, and **one unique hullmod synergy** (Ziggurat has
+Mote Control + 1,200 dissipation + phase + Phase Anchor). The base stats stay deliberately modest.
+
+**Look:** a long rapier silhouette (the most streamlined hull in the mod). A needle prow sits between two long
+forward lance barrels, which are the two built-in large hardpoints. Swept-back blade wings carry the faction's
+biggest resonator cells, and the wing tips are DECORATIVE parts that flare open in Bravura. Seams use the faction
+teal→violet gradient normally; **in Bravura they change colour to radiant gold-white** (see Bravura below).
+DA-level sharpness: stepped spear prow, diagonal tip cuts, segmented plates.
+
+**Preliminary stats** (design targets; confirm with `vanilla_baselines.py` at the data stage):
+
+| Stat | Virtuoso | Ziggurat | Note |
+|---|---|---|---|
+| DP / supplies | 80 | 75 | Its main cost |
+| Hull / armour | 12,000 / 1,200 | 14,000 / 1,500 | Weaker body on purpose |
+| Flux cap / diss | 15,000 / 1,200 | 16,000 / 1,200 | Ziggurat-tier dissipation |
+| Speed / accel / turn | 65 / 45 / 14 | 40 / 50 / 20 | Fastest Lattice capital (Retribution's 75 is the vanilla max) |
+| Mass | 2,600 | 2,400 | |
+| Defense | OMNI shield, 240°, eff 0.8, upkeep 0.4 | phase | |
+| Peak CR / CR loss | 420 s / 0.3%/s | 600 s / 0.25 | Short on purpose; CR theft refills it |
+| OP | 260 (built-ins excluded) | 260 | |
+| Slots | 2 L energy HP (built-in Sforzando) + 4 M energy/hybrid T + 6 S energy T | 2L + 4M + 6S | |
+
+**Built-in weapon (×2): Sforzando Lance** (unique LARGE ENERGY, HARDPOINT, built-in only)
+- A three-round burst of crystal lance bolts (~800 range). It acts like a burst railgun rather than a beam, so it
+  rewards facing the target and lining up shots.
+- *Accent:* the first burst after a Glissando dash, or any burst fired at over 80% top speed, pierces and arcs EMP
+  into nearby targets. Moving fast makes the gun better.
+- Every hull or armour hit feeds Stolen Time (below). Rough target: about 500 sustained DPS per gun at ~1.0
+  flux/damage, between Plasma Cannon and High Intensity Laser. Tags: `no_drop`, `no_sell`, `no_dealer`; a built-in
+  only (not in any blueprint).
+
+**System: Glissando** (the core of its power, like Mote Control is for Ziggurat)
+- 2 charges, ~6 s recharge each. A ~600 u blink-dash towards the movement direction. It is untargetable and takes no
+  damage for 0.35 s mid-dash (the phase-like evasion layer, done as a skimmer-style dash, not a cloak).
+- Leaves a fading afterimage that briefly draws missile locks.
+- The next Sforzando burst is Accented.
+- Overtone (Lattice Core ≥60 Resonance): enemies the dash passes through lose CR to Stolen Time (see below), and the
+  dash refunds half a charge.
+
+**Built-in hullmod 1: Stolen Time** (unique)
+- Hull or armour damage that the Virtuoso deals to enemy **ships** (not fighters or missiles) **steals combat
+  readiness**. The target loses CR and the Virtuoso gains the same amount, up to **100%**. Draft rate: about 1% CR
+  per 600 damage, scaled by target size (frigate 0.5× … capital 1.5×).
+- Caps: at most 25% CR taken from any one ship per battle (so nothing gets farmed). Allies are never drained.
+- Overflow: while already at 100%, stolen CR extends **peak performance time** instead (+4 s per 1%), so
+  aggressive play sustains itself.
+- Visual: thin violet wisps flow from the target to the ship. The `_glow` seams follow CR instead of Resonance.
+- API basis (verified): `ShipAPI.getCurrentCR()/setCurrentCR()` (vanilla raises CR in combat in `ThreatSwarmAI`,
+  clamped to 1.0); `MutableShipStatsAPI.getPeakCRDuration()` is a StatBonus (`CombatEndurance` modifies it).
+
+**Built-in hullmod 2: Bravura** (the 100% CR state; one hullmod with Stolen Time or a second one, decided in code)
+- At **100% CR** the ship enters Bravura. It stays there until CR drops below 92% (hysteresis, so it does not
+  flicker).
+- Effects: +20% top speed and manoeuvrability, +25% flux dissipation, +20% energy weapon rate of fire, -30% system
+  recharge time, and Sforzando bursts always Accent.
+- **Seam colour change:** every seam (hull, wing-tip vanes and the Sforzando barrels) cross-fades over ~0.5 s from
+  the faction teal→violet gradient to **radiant gold-white** (~255,215,140), with a slow pulse, and fades back when
+  Bravura ends. Gold is used nowhere else in the mod, so it reads instantly as "this ship is at 100%".
+  Implementation: the finish step writes a second glow sprite, `rsl_virtuoso_glow_bravura.png` (same seam mask,
+  gold), and the combat plugin draws both, cross-fading their alpha (`SpriteAPI.setAlphaMult`/`setColor`, verified
+  in the API).
+- Other feedback: the wing-tip vanes flare open, and a MagicLib status line "BRAVURA" shows.
+- Normal player CR tops out around 70–85%, so Bravura is **earned in each fight** by stealing CR, never deployed
+  into. That is the "faster and more powerful" moment the ship is built around.
+
+**Unique synergy (the Phase Anchor analogue): Safety Overrides allowed**
+- In vanilla, `safetyoverrides` cannot go on capitals, and the faction's Lattice Core forbids it. The Virtuoso's
+  "unbound core" allows it.
+- SO's costs are exactly what this ship offsets: the peak-time and CR loss are covered by Stolen Time, and the
+  range cap is covered by Glissando closing the distance. This turns it into a true knife-fighting capital.
+- Balance risk: SO doubles dissipation (1,200 → effectively 2,400 while not venting). If that proves too strong,
+  lower the base dissipation (not DP), or make SO halve Bravura's dissipation bonus.
+
+**Other built-ins:** `lattice_core` (faction), `auxiliarythrusters` (vanilla, for the duelling feel).
+
+**Uniqueness ("one per campaign"):**
+- Hull tags: `restricted, no_dealer, no_drop, no_bp_drop, no_sell, codex_unlockable`; hint `UNBOARDABLE`.
+  No blueprint exists.
+- The variant carries `always_recoverable`, so losing it in battle never deletes it.
+- The quest grants it exactly once, behind a sector memory flag (`$rsl_virtuosoGranted`), checked idempotently on
+  new game and on load.
+- If the player sells or scuttles it, it is gone. Warn about this in the dialog.
+
+**Player-pilot focus:**
+- Stolen Time's rate halves while the ship is not the player's flagship. The AI can use it, but it is tuned for you.
+- The Glissando AI (written later) dashes conservatively: to evade, or to close distance when the lances are ready.
+
+**Two stages: Virtuoso (Unsung) → Virtuoso**
+
+| | Unsung (questline start) | Virtuoso (questline end) |
+|---|---|---|
+| DP / supplies | **55** | **80** |
+| Hull / armour | 10,000 / 1,000 | 12,000 / 1,200 |
+| Flux cap / diss | 12,500 / 950 | 15,000 / 1,200 |
+| Speed / accel / turn | 55 / 38 / 12 | 65 / 45 / 14 |
+| Peak CR | 360 s | 420 s |
+| Built-in lances | *Sforzando Lance (Untuned)*: 2-round burst, no Accent | Sforzando Lance: 3-round burst, Accent |
+| Glissando | 1 charge, 0.2 s invulnerable, no Overtone | 2 charges, 0.35 s, Overtone |
+| Stolen Time | Active, but only up to the hull's normal max CR; no peak-time overflow | Up to 100%, overflow extends peak time |
+| Bravura (100% CR) | Locked: no stat boost, no seam colour change | Unlocked |
+| Safety Overrides | Not allowed | Allowed (the "unbound core") |
+| Wing-tip vanes | Absent: bare stub mounts | Present, flare open in Bravura |
+| Look | Same hull, but some plates missing (exposed scaffolding), half the cells dark, dimmer seams | Complete, fully lit |
+
+- The Unsung still feels special from day one: it is a fast 55 DP capital that steals CR. The questline then turns
+  it into the 80 DP monster, so the player has grown into the cost by the time they pay it.
+- **Data:** the Unsung is a `.skin` of `rsl_virtuoso` (like vanilla's `_d` D-hull skins) with its own
+  `ship_data.csv` row (55 DP and the stats above), its own system id (`rsl_glissando_unsung`), its own sprite,
+  built-in `rsl_sforzando_untuned` instead of `rsl_sforzando`, and the vane deco slots removed.
+- **Upgrade (quest end):** `member.getVariant().setHullSpecAPI(<rsl_virtuoso spec>)` on the player's existing fleet
+  member (precedent: vanilla `DModManager` and `FieldRepairsScript` swap base and D hulls this way). This keeps the
+  ship's name, captain, fitted weapons, hullmods and S-mods. Then swap the built-in Sforzando ids, refresh the stats,
+  and repair CR to the new max. **Unverified, to test in game:** that built-in weapons and deco slots refresh
+  correctly after the swap; the fallback is to rebuild the variant on the new hull and copy the fit across.
+- Hullmods: Stolen Time reads the hull id to decide which stage rules apply, so one hullmod class covers both.
+- Uniqueness covers both stages: the same tags and flags, and the quest grants the Unsung exactly once and upgrades it
+  exactly once (`$rsl_virtuosoGranted`, `$rsl_virtuosoUpgraded`). If the player has lost or sold the Unsung by the
+  upgrade step, the quest needs a fallback: a recovery beat, or granting a fresh full Virtuoso. Decide when designing
+  the quest.
+- Art: one spec. The Unsung sprite is the same spec with an `"unsung"` override block (layers and cells removed,
+  seams dimmed), so the two always line up. Render both when the Virtuoso is drawn.
+
+**Quest hook (outline only, not designed):** the Choir's lost "first soloist", a prototype that sang alone after
+its chorus died. It is found dormant (the Unsung) in a derelict Domain harmonic lab near the start of the questline,
+and waking it has a price. Near the end, the player brings it to the place it was built to sing, where it is
+completed (the upgrade). The full quest comes in the STRETCH stage (questline slice).
+
 ## 4. Faction weapons (initial set)
 
 | Weapon | Mount | Behaviour |
@@ -99,6 +237,7 @@ All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats com
 | Tuning Spike | S/M missile | Embeds in the hull and detonates when a Lattice energy weapon hits that target (combo) |
 | Harmonic Driver | L energy | Charge-up shot; a full charge pierces. Also the Conductor's built-in spinal |
 | Resonance Bloom | L missile | Slow torpedo that bursts into an expanding frag + EMP ring |
+| Sforzando Lance (+ Untuned variant for the Unsung) | L energy HP, **Virtuoso built-in only** | 3-round crystal lance burst; Accented (pierce + EMP arcs) after a dash or at speed; hits feed Stolen Time |
 | *Deco set* | DECORATIVE | Halo ring, Cantor ring, Refrain vanes, Conductor prong glows, Lattice seam glows |
 
 Slot types lean ENERGY, with HYBRID/SYNERGY flex and few MISSILE slots. Weapons stay usable by other factions (no hard lock), but some behaviours get stronger on Lattice hulls.
@@ -158,7 +297,7 @@ One spec per hull drives **both** the art and the `.ship` file, so slots and eng
 
 ### 5e. Prototype order & iteration loop
 1. **Style test first:** Grace Note (frigate) and Refrain (destroyer). These lock the material, seam and ink look while the ships are cheap to redo. You review them before I continue.
-2. Then Staccato → Cadence → Tremolo → Conductor → Halo → Cantor Array (the station's modules come last because they're the most complex).
+2. Then Staccato → Cadence → Tremolo → Conductor → Virtuoso → Halo → Cantor Array (the station's modules come last because they're the most complex).
 3. After every pass:
    - `contact_sheet.py --mod . --peers 2 --scale 1,2 --overlay`, judged at **1x** next to vanilla peers.
    - `sprite_stats.py --mod .` to check tone, saturation, rim and edge density against the bands.
@@ -168,13 +307,17 @@ One spec per hull drives **both** the art and the `.ship` file, so slots and eng
 ## 6. Scope budget
 - **MUST (next stage):** scaffold; the Blender kit, render and finish pipeline; prototype sprites + `.ship` geometry for all 8 hulls; glow layers; 6 weapon sprites + deco set; contact sheets.
 - **SHOULD (stage after):** data (ship_data and weapon_data rows from vanilla baselines); the Lattice Core hullmod; the 8 ship systems in Java with AI; weapon scripts.
-- **STRETCH:** a custom fighter wing for Halo and Cantor; station placement in a star system; faction, markets and lore text.
+- **STRETCH:** a custom fighter wing for Halo and Cantor; station placement in a star system; faction, markets and lore text;
+  the Virtuoso acquisition quest (its sprite, data, hullmods, system and Sforzando are SHOULD, with the other hulls).
 
 ## 7. Risks
 - Downscaled 3D can look "CG". The ink pass, tone-matching and the style test on two small hulls come first so this is caught early.
 - The station's modular setup and the rotating rings need careful `.ship` and module wiring. That is why the station comes last.
 - Blender renders use the GPU briefly, so I'll ask before the first run.
 - None of the tools can judge balance or motion. In-game checks are yours (`templates/SMOKE_TEST.md`).
+- Virtuoso: SO on a capital plus Bravura may snowball. Tune it in game; the levers are base dissipation, the CR steal
+  rate and the per-target cap, never DP. Check that CR above the hull's max CR persists in combat (vanilla clamps
+  to 1.0; the max-CR interaction is unverified) and that post-battle CR settles back to normal.
 
 ## 8. Verification
 - `./build.sh` (or `build.bat`) reports **0 errors**. `validate_mod.py` checks for 8-bit PNGs, even weapon widths, sprite size against the `.ship`, slots on opaque pixels, and path case.

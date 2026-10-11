@@ -1,0 +1,213 @@
+{
+  "bounds": [
+    104.0,
+    1.0,
+    60.0,
+    -11.0,
+    50.0,
+    -22.0,
+    41.0,
+    -17.0,
+    10.0,
+    -18.0,
+    43.0,
+    -62.0,
+    57.0,
+    -66.0,
+    47.0,
+    -73.0,
+    21.0,
+    -74.0,
+    -49.0,
+    -23.0,
+    -71.0,
+    -25.0,
+    -78.0,
+    -19.0,
+    -75.0,
+    23.0,
+    -49.0,
+    23.0,
+    21.0,
+    74.0,
+    47.0,
+    73.0,
+    57.0,
+    66.0,
+    43.0,
+    62.0,
+    10.0,
+    18.0,
+    41.0,
+    17.0,
+    50.0,
+    22.0,
+    60.0,
+    11.0
+  ],
+  "builtInMods": [],
+  "center": [
+    75.0,
+    80.0
+  ],
+  "collisionRadius": 129,
+  "coversColor": "",
+  "engineSlots": [
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -76.8,
+        0.0
+      ],
+      "style": "MIDLINE",
+      "width": 10.35
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 20.7,
+      "location": [
+        -75.1,
+        -19.8
+      ],
+      "style": "MIDLINE",
+      "width": 5.75
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 20.7,
+      "location": [
+        -75.1,
+        19.8
+      ],
+      "style": "MIDLINE",
+      "width": 5.75
+    }
+  ],
+  "height": 186,
+  "hullId": "rsl_staccato",
+  "hullName": "Staccato",
+  "hullSize": "DESTROYER",
+  "shieldCenter": [
+    13.0,
+    0
+  ],
+  "shieldRadius": 95,
+  "spriteName": "graphics/rsl/ships/rsl_staccato.png",
+  "style": "MIDLINE",
+  "viewOffset": 0,
+  "weaponSlots": [
+    {
+      "angle": 0.0,
+      "arc": 10.0,
+      "id": "WS0001",
+      "locations": [
+        8.7,
+        -29.4
+      ],
+      "mount": "HARDPOINT",
+      "size": "MEDIUM",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -0.0,
+      "arc": 10.0,
+      "id": "WS0001R",
+      "locations": [
+        8.7,
+        29.4
+      ],
+      "mount": "HARDPOINT",
+      "size": "MEDIUM",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 270.0,
+      "id": "WS0003",
+      "locations": [
+        17.5,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "HYBRID"
+    },
+    {
+      "angle": 30.0,
+      "arc": 210.0,
+      "id": "WS0004",
+      "locations": [
+        -3.8,
+        -53.4
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -30.0,
+      "arc": 210.0,
+      "id": "WS0004R",
+      "locations": [
+        -3.8,
+        53.4
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 90.0,
+      "arc": 200.0,
+      "id": "WS0006",
+      "locations": [
+        -22.8,
+        -12.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -90.0,
+      "arc": 200.0,
+      "id": "WS0006R",
+      "locations": [
+        -22.8,
+        12.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 180.0,
+      "id": "WS0008",
+      "locations": [
+        -41.2,
+        -11.3
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "MISSILE"
+    },
+    {
+      "angle": -0.0,
+      "arc": 180.0,
+      "id": "WS0008R",
+      "locations": [
+        -41.2,
+        11.3
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "MISSILE"
+    }
+  ],
+  "width": 150
+}

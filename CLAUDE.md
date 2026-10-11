@@ -13,7 +13,13 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
 - Stage 1 (proposal): done, approved.
 - Stage 2 (prototype sprites): **style test approved** (Grace Note v2 approved; Refrain v3 = final requested
   iteration). Review sheet: `art_src/review/styletest_v3.png` (v1/v2 kept for comparison).
-- Next, continue in order: Staccato → Cadence → Tremolo → Conductor → Halo → Cantor Array (station last).
+- Staccato v1 done (150x186, mass 11,340): review sheet `art_src/review/staccato_v1.png`, awaiting user feedback.
+- Next, continue in order: Cadence → Tremolo → Conductor → **Virtuoso (+ Unsung skin)** → Halo → Cantor Array.
+- **Virtuoso** (added 2026-10-11): unique player capital, DESIGN.md §3.9. Two stages: Unsung skin (55 DP, start of
+  questline) upgraded via `variant.setHullSpecAPI` to the full Virtuoso (80 DP). Power comes from its kit, like
+  Ziggurat (Glissando dash system, 1,200 dissipation, i-frames, SO allowed on a capital), plus Stolen Time (CR theft)
+  and Bravura (100% CR: buffs, seams cross-fade to gold-white via a 2nd glow sprite). The user meant "OP cost 80" as
+  80 DP. The quest itself is NOT designed yet.
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -37,7 +43,7 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
   flanking the spine; one small cell as a nose glyph.
 - **Leading-edge emitters**: glow cuts along prow/shoulder edges forming one big chevron (Refrain).
 
-### Style-test state
+### Sprite state
 - Grace Note (v2, approved) 68×116, mass 3,238 (frigate p10 2,838): sharp dart, V-notched nose plate, tucked
   clipped-delta fins, side pods with hardpoints.
 - Refrain (v3) 106×160, mass 10,118 + vanes: split bow (stepped spear with nose glyph, medium turret behind it,
@@ -45,6 +51,9 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
   Vanes: `rsl_refrain_vane_r` (22×204, pivot at centre, blade ~100 px: parallel edges, slanted tip, notched teeth,
   4 segmented plates, full-length edge-rail conduit, 3 chevron cells) and `rsl_refrain_vane_l` = pixel mirror.
   Slots WS0009 (+x, angle -162, deployed 12) / WS0010 (-x, 162, deployed -12).
+- Staccato (v1) 150x186: needle fuselage with stepped spear nose + diagonal strakes, big forward-swept wings in two
+  armour segments with diagonal-cut tip prongs and a sawtooth trailing-edge notch. Seams: wide-pitch "staccato"
+  chevron cells (fill 0.38), core-to-wingtip conduits, tip-prong emitter cuts, aft conduits to the engine pods.
 - Known weaknesses: aft ivory areas flatter than DA; at 1x glow-on the cell pairs merge into one block.
 
 ## Theme / visual language (summary; details in DESIGN.md)
