@@ -5,8 +5,9 @@ python art_src/gen/gen_tremolo.py art_src/specs/rsl_tremolo.json   # then ./art_
 Direction chosen by the user (2026-10-11, option A of art_src/review/tremolo_options.png, "Fork"):
   a catamaran of two narrow hulls. Each hull: stepped spear bow with an inner mandible tooth -> shoulder steps ->
   sponson with a sharp forward-out tooth -> notch -> mid section -> engine block flaring into a swept aft tip.
-  A forward bridge with the lattice core joins the hulls behind the open fork; glowing X-spars (+ a cross bar and a
-  hub) cross the open gap aft. Real empty space: the fork between the bows and the truss windows.
+  A forward bridge with the lattice core joins the hulls behind the open fork; behind it a solid aft deck fills the
+  gap between the hulls, with a gunmetal scaffold (chords + X + hub) raised on top of it. v1's free-standing spars
+  were rejected as fragile (user, 2026-10-11). Real empty space: the fork between the bows.
 Plates are made from the frame outline (inset + clipped to bands), so the gaps between them expose machinery.
 """
 import json
@@ -116,17 +117,14 @@ HULL = [(44, 0), (46, 10), (47.5, 26), (52, 29), (54, 46), (58, 49),            
         (30, 30), (36, 34), (38.5, 26), (42, 10)]                                   # inner mandible tooth
 BRIDGE = [P(0, 74), P(5, 84), P(14, 88), P(40, 99), P(45, 104), P(45.5, 134), P(30, 138), P(18, 148), P(8, 152),
           P(4, 162), P(0, 164)]
-XA, XB = (51, 174), (-51, 224)                    # X-spar (the other one is its mirror image)
-HY = 199                                          # cross bar
-HUB = [P(0, 188), P(5, 195), P(10, HY), P(5, 203), P(0, 210)]
+# aft deck filling the gap between the hulls (user 2026-10-11: free spars looked fragile); stern V-notch
+DECK = [P(0, 130), P(44, 130), P(48, 176), P(50, 232), P(50, 246), P(30, 240), P(12, 228), P(0, 228)]
+TC, BC, HY = 168, 216, 192                        # scaffold: top chord, bottom chord, hub (X crossing)
 
 # ------------------------------------------------------------------ silhouette
 frame("f_hull", sym_poly=[P(*p) for p in HULL])
 frame("f_bridge", half=BRIDGE)
-frame("f_spar_x1", poly=bar(XA, XB, 8))
-frame("f_spar_x2", poly=bar((-XA[0], XA[1]), (-XB[0], XB[1]), 8))
-frame("f_spar_h", half=[P(0, HY - 3), P(51, HY - 3), P(51, HY + 3), P(0, HY + 3)])
-frame("f_hub", half=HUB)
+frame("f_deck", half=DECK)
 
 # ------------------------------------------------------------------ hull plates (bands of the frame outline)
 glow = lambda pts, w=1.5, d=2.0: {"pts": pts, "w": w, "depth": d, "glow": True, "sym": True}
@@ -135,27 +133,26 @@ plate("h_spear", "ivory", [4.4, 6.6], bevel=0.5, sym_poly=region(HULL, 1.5, 48, 
       tier={"inset": 1.1, "dz": 0.5, "mat": "ivory"})
 plate("h_fore", "ivory", PL, sym_poly=region(HULL, 50.5, 96),
       tier={"inset": 1.4, "dz": 0.6, "mat": "ivory",
-            "cuts": [{"pts": [P(40, 72), P(64, 76)], "w": 0.55, "depth": 0.5, "sym": True}]})
+            "cuts": [{"pts": [P(40, 84), P(64, 88)], "w": 0.55, "depth": 0.5, "sym": True}]})
 plate("h_spon", "ivory", PL, sym_poly=region(HULL, 99, 149),
       tier={"inset": 1.6, "dz": 0.6, "mat": "ivory",
-            "cuts": [{"pts": [P(46, 126), P(84, 122)], "w": 0.55, "depth": 0.5, "sym": True}]})
+            "cuts": [{"pts": [P(54, 140), P(84, 137)], "w": 0.55, "depth": 0.5, "sym": True}]})
 plate("h_mid", "ivory2", PL, sym_poly=region(HULL, 154, 205),
-      tier={"inset": 1.5, "dz": 0.6, "mat": "ivory",
-            "cuts": [glow([P(55, 160), P(55, 200)], 1.4)]})
+      tier={"inset": 1.5, "dz": 0.6, "mat": "ivory"})
 plate("h_eng", "ivory2", PL, sym_poly=region(HULL, 209, 231),
       tier={"inset": 1.4, "dz": 0.5, "mat": "ivory2",
-            "cuts": [{"pts": [P(54, 220), P(88, 220)], "w": 0.55, "depth": 0.5, "sym": True}]})
+            "cuts": [{"pts": [P(60, 220), P(88, 220)], "w": 0.55, "depth": 0.5, "sym": True}]})
 plate("h_eng2", "ivory2", PL, sym_poly=region(HULL, 234, 256.5),
       tier={"inset": 1.3, "dz": 0.5, "mat": "ivory"})
 # swept aft tip blade: raised, with an emitter line running out to the point
 plate("h_tip", "ivory", RL, bevel=0.5, sym_poly=[P(86, 222), P(89.4, 223), P(96.4, 249), P(87.6, 245.6), P(84, 240)],
       tier={"inset": 0.9, "dz": 0.4, "mat": "ivory", "cuts": [glow([P(87.6, 228), P(93.6, 246)], 1.1, 1.6)]})
-# raised inner keel rail on each hull (gunmetal), carries the accelerator line from the bridge to the bow gun
+# raised inner keel rail on each fore hull (gunmetal structure, no glow: the conduit runs beside it)
 plate("h_keel", "slate", [6.6, 8.4], bevel=0.4,
-      sym_poly=[P(38.4, 54), P(43, 51), P(46, 54), P(46, 96), P(42, 100), P(39.5, 98)],
-      tier={"inset": 0.7, "dz": 0.4, "mat": "ivory2", "cuts": [glow([P(42.4, 57), P(42.4, 94)], 1.1, 1.6)]})
+      sym_poly=[P(38.6, 66), P(43, 63), P(46, 66), P(46, 96), P(42, 100), P(39.5, 98)],
+      tier={"inset": 0.7, "dz": 0.4, "mat": "ivory2"})
 
-# ------------------------------------------------------------------ bridge (lattice core) and spars
+# ------------------------------------------------------------------ bridge (lattice core)
 plate("br_a", "ivory", PL, half=[P(0, 76.5), P(4.4, 86), P(13.6, 90), P(39, 100.6), P(43.4, 105), P(43.4, 118),
                                  P(0, 118)],
       tier={"inset": 1.5, "dz": 0.6, "mat": "ivory",
@@ -167,52 +164,61 @@ plate("br_b", "ivory2", PL, half=[P(0, 121), P(43.4, 121), P(43.6, 132), P(29.4,
 plate("br_edge", "slate", [6.4, 8.2], bevel=0.4, sym_poly=[P(6, 88.4), P(14.4, 91.4), P(38, 101.4), P(38, 105.4),
                                                           P(13.6, 95.6), P(6, 92.6)],
       cuts=[{"pts": [P(8, 90.6), P(14, 93.2), P(36, 102.6)], "w": 1.0, "depth": 1.4, "glow": True, "sym": True}])
-plate("br_spine", "slate", [6.8, 8.4], half=[P(0, 92), P(3.6, 94), P(4, 150), P(2, 154), P(0, 155)],
+plate("br_spine", "slate", [6.8, 8.4], half=[P(0, 90), P(3.6, 92), P(4, 116), P(2, 119), P(0, 120)],
       tier={"inset": 0.7, "dz": 0.4, "mat": "ivory2"})
-SX0, SX1 = lerp(XA, XB, 0.04), lerp(XA, XB, 0.96)
-plate("s_x1", "slate", [4.0, 5.6], bevel=0.4, poly=bar(SX0, SX1, 4.6),
-      cuts=[{"pts": [P(*lerp(XA, XB, 0.08)), P(*lerp(XA, XB, 0.92))], "w": 1.4, "depth": 1.4, "glow": True}])
-plate("s_x2", "slate", [4.0, 5.6], bevel=0.4, poly=bar((-SX0[0], SX0[1]), (-SX1[0], SX1[1]), 4.6),
-      cuts=[{"pts": [P(-lerp(XA, XB, 0.08)[0], lerp(XA, XB, 0.08)[1]),
-                     P(-lerp(XA, XB, 0.92)[0], lerp(XA, XB, 0.92)[1])], "w": 1.4, "depth": 1.4, "glow": True}])
-plate("s_h", "slate", [4.4, 6.0], bevel=0.4, half=[P(0, HY - 1.8), P(49, HY - 1.8), P(49, HY + 1.8), P(0, HY + 1.8)],
-      cuts=[{"pts": [P(-46, HY), P(46, HY)], "w": 1.2, "depth": 1.4, "glow": True}])
-plate("s_hub", "ivory", [6.0, 8.6], bevel=0.5, half=[P(0, 189.5), P(4.4, 195.4), P(8.4, HY), P(4.4, 202.6),
-                                                     P(0, 208.5)])
-for k, (y, h) in enumerate(((176, 6), (HY, 5), (222, 6))):       # spar root clamps on the inner hull edge
-    plate("clamp%d" % k, "slate", [6.2, 8.4], bevel=0.4,
-          sym_poly=[P(46.6, y - h), P(53.5, y - h - 1.4), P(53.5, y + h + 1.4), P(46.6, y + h)])
-for k, y in enumerate((102, 132)):                                # bridge root clamps
-    plate("bclamp%d" % k, "slate", [6.2, 8.4], bevel=0.4,
-          sym_poly=[P(41.5, y - 3), P(48, y - 4), P(48, y + 4), P(41.5, y + 3)])
+plate("bclamp", "slate", [6.2, 8.4], bevel=0.4, sym_poly=[P(41.5, 99), P(48, 98), P(48, 106), P(41.5, 105)])
 
-FRAMES = ["f_hull", "f_bridge"]
+# ------------------------------------------------------------------ aft deck + the scaffolding on top of it
+plate("d_deck", "slate", [3.8, 5.4], half=[P(0, 164.6), P(4.6, 163.4), P(8.6, 153.6), P(18.6, 149.4),
+                                           P(30.6, 139.4), P(46, 137), P(47, 176), P(48.6, 232), P(48.6, 244), P(30.4, 238.4),
+                                           P(12.6, 226.6), P(0, 226.6)],
+      tier={"inset": 1.4, "dz": 0.4, "mat": "slate"})
+SZ = [6.0, 7.4]
+plate("sc_top", "ivory", SZ, bevel=0.4, sym_poly=[P(5, TC - 2.2), P(47, TC - 2.2), P(47, TC + 2.2), P(5, TC + 2.2)],
+      tier={"inset": 0.6, "dz": 0.3, "mat": "ivory"})
+plate("sc_bot", "ivory", SZ, bevel=0.4, sym_poly=[P(5, BC - 2.2), P(49, BC - 2.2), P(49, BC + 2.2), P(5, BC + 2.2)],
+      tier={"inset": 0.6, "dz": 0.3, "mat": "ivory"})
+plate("sc_x1", "ivory", SZ, bevel=0.4, poly=bar((44, TC + 2), (-44, BC - 2), 4.2))
+plate("sc_x2", "ivory", SZ, bevel=0.4, poly=bar((-44, TC + 2), (44, BC - 2), 4.2))
+plate("sc_hub", "slate", [6.8, 8.8], bevel=0.5, half=[P(0, HY - 9), P(5, HY - 4.6), P(9.4, HY), P(5, HY + 4.6),
+                                                     P(0, HY + 9)],
+      tier={"inset": 1.0, "dz": 0.4, "mat": "ivory2"})
+for k, y in enumerate((TC, BC)):                  # chords clamp into the hulls
+    plate("sclamp%d" % k, "ivory2", [6.6, 8.6], bevel=0.4,
+          sym_poly=[P(42.6, y - 4), P(51.4, y - 5), P(51.4, y + 5), P(42.6, y + 4)])
+
+FRAMES = ["f_hull", "f_bridge", "f_deck"]
+# Lattice script: the core feeds (1) each hull's relay node, which drives that hull's bow gun and engines, and
+# (2) the scaffold hub, which drives the centre engines. Resonator cells sit in the hulls and in the truss windows;
+# emitters run along the bridge's leading edge and the swept aft tips. No branching: every run ends in a node.
+RX = 50                                            # hull conduit line
 details = [
-    {"type": "node", "pos": [0, 128], "r": 3.2, "shape": "diamond"},
+    {"type": "node", "pos": [0, 128], "r": 3.2, "shape": "diamond"},                     # lattice core
     {"type": "cell", "pos": [0, 82], "size": [4.4, 4.4], "n": 2, "v": 1.0},               # nose glyph
-    {"type": "node", "pos": [0, HY], "r": 2.4},                                          # truss hub
-    # core -> keel rails -> bow guns
-    {"type": "conduit", "pos": [0, 0], "pts": [P(4, 128), P(26, 128), P(34, 120), P(42.4, 112), P(42.4, 99)],
-     "w": 1.2, "sym": True},
-    {"type": "node", "pos": P(42.4, 54), "r": 2.0, "sym": True},
-    # core -> sponson turret
-    {"type": "conduit", "pos": [0, 0], "pts": [P(0, 134), P(0, 142), P(10, 142), P(16, 136), P(56, 136),
-                                               P(66, 126)], "w": 1.1, "sym": True},
-    {"type": "node", "pos": P(66.6, 125.4), "r": 2.0, "sym": True},
-    # truss -> engines
-    {"type": "conduit", "pos": [0, 0], "pts": [P(55, 204), P(55, 222), P(60, 228), P(60, 246)], "w": 1.1,
+    {"type": "conduit", "pos": [0, 0], "pts": [P(4.2, 128), P(RX - 2.4, 128)], "w": 1.3, "sym": True},
+    {"type": "node", "pos": P(RX, 128), "r": 2.4, "sym": True},                           # hull relay node
+    {"type": "conduit", "pos": [0, 0], "pts": [P(RX, 125.4), P(RX, 60), P(47, 57), P(47, 54)], "w": 1.2,
      "sym": True},
-    {"type": "cell", "pos": [72, 176], "size": [7.6, 18], "n": 4, "v": 1.4, "sym": True},
-    {"type": "cell", "pos": [56, 74], "size": [6, 14], "n": 3, "v": 1.3, "sym": True},
+    {"type": "node", "pos": P(47, 52), "r": 2.0, "sym": True},                            # bow gun
+    {"type": "conduit", "pos": [0, 0], "pts": [P(RX, 130.6), P(RX, 150), P(57, 157), P(57, 243)], "w": 1.2,
+     "sym": True},
+    {"type": "node", "pos": P(57, 245), "r": 1.8, "sym": True},                           # engine
+    {"type": "conduit", "pos": [0, 0], "pts": [P(0, 131.6), P(0, HY - 9)], "w": 1.3},
+    {"type": "node", "pos": [0, HY], "r": 2.8},                                          # scaffold hub
+    {"type": "conduit", "pos": [0, 0], "pts": [P(0, HY + 9), P(0, 221)], "w": 1.2},
+    {"type": "node", "pos": [0, 223], "r": 1.8},                                         # centre engines
+    {"type": "cell", "pos": [56, 76], "size": [6, 14], "n": 3, "v": 1.3, "sym": True},
+    {"type": "cell", "pos": [72, 180], "size": [7.6, 18], "n": 4, "v": 1.4, "sym": True},
+    {"type": "cell", "pos": [31, HY], "size": [6.4, 12], "n": 3, "v": 1.3, "sym": True},   # truss windows
     {"type": "vent", "pos": [0, 110], "w": 8, "n": 4, "step": 1.3},
     {"type": "vent", "pos": [74, 232], "w": 6, "n": 6, "step": 1.2, "sym": True},
-    {"type": "block", "pos": [76, 140], "size": [3, 6], "h": 0.5, "mat": "steel", "sym": True},
-    {"type": "block", "pos": [64, 214], "size": [3, 6], "h": 0.4, "mat": "steel", "sym": True},
-    {"type": "hatch", "pos": P(78, 194), "r": 1.8, "sym": True},
+    {"type": "block", "pos": [76, 146], "size": [3, 6], "h": 0.5, "mat": "steel", "sym": True},
+    {"type": "block", "pos": [66, 214], "size": [3, 6], "h": 0.4, "mat": "steel", "sym": True},
+    {"type": "hatch", "pos": P(78, 196), "r": 1.8, "sym": True},
     {"type": "light", "pos": P(93, 244), "r": 0.6, "sym": True},
     {"type": "light", "pos": P(86, 109), "r": 0.5, "sym": True},
-    {"type": "mark", "pos": [0, 0], "pts": [P(20, 112), P(20, 120)], "w": 0.7, "sym": True},
-    {"type": "mark", "pos": [0, 0], "pts": [P(22, 112), P(22, 120)], "w": 0.7, "sym": True},
+    {"type": "mark", "pos": [0, 0], "pts": [P(20, 110), P(20, 117)], "w": 0.7, "sym": True},
+    {"type": "mark", "pos": [0, 0], "pts": [P(22, 110), P(22, 117)], "w": 0.7, "sym": True},
 ]
 slots = [
     {"id": "WS0001", "pos": P(46, 34), "size": "MEDIUM", "type": "ENERGY", "mount": "HARDPOINT", "angle": 0, "arc": 10, "sym": True},
@@ -221,7 +227,8 @@ slots = [
     {"id": "WS0006", "pos": P(70, 200), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 100, "arc": 220, "sym": True},
     {"id": "WS0008", "pos": P(62, 84), "size": "SMALL", "type": "MISSILE", "mount": "TURRET", "angle": 30, "arc": 180, "sym": True},
 ]
-engines = [{"pos": [62, 256], "width": 8, "sym": True}, {"pos": [77, 256], "width": 8, "sym": True}]
+engines = [{"pos": [62, 256], "width": 8, "sym": True}, {"pos": [77, 256], "width": 8, "sym": True},
+           {"pos": [7, 228], "width": 6, "sym": True}]
 # livery ("tremolo" = a trembling note): a dark-blue WAVEFORM stripe runs down each hull's outer flank (two
 # regions with different frequencies), the inner faces darken towards the gap, gradients deepen to bow and stern,
 # forward chevrons on the bridge, tight cross bands on the engine blocks. No yellow, no flat steel.
@@ -234,9 +241,14 @@ livery = [
      "b": [90, 0], "a0": 0.0, "a1": 0.5},
     {"type": "gradient", "color": "navy", "poly": BRIDGE, "a": [0, 150], "b": [0, 80], "a0": 0.15, "a1": 0.55},
     {"type": "splinter", "color": "navy", "colors": [None, "navy", None], "widths": [55, 5, 200], "angle": 0,
-     "zigzag": 7, "amp": 1.6, "alpha": 0.8, "poly": [P(30, 50), P(80, 50), P(80, 96), P(30, 96)]},
+     "zigzag": 22, "amp": 1.1, "alpha": 0.8, "poly": [P(30, 50), P(80, 50), P(80, 96), P(30, 96)]},
     {"type": "splinter", "color": "navy", "colors": [None, "navy", None], "widths": [72.5, 7, 200], "angle": 0,
      "zigzag": 12, "amp": 2.6, "alpha": 0.8, "poly": [P(60, 100), P(100, 100), P(100, 206), P(60, 206)]},
+    # gunmetal deck under the scaffold: dark blue deepening aft and towards the hull roots
+    {"type": "gradient", "color": "navy", "on": [7], "poly": DECK, "a": [0, 140], "b": [0, 228], "a0": 0.25,
+     "a1": 0.8},
+    {"type": "gradient", "color": "navy", "on": [7], "poly": DECK, "a": [12, 0], "b": [46, 0], "a0": 0.0,
+     "a1": 0.35},
     {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy"], "widths": [8, 4, 11, 5],
      "alpha": 0.5, "angle": 58, "poly": [P(0, 74), P(46, 74), P(46, 120), P(0, 120)]},
     {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy", None, "navy"],
@@ -249,7 +261,7 @@ W = 2 * int(max(p[0] for L in layers for p in (L.get("half") or L.get("sym_poly"
 H = int(math.ceil(H * SCALE))
 spec = {"id": "rsl_tremolo", "name": "Tremolo", "hullSize": "CRUISER", "size": [W, H], "layers": layers,
         "greebles": {"layers": FRAMES, "z0": 3.0, "zmax": 3.9, "density": 1.0, "seed": 47},
-        "surface_detail": {"layers": ["h_fore", "h_spon", "br_a"], "density": 0.06, "seed": 23},
+        "surface_detail": {"layers": ["h_fore", "h_spon", "br_a"], "density": 0.035, "seed": 23},
         "details": details, "slots": slots, "engines": engines, "livery": livery,
         "ship": {"builtInMods": ["auxiliarythrusters"]}}
 json.dump(spec, open(sys.argv[1], "w", newline="\n"), indent=1)
