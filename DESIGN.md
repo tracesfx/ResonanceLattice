@@ -11,9 +11,12 @@ Decisions made: **theme = Resonance Lattice**; **art = hybrid** (Blender-scripte
 A refugee research polity, provisionally "the Choir", grew out of a Domain-era harmonic-flux lab. Its ships are built around **lattice cores**: crystalline resonators that turn stress (flux, impacts) into stored charge. Their doctrine is musical. Ships "tune" to each other, and a fleet fighting together is stronger than the sum of its hulls.
 
 **Visual language (shared by every hull):**
-- Ivory/pale-grey ceramic plates (~214,210,200) over dark graphite machinery (~52,54,58). The two-material rule follows vanilla.
+- **Revised 2026-10-11 (user):** clean **stainless-steel** plates (bright steel, brushed mid steel, gunmetal) over dark
+  graphite machinery, with a **dark-blue livery** that is different on every hull (splinter bands, gradients, bold
+  bands; Zepporia/Pandemonium-style, fitted to each silhouette). **No yellow.** No flat single-colour hulls. (The
+  original ivory ceramic look was dropped as too flat.) See CLAUDE.md "Standing art direction" for the full rules.
 - **Signature accent:** thin glowing *lattice seams* (teal 90,220,210 shading to violet 150,110,230) that run along plate gaps. No big paint stripes, which keeps them clear of ScalarTech and DA.
-- Secondary accent: small ink-blue tech markings and hex-cell micro-texture on machinery.
+- Secondary accent: dark-blue livery (see above) and hex-cell micro-texture on machinery.
 - Overhead lighting with no baked direction, mirror-symmetric, dark rim (vanilla's rules from sprites.md).
 - Each class gets one **signature silhouette idea** (below), so no two ships read alike at 1x.
 - Moving parts (rings, vanes, prongs) are done as decorative weapons, which brings the ships to life in combat.
@@ -49,7 +52,7 @@ All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats com
 - **Built-ins:** vanilla station hullmods, plus `hardened_subsystems` on petals and `never_detaches` on modules.
 
 ### 2. Conductor — capital battleship
-- **Look:** a long ivory blade split into two prongs. The inner faces of the prongs carry the brightest seams, with a huge spinal *Harmonic Driver* set between them. The prong glows pulse while it charges.
+- **Look:** a long steel blade split into two prongs. The inner faces of the prongs carry the brightest seams, with a huge spinal *Harmonic Driver* set between them. The prong glows pulse while it charges.
 - **Mechanic, "Conductor's Bridge" (custom hullmod):** Lattice allies within 2000u get double Sympathy from the Conductor. It is the hub of the faction's group play.
 - **System, "Sympathetic Strike":** after a 1.5s charge, a spinal beam hits its target and *marks* it for 8s. Hits on that target from any Lattice ship deal +20% damage. Overtone: the beam chains to a second target, which is also marked.
 - **Built-ins:** `stabilizedshieldemitter`, `operations_center` flavour (command ship).
@@ -66,7 +69,7 @@ All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats com
 - **Built-ins:** `auxiliarythrusters`.
 
 ### 5. Cadence — cruiser
-- **Look:** an arrowhead hull with two long rails down the flanks that hold forward hardpoints. It reads as precise and martial.
+- **Look:** an arrowhead: a long stepped needle bow, a faceted head, and two long accelerator rails swept back from the shoulders as the arrowhead's barbs (attached along a long root; large forward hardpoints at the rail roots, turret blisters on the barbs). It reads as precise and martial. *(Silhouette chosen by the user, 2026-10-11.)*
 - **System, "Crescendo" (6s):** each consecutive energy hit adds rate of fire (up to +100%), and flux cost rises with it. Overtone: at max stacks, every energy weapon fires one *Fortissimo* shot together, then the ship soft-vents.
 - **Built-ins:** `dedicated_targeting_core`.
 
@@ -320,7 +323,7 @@ One spec per hull drives **both** the art and the `.ship` file, so slots and eng
 5. The `.ship` file is written from the spec: `center`, slots, engines, `bounds` (simplified from the alpha contour, 12–20 points), and `collisionRadius` and `shieldRadius` at vanilla ratios.
 
 ### 5d. Weapons
-- **Small and medium weapons:** `weapongen.py` with a new *lattice* recipe: ivory housings, graphite cores, teal lens or seam accents, and the dark 1px separation and roughly 25–44% coverage vanilla uses. Turret and hardpoint sprites come out with matching `.wpn` offsets. Glow frames for charge-up use `_glow` sprites.
+- **Small and medium weapons:** `weapongen.py` with a new *lattice* recipe: steel housings with dark-blue livery accents, graphite cores, teal lens or seam accents, and the dark 1px separation and roughly 25–44% coverage vanilla uses. Turret and hardpoint sprites come out with matching `.wpn` offsets. Glow frames for charge-up use `_glow` sprites.
 - **Large weapons and the deco set:** the same Blender kit, rendered top-down, then the same finishing pass.
 
 ### 5e. Prototype order & iteration loop

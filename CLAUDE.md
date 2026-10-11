@@ -5,140 +5,153 @@ Deps: LazyLib, MagicLib (hard); GraphicsLib optional (guard with `isModEnabled("
 Use the **starsector-modding** skill (`~/.claude/skills/starsector-modding/`) for all data, code, balance and validation.
 Never launch the game or edit vanilla / other mods without the user's explicit OK.
 
-**Full approved design proposal: `DESIGN.md`** (theme, all 8 hulls with systems/mechanics, weapons, art plan, scope,
-risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
+**Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
+scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
+**Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user
+feedback.
 
 ## Status (2026-10-11)
 
-- Stage 1 (proposal): done, approved.
-- Stage 2 (prototype sprites): **style test approved** (Grace Note v2 approved; Refrain v3 = final requested
-  iteration). Review sheet: `art_src/review/styletest_v3.png` (v1/v2 kept for comparison).
-- Staccato approved. Cadence v1 done (152x270, mass 22,754): review sheet `art_src/review/cadence_v1.png`, awaiting
-  user feedback.
-- Next, continue in order: Tremolo → Conductor → **Virtuoso (+ Unsung skin)** → Halo → Cantor Array.
-- **Virtuoso** (added 2026-10-11): unique player capital, DESIGN.md §3.9. Two stages: Unsung skin (55 DP, start of
-  questline) upgraded via `variant.setHullSpecAPI` to the full Virtuoso (80 DP). Power comes from its kit, like
-  Ziggurat (Glissando dash system, 1,200 dissipation, i-frames, SO allowed on a capital), plus Stolen Time (CR theft)
-  and Bravura (100% CR: buffs, seams cross-fade to gold-white via a 2nd glow sprite). The user meant "OP cost 80" as
-  80 DP. The quest itself is NOT designed yet.
-  Revised (user): Sforzando = semi-rapid railgun TURRET (2,000 proj speed, 0 spread, 45 deg/s turn, ANTI_FTR +
-  USE_VS_FRIGATES, Cascade pierce on small-ship kills) so it clears frigate/fighter swarms; Glissando costs 2% CR
-  per dash and leaves "the String" (path snaps after 1.2 s: line damage + CR drain, blocks projectiles meanwhile).
+- Stage 1 (proposal): done. Stage 2 (prototype sprites): in progress.
+- Sprites done: Grace Note (approved), Refrain v3 (approved), Staccato (approved), **Cadence v5 (awaiting user
+  review)** — all re-coloured to the new steel + dark-blue livery scheme (user hasn't reviewed the restyle on the
+  three approved hulls yet; review sheets below).
+- Review sheets: `art_src/review/cadence_v2.png` (current: all four hulls), `steel_livery_v1.png` (old yellow test,
+  rejected), `cadence_options.png` (silhouette options; user chose C), older `styletest_v*.png`.
+- Next, in order: Tremolo → Conductor → **Virtuoso (+ Unsung skin)** → Halo → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
-### User feedback on style test v1 (2026-10-11) — standing art direction
-1. Colours (ivory + graphite + slate + teal→violet) are right. Keep.
-2. Go busier, Diable Avionics density: exposed machinery bands, many small parts.
-3. Sharp / angular silhouettes (DA, UAF). No wide splayed "legs"; no rounded-rectangle heads. Chevron-layered plates.
-   v2 follow-up: a plain triangle bow is NOT angular enough. DA sharpness = split bows (stepped central spear +
-   forward mandibles with notches between), tips cut on one diagonal slant, chamfered-rectangle plates, segmented
-   armour with graphite gaps, notched/stepped edges. Moving parts (vanes etc.) are centerpieces: big, not leaf-like,
-   with their own prominent seams (edge rail conduit + cells).
-4. Seams are THE identifier: must be very noticeable, but NOT tree/branch shaped. Use the "lattice script" below.
+### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started
+Two stages: Unsung skin (55 DP, questline start) upgraded via `variant.setHullSpecAPI` to the full Virtuoso (80 DP;
+the user's "OP cost 80" = DP). Power comes from its kit like Ziggurat (user: Ziggurat is strong because of system,
+dissipation, phase, Phase Anchor — not raw stats): Glissando dash (2 charges, i-frames, **costs 2% CR**, leaves
+"the String" that snaps after 1.2 s: line damage + CR drain, blocks projectiles), 1,200 dissipation, SO allowed on a
+capital, Stolen Time (CR theft), Bravura at 100% CR (buffs + **seams cross-fade to gold-white** via a 2nd glow
+sprite — gold glow is fine; the "no yellow" rule is about paint). Sforzando Lance ×2 = semi-rapid railgun TURRETS
+(2,000 proj speed, zero spread, 45°/s turn, ANTI_FTR + USE_VS_FRIGATES, Cascade pierce on small-ship kills) so it
+shreds frigate/fighter swarms. Quest not designed yet.
 
-### Lattice script (seam language, every hull)
-- **Conduits** (`conduit` detail): straight runs with 45°/90° bends, from the core to something functional (weapons,
-  engines, vane hinges, fin tips). No branching trees; a conduit ends in a node or at a socket/engine.
+## STANDING ART DIRECTION (all user feedback so far — follow on every hull)
+1. **Colours: clean stainless steel + dark blue + teal seams. NO YELLOW anywhere** (paint, markings; it read as
+   caution tape). Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
+   legacy: bright steel / brushed mid steel / gunmetal).
+2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
+   splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
+   **Vary the technique per ship — not stripes everywhere; use gradients too.** Current set:
+   Grace Note = dark-blue gradient deepening aft + gunmetal chevron band; Refrain = dark-blue zigzag splinter, vanes
+   = dark-blue gradient from the tip; Staccato = wing gradients deepening to the tips + short dark-blue "staccato"
+   dashes on the leading edges; Cadence = dark-blue splinter chevrons (60% opacity) + gradient on the barbs.
+3. **Busy, DA density:** exposed machinery bands, many small parts — but no speckle noise on big plates.
+4. **Sharp, angular, intricate engineering.** No geometric primitives as silhouettes: no isosceles triangles, no
+   rectangles/boxes, no eggs, no rockets, no parallelogram panels. A silhouette = several distinct masses with
+   different edge angles, notches between them, protrusions (blisters, prongs, pods, fins, canards). DA sharpness:
+   split bows (stepped spear + mandibles), diagonal tip cuts, chamfers, segmented armour, stepped edges.
+5. **Nothing fragile:** parts must be structurally attached (no free-standing "solar panel" rails, no big gaps
+   between rails and hull, no splayed "legs"). Long attachment roots, clamps, web plates.
+6. **Moving parts are centerpieces:** big, angular, with their own prominent seams (Refrain vanes).
+7. **Seams are THE identifier** — very noticeable, never tree/branch shaped: use the lattice script.
+8. When a silhouette doesn't converge after ~2 tries, sketch 2–3 flat options (`art_src/gen/cadence_options.py`
+   pattern) and ask the user to pick, instead of guessing further.
+
+### Lattice script (seam language)
+- **Conduits** (`conduit` detail): straight runs with 45°/90° bends from the core to something functional (weapons,
+  engines, hinges, rails, tips). No branching; a conduit ends in a node or at a socket/engine.
 - **Nodes** (`node`): ringed glow terminal; the core is a `diamond` node on the spine/keel.
-- **Resonator cells** (`cell`, `v` > 0 = chevron bars pointing forward): the brightest signature, symmetric pairs
-  flanking the spine; one small cell as a nose glyph.
-- **Leading-edge emitters**: glow cuts along prow/shoulder edges forming one big chevron (Refrain).
+- **Resonator cells** (`cell`, `v` > 0 = chevron bars pointing forward): brightest signature, symmetric pairs; one
+  small cell as a nose glyph. Staccato uses wide-pitch cells (fill 0.38).
+- **Emitters / accelerators**: glow cuts along leading edges or down rails, with coil nodes.
+- Seam colour: teal 90,220,210 → violet 150,110,230 towards the tail.
 
 ### Sprite state
-- Grace Note (v2, approved) 68×116, mass 3,238 (frigate p10 2,838): sharp dart, V-notched nose plate, tucked
-  clipped-delta fins, side pods with hardpoints.
-- Refrain (v3) 106×160, mass 10,118 + vanes: split bow (stepped spear with nose glyph, medium turret behind it,
-  two forward mandibles with seams), stepped shoulder seams, chevron spine top.
-  Vanes: `rsl_refrain_vane_r` (22×204, pivot at centre, blade ~100 px: parallel edges, slanted tip, notched teeth,
-  4 segmented plates, full-length edge-rail conduit, 3 chevron cells) and `rsl_refrain_vane_l` = pixel mirror.
-  Slots WS0009 (+x, angle -162, deployed 12) / WS0010 (-x, 162, deployed -12).
-- Staccato (v1) 150x186: needle fuselage with stepped spear nose + diagonal strakes, big forward-swept wings in two
-  armour segments with diagonal-cut tip prongs and a sawtooth trailing-edge notch. Seams: wide-pitch "staccato"
-  chevron cells (fill 0.38), core-to-wingtip conduits, tip-prong emitter cuts, aft conduits to the engine pods.
-- Cadence (v1) 152x270, generated by `art_src/gen/gen_cadence.py` (edit the generator, not the spec): stepped
-  spear, arrowhead body in chevron segments, rails as 4 stair-stepped segments (dark front prongs carry the LARGE
-  hardpoints), enclosed windows between rails and body (one strut), transom + W-notched stern. Seams: rail
-  accelerator lines with coil nodes, core-to-rail conduits, cells, prong leading-edge emitters.
-- Known weaknesses: aft ivory areas flatter than DA; at 1x glow-on the cell pairs merge into one block; Cadence body
-  plates read slightly speckled at 1x.
+- **Grace Note** 68×116, mass 3,238: sharp dart, V-notched nose, tucked clipped-delta fins, side pods.
+- **Refrain** 106×160, mass 10,118 + vanes: split bow (stepped spear, glyph, medium turret behind it, two mandibles),
+  stepped shoulder seams. Vanes `rsl_refrain_vane_r` (22×204, pivot at centre, ~100 px blade) + `_l` = pixel mirror;
+  slots WS0009 (+x, angle -162, deployed 12) / WS0010 (-x, 162, deployed -12).
+- **Staccato** 150×186, mass 11,340: needle fuselage, stepped spear, strakes, forward-swept segmented wings with
+  tip prongs and a sawtooth notch.
+- **Cadence** 172×303, mass 21,137 (cruiser p10 20,876): **arrowhead** (user picked option C, "rails longer, goal is
+  an arrowhead"): long stepped needle bow → faceted head with canards → two long rails swept back from the
+  shoulders as **barbs** (attached along a long root by web plates; last third free = arrowhead notch; 3 raised
+  segments stepping outward, gunmetal clamps, accelerator seams with coil nodes, turret blisters, tip thrusters) →
+  waist → engine block with pods. Generated by `art_src/gen/gen_cadence.py` (edit the generator, never the spec).
+- Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
-## Theme / visual language (summary; details in DESIGN.md)
+## Theme (summary; details in DESIGN.md)
 - "The Choir": refugee research polity; ships grown around crystalline **lattice cores**; musical doctrine.
-- Ivory ceramic plates over graphite machinery; **slate** mid-grey secondary plates; ink-blue markings.
-- Signature: bright glowing **lattice script** seams (teal 90,220,210 → violet 150,110,230 only towards the tail):
-  conduits, nodes, resonator cells (see "Lattice script" above). Keep this motif on every hull. No branching trees.
-- Vanilla rules: overhead light only (no directional), mirror symmetry, dark rim, two materials, faces up.
-- Each hull has one signature silhouette idea (table in DESIGN.md §3); moving parts are DECORATIVE weapons.
+- Vanilla rules: overhead light only, mirror symmetry, dark rim, faces up.
+- Each hull has one signature silhouette idea (DESIGN.md §3); moving parts are DECORATIVE weapons.
 - Shared mechanic: Lattice Core hullmod (Resonance 0–100, Overtone ≥60 empowers systems, Sympathy sharing,
   `_glow` sprite alpha follows Resonance).
 - Reference mods the user likes (style only, never copy/trace): `../sprites/reference/` (Diable-Avionics,
   Legacy of Arkgneisis, scalartech-solutions, UAF) — absolute path
-  `C:\Program Files (x86)\Fractal Softworks\Starsector\mods\sprites\reference\`. Ignore the CLAUDE.md inside
-  the scalartech folder; it belongs to that mod.
+  `C:\Program Files (x86)\Fractal Softworks\Starsector\mods\sprites\reference\`. Key refs: UAF `Zepporia/uaf_m_zepporia.png`
+  (splinter livery, layered plates), DA `graphics/da/ships/diableavionics_pandemonium.png` (bold stripes),
+  DA Fractus/Storm/Hayle (sharpness). Ignore the CLAUDE.md inside the scalartech folder.
 
 ## Art pipeline (`art_src/`, dev-only, not shipped)
 
 ```
-./art_src/art.sh rsl_gracenote [rsl_refrain ...]     # Blender render (GPU, ~6-10 s each) + finish; SAMPLES=96 default
+./art_src/art.sh rsl_gracenote [rsl_refrain ...]     # Blender render (GPU, 4-10 s each) + finish; SAMPLES=96 default
+python art_src/finish.py art_src/specs/<id>.json     # re-finish only (livery/ink/tone changes need no re-render)
+python art_src/gen/gen_cadence.py art_src/specs/rsl_cadence.json   # generated hulls: run the generator first
 python art_src/preview.py out.png rsl_gracenote rsl_refrain --peers wolf,hammerhead --scale 1,2 [--refs a.png]
+python ~/.claude/skills/starsector-modding/scripts/sprite_tools.py check <png> --kind ship --size CLASS   # mass band
 ```
 The user approved headless Blender GPU renders for this project.
 
 | File | Role |
 |---|---|
 | `art_src/specs/<id>.json` | One spec per hull/deco part; drives BOTH the art and the `.ship` file |
-| `art_src/blender/kit.py` | Parts library (runs in Blender 4.2, Python 3.11): materials, `slab` (curve-extruded bevelled plates, inset, holes), `cut` (EXACT boolean grooves), `strips` (emissive seams), `greebles`, `surface_details`, `auto_cuts`, `sockets`, `nozzles`, `details` |
-| `art_src/blender/render.py` | Builds the scene from a spec, ortho top-down camera, sun straight down + white sky, Cycles GPU (OptiX), writes `renders/<id>/{color,emit,normal,height,matid}.png` at 4x |
-| `art_src/finish.py` | System Python 3.14 + Pillow/numpy. Ink lines (height steps/normal creases), crest highlights, premultiplied 4x box downscale, `hullgen.tone_match` to TARGET (p5 .11 / p95 .80 / mean .44), rim ×0.62, seam tint, alpha bleed. Writes `graphics/rsl/ships/<id>.png` + `_glow.png`, `graphics/rsl/maps/<id>_{normal,material,surface}.png`, `data/hulls/<id>.ship` (via `hullgen.ship_json` + `check`). Deco specs (`"kind": "deco"`) go to `graphics/rsl/weapons/deco/` and get no .ship |
-| `art_src/preview.py` | Review sheet on combat-dark bg: our sprite, glow-on variant with deco at `deco_alt_angle`, vanilla peers, optional refs |
-| `art_src/renders/` | Intermediate passes (gitignored) |
-| `art_src/scale_spec.py` | Scale a spec's geometry (`python art_src/scale_spec.py spec.json 1.12 --size 68,116`) to hit pixel mass |
+| `art_src/gen/` | Generators for complex hulls (`gen_cadence.py`) and silhouette option sketches (`cadence_options.py`) |
+| `art_src/blender/kit.py` | Parts library (Blender 4.2, Python 3.11): materials (steel palette, brushed noise, per-plate tint), `slab`, `cut` (EXACT booleans), `strips` (emissive seams), `greebles`, `surface_details`, `auto_cuts`, `sockets`, `nozzles`, `details` (incl. conduit/node/cell), vertex-built primitives `cyl`/`pipe_y`/`prism` |
+| `art_src/blender/render.py` | Scene from spec, ortho top-down camera, sun straight down + white sky, Cycles GPU (OptiX), `renders/<id>/{color,emit,normal,height,matid}.png` at 4x; prints `RSL_T` step timings |
+| `art_src/finish.py` | **Livery** (at 4x, before ink), ink lines, crest highlights, 4x box downscale, `hullgen.tone_match` (TARGET p5 .11 / p95 .80 / mean .44; seams and white paint excluded), rim, seam tint/hot core/spill, alpha bleed, glow layer with halo, GraphicsLib maps, `.ship` via `hullgen`. `mirror_of` deco specs are flipped from their source |
+| `art_src/preview.py` | Review sheet: sprite, glow-on variant with decos at `deco_alt_angle` (canvas padded, never cropped), peers, refs |
+| `art_src/scale_spec.py` | Scale a spec's geometry incl. livery (`walk()` is also imported by generators) |
 | `art_src/review/` | Saved review sheets for the user |
+| `art_src/renders/` | Intermediate passes (gitignored) |
 
-Blender exe: `C:\Program Files\Blender Foundation\Blender 4.2\blender.exe`. finish.py imports `hullgen` from the skill's
-scripts folder.
+Blender exe: `C:\Program Files\Blender Foundation\Blender 4.2\blender.exe`. finish.py imports `hullgen` from the
+skill's scripts folder.
 
 ### Spec format (coordinates = final pixels; x = lateral offset from centre line, + = right; y = from top)
-- `size [W,H]` (keep W even), `hullSize`, `id`, `name`, optional `"kind": "deco"`, optional `"finish": {...}`
-  overrides (`ink`, `ink_step`, `ink_crease`, `crest`, `rim`, `seam_base`, `seam_hot`, `seam_spill`, `halo`).
-- `layers[]`: `name`, `mat` (ivory, ivory2, slate, graphite, steel, accent, seam, crystal, nozzle), `z [z0,z1]`,
-  `bevel`, shape via `half` (x≥0 outline top→bottom, mirrored), `poly`, or `sym_poly` (poly + mirror), `holes`,
-  `cuts[]` ({`pts`, `w`, `depth`, `glow`, `sym`}), `auto_cuts` ({spacing, seed, y_from, y_to}),
-  `tiers[]` ({`inset`, `dz`, `mat`, `bevel`, `cuts`}) = raised inner plates stacked on the layer.
-- Typical z stack: frame graphite 0–2.6, greebles 2.6–3.4, plates 3.4–6, tiers +0.4–0.7 each, spine higher.
-- `greebles` {layers, z0, zmax, density, seed}; `surface_detail` {layers, density, seed}.
-- `details[]`: hatch, light, vent, mark/line (decal polyline), block, crystal, dome, and the lattice script:
-  `conduit` {pts, w}, `node` {pos, r, shape}, `cell` {pos, size, n, v, slant, fill} (`sym` mirrors).
-- `slots[]` / `engines[]`: hullgen format (`pos`, `size`, `type`, `mount`, `angle`, `arc`, `sym`; engine `width`,
-  `length`). Decorative slot: `"type": "DECORATIVE"`, `"deco": "<deco spec id>"`, `"deco_alt_angle"` (preview only).
+- `size [W,H]` (W even), `hullSize`, `id`, `name`, optional `"kind": "deco"`, `"mirror_of"` (L/R deco pairs),
+  `"finish": {...}` overrides (`ink`, `ink_step`, `ink_crease`, `crest`, `rim`, `seam_base`, `seam_hot`, `seam_spill`,
+  `halo`).
+- `layers[]`: `name`, `mat` (ivory=bright steel, ivory2=mid steel, slate=gunmetal, graphite, steel, accent, seam,
+  crystal, nozzle), `z [z0,z1]`, `bevel`, shape via `half` (x≥0 outline, mirrored), `poly`, `sym_poly`; `holes`,
+  `cuts[]` ({`pts`, `w`, `depth`, `glow`, `sym`}), `auto_cuts`, `tiers[]` ({`inset`, `dz`, `mat`, `bevel`, `cuts`}).
+  Overlapping shapes inside ONE layer punch even-odd holes: use separate layers (e.g. `f_body`, `f_rail`, …).
+- Typical z: frame graphite 0–3, greebles 3–3.9, plates 4–6.2, raised housings 5.2–7.6, tiers +0.4–0.7, spine higher.
+- `greebles` {layers, z0, zmax, density, seed}; `surface_detail` {layers, density ≤ 0.08, seed}.
+- `details[]`: hatch, light, vent, mark/line, block, crystal, dome, `conduit` {pts, w}, `node` {pos, r, shape},
+  `cell` {pos, size, n, v, slant, fill} (`sym` mirrors).
+- `livery[]` (applied in order, only on plate materials; `on` = matid list, default [2] = bright/mid steel; `sym`
+  mirrors shapes, `mirror` uses |x| for patterns; `alpha`):
+  `poly` {poly, color}; `band` {pts, w, color}; `stripes` {poly?, angle, period, w, color};
+  `splinter` {poly?, angle, period, zigzag, amp, colors: [null, "navy"] (painted bands) or tones: [1.0, 0.74]};
+  `gradient` {poly?, color, a: [x,y], b: [x,y], a0, a1} (opacity ramp a→b).
+  Paints (finish.PAINT): navy, blue, white, steel_light, steel_dark, gunmetal, black. Paint keeps the rendered
+  shading; ink lines cut through it afterwards. Bands/periods must be broad (≥ ~1/4 hull width) or they read as noise.
+- `slots[]` / `engines[]`: hullgen format; decorative slot: `"type": "DECORATIVE"`, `"deco"`, `"deco_alt_angle"`.
 
 ### Gotchas learned
 - Curve-converted meshes must be welded (`remove_doubles`) or EXACT booleans silently fail — done in `slab`.
-- A tier covers the grooves of the layer below: put glow cuts on the **topmost tier**, not the base layer.
-- Very thin plates + large tier inset → tier vanishes (and its seams with it). Fin seams go on the base layer.
-- Deco sprites rotate about their centre: pad so the pivot is at the image centre (vane = 22×204, blade in top half).
-- Judge at 1x first. Check mass with `python <skill>/scripts/sprite_tools.py check <png> --kind ship --size CLASS`.
-- Plates covering everything = flat white blob; leave exposed machinery bands (vanilla high tech is ~56% metal).
-- Turret sockets on slate plates have low contrast; check they read.
-- Deco angle: smaller angle folds the vane INWARD over the hull; use negative (e.g. -164) to sweep outward.
-- The game never flips weapon/deco sprites for the mirrored side. Asymmetric parts need an L/R pair: author the R
-  spec, make the L spec `{"id", "kind": "deco", "mirror_of": "<R id>"}`; art.sh/finish.py flip the finished
-  PNGs (normal map x inverted) instead of re-rendering. Use two non-sym slots with explicit ±angles.
-- Greebles assume a symmetric region (they mirror); fine on asymmetric parts but never render L and R separately.
-- Never use `bmesh.ops.*` per part in kit.py: each call scans the whole bmesh, so greebling a cruiser went O(n^2)
-  and hung for 10+ min. Primitives are built vertex by vertex (`cyl`, `pipe_y`, `prism`). render.py prints
-  `RSL_T <step> <s>` timings (art.sh shows them); a cruiser takes ~10 s.
-- Big hulls: parallel rails + parallel body = rectangle; straight diagonal edges = triangle. Get articulation from
-  stair-steps of 3+ px, enclosed negative space (windows) and notched sterns, not from detail density.
-- Large plates + surface_detail density > ~0.08 = speckle noise; use more cuts/vents instead.
-- Complex hulls: write a generator in `art_src/gen/` (formulas for edges) instead of hand-typing coordinates.
-- preview.py pads the canvas for decos (the game draws them past hull bounds); v1's "cut off" was a preview crop.
-- finish params `seam_hot`, `seam_spill`, `halo` (glow layer bloom, 0.6; 1.3 blobs the cells).
+- A tier covers the grooves below: glow cuts go on the **topmost tier**. Very thin plates + big inset = no tier.
+- Deco sprites rotate about their centre (pivot at image centre). Smaller deco angle folds INWARD; negative sweeps
+  out. The game never flips deco sprites: asymmetric parts need an R spec + `mirror_of` L spec, two non-sym slots.
+- Never call `bmesh.ops.*` per part in kit.py (O(n²) → a cruiser hung 10+ min). Build primitives vertex by vertex.
+- Tone match pulls bright paint toward the mean: bright paints must be protected (done for white; yellow is banned).
+- Judge at 1x first; check mass band after every pass; scale via the generator's SCALE or `scale_spec.py`.
+- Silhouette lessons (Cadence took 6 versions): parallel rails = rectangle; straight diagonals = triangle; all-rect
+  modules = box; one smooth envelope = egg; vertical-sided midship = rocket. What worked: a chosen massing sketch,
+  then masses with different angles + long attached barbs + notches + protrusions.
 
 ## Next steps after sprites (from DESIGN.md scope)
 SHOULD: ship_data/weapon_data rows from `vanilla_baselines.py peers` (clone nearest vanilla, change only what the
-design needs), Lattice Core hullmod, the 8 ship systems + AI, weapon scripts, GraphicsLib texture_data CSV for the
-maps. STRETCH: fighter wing, station placement, faction/markets/lore text.
+design needs), Lattice Core hullmod, the ship systems + AI, weapon scripts, GraphicsLib texture_data CSV for the
+maps, Virtuoso hullmods/system/Sforzando. STRETCH: fighter wing, station placement, faction/markets/lore text,
+Virtuoso questline.

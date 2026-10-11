@@ -49,6 +49,101 @@ def dilate(m, r=1):
     return out
 
 
+# ------------------------------------------------------------------ livery (paint on top of the rendered plates)
+# Display colours (pre tone-match) that a plate shows at its typical shading.
+# No yellow/amber: removed at the user's request (2026-10-11, "looks like caution tape"). Accent colour = dark blue.
+PAINT = {
+    "navy": (0.13, 0.19, 0.33), "blue": (0.22, 0.32, 0.52), "white": (0.95, 0.96, 0.97),
+    "steel_light": (0.80, 0.82, 0.85), "steel_dark": (0.44, 0.47, 0.51), "gunmetal": (0.25, 0.27, 0.30),
+    "black": (0.10, 0.11, 0.12),
+}
+MAT_PLATE, MAT_SLATE = 2, 7
+
+
+def _xy(W, x, y):
+    return ((W / 2 + x) * SS, y * SS)
+
+
+def _mirror(pts):
+    return [(-x, y) for x, y in pts]
+
+
+def _shape_mask(L, W, H):
+    """Rasterise one livery entry (spec coordinates) to a 4x float mask."""
+    from PIL import ImageDraw
+    m = Image.new("L", (W * SS, H * SS), 0)
+    d = ImageDraw.Draw(m)
+    t = L["type"]
+    sym = L.get("sym", True)
+    if t in ("poly", "stripes", "splinter", "gradient") and "poly" in L:
+        for poly in [L["poly"]] + ([_mirror(L["poly"])] if sym else []):
+            d.polygon([_xy(W, *p) for p in poly], fill=255)
+    elif t in ("stripes", "splinter", "gradient"):
+        d.rectangle([0, 0, W * SS, H * SS], fill=255)       # no region: whole sprite
+    if t == "band":
+        for pts in [L["pts"]] + ([_mirror(L["pts"])] if sym else []):
+            d.line([_xy(W, *p) for p in pts], fill=255, width=max(1, int(round(L["w"] * SS))), joint="curve")
+    mask = np.asarray(m).astype(np.float32) / 255
+    if t in ("stripes", "splinter", "gradient"):
+        X = (np.arange(W * SS, dtype=np.float32)[None, :] + 0.5) / SS - W / 2
+        Y = (np.arange(H * SS, dtype=np.float32)[:, None] + 0.5) / SS
+        ax = np.abs(X) if L.get("mirror", True) else X
+        a = np.radians(L.get("angle", 45))
+        u = ax * np.cos(a) + Y * np.sin(a)
+        if t == "gradient":
+            # linear ramp of paint opacity from point a (alpha a0) to point b (alpha a1); |x| mirrored by default
+            (x0, y0), (x1, y1) = L["a"], L["b"]
+            dx, dy = x1 - x0, y1 - y0
+            f = np.clip(((ax - x0) * dx + (Y - y0) * dy) / max(1e-6, dx * dx + dy * dy), 0, 1)
+            f = f * f * (3 - 2 * f) if L.get("smooth", True) else f
+            return mask * (L.get("a0", 0.0) + (L.get("a1", 1.0) - L.get("a0", 0.0)) * f), None
+        if t == "stripes":
+            per, w = L["period"], L["w"]
+            mask = mask * (np.mod(u - L.get("offset", 0), per) < w)
+        else:
+            v = -ax * np.sin(a) + Y * np.cos(a)
+            zz = L.get("zigzag", 0)
+            if zz:
+                ph = np.mod(v / zz, 1.0)
+                u = u + L.get("amp", 2.0) * (np.abs(ph - 0.5) * 4 - 1)
+            idx = np.floor((u - L.get("offset", 0)) / L["period"]).astype(np.int64)
+            if "colors" in L:      # painted bands: 1 where this band carries paint, the colour is L["color"]
+                on = np.array([c is not None for c in L["colors"]], np.float32)
+                return mask * on[np.mod(idx, len(on))], None
+            tones = np.array(L["tones"], np.float32)
+            return mask, tones[np.mod(idx, len(tones))]
+    return mask, None
+
+
+def apply_livery(rgb4, mat, spec, W, H):
+    """Paint the plates. Paint keeps the rendered shading (AO, bevels, grooves), so it reads as a decal on the hull;
+    ink lines are drawn afterwards and cut through it."""
+    entries = spec.get("livery", [])
+    prot = np.zeros(mat.shape, np.float32)
+    if not entries:
+        return rgb4, prot
+    lum = rgb4 @ np.array([0.299, 0.587, 0.114], np.float32)
+    ref = {}
+    for m_id in (MAT_PLATE, MAT_SLATE):
+        sel = mat == m_id
+        ref[m_id] = float(np.median(lum[sel])) if sel.sum() > 50 else 0.5
+    for L in entries:
+        mask, tone = _shape_mask(L, W, H)
+        on = np.isin(mat, L.get("on", [MAT_PLATE]))
+        k = mask * on * L.get("alpha", 1.0)
+        if tone is not None:              # tonal pattern: multiply
+            rgb4 = rgb4 * (1 + (tone - 1) * k)[..., None]
+            continue
+        col = np.array(PAINT.get(L["color"], L["color"]) if isinstance(L["color"], str) else L["color"], np.float32)
+        refmap = np.where(mat == MAT_SLATE, ref[MAT_SLATE], ref[MAT_PLATE])
+        shade = np.clip(lum / np.maximum(refmap, 1e-3), 0, 1.6)[..., None]
+        rgb4 = rgb4 * (1 - k[..., None]) + np.clip(col * shade, 0, 1) * k[..., None]
+        # bright paints only read as their colour when bright: keep them out of the tone remap (like the seams)
+        if L.get("protect", L["color"] == "white"):
+            prot = np.maximum(prot, k)
+    return rgb4, prot
+
+
 def finish(spec, rdir, mod, params):
     W, H = spec["size"]
     col = np.asarray(load(rdir, "color", "RGBA")).astype(np.float32) / 255
@@ -61,6 +156,7 @@ def finish(spec, rdir, mod, params):
     A4 = col[..., 3]
     rgb4 = col[..., :3]
     solid = A4 > 0.5
+    rgb4, prot4 = apply_livery(rgb4, mat, spec, W, H)
 
     # --- ink: steps in height and creases in the normal field (1-2 px at 4x -> ~0.5 px dark line at 1x)
     step = np.zeros_like(h)
@@ -91,7 +187,8 @@ def finish(spec, rdir, mod, params):
     emi_mask = np.clip(np.maximum(emi1 * 3, seam1 * 1.5), 0, 1)
 
     # --- tone match (emissive pixels excluded), dark rim
-    rgb = hullgen.tone_match(rgb, A, emi_mask, TARGET, False)
+    prot1 = box_down(prot4, SS)
+    rgb = hullgen.tone_match(rgb, A, np.maximum(emi_mask, prot1 * 2), TARGET, False)
     opaque = A > 0.5
     edge = opaque & ~(shift(opaque, 1, 0) & shift(opaque, -1, 0) & shift(opaque, 0, 1) & shift(opaque, 0, -1))
     rgb = np.where(edge[..., None], rgb * params["rim"], rgb)

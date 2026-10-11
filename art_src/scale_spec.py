@@ -5,8 +5,8 @@ python scale_spec.py specs/rsl_gracenote.json 1.12 --size 68,116
 import argparse
 import json
 
-GEOM = {"half", "poly", "sym_poly", "pts", "pos"}
-LEN = {"r", "y_from", "y_to", "width", "length", "spacing"}
+GEOM = {"half", "poly", "sym_poly", "pts", "pos", "a", "b"}      # a/b: livery gradient end points
+LEN = {"r", "y_from", "y_to", "width", "length", "spacing", "period", "zigzag", "amp"}
 
 
 def walk(o, k):
@@ -39,7 +39,7 @@ def main():
     a = ap.parse_args()
     s = json.load(open(a.spec, encoding="utf-8"))
     walk(s["layers"], a.k)
-    for key in ("details", "slots", "engines"):
+    for key in ("details", "slots", "engines", "livery"):
         walk(s.get(key, []), a.k)
     s["size"] = [int(x) for x in a.size.split(",")]
     with open(a.spec, "w", encoding="utf-8", newline="\n") as f:

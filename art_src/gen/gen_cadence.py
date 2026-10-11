@@ -1,22 +1,25 @@
-"""Generate art_src/specs/rsl_cadence.json (arrowhead body + diagonal stair-stepped flank rails from formulas).
+"""Generate art_src/specs/rsl_cadence.json.
 
 python art_src/gen/gen_cadence.py art_src/specs/rsl_cadence.json   # then ./art_src/art.sh rsl_cadence
+
+Direction chosen by the user (2026-10-11, option C of art_src/review/cadence_options.png, "make the rails longer;
+the design goal is an arrowhead"):
+  long stepped needle bow -> faceted head -> the two rails sweep back from the shoulders as long BARBS of an
+  arrowhead -> narrow waist -> engine block with pods.
+Each barb is attached to the body along a long root through web plates (no fragile free-standing rails); only the
+last third of the barb is free, which makes the arrowhead notch. Rails are raised, segmented (stepped outward),
+carry glowing accelerator lines, turret blisters on their outer edge and a small thruster at the tip.
+Earlier rejected versions: rectangle, isosceles triangle with free-standing rails, box, egg, rocket.
 """
 import json
+import math
+import os
 import sys
 
-K = 0.16                       # rail taper (x per y)
-I = lambda y: 16 + (y - 30) * K          # rail inner edge
-STEP = [(30, 62, 0.0), (65, 120, 3.0), (123, 180, 6.0), (183, 252, 9.0)]   # rail segments (y0, y1, outward stair offset)
-RW = 13.0                       # base rail width
-O = lambda y, e: I(y) + RW + e           # rail outer edge (segment shifted outward by e)
-In = lambda y, e: I(y) + e               # rail inner edge of a segment
-def B(y):
-    """Body plate edge: in front it hugs the rail (graphite channel), aft of the gap it tapers inward."""
-    if y < 150:
-        e = 0 if y < 64 else 3 if y < 122 else 6
-        return I(y) + e - 3.2
-    return I(150) + 6 - 3.2 - (y - 150) * 0.05
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from scale_spec import walk  # noqa: E402
+
+SCALE = 1.08        # final size factor (keeps the cruiser in the vanilla pixel-mass band)
 
 r = lambda v: round(v, 2)
 
@@ -25,124 +28,172 @@ def P(x, y):
     return [r(x), r(y)]
 
 
-# ---------------- frame: body outline (half) + rail outline (sym_poly) + struts. Rails hug the body in front and
-# separate from it aft of y=150 (real negative space between them).
-GAP_Y = 152
-body_frame = [P(0, 0), P(2.5, 7), P(3.2, 18), P(7, 22), P(7.6, 36), P(11, 39), P(11.6, 50), P(14.6, 52),
-              P(In(56, 0), 56), P(In(64, 0), 64), P(In(66, 3), 66), P(In(121, 3), 121), P(In(123, 6), 123),
-              P(In(GAP_Y - 4, 6), GAP_Y - 4), P(B(GAP_Y + 4) + 1, GAP_Y + 4), P(B(232) + 1, 232),
-              P(In(238, 9), 238), P(In(246, 9) - 0.6, 249.5), P(35, 252), P(30.5, 259.5), P(24, 266), P(0, 268)]
-rail_frame = [P(In(30, 0) - 0.6, 30), P(I(30) + 7, 20), P(O(30, 0) + 0.8, 27)]
-for y0, y1, e in STEP:
-    rail_frame += [P(O(y0, e) + 0.8, y0 - 1.5 if e else y0), P(O(y1, e) + 0.8, y1 + 1.5)]
-rail_frame += [P(O(258, 9), 262), P(In(258, 9) + 2, 264), P(In(252, 9) - 0.8, 254)]
-for y0, y1, e in reversed(STEP):
-    rail_frame += [P(In(y1, e) - 0.8, y1 + 1.5), P(In(y0, e) - 0.8, y0 - 1.5 if e else y0)]
-struts = [[P(B(y) - 1, y), P(In(y, 9) + 1, y), P(In(y + 6, 9) + 1, y + 6), P(B(y + 6) - 1, y + 6)] for y in (192,)]
-frame = body_frame + rail_frame
-layers = [{"name": "frame", "mat": "graphite", "z": [0, 3.0], "bevel": 0.7, "half": body_frame, "sym_poly": rail_frame},
-          {"name": "strut", "mat": "graphite", "z": [0, 3.4], "bevel": 0.5, "sym_poly": struts[0]}]
-
-layers.append({"name": "spear", "mat": "ivory", "z": [4.4, 6.6], "bevel": 0.5,
-               "half": [P(0, 1.5), P(2, 7.5), P(2.6, 18.6), P(6.2, 22.6), P(6.8, 36.6), P(10.2, 39.6), P(10.8, 50), P(0, 54)],
-               "cuts": [{"pts": [P(2.2, 20.4), P(5.8, 23.6)], "w": 0.55, "depth": 0.5, "sym": True},
-                        {"pts": [P(6.8, 38.4), P(10, 41.2)], "w": 0.55, "depth": 0.5, "sym": True}],
-               "tiers": [{"inset": 1.0, "dz": 0.5, "mat": "ivory"}]})
+def octa(cx, cy, rad):
+    return [P(cx + rad * math.cos(math.radians(22.5 + 45 * i)), cy + rad * math.sin(math.radians(22.5 + 45 * i)))
+            for i in range(8)]
 
 
-def chevron_plate(name, y0, y1, mat, v=6.0, tier_mat="ivory", cuts=None):
-    """Body segment: forward-pointing chevron top and bottom edges, sides follow the body edge."""
-    half = [P(0, y0), P(B(y0 + v), y0 + v), P(B(y1 + v), y1 + v), P(0, y1)]
-    L = {"name": name, "mat": mat, "z": [4.0, 6.2], "bevel": 0.6, "half": half,
-         "tiers": [{"inset": 1.8, "dz": 0.6, "mat": tier_mat}]}
+def shrink(poly, k):
+    cx = sum(p[0] for p in poly) / len(poly)
+    cy = sum(p[1] for p in poly) / len(poly)
+    return [P(x - (x - cx) / (math.hypot(x - cx, y - cy) or 1) * k, y - (y - cy) / (math.hypot(x - cx, y - cy) or 1) * k)
+            for x, y in poly]
+
+
+# ------------------------------------------------------------------ the barb (right rail) geometry
+A, B, RW = (24.0, 92.0), (68.0, 206.0), 16.0           # rail centre line start/end, rail width
+LEN = math.hypot(B[0] - A[0], B[1] - A[1])
+D = ((B[0] - A[0]) / LEN, (B[1] - A[1]) / LEN)          # along the rail (aft-outward)
+N = (D[1], -D[0])                                       # outward normal (+x, -y)
+
+
+def C(t, s=0.0):
+    """Point on the rail: t along (0 root .. 1 tip), s across (+ outward, - inward), in px."""
+    return (A[0] + (B[0] - A[0]) * t + N[0] * s, A[1] + (B[1] - A[1]) * t + N[1] * s)
+
+
+def CP(t, s=0.0):
+    return P(*C(t, s))
+
+
+def seg(t0, t1, s_in, s_out, c=1.6):
+    """Rail segment quad with chamfered outer corners."""
+    dt = c / LEN
+    return [CP(t0, s_in), CP(t0, s_out - c), CP(t0 + dt, s_out), CP(t1 - dt, s_out), CP(t1, s_out - c), CP(t1, s_in)]
+
+
+layers = []
+FZ, PL, RL = [0, 3.0], [4.0, 6.2], [5.2, 7.6]
+
+
+def frame(name, **shape):
+    layers.append(dict({"name": name, "mat": "graphite", "z": FZ, "bevel": 0.6}, **shape))
+
+
+def plate(name, mat, z, tier=None, cuts=None, bevel=0.6, **shape):
+    L = dict({"name": name, "mat": mat, "z": z, "bevel": bevel}, **shape)
     if cuts:
-        L["tiers"][0]["cuts"] = cuts
-    return L
-
-
-layers.append({"name": "prow", "mat": "ivory", "z": [4.0, 6.2], "bevel": 0.6,
-               "half": [P(0, 52), P(11.6, 53), P(B(56), 56), P(B(76), 76), P(0, 70)],
-               "tiers": [{"inset": 1.4, "dz": 0.5, "mat": "ivory"}]})
-layers.append(chevron_plate("deck", 72.5, 82, "slate", tier_mat="ivory2"))
-layers.append(chevron_plate("body1", 84.5, 138, "ivory",
-                            cuts=[{"pts": [P(-20, 102), P(0, 97), P(20, 102)], "w": 0.55, "depth": 0.5},
-                                  {"pts": [P(-20, 124), P(0, 119), P(20, 124)], "w": 0.55, "depth": 0.5},
-                                  {"pts": [P(7.5, 90), P(7.5, 133)], "w": 0.5, "depth": 0.45, "sym": True}]))
-layers.append(chevron_plate("body2", 140.5, 198, "ivory",
-                            cuts=[{"pts": [P(-24, 158), P(0, 153), P(24, 158)], "w": 0.55, "depth": 0.5},
-                                  {"pts": [P(-24, 192), P(0, 187), P(24, 192)], "w": 0.55, "depth": 0.5},
-                                  {"pts": [P(7.5, 146), P(7.5, 194)], "w": 0.5, "depth": 0.45, "sym": True}]))
-layers.append(chevron_plate("body3", 200.5, 236, "ivory", tier_mat="slate"))
-layers.append({"name": "spine", "mat": "slate", "z": [7.2, 8.6], "bevel": 0.6,
-               "half": [P(0, 86), P(5.4, 90), P(6, 196), P(3.4, 202), P(0, 203)],
-               "tiers": [{"inset": 0.9, "dz": 0.45, "mat": "ivory2"}]})
-layers.append({"name": "aft", "mat": "slate", "z": [3.8, 5.8], "bevel": 0.6,
-               "half": [P(0, 236.5), P(B(234) + 0.4, 234.5), P(In(240, 9) + 0.2, 240), P(In(245, 9) - 1.4, 248), P(34, 250.4), P(29.6, 258.4), P(23, 264.4), P(0, 266)],
-               "tiers": [{"inset": 1.3, "dz": 0.45, "mat": "ivory2"}]})
-
-# rails: 4 segments, each a separate plate; front one ends in the diagonal-cut prong
-for k, (y0, y1, e) in enumerate(STEP):
-    a, b = y0 + 1.2, y1 - 1.2
-    if k == 0:
-        poly = [P(In(31, e) + 0.6, 31.5), P(I(30) + 7, 21.6), P(O(30, 0) - 0.6, 28), P(O(b, e) - 0.6, b), P(In(b, e) + 0.6, b)]
-    elif k == 3:
-        poly = [P(In(a, e) + 0.6, a), P(O(a, e) - 0.6, a), P(O(250, e) - 0.6, 250), P(O(258, e) - 1.4, 260.4), P(In(258, e) + 2.4, 262), P(In(252, e) + 0.6, 254)]
-    else:
-        poly = [P(In(a, e) + 0.6, a), P(O(a, e) - 0.6, a), P(O(b, e) - 0.6, b), P(In(b, e) + 0.6, b)]
-    L = {"name": "rail%d" % (k + 1), "mat": "ivory", "z": [4.0, 6.2], "bevel": 0.6, "sym_poly": poly,
-         "tiers": [{"inset": 1.4, "dz": 0.6, "mat": "slate" if k == 0 else "ivory"}]}
-    if k in (1, 2):   # accelerator line down the rail centre
-        c0, c1 = a + 3, b - 3
-        L["tiers"][0]["cuts"] = [{"pts": [P(In(c0, e) + RW / 2, c0), P(In(c1, e) + RW / 2, c1)],
-                                  "w": 1.5, "depth": 2.0, "glow": True, "sym": True}]
-    if k == 0:        # prong leading-edge emitter
-        L["cuts"] = [{"pts": [P(I(33) + 1.8, 31.8), P(I(30) + 7, 24.6), P(O(30, 0) - 2.2, 29.6)],
-                      "w": 1.1, "depth": 1.4, "glow": True, "sym": True}]
+        L["cuts"] = cuts
+    if tier:
+        L["tiers"] = [tier]
     layers.append(L)
 
-rc = lambda y, e: r(In(y, e) + RW / 2)      # rail centre line
+
+H = 280
+BODY = [P(0, 0), P(1.8, 8), P(2.6, 20), P(5, 24), P(5.6, 38), P(8.4, 42), P(9, 56), P(12.6, 60), P(16, 72),
+        P(20.5, 84), P(24, 92), P(27, 100), P(27.5, 192), P(24, 202), P(24, 214), P(29, 222), P(31, 252), P(25, 264),
+        P(14.5, 268), P(10.5, 278), P(0, 278)]
+TF = 0.66                                    # the barb is attached up to here; free beyond (arrowhead notch)
+WEB = [P(26, 99), CP(0.04, -RW / 2 + 0.5), CP(TF, -RW / 2 + 0.5), P(26.6, 176)]
+RAIL = [CP(0, -RW / 2), CP(0, RW / 2 - 2), CP(0.02, RW / 2), CP(0.36, RW / 2), CP(0.37, RW / 2 + 2.2),
+        CP(0.70, RW / 2 + 2.2), CP(0.71, RW / 2 + 4), CP(0.95, RW / 2 + 4), CP(1.0, RW / 2 - 4), CP(0.99, -RW / 2)]
+BL1 = C(0.30, RW / 2 + 6.5) + (7.4,)
+BL2 = C(0.62, RW / 2 + 8.4) + (6.4,)
+POD = [P(29, 224), P(36, 222), P(41, 230), P(42, 252), P(36.5, 260), P(30.5, 258)]
+
+# ------------------------------------------------------------------ silhouette
+frame("f_body", half=BODY)
+frame("f_web", sym_poly=WEB)
+frame("f_rail", sym_poly=RAIL)
+frame("f_blister1", sym_poly=octa(*BL1))
+frame("f_blister2", sym_poly=octa(*BL2))
+frame("f_pod", sym_poly=POD)
+frame("f_tipthruster", sym_poly=[CP(0.93, -RW / 2 + 1), CP(0.93, RW / 2 - 6), CP(1.04, RW / 2 - 6), CP(1.04, -RW / 2 + 1)])
+frame("f_vane", sym_poly=[P(12.4, 62), P(17.5, 60), P(20, 64), P(16.4, 70)])         # small forward canards
+
+# ------------------------------------------------------------------ plates
+plate("spear", "ivory", [4.4, 6.6], bevel=0.5,
+      half=[P(0, 1.5), P(1.4, 8.4), P(2.1, 20.4), P(4.4, 24.6), P(5, 38.4), P(7.6, 42.6), P(8.2, 55.6), P(0, 58)],
+      cuts=[{"pts": [P(2.0, 22.4), P(4.4, 25.4)], "w": 0.5, "depth": 0.45, "sym": True},
+            {"pts": [P(5.2, 40.4), P(7.6, 43.4)], "w": 0.5, "depth": 0.45, "sym": True}],
+      tier={"inset": 0.9, "dz": 0.5, "mat": "ivory"})
+plate("canard", "ivory2", [3.8, 5.8], sym_poly=shrink([P(12.4, 62), P(17.5, 60), P(20, 64), P(16.4, 70)], 0.7))
+plate("head_a", "ivory", PL, half=[P(0, 56.6), P(11.6, 60.6), P(15, 72), P(19, 82.6), P(0, 76)],
+      tier={"inset": 1.4, "dz": 0.6, "mat": "ivory"})
+plate("head_b", "slate", PL, half=[P(0, 78), P(19.6, 84.6), P(22.8, 92), P(0, 88)],
+      tier={"inset": 1.2, "dz": 0.5, "mat": "ivory2"})
+plate("body1", "ivory", PL, half=[P(0, 90.4), P(22.6, 94), P(25.6, 100.6), P(25.8, 146), P(0, 142)],
+      tier={"inset": 1.6, "dz": 0.6, "mat": "ivory",
+            "cuts": [{"pts": [P(-20, 122), P(0, 118), P(20, 122)], "w": 0.55, "depth": 0.5}]})
+plate("body2", "ivory", PL, half=[P(0, 145), P(25.8, 149), P(26, 190), P(22.8, 199), P(0, 196)],
+      tier={"inset": 1.6, "dz": 0.6, "mat": "ivory",
+            "cuts": [{"pts": [P(-20, 172), P(0, 168), P(20, 172)], "w": 0.55, "depth": 0.5}]})
+plate("spine", "slate", [6.8, 8.4], half=[P(0, 92), P(4.6, 95), P(5, 192), P(3, 197), P(0, 198)],
+      tier={"inset": 0.8, "dz": 0.45, "mat": "ivory2"})
+plate("web", "ivory2", PL, sym_poly=shrink(WEB, 1.4), tier={"inset": 1.3, "dz": 0.5, "mat": "slate"})
+# barb: three raised segments stepping outward + a gunmetal tip
+for k, (t0, t1, so) in enumerate(((0.0, 0.355, RW / 2), (0.375, 0.69, RW / 2 + 2.2), (0.71, 0.92, RW / 2 + 4))):
+    tier = {"inset": 1.3, "dz": 0.6, "mat": "ivory"}
+    tier["cuts"] = [{"pts": [CP(t0 + 0.03, 0.6), CP(t1 - 0.03, 0.6)], "w": 1.6, "depth": 2.2, "glow": True, "sym": True}]
+    plate("rail%d" % k, "ivory", RL, sym_poly=seg(t0 + 0.004, t1, -RW / 2 + 1.2, so - 1.2), tier=tier)
+plate("rail_tip", "slate", RL, sym_poly=[CP(0.935, -RW / 2 + 1.2), CP(0.935, RW / 2 + 2.6), CP(0.975, RW / 2 - 1),
+                                        CP(0.985, -RW / 2 + 1.2)], tier={"inset": 1.0, "dz": 0.4, "mat": "ivory2"})
+for k, t in enumerate((0.365, 0.70)):                   # gunmetal clamps between barb segments
+    plate("clamp%d" % k, "slate", [6.4, 8.6], bevel=0.4,
+          sym_poly=[CP(t - 0.014, -RW / 2 - 1), CP(t - 0.014, RW / 2 + 3), CP(t + 0.014, RW / 2 + 3), CP(t + 0.014, -RW / 2 - 1)])
+plate("blister1", "ivory2", [5.2, 7.4], sym_poly=shrink(octa(*BL1), 1.0), tier={"inset": 1.4, "dz": 0.5, "mat": "slate"})
+plate("blister2", "ivory2", [5.2, 7.4], sym_poly=shrink(octa(*BL2), 1.0), tier={"inset": 1.3, "dz": 0.5, "mat": "slate"})
+plate("aft", "ivory", PL, half=[P(0, 199.6), P(22.6, 202.6), P(22.6, 214.6), P(27.6, 222.6), P(29.2, 240), P(0, 240)],
+      tier={"inset": 1.6, "dz": 0.6, "mat": "ivory",
+            "cuts": [{"pts": [P(-20, 226), P(0, 222), P(20, 226)], "w": 0.55, "depth": 0.5}]})
+plate("aft_b", "slate", PL, half=[P(0, 242.4), P(29.4, 242.4), P(29.6, 251), P(24, 262), P(14, 265.6), P(10, 275),
+                                 P(0, 275)],
+      tier={"inset": 1.3, "dz": 0.45, "mat": "ivory2"})
+plate("pod", "ivory", [4.4, 6.6], sym_poly=shrink(POD, 1.2), tier={"inset": 1.3, "dz": 0.5, "mat": "ivory"})
+
+FRAMES = [L["name"] for L in layers if L["name"].startswith("f_")]
 details = [
     {"type": "node", "pos": [0, 150], "r": 3.0, "shape": "diamond"},
-    {"type": "cell", "pos": [0, 61], "size": [5, 5], "n": 2, "v": 1.0},
-    {"type": "conduit", "pos": [0, 0], "pts": [[0, 8], [0, 48]], "w": 1.1},
-    {"type": "conduit", "pos": [0, 0], "pts": [P(6, 142), P(B(142) - 6, 142), P(B(142) - 2, 138), P(rc(138, 6) - 1.5, 138)], "w": 1.3, "sym": True},
-    {"type": "conduit", "pos": [0, 0], "pts": [P(rc(195, 9) - 2, 195), P(B(195) + 1, 195), P(B(195) - 6, 195)], "w": 1.1, "sym": True},
-    {"type": "node", "pos": P(rc(68, 3), 68.4), "r": 2.2, "sym": True},
-    {"type": "node", "pos": P(rc(117, 3), 117), "r": 2.2, "sym": True},
-    {"type": "node", "pos": P(rc(138, 6), 138), "r": 2.4, "sym": True},
-    {"type": "node", "pos": P(rc(176, 6), 176), "r": 2.2, "sym": True},
-    {"type": "node", "pos": P(rc(195, 9), 195), "r": 2.2, "sym": True},
-    {"type": "node", "pos": P(rc(232, 9), 232), "r": 2.2, "sym": True},
-    {"type": "vent", "pos": [31, 240], "w": 5, "n": 5, "step": 1.2, "sym": True},
-    {"type": "vent", "pos": [26, 104], "w": 3.6, "n": 4, "step": 1.1, "sym": True},
-    {"type": "vent", "pos": [28, 162], "w": 3.6, "n": 4, "step": 1.1, "sym": True},
-    {"type": "cell", "pos": [13, 172], "size": [7, 22], "n": 5, "v": 1.5, "sym": True},
-    {"type": "cell", "pos": [12, 112], "size": [6.4, 14], "n": 4, "v": 1.4, "sym": True},
-    {"type": "conduit", "pos": [0, 0], "pts": [P(13, 184), P(13, 224), P(20, 231), P(20, 240)], "w": 1.1, "sym": True},
-    {"type": "vent", "pos": [0, 214], "w": 7, "n": 6, "step": 1.3},
-    {"type": "vent", "pos": [26, 206], "w": 4, "n": 5, "step": 1.2, "sym": True},
-    {"type": "block", "pos": [22, 96], "size": [3, 7], "h": 0.5, "mat": "steel", "sym": True},
-    {"type": "block", "pos": [8, 226], "size": [3, 7], "h": 0.4, "mat": "steel", "sym": True},
-    {"type": "hatch", "pos": [27, 160], "r": 2.0, "sym": True},
-    {"type": "mark", "pos": [0, 0], "pts": [P(18, 128), P(23, 124)], "w": 0.7, "sym": True},
-    {"type": "mark", "pos": [0, 0], "pts": [P(18, 131), P(24.4, 126)], "w": 0.7, "sym": True},
-    {"type": "light", "pos": P(I(30) + 7, 23.4), "r": 0.7, "sym": True},
+    {"type": "cell", "pos": [0, 66], "size": [4.6, 4.6], "n": 2, "v": 1.0},
+    {"type": "conduit", "pos": [0, 0], "pts": [[0, 9], [0, 54]], "w": 1.1},
+    # core feeds both barbs through the web
+    {"type": "conduit", "pos": [0, 0], "pts": [P(5, 150), P(26, 150), CP(0.52, -2.4)], "w": 1.3, "sym": True},
+    {"type": "node", "pos": CP(0.52, 0.6), "r": 2.4, "sym": True},
+    {"type": "node", "pos": CP(0.20, 0.6), "r": 2.2, "sym": True},
+    {"type": "node", "pos": CP(0.82, 0.6), "r": 2.2, "sym": True},
+    {"type": "cell", "pos": [12, 124], "size": [6.4, 16], "n": 4, "v": 1.4, "sym": True},
+    {"type": "cell", "pos": [12, 176], "size": [6.6, 18], "n": 4, "v": 1.5, "sym": True},
+    {"type": "cell", "pos": P(33, 132), "size": [5.6, 12], "n": 3, "v": 1.3, "sym": True},
+    {"type": "conduit", "pos": [0, 0], "pts": [P(12, 186.6), P(12, 232), P(17, 237), P(17, 244)], "w": 1.1, "sym": True},
+    {"type": "conduit", "pos": [0, 0], "pts": [P(24, 104), P(16, 104), P(16, 112)], "w": 1.0, "sym": True},
+    {"type": "vent", "pos": [0, 100], "w": 8, "n": 4, "step": 1.3},
+    {"type": "vent", "pos": [19, 216], "w": 4, "n": 6, "step": 1.2, "sym": True},
+    {"type": "vent", "pos": [0, 244], "w": 10, "n": 6, "step": 1.3},
+    {"type": "block", "pos": [14, 80], "size": [2.6, 5], "h": 0.5, "mat": "steel", "sym": True},
+    {"type": "block", "pos": [8, 230], "size": [3, 7], "h": 0.4, "mat": "steel", "sym": True},
+    {"type": "hatch", "pos": P(31, 156), "r": 1.8, "sym": True},
+    {"type": "light", "pos": CP(0.99, 2), "r": 0.6, "sym": True},
+    {"type": "light", "pos": P(18.6, 61), "r": 0.5, "sym": True},
+    {"type": "mark", "pos": [0, 0], "pts": [P(8.4, 96), P(8.4, 102)], "w": 0.7, "sym": True},
+    {"type": "mark", "pos": [0, 0], "pts": [P(10.2, 96), P(10.2, 102)], "w": 0.7, "sym": True},
 ]
 slots = [
-    {"id": "WS0001", "pos": P(rc(46, 0), 46), "size": "LARGE", "type": "ENERGY", "mount": "HARDPOINT", "angle": 0, "arc": 10, "sym": True},
-    {"id": "WS0003", "pos": [0, 64], "size": "MEDIUM", "type": "HYBRID", "mount": "TURRET", "angle": 0, "arc": 270},
-    {"id": "WS0004", "pos": [17, 130], "size": "MEDIUM", "type": "ENERGY", "mount": "TURRET", "angle": 20, "arc": 240, "sym": True},
-    {"id": "WS0006", "pos": [24, 222], "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 90, "arc": 200, "sym": True},
-    {"id": "WS0008", "pos": P(rc(214, 9), 214), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 60, "arc": 220, "sym": True},
-    {"id": "WS0010", "pos": [12, 251], "size": "SMALL", "type": "MISSILE", "mount": "TURRET", "angle": 150, "arc": 180, "sym": True},
+    {"id": "WS0001", "pos": CP(0.07, 0.4), "size": "LARGE", "type": "ENERGY", "mount": "HARDPOINT", "angle": 0, "arc": 10, "sym": True},
+    {"id": "WS0003", "pos": [0, 80], "size": "MEDIUM", "type": "HYBRID", "mount": "TURRET", "angle": 0, "arc": 270},
+    {"id": "WS0004", "pos": P(*BL1[:2]), "size": "MEDIUM", "type": "ENERGY", "mount": "TURRET", "angle": 45, "arc": 240, "sym": True},
+    {"id": "WS0006", "pos": P(*BL2[:2]), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 90, "arc": 220, "sym": True},
+    {"id": "WS0008", "pos": P(16, 160), "size": "SMALL", "type": "ENERGY", "mount": "TURRET", "angle": 60, "arc": 240, "sym": True},
+    {"id": "WS0010", "pos": P(35.4, 240), "size": "SMALL", "type": "MISSILE", "mount": "TURRET", "angle": 150, "arc": 180, "sym": True},
 ]
-engines = [{"pos": [0, 266], "width": 12}, {"pos": [22, 262], "width": 7, "sym": True},
-           {"pos": P(rc(258, 9), 262), "width": 6, "length": 22, "sym": True}]
-W = int(2 * (max(p[0] for p in frame) + 2) + 1) // 2 * 2
-H = 270
-spec = {"id": "rsl_cadence", "name": "Cadence", "hullSize": "CRUISER", "size": [W, 270], "layers": layers,
-        "greebles": {"layers": ["frame"], "z0": 3.0, "zmax": 3.9, "density": 1.0, "seed": 31},
-        "surface_detail": {"layers": ["prow", "deck", "body1", "body2"], "density": 0.08, "seed": 19},
-        "details": details, "slots": slots, "engines": engines, "ship": {"builtInMods": []}}
+engines = [{"pos": [0, 276], "width": 10}, {"pos": [17.5, 266], "width": 7, "sym": True},
+           {"pos": P(35, 259), "width": 6, "length": 22, "sym": True},
+           {"pos": CP(1.03, -2.4), "width": 4, "length": 14, "sym": True}]
+# livery: dark-blue splinter chevrons angled with the barbs (they read as the arrowhead's fletching), a dark-blue
+# gradient deepening towards the barb tips, gunmetal needle tip. No yellow (user, 2026-10-11).
+ang = math.degrees(math.atan2(N[1], N[0])) + 180
+livery = [
+    {"type": "splinter", "color": "navy", "colors": [None, "navy"], "alpha": 0.6, "angle": 62, "period": 22,
+     "poly": BODY[:1] + [P(30, 0)] + [P(30, 278)] + [P(0, 278)]},
+    {"type": "gradient", "color": "navy", "poly": RAIL, "a": list(C(0.3)), "b": list(C(1.0)), "a0": 0.0, "a1": 0.9},
+    {"type": "poly", "color": "gunmetal", "sym": False, "poly": [P(-2.6, 0), P(2.6, 0), P(2.6, 12), P(-2.6, 12)]},
+]
+for part in (layers, details, slots, engines, livery):
+    walk(part, SCALE)
+W = 2 * int(max(p[0] for L in layers for p in (L.get("half") or L.get("sym_poly"))) + 3)
+H = int(math.ceil(H * SCALE))
+spec = {"id": "rsl_cadence", "name": "Cadence", "hullSize": "CRUISER", "size": [W, H], "layers": layers,
+        "greebles": {"layers": FRAMES, "z0": 3.0, "zmax": 3.9, "density": 1.0, "seed": 31},
+        "surface_detail": {"layers": ["head_a", "body1", "body2", "aft"], "density": 0.06, "seed": 19},
+        "details": details, "slots": slots, "engines": engines, "livery": livery, "ship": {"builtInMods": []}}
 json.dump(spec, open(sys.argv[1], "w", newline="\n"), indent=1)
-print("W", W, "max x", max(p[0] for p in frame))
+print("W", W, "rail length", round(LEN, 1), "barb tip", CP(1.0, RW / 2))

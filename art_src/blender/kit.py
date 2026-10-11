@@ -12,10 +12,12 @@ import bpy
 from mathutils import Vector
 
 # ------------------------------------------------------------------ palette (linear-ish albedo picked by eye)
+# Material names are legacy: "ivory" = bright stainless plate, "ivory2" = brushed mid steel, "slate" = gunmetal.
+# (User direction 2026-10-11: clean stainless steel with yellow features instead of ivory; colour comes from liveries.)
 PALETTE = {
-    "ivory": (0.70, 0.67, 0.60),
-    "ivory2": (0.58, 0.57, 0.54),
-    "slate": (0.20, 0.21, 0.23),
+    "ivory": (0.60, 0.625, 0.66),
+    "ivory2": (0.44, 0.46, 0.49),
+    "slate": (0.15, 0.16, 0.18),
     "graphite": (0.040, 0.043, 0.050),
     "steel": (0.16, 0.165, 0.175),
     "accent": (0.05, 0.11, 0.24),       # ink-blue markings
@@ -46,9 +48,9 @@ def material(name):
     nt = m.node_tree
     bsdf = nt.nodes["Principled BSDF"]
     col = PALETTE[name]
-    rough = {"ivory": 0.42, "ivory2": 0.5, "slate": 0.5, "graphite": 0.65, "steel": 0.45, "accent": 0.5}.get(name, 0.5)
+    rough = {"ivory": 0.34, "ivory2": 0.42, "slate": 0.5, "graphite": 0.65, "steel": 0.45, "accent": 0.5}.get(name, 0.5)
     bsdf.inputs["Roughness"].default_value = rough
-    bsdf.inputs["Metallic"].default_value = 0.6 if name == "steel" else 0.0
+    bsdf.inputs["Metallic"].default_value = {"steel": 0.6, "ivory": 0.25, "ivory2": 0.3}.get(name, 0.0)
     if name in EMISSIVE:
         bsdf.inputs["Base Color"].default_value = (*[c * 0.4 for c in col], 1)
         bsdf.inputs["Emission Color"].default_value = (*col, 1)
@@ -59,16 +61,20 @@ def material(name):
         noise = nt.nodes.new("ShaderNodeTexNoise")
         noise.inputs["Scale"].default_value = 0.12 if name.startswith("ivory") else 0.6
         noise.inputs["Detail"].default_value = 4.0
+        # brushed steel: stretch the noise along the hull axis (fine streaks along Blender Y)
+        brush = nt.nodes.new("ShaderNodeMapping")
+        brush.inputs["Scale"].default_value = (6.0, 0.25, 6.0) if name.startswith("ivory") else (1, 1, 1)
         info = nt.nodes.new("ShaderNodeObjectInfo")
         mix = nt.nodes.new("ShaderNodeMath")
         mix.operation = "MULTIPLY_ADD"
-        mix.inputs[1].default_value = 0.10 if name.startswith("ivory") else 0.5
-        nt.links.new(tc.outputs["Object"], noise.inputs["Vector"])
+        mix.inputs[1].default_value = 0.16 if name.startswith("ivory") else 0.5
+        nt.links.new(tc.outputs["Object"], brush.inputs["Vector"])
+        nt.links.new(brush.outputs["Vector"], noise.inputs["Vector"])
         nt.links.new(noise.outputs["Fac"], mix.inputs[0])
         rnd = nt.nodes.new("ShaderNodeMath")
         rnd.operation = "MULTIPLY_ADD"
         nt.links.new(info.outputs["Random"], rnd.inputs[0])
-        rnd.inputs[1].default_value = 0.08 if name.startswith("ivory") else 0.0
+        rnd.inputs[1].default_value = 0.16 if name.startswith("ivory") else 0.08
         rnd.inputs[2].default_value = 0.91 - (0.05 if name.startswith("ivory") else 0.25)
         nt.links.new(rnd.outputs[0], mix.inputs[2])
         rgb = nt.nodes.new("ShaderNodeRGB")
