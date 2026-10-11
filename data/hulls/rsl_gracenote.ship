@@ -1,0 +1,143 @@
+{
+  "bounds": [
+    61.0,
+    -1.0,
+    26.0,
+    -11.0,
+    22.0,
+    -15.0,
+    7.0,
+    -16.0,
+    -2.0,
+    -27.0,
+    -16.0,
+    -34.0,
+    -35.0,
+    -39.0,
+    -35.0,
+    -33.0,
+    -19.0,
+    -24.0,
+    -11.0,
+    -15.0,
+    -35.0,
+    -10.0,
+    -37.0,
+    -4.0,
+    -36.0,
+    9.0,
+    -11.0,
+    16.0,
+    -19.0,
+    24.0,
+    -34.0,
+    32.0,
+    -36.0,
+    38.0,
+    -31.0,
+    39.0,
+    -2.0,
+    27.0,
+    7.0,
+    16.0,
+    19.0,
+    16.0,
+    26.0,
+    11.0,
+    57.0,
+    3.0
+  ],
+  "builtInMods": [],
+  "center": [
+    40.0,
+    37.0
+  ],
+  "collisionRadius": 77,
+  "coversColor": "",
+  "engineSlots": [
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 24.0,
+      "location": [
+        -36.0,
+        0.0
+      ],
+      "style": "MIDLINE",
+      "width": 9.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 14.0,
+      "location": [
+        -35.0,
+        -36.5
+      ],
+      "style": "MIDLINE",
+      "width": 4.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 14.0,
+      "location": [
+        -35.0,
+        36.5
+      ],
+      "style": "MIDLINE",
+      "width": 4.0
+    }
+  ],
+  "height": 100,
+  "hullId": "rsl_gracenote",
+  "hullName": "Grace Note",
+  "hullSize": "FRIGATE",
+  "shieldCenter": [
+    12.0,
+    0
+  ],
+  "shieldRadius": 64,
+  "spriteName": "graphics/rsl/ships/rsl_gracenote.png",
+  "style": "MIDLINE",
+  "viewOffset": 0,
+  "weaponSlots": [
+    {
+      "angle": 0.0,
+      "arc": 10.0,
+      "id": "WS0001",
+      "locations": [
+        30.0,
+        -7.2
+      ],
+      "mount": "HARDPOINT",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -0.0,
+      "arc": 10.0,
+      "id": "WS0001R",
+      "locations": [
+        30.0,
+        7.2
+      ],
+      "mount": "HARDPOINT",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 300.0,
+      "id": "WS0003",
+      "locations": [
+        9.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "HYBRID"
+    }
+  ],
+  "width": 80
+}

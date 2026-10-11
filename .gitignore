@@ -7,3 +7,5 @@ __pycache__/
 *.iml
 .DS_Store
 Thumbs.db
+art_src/renders/
+art_src/**/__pycache__/
