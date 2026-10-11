@@ -99,14 +99,21 @@ def finish(spec, rdir, mod, params):
     t = (np.clip((np.linspace(0, 1, H, dtype=np.float32) - 0.55) / 0.45, 0, 1) * 0.6)[:, None, None]
     seam_col = SEAM_A * (1 - t) + SEAM_B * t
     base_seam = np.clip(emi_mask, 0, 1)[..., None] * params["seam_base"]
-    rgb = rgb * (1 - base_seam) + seam_col * base_seam
+    # hot core: strongly emissive pixels lift towards white so seams read at 1x
+    hot = np.clip(emi1 * 2.2 - 0.6, 0, 1)[..., None] * params["seam_hot"]
+    seam_px = seam_col * (1 - hot) + hot
+    rgb = rgb * (1 - base_seam) + seam_px * base_seam
+    # faint spill onto neighbouring plate pixels (1 px), so the seams separate from the ivory
+    spill = np.clip(hullgen.blur(emi_mask, 0.9) - emi_mask, 0, 1)[..., None] * params["seam_spill"] * (A[..., None] > 0.5)
+    rgb = rgb * (1 - spill) + seam_col * spill
     A = np.where(A < 0.02, 0, A)
     out = np.concatenate([rgb, A[..., None]], -1)
     sprite = hullgen.alpha_bleed(Image.fromarray((np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA"))
 
     # --- glow layer: seams only, gradient colour, alpha = emission
     ga = np.clip(emi_mask * 1.2, 0, 1)
-    glow = np.concatenate([np.broadcast_to(seam_col, (H, W, 3)) * 1.0, ga[..., None]], -1)
+    ga = np.maximum(ga, np.clip(hullgen.blur(ga, 1.4) * params["halo"], 0, 1))
+    glow = np.concatenate([np.broadcast_to(seam_col, (H, W, 3)) * (1 - hot * 0.5) + hot * 0.5, ga[..., None]], -1)
     glow_im = Image.fromarray((np.clip(glow, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA")
 
     # --- GraphicsLib maps (normal: R = +right, G = +down, B = +z)
@@ -158,7 +165,8 @@ def main():
     a = ap.parse_args()
     with open(a.spec, encoding="utf-8") as f:
         spec = json.load(f)
-    params = dict(ink=0.65, ink_step=0.45, ink_crease=0.25, crest=0.35, rim=0.62, seam_base=0.85)
+    params = dict(ink=0.65, ink_step=0.45, ink_crease=0.25, crest=0.35, rim=0.62, seam_base=0.95, seam_hot=0.45,
+                  seam_spill=0.35, halo=0.6)
     params.update(spec.get("finish", {}))
     finish(spec, os.path.join(a.renders, spec["id"]), a.mod, params)
 

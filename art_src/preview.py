@@ -42,21 +42,23 @@ def with_deco(sid, im, alt=False):
     if not os.path.exists(sp):
         return im
     spec = json.load(open(sp, encoding="utf-8"))
-    out = im.copy()
-    W = out.width
-    for s in spec.get("slots", []):
-        if not s.get("deco"):
-            continue
+    decos = [s for s in spec.get("slots", []) if s.get("deco")]
+    if not decos:
+        return im
+    # the game draws decorative weapons past the hull bounds: pad the canvas instead of cropping them
+    P = max(max(Image.open(os.path.join(MOD, "graphics/rsl/weapons/deco/%s.png" % s["deco"])).size) for s in decos)
+    out = Image.new("RGBA", (im.width + 2 * P, im.height + 2 * P))
+    out.paste(im, (P, P))
+    W = im.width
+    for s in decos:
         deco = Image.open(os.path.join(MOD, "graphics/rsl/weapons/deco/%s.png" % s["deco"])).convert("RGBA")
         ang = s.get("deco_alt_angle", s.get("angle", 0)) if alt else s.get("angle", 0)
         for sx in ([1, -1] if s.get("sym") else [1]):
             r = deco.rotate(ang * sx, resample=Image.BICUBIC, expand=True)
-            cx, cy = W / 2 + sx * s["pos"][0], s["pos"][1]
-            big = Image.new("RGBA", (out.width + 2 * r.width, out.height + 2 * r.height))
-            big.paste(out, (r.width, r.height))
-            big.alpha_composite(r, (int(round(cx - r.width / 2)) + r.width, int(round(cy - r.height / 2)) + r.height))
-            out = big.crop((r.width, r.height, r.width + out.width, r.height + out.height))
-    return out
+            cx, cy = P + W / 2 + sx * s["pos"][0], P + s["pos"][1]
+            out.alpha_composite(r, (int(round(cx - r.width / 2)), int(round(cy - r.height / 2))))
+    x0, y0, x1, y1 = out.getbbox()
+    return out.crop((min(x0, P), min(y0, P), max(x1, P + im.width), max(y1, P + im.height)))
 
 
 def main():

@@ -346,7 +346,7 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
     for _ in range(n):
         x, y = rng.uniform(0, x1), rng.uniform(y0, y1)
         kind = rng.random()
-        if kind < 0.45:  # box
+        if kind < 0.34:  # box
             w, h = rng.uniform(0.8, 3.2), rng.uniform(0.8, 4.0)
             if not inside(x, y, max(w, h) / 2 + 0.3):
                 continue
@@ -356,7 +356,7 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
                 cx = sx * x
                 prism(bm, ctx, [(cx - w / 2, y - h / 2), (cx + w / 2, y - h / 2), (cx + w / 2, y + h / 2),
                                 (cx - w / 2, y + h / 2)], z0, z0 + hz)
-        elif kind < 0.7:  # tank / cylinder end-on
+        elif kind < 0.5:  # tank / cylinder end-on
             r = rng.uniform(0.6, 1.8)
             if not inside(x, y, r + 0.3):
                 continue
@@ -365,7 +365,7 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
                 ret = bmesh.ops.create_cone(bm_s, cap_ends=True, segments=12, radius1=r, radius2=r * 0.85,
                                             depth=hz)
                 bmesh.ops.translate(bm_s, verts=ret["verts"], vec=ctx.v(sx * x, y, z0 + hz / 2))
-        elif kind < 0.85:  # pipe run along y
+        elif kind < 0.64:  # pipe run along y
             L = rng.uniform(4, 14)
             r = rng.uniform(0.35, 0.7)
             if not (inside(x, y - L / 2, r + 0.3) and inside(x, y + L / 2, r + 0.3)):
@@ -375,6 +375,31 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
                 bmesh.ops.rotate(bm_s, verts=ret["verts"], cent=Vector((0, 0, 0)),
                                  matrix=__import__("mathutils").Matrix.Rotation(math.pi / 2, 3, "X"))
                 bmesh.ops.translate(bm_s, verts=ret["verts"], vec=ctx.v(sx * x, y, z0 + min(hmax, r * 1.6)))
+        elif kind < 0.8:  # actuator: stacked cylinders, narrowing upwards
+            r = rng.uniform(0.9, 1.7)
+            if not inside(x, y, r + 0.3):
+                continue
+            for sx in (1, -1):
+                zz = z0
+                for k, f in enumerate((1.0, 0.72, 0.42)):
+                    hz = hmax * (0.45, 0.3, 0.25)[k]
+                    ret = bmesh.ops.create_cone(bm_s if k % 2 else bm_d, cap_ends=True, segments=12, radius1=r * f,
+                                                radius2=r * f, depth=hz)
+                    bmesh.ops.translate(bm_s if k % 2 else bm_d, verts=ret["verts"], vec=ctx.v(sx * x, y, zz + hz / 2))
+                    zz += hz
+        elif kind < 0.92:  # ribbed block
+            w, h = rng.uniform(2.0, 3.6), rng.uniform(2.4, 4.4)
+            if not inside(x, y, max(w, h) / 2 + 0.3):
+                continue
+            for sx in (1, -1):
+                cx = sx * x
+                prism(bm_d, ctx, [(cx - w / 2, y - h / 2), (cx + w / 2, y - h / 2), (cx + w / 2, y + h / 2),
+                                  (cx - w / 2, y + h / 2)], z0, z0 + 0.5 * hmax)
+                yy = y - h / 2 + 0.4
+                while yy < y + h / 2 - 0.5:
+                    prism(bm_s, ctx, [(cx - w / 2 + 0.2, yy), (cx + w / 2 - 0.2, yy), (cx + w / 2 - 0.2, yy + 0.45),
+                                      (cx - w / 2 + 0.2, yy + 0.45)], z0, z0 + 0.85 * hmax)
+                    yy += 0.95
         else:  # vent bank
             k = rng.randint(3, 6)
             w = rng.uniform(1.5, 3.5)
@@ -508,8 +533,66 @@ def details(ctx, items):
             ret = bmesh.ops.create_uvsphere(bm_for(it.get("mat", "steel")), u_segments=16, v_segments=8, radius=r)
             bmesh.ops.scale(bm_for(it.get("mat", "steel")), verts=ret["verts"], vec=Vector((1, 1, 0.45)))
             bmesh.ops.translate(bm_for(it.get("mat", "steel")), verts=ret["verts"], vec=Vector((c.x, c.y, z)))
+        elif t == "conduit":
+            # lattice conduit: dark channel with a glowing core, laid over whatever it crosses (max height on path)
+            pts = it["pts"]
+            z = path_top(ctx, pts)
+            w = it.get("w", 1.2)
+            prism(bm_for("nozzle"), ctx, offset_polyline(pts, w + 0.9), z - 0.3, z + 0.12)
+            prism(bm_for(it.get("mat", "seam")), ctx, offset_polyline(pts, w), z + 0.05, z + 0.22)
+        elif t == "node":
+            # conduit terminal: steel collar, dark ring, glowing core (diamond if shape == "diamond")
+            x, y = it["pos"]
+            c = ctx.v(x, y)
+            z = top_z(c.x, c.y)
+            r = it.get("r", 1.6)
+            disc(bm_for("steel"), c, r, z - 0.3, z + 0.3, seg=20)
+            disc(bm_for("nozzle"), c, r * 0.72, z + 0.3, z + 0.38, seg=20)
+            if it.get("shape") == "diamond":
+                k = r * 0.62
+                prism(bm_for("crystal"), ctx, [(x, y - k), (x + k * 0.75, y), (x, y + k), (x - k * 0.75, y)],
+                      z + 0.3, z + 0.6)
+            else:
+                disc(bm_for("crystal"), c, r * 0.48, z + 0.3, z + 0.6, seg=14)
+        elif t == "cell":
+            # resonator cell: dark recessed frame holding n glowing bars; v > 0 bends the bars into chevrons
+            x, y = it["pos"]
+            w, h = it["size"]
+            n = it.get("n", 4)
+            v = it.get("v", 0.0)
+            c = ctx.v(x, y)
+            z = max(top_z(ctx.v(x + dx, y + dy).x, ctx.v(x + dx, y + dy).y)
+                    for dx in (-w / 2, 0, w / 2) for dy in (-h / 2, 0, h / 2))
+            sl = it.get("slant", 0.0)  # x shift of the bottom edge (parallelogram cells)
+            frame = [(x - w / 2 - 0.5, y - h / 2 - 0.5), (x + w / 2 + 0.5, y - h / 2 - 0.5),
+                     (x + w / 2 + 0.5 + sl, y + h / 2 + 0.5), (x - w / 2 - 0.5 + sl, y + h / 2 + 0.5)]
+            prism(bm_for("steel"), ctx, frame, z - 0.3, z + 0.35)
+            inner = [(x - w / 2, y - h / 2), (x + w / 2, y - h / 2), (x + w / 2 + sl, y + h / 2),
+                     (x - w / 2 + sl, y + h / 2)]
+            prism(bm_for("nozzle"), ctx, inner, z + 0.3, z + 0.4)
+            pitch = h / n
+            bw = pitch * it.get("fill", 0.55)
+            for i in range(n):
+                yy = y - h / 2 + pitch * (i + 0.5)
+                f = (yy - (y - h / 2)) / h
+                ox = sl * f
+                xl, xr = x - w / 2 + 0.35 + ox, x + w / 2 - 0.35 + ox
+                bar = [(xl, yy + v), ((xl + xr) / 2, yy), (xr, yy + v)] if v else [(xl, yy), (xr, yy)]
+                prism(bm_for(it.get("mat", "seam")), ctx, offset_polyline(bar, bw), z + 0.35, z + 0.55)
     for mat, bm in bms.items():
         mesh_obj("detail_" + mat, bm, mat)
+
+
+def path_top(ctx, pts):
+    """Highest surface along a polyline (sampled every ~1 px)."""
+    best = 0.0
+    for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+        n = max(1, int(math.hypot(bx - ax, by - ay)))
+        for i in range(n + 1):
+            t = i / n
+            c = ctx.v(ax + (bx - ax) * t, ay + (by - ay) * t)
+            best = max(best, top_z(c.x, c.y))
+    return best
 
 
 def surface_details(ctx, region_polys, density, seed, mats=("rsl_ivory", "rsl_ivory2", "rsl_slate")):
