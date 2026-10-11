@@ -156,6 +156,23 @@ def finish(spec, rdir, mod, params):
     return sprite
 
 
+def mirror(spec, mod):
+    """Left/right deco pair: the game never flips weapon sprites, so build the mirrored part from the finished one
+    (pixel-exact; the normal map's x channel is inverted)."""
+    src, dst = spec["mirror_of"], spec["id"]
+    base = "graphics/rsl/weapons/deco/%s"
+    pairs = [(base + ".png", False), (base + "_glow.png", False), ("graphics/rsl/maps/%s_normal.png", True),
+             ("graphics/rsl/maps/%s_material.png", False), ("graphics/rsl/maps/%s_surface.png", False)]
+    for rel, is_normal in pairs:
+        im = Image.open(os.path.join(mod, rel % src)).convert("RGBA").transpose(Image.FLIP_LEFT_RIGHT)
+        if is_normal:
+            a = np.asarray(im).copy()
+            a[..., 0] = np.where(a[..., 3] > 0, 255 - a[..., 0], a[..., 0])
+            im = Image.fromarray(a, "RGBA")
+        im.save(os.path.join(mod, rel % dst))
+    print("mirrored %s -> %s" % (src, dst))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("spec")
@@ -165,6 +182,9 @@ def main():
     a = ap.parse_args()
     with open(a.spec, encoding="utf-8") as f:
         spec = json.load(f)
+    if spec.get("mirror_of"):
+        mirror(spec, a.mod)
+        return
     params = dict(ink=0.65, ink_step=0.45, ink_crease=0.25, crest=0.35, rim=0.62, seam_base=0.95, seam_hot=0.45,
                   seam_spill=0.35, halo=0.6)
     params.update(spec.get("finish", {}))

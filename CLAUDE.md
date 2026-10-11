@@ -11,9 +11,9 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
 ## Status (2026-10-11)
 
 - Stage 1 (proposal): done, approved.
-- Stage 2 (prototype sprites): **style test v2 done (user feedback applied), waiting on user review.**
-  Review sheet: `art_src/review/styletest_v2.png` (v1 kept for comparison).
-- After approval continue in order: Staccato → Cadence → Tremolo → Conductor → Halo → Cantor Array (station last).
+- Stage 2 (prototype sprites): **style test approved** (Grace Note v2 approved; Refrain v3 = final requested
+  iteration). Review sheet: `art_src/review/styletest_v3.png` (v1/v2 kept for comparison).
+- Next, continue in order: Staccato → Cadence → Tremolo → Conductor → Halo → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -23,6 +23,10 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
 1. Colours (ivory + graphite + slate + teal→violet) are right. Keep.
 2. Go busier, Diable Avionics density: exposed machinery bands, many small parts.
 3. Sharp / angular silhouettes (DA, UAF). No wide splayed "legs"; no rounded-rectangle heads. Chevron-layered plates.
+   v2 follow-up: a plain triangle bow is NOT angular enough. DA sharpness = split bows (stepped central spear +
+   forward mandibles with notches between), tips cut on one diagonal slant, chamfered-rectangle plates, segmented
+   armour with graphite gaps, notched/stepped edges. Moving parts (vanes etc.) are centerpieces: big, not leaf-like,
+   with their own prominent seams (edge rail conduit + cells).
 4. Seams are THE identifier: must be very noticeable, but NOT tree/branch shaped. Use the "lattice script" below.
 
 ### Lattice script (seam language, every hull)
@@ -33,12 +37,15 @@ risks). Read it before designing or drawing anything. Names are placeholders; lo
   flanking the spine; one small cell as a nose glyph.
 - **Leading-edge emitters**: glow cuts along prow/shoulder edges forming one big chevron (Refrain).
 
-### v2 state
-- Grace Note 68×116, mass 3,238 (frigate p10 2,838): sharp dart, chevron V-notched nose plate, tucked clipped-delta
-  fins, side pods with hardpoints.
-- Refrain 106×160, mass 9,934 (+ vanes): layered chevron prow + leading-edge shoulder blades, chevron spine top.
-  Vanes: faceted blades 20×132, folded angle -164 (swept outward), deployed 28 (tip lands at the bow).
-- Known weaknesses: aft ivory areas still flatter than DA; at 1x glow-on the cell pairs merge into one block.
+### Style-test state
+- Grace Note (v2, approved) 68×116, mass 3,238 (frigate p10 2,838): sharp dart, V-notched nose plate, tucked
+  clipped-delta fins, side pods with hardpoints.
+- Refrain (v3) 106×160, mass 10,118 + vanes: split bow (stepped spear with nose glyph, medium turret behind it,
+  two forward mandibles with seams), stepped shoulder seams, chevron spine top.
+  Vanes: `rsl_refrain_vane_r` (22×204, pivot at centre, blade ~100 px: parallel edges, slanted tip, notched teeth,
+  4 segmented plates, full-length edge-rail conduit, 3 chevron cells) and `rsl_refrain_vane_l` = pixel mirror.
+  Slots WS0009 (+x, angle -162, deployed 12) / WS0010 (-x, 162, deployed -12).
+- Known weaknesses: aft ivory areas flatter than DA; at 1x glow-on the cell pairs merge into one block.
 
 ## Theme / visual language (summary; details in DESIGN.md)
 - "The Choir": refugee research polity; ships grown around crystalline **lattice cores**; musical doctrine.
@@ -94,11 +101,15 @@ scripts folder.
 - Curve-converted meshes must be welded (`remove_doubles`) or EXACT booleans silently fail — done in `slab`.
 - A tier covers the grooves of the layer below: put glow cuts on the **topmost tier**, not the base layer.
 - Very thin plates + large tier inset → tier vanishes (and its seams with it). Fin seams go on the base layer.
-- Deco sprites rotate about their centre: pad so the pivot is at the image centre (vane = 20×132, blade in top half).
+- Deco sprites rotate about their centre: pad so the pivot is at the image centre (vane = 22×204, blade in top half).
 - Judge at 1x first. Check mass with `python <skill>/scripts/sprite_tools.py check <png> --kind ship --size CLASS`.
 - Plates covering everything = flat white blob; leave exposed machinery bands (vanilla high tech is ~56% metal).
 - Turret sockets on slate plates have low contrast; check they read.
 - Deco angle: smaller angle folds the vane INWARD over the hull; use negative (e.g. -164) to sweep outward.
+- The game never flips weapon/deco sprites for the mirrored side. Asymmetric parts need an L/R pair: author the R
+  spec, make the L spec `{"id", "kind": "deco", "mirror_of": "<R id>"}`; art.sh/finish.py flip the finished
+  PNGs (normal map x inverted) instead of re-rendering. Use two non-sym slots with explicit ±angles.
+- Greebles assume a symmetric region (they mirror); fine on asymmetric parts but never render L and R separately.
 - preview.py pads the canvas for decos (the game draws them past hull bounds); v1's "cut off" was a preview crop.
 - finish params `seam_hot`, `seam_spill`, `halo` (glow layer bloom, 0.6; 1.3 blobs the cells).
 
