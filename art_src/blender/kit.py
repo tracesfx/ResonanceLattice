@@ -149,6 +149,8 @@ def link(obj, coll=None):
 
 
 def mesh_obj(name, bm, mat):
+    if bm.faces:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
     bm.free()
@@ -362,19 +364,16 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
                 continue
             hz = rng.uniform(0.4, 1.0) * hmax
             for sx in (1, -1):
-                ret = bmesh.ops.create_cone(bm_s, cap_ends=True, segments=12, radius1=r, radius2=r * 0.85,
-                                            depth=hz)
-                bmesh.ops.translate(bm_s, verts=ret["verts"], vec=ctx.v(sx * x, y, z0 + hz / 2))
+                c = ctx.v(sx * x, y)
+                cyl(bm_s, c.x, c.y, r, r * 0.85, z0, z0 + hz, 12)
         elif kind < 0.64:  # pipe run along y
             L = rng.uniform(4, 14)
             r = rng.uniform(0.35, 0.7)
             if not (inside(x, y - L / 2, r + 0.3) and inside(x, y + L / 2, r + 0.3)):
                 continue
             for sx in (1, -1):
-                ret = bmesh.ops.create_cone(bm_s, cap_ends=True, segments=8, radius1=r, radius2=r, depth=L)
-                bmesh.ops.rotate(bm_s, verts=ret["verts"], cent=Vector((0, 0, 0)),
-                                 matrix=__import__("mathutils").Matrix.Rotation(math.pi / 2, 3, "X"))
-                bmesh.ops.translate(bm_s, verts=ret["verts"], vec=ctx.v(sx * x, y, z0 + min(hmax, r * 1.6)))
+                a, b = ctx.v(sx * x, y - L / 2), ctx.v(sx * x, y + L / 2)
+                pipe_y(bm_s, a.x, a.y, b.y, r, z0 + min(hmax, r * 1.6), 8)
         elif kind < 0.8:  # actuator: stacked cylinders, narrowing upwards
             r = rng.uniform(0.9, 1.7)
             if not inside(x, y, r + 0.3):
@@ -383,9 +382,8 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
                 zz = z0
                 for k, f in enumerate((1.0, 0.72, 0.42)):
                     hz = hmax * (0.45, 0.3, 0.25)[k]
-                    ret = bmesh.ops.create_cone(bm_s if k % 2 else bm_d, cap_ends=True, segments=12, radius1=r * f,
-                                                radius2=r * f, depth=hz)
-                    bmesh.ops.translate(bm_s if k % 2 else bm_d, verts=ret["verts"], vec=ctx.v(sx * x, y, zz + hz / 2))
+                    c = ctx.v(sx * x, y)
+                    cyl(bm_s if k % 2 else bm_d, c.x, c.y, r * f, r * f, zz, zz + hz, 12)
                     zz += hz
         elif kind < 0.92:  # ribbed block
             w, h = rng.uniform(2.0, 3.6), rng.uniform(2.4, 4.4)
@@ -416,16 +414,34 @@ def greebles(ctx, region_polys, z0, zmax, density, seed, exclude=()):
 
 
 # ------------------------------------------------------------------ details placed on the surface
-def ring(bm, c, r_out, r_in, z0, z1, seg=24):
-    ret = bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r_out, radius2=r_out, depth=z1 - z0)
-    bmesh.ops.translate(bm, verts=ret["verts"], vec=Vector((c.x, c.y, (z0 + z1) / 2)))
-    ret = bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r_in, radius2=r_in, depth=z1 - z0 + 0.2)
-    return ret
+# Primitives are built vertex by vertex: bmesh.ops calls scan the whole mesh each time, which made greebling a
+# cruiser (thousands of parts in one bmesh) quadratic and take tens of minutes.
+def cyl(bm, cx, cy, r1, r2, z0, z1, seg=12):
+    """Capped (tapered) cylinder, Blender coordinates; r1 at z0, r2 at z1."""
+    ang = [2 * math.pi * i / seg for i in range(seg)]
+    bot = [bm.verts.new((cx + r1 * math.cos(a), cy + r1 * math.sin(a), z0)) for a in ang]
+    top = [bm.verts.new((cx + r2 * math.cos(a), cy + r2 * math.sin(a), z1)) for a in ang]
+    bm.faces.new(list(reversed(bot)))
+    bm.faces.new(top)
+    for i in range(seg):
+        j = (i + 1) % seg
+        bm.faces.new((bot[i], bot[j], top[j], top[i]))
+
+
+def pipe_y(bm, cx, y0, y1, r, zc, seg=8):
+    """Capped pipe lying along Blender Y, axis at height zc."""
+    ang = [2 * math.pi * i / seg for i in range(seg)]
+    a = [bm.verts.new((cx + r * math.cos(t), y0, zc + r * math.sin(t))) for t in ang]
+    b = [bm.verts.new((cx + r * math.cos(t), y1, zc + r * math.sin(t))) for t in ang]
+    bm.faces.new(a)
+    bm.faces.new(list(reversed(b)))
+    for i in range(seg):
+        j = (i + 1) % seg
+        bm.faces.new((a[i], b[i], b[j], a[j]))
 
 
 def disc(bm, c, r, z0, z1, seg=20):
-    ret = bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=r, radius2=r, depth=z1 - z0)
-    bmesh.ops.translate(bm, verts=ret["verts"], vec=Vector((c.x, c.y, (z0 + z1) / 2)))
+    cyl(bm, c.x, c.y, r, r, z0, z1, seg)
 
 
 SOCKET_R = {"SMALL": 5.0, "MEDIUM": 8.0, "LARGE": 12.0}
@@ -522,9 +538,8 @@ def details(ctx, items):
             c = ctx.v(x, y)
             z = top_z(c.x, c.y)
             r = it.get("r", 2.0)
-            ret = bmesh.ops.create_cone(bm_for("crystal"), cap_ends=True, segments=6, radius1=r, radius2=r * 0.55,
-                                        depth=it.get("h", 1.2))
-            bmesh.ops.translate(bm_for("crystal"), verts=ret["verts"], vec=Vector((c.x, c.y, z + 0.3)))
+            hh = it.get("h", 1.2)
+            cyl(bm_for("crystal"), c.x, c.y, r, r * 0.55, z + 0.3 - hh / 2, z + 0.3 + hh / 2, 6)
         elif t == "dome":
             x, y = it["pos"]
             c = ctx.v(x, y)

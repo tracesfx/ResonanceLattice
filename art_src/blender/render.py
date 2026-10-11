@@ -7,6 +7,7 @@ Writes <out_dir>/{color,emit,normal,height,matid}.png (4x the spec size). finish
 import json
 import os
 import sys
+import time
 
 import bpy
 
@@ -16,6 +17,15 @@ import kit  # noqa: E402
 SS = 4
 CAM_Z = 100.0
 ZMAX = 16.0
+
+
+_T = [time.time()]
+
+
+def lap(what):
+    now = time.time()
+    print("RSL_T %-28s %6.1fs" % (what, now - _T[0]), flush=True)
+    _T[0] = now
 
 
 def build(spec):
@@ -54,6 +64,7 @@ def build(spec):
                 if glow:
                     kit.strips(ctx, "%s_t%d_seam" % (L["name"], k), glow, "seam")
             ztop = zt
+        lap("layer " + L["name"])
     g = spec.get("greebles")
     if g:
         region = []
@@ -63,9 +74,12 @@ def build(spec):
         for name in g.get("exclude_layers", []):
             exclude += layer_polys[name]
         kit.greebles(ctx, region, g["z0"], g["zmax"], g.get("density", 0.25), g.get("seed", 1), exclude)
+        lap("greebles")
     bpy.context.view_layer.update()
     kit.nozzles(ctx, spec.get("engines", []), spec.get("hullSize", "FRIGATE"))
+    lap("nozzles")
     kit.details(ctx, spec.get("details", []))
+    lap("details")
     bpy.context.view_layer.update()
     sd = spec.get("surface_detail")
     if sd:
@@ -74,7 +88,9 @@ def build(spec):
             region += layer_polys[name]
         kit.surface_details(ctx, region, sd.get("density", 0.05), sd.get("seed", 1))
         bpy.context.view_layer.update()
+        lap("surface_details")
     kit.sockets(ctx, spec.get("slots", []))
+    lap("sockets")
 
 
 def setup_render(spec, out_dir, samples):
@@ -199,7 +215,9 @@ def main():
     if "--blend" in argv:
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out_dir, spec["id"] + ".blend"))
     bpy.context.scene.frame_set(1)
+    lap("setup")
     bpy.ops.render.render(write_still=False)
+    lap("render")
     # File Output appends the frame number; strip it
     for name in ("color", "emit", "normal", "height", "matid"):
         src = os.path.join(out_dir, "%s_0001.png" % name)

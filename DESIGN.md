@@ -37,7 +37,7 @@ A refugee research polity, provisionally "the Choir", grew out of a Domain-era h
 | 6 | Destroyer | **Refrain** | Compact hull with hinged armor vanes | Escort/guardian | ~120×150 | ~10 |
 | 7 | Destroyer | **Staccato** | Needle with forward-swept wings | Flanker/striker | ~130×160 | ~12 |
 | 8 | Frigate | **Grace Note** | Dart with split tail fins | Stance-switch interceptor | ~70×90 | ~6 |
-| 9 | Capital (unique, 2 stages: Unsung 55 DP → 80 DP) | **Virtuoso** | Rapier: needle prow between twin lance barrels, swept blade wings that flare open in Bravura | Player-piloted duelist flagship | ~170×360 | 80 |
+| 9 | Capital (unique, 2 stages: Unsung 55 DP → 80 DP) | **Virtuoso** | Rapier: needle prow, twin long-barrelled shoulder turrets, swept blade wings that flare open in Bravura | Player-piloted duelist flagship | ~170×360 | 80 |
 
 All sizes fall inside the vanilla p10–p90 bands in sprites.md. Final stats come from `vanilla_baselines.py peers` before any data is written.
 
@@ -102,8 +102,8 @@ Ziggurat, and come from the same kind of place: not from raw hull, armour or slo
 system**, **high dissipation**, a **phase-like evasion layer**, and **one unique hullmod synergy** (Ziggurat has
 Mote Control + 1,200 dissipation + phase + Phase Anchor). The base stats stay deliberately modest.
 
-**Look:** a long rapier silhouette (the most streamlined hull in the mod). A needle prow sits between two long
-forward lance barrels, which are the two built-in large hardpoints. Swept-back blade wings carry the faction's
+**Look:** a long rapier silhouette (the most streamlined hull in the mod): a needle prow, and two long-barrelled
+Sforzando turrets on raised shoulder mounts that can sweep almost all the way around. Swept-back blade wings carry the faction's
 biggest resonator cells, and the wing tips are DECORATIVE parts that flare open in Bravura. Seams use the faction
 teal→violet gradient normally; **in Bravura they change colour to radiant gold-white** (see Bravura below).
 DA-level sharpness: stepped spear prow, diagonal tip cuts, segmented plates.
@@ -120,24 +120,52 @@ DA-level sharpness: stepped spear prow, diagonal tip cuts, segmented plates.
 | Defense | OMNI shield, 240°, eff 0.8, upkeep 0.4 | phase | |
 | Peak CR / CR loss | 420 s / 0.3%/s | 600 s / 0.25 | Short on purpose; CR theft refills it |
 | OP | 260 (built-ins excluded) | 260 | |
-| Slots | 2 L energy HP (built-in Sforzando) + 4 M energy/hybrid T + 6 S energy T | 2L + 4M + 6S | |
+| Slots | 2 L energy **turrets** (built-in Sforzando, ~300° arcs, one per shoulder) + 4 M energy/hybrid T + 6 S energy T | 2L + 4M + 6S | |
 
-**Built-in weapon (×2): Sforzando Lance** (unique LARGE ENERGY, HARDPOINT, built-in only)
-- A three-round burst of crystal lance bolts (~800 range). It acts like a burst railgun rather than a beam, so it
-  rewards facing the target and lining up shots.
-- *Accent:* the first burst after a Glissando dash, or any burst fired at over 80% top speed, pierces and arcs EMP
-  into nearby targets. Moving fast makes the gun better.
-- Every hull or armour hit feeds Stolen Time (below). Rough target: about 500 sustained DPS per gun at ~1.0
-  flux/damage, between Plasma Cannon and High Intensity Laser. Tags: `no_drop`, `no_sell`, `no_dealer`; a built-in
-  only (not in any blueprint).
+**Built-in weapon (×2): Sforzando Lance** (unique LARGE ENERGY, **TURRET**, built-in only)
+*Revised 2026-10-11: no longer a 3-round burst (too close to vanilla's Plasma Cannon). It is a semi-rapid railgun built
+to clear swarms: the Virtuoso must be able to kill frigates and fighters easily when it is surrounded.*
+
+| Stat | Sforzando | Vanilla reference |
+|---|---|---|
+| Fire mode | Semi-rapid single shots, ~2.5/s (chargedown 0.4 s) | Railgun (M): 100 dmg, turn 30 |
+| Damage | 200 energy per shot (~500 DPS per gun) | Autopulse: 150/shot, Heavy Blaster: 500/shot |
+| Range | 800 | Large energy: 700–1,000 |
+| **Projectile speed** | **2,000** (very fast slug and trail; nothing has time to dodge) | ~1,000 for most guns, Plasma 750 |
+| **Recoil / spread** | **0 min / 0 max / 0 per shot**: pinpoint at any rate of fire | Autopulse 0→10 |
+| **Turn rate** | **45°/s** (tracks fighters and orbiting frigates) | Large guns 5–20°/s |
+| Flux | ~220 per shot (1.1 flux/damage) | |
+| AI hints | `ANTI_FTR`, `USE_VS_FRIGATES` (both verified in `WeaponAPI.AIHints`) | |
+
+- **Swarm-clearing rules** (in the weapon's on-hit script):
+  - +50% damage against fighters and frigates, so 2 shots kill most frigates once armour is stripped, and 1 shot
+    kills most fighters.
+  - **Cascade:** when a shot destroys a fighter or a frigate, the slug carries on (pierces) to the next target in
+    line, with 60% of its damage left. Being surrounded by small ships is where this gun is best.
+- *Accent:* for 2 s after a Glissando dash, or while the ship is above 80% of top speed, every shot pierces and
+  arcs EMP into the nearest other enemy within 250 u. Moving fast makes the gun better.
+- Every hit on hull or armour feeds Stolen Time (below).
+- Tags: `no_drop`, `no_sell`, `no_dealer`. Built-in only (not in any blueprint).
 
 **System: Glissando** (the core of its power, like Mote Control is for Ziggurat)
 - 2 charges, ~6 s recharge each. A ~600 u blink-dash towards the movement direction. It is untargetable and takes no
   damage for 0.35 s mid-dash (the phase-like evasion layer, done as a skimmer-style dash, not a cloak).
-- Leaves a fading afterimage that briefly draws missile locks.
-- The next Sforzando burst is Accented.
-- Overtone (Lattice Core ≥60 Resonance): enemies the dash passes through lose CR to Stolen Time (see below), and the
-  dash refunds half a charge.
+- **Costs combat readiness: 2% CR per dash** (3% on the Unsung). It can't be used below 30% CR. This closes the
+  resource loop: steal CR with the lances, spend it on dashes, steal it back. In Bravura the dash still costs CR, so
+  dashing too much drops you out of the 100% state. That is a real decision.
+- **Unique effect: the String.** The dash path stays behind as a taut, glowing violet "string" between the departure
+  and arrival points for 1.2 s. Then it **snaps**: every enemy ship, fighter and missile touching the line takes
+  ~400 energy damage (fighters and missiles are destroyed outright), and every enemy ship hit loses 2% CR to Stolen
+  Time. So a dash through a swarm of frigates pays for itself. No vanilla system works like this: it is a delayed
+  line-shaped area attack drawn by your own movement.
+  - The String is also a barrier while it lasts: enemy projectiles that cross it are deleted (ship-sized
+    hitpoints, so it blocks a volley but not a sustained barrage).
+  - Implementation: combat plugin holding the segment; LazyLib `CollisionUtils.getCollides(from, to, center, radius)`
+    for the line test (verified; MagicLib's `MagicFakeBeam` uses it the same way); MagicLib trail for the visual.
+- After a dash the next 2 s of Sforzando fire is Accented.
+- Overtone (Lattice Core ≥60 Resonance): the String snaps twice (at 1.2 s and 2.4 s), and the dash refunds half a
+  charge.
+- Leaves a fading afterimage at the departure point that briefly draws missile locks.
 
 **Built-in hullmod 1: Stolen Time** (unique)
 - Hull or armour damage that the Virtuoso deals to enemy **ships** (not fighters or missiles) **steals combat
@@ -154,7 +182,7 @@ DA-level sharpness: stepped spear prow, diagonal tip cuts, segmented plates.
 - At **100% CR** the ship enters Bravura. It stays there until CR drops below 92% (hysteresis, so it does not
   flicker).
 - Effects: +20% top speed and manoeuvrability, +25% flux dissipation, +20% energy weapon rate of fire, -30% system
-  recharge time, and Sforzando bursts always Accent.
+  recharge time, and Sforzando shots always Accent.
 - **Seam colour change:** every seam (hull, wing-tip vanes and the Sforzando barrels) cross-fades over ~0.5 s from
   the faction teal→violet gradient to **radiant gold-white** (~255,215,140), with a slow pulse, and fades back when
   Bravura ends. Gold is used nowhere else in the mod, so it reads instantly as "this ship is at 100%".
@@ -196,8 +224,8 @@ DA-level sharpness: stepped spear prow, diagonal tip cuts, segmented plates.
 | Flux cap / diss | 12,500 / 950 | 15,000 / 1,200 |
 | Speed / accel / turn | 55 / 38 / 12 | 65 / 45 / 14 |
 | Peak CR | 360 s | 420 s |
-| Built-in lances | *Sforzando Lance (Untuned)*: 2-round burst, no Accent | Sforzando Lance: 3-round burst, Accent |
-| Glissando | 1 charge, 0.2 s invulnerable, no Overtone | 2 charges, 0.35 s, Overtone |
+| Built-in lances | *Sforzando Lance (Untuned)*: ~1.7 shots/s, speed 1,600, turn 30°/s, no Cascade, no Accent | Sforzando Lance (full spec above) |
+| Glissando | 1 charge, 0.2 s invulnerable, 3% CR per dash, String does not snap (barrier only), no Overtone | 2 charges, 0.35 s, 2% CR, String snaps, Overtone |
 | Stolen Time | Active, but only up to the hull's normal max CR; no peak-time overflow | Up to 100%, overflow extends peak time |
 | Bravura (100% CR) | Locked: no stat boost, no seam colour change | Unlocked |
 | Safety Overrides | Not allowed | Allowed (the "unbound core") |
@@ -237,7 +265,7 @@ completed (the upgrade). The full quest comes in the STRETCH stage (questline sl
 | Tuning Spike | S/M missile | Embeds in the hull and detonates when a Lattice energy weapon hits that target (combo) |
 | Harmonic Driver | L energy | Charge-up shot; a full charge pierces. Also the Conductor's built-in spinal |
 | Resonance Bloom | L missile | Slow torpedo that bursts into an expanding frag + EMP ring |
-| Sforzando Lance (+ Untuned variant for the Unsung) | L energy HP, **Virtuoso built-in only** | 3-round crystal lance burst; Accented (pierce + EMP arcs) after a dash or at speed; hits feed Stolen Time |
+| Sforzando Lance (+ Untuned variant for the Unsung) | L energy turret, **Virtuoso built-in only** | Semi-rapid railgun: 2,000 speed, zero spread, 45°/s turn; Cascade pierce on fighter/frigate kills; Accented after a dash or at speed; hits feed Stolen Time |
 | *Deco set* | DECORATIVE | Halo ring, Cantor ring, Refrain vanes, Conductor prong glows, Lattice seam glows |
 
 Slot types lean ENERGY, with HYBRID/SYNERGY flex and few MISSILE slots. Weapons stay usable by other factions (no hard lock), but some behaviours get stronger on Lattice hulls.
@@ -315,7 +343,8 @@ One spec per hull drives **both** the art and the `.ship` file, so slots and eng
 - The station's modular setup and the rotating rings need careful `.ship` and module wiring. That is why the station comes last.
 - Blender renders use the GPU briefly, so I'll ask before the first run.
 - None of the tools can judge balance or motion. In-game checks are yours (`templates/SMOKE_TEST.md`).
-- Virtuoso: SO on a capital plus Bravura may snowball. Tune it in game; the levers are base dissipation, the CR steal
+- Virtuoso: SO on a capital plus Bravura plus a 45°/s zero-spread large gun may snowball, especially against
+  frigate-heavy fleets (which is intended). Tune it in game; the levers are base dissipation, the CR steal
   rate and the per-target cap, never DP. Check that CR above the hull's max CR persists in combat (vanilla clamps
   to 1.0; the max-CR interaction is unverified) and that post-battle CR settles back to normal.
 
