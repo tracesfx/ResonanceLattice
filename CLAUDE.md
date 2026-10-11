@@ -25,7 +25,10 @@ feedback.
   Sheet `art_src/review/tremolo_v2.png` (v1: `tremolo_v1.png`); generator `art_src/gen/gen_tremolo.py`.
 - Older review sheets: `final_v1.png`, `cadence_v2.png`, `steel_livery_v1.png` (yellow test, rejected), `cadence_options.png`
   (silhouette options; user chose C), `styletest_v*.png`.
-- Next, in order: Tremolo (feedback) → Conductor → **Virtuoso (+ Unsung skin)** → Halo → Cantor Array (station last).
+- **Halo v1 (awaiting user feedback; user jumped to it ahead of Conductor/Virtuoso):** user picked option C "Eye" of
+  `art_src/review/halo_options.png`. Sheet `art_src/review/halo_v1.png`; generator `art_src/gen/gen_halo.py` writes
+  BOTH `rsl_halo.json` and the deco `rsl_halo_ring.json`.
+- Next, in order: Tremolo + Halo (feedback) → Conductor → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -108,6 +111,16 @@ shreds frigate/fighter swarms. Quest not designed yet.
   chevrons, engine cross-bands. Plates are generated as inset bands of the frame outline (`region()`), so the gaps
   expose machinery. Mirror-diff reads ~380 px: invisible 1-px ink jitter along its many long plate edges
   (verified L vs mirrored R at 5x), not a geometry asymmetry.
+- **Halo** 310×380, mass 78,085 (capital p10–p90 45,219–146,692): wide carrier wrapping a ring that spins in a
+  central well. Stepped spear + canards → head with back-swept shoulders → deep V notch → two claw prongs with swept
+  tips → fore flight deck slanting out to a tooth → aft deck slanting in → swept aft fins → stepped engine block.
+  Raised gunmetal flight decks with bay hatches (4 HIDDEN LAUNCH_BAY slots), bearing race + clamps around the well,
+  dark well floor with static ribs + glow ring, lattice core diamond at the centre. Conduits run from the race clamps
+  to the turrets/engines. Ring = deco `rsl_halo_ring` (188×188, slot WS0009 at the well centre, arc 360): 6 segments
+  with swept teeth (they show the spin direction, so the ring is deliberately NOT mirror-symmetric), hatches, glow
+  seam, 3 spokes + hub (hollow centre shows the core); alternate segments navy so rotation reads. In game it needs an
+  EveryFrameWeaponEffectPlugin to spin it (faster while the system is on). Livery: "Stillwater" broken concentric
+  ripple arcs + flank gradient deepening outward + prong gradients + engine cross-bands.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)
@@ -175,6 +188,11 @@ skill's scripts folder.
 - A tier covers the grooves below: glow cuts go on the **topmost tier**. Very thin plates + big inset = no tier.
 - Deco sprites rotate about their centre (pivot at image centre). Smaller deco angle folds INWARD; negative sweeps
   out. The game never flips deco sprites: asymmetric parts need an R spec + `mirror_of` L spec, two non-sym slots.
+- **Curve-fill holes only work when the hole lies fully inside ONE outline** (render.py now carries `holes` into
+  tiers too). A hole crossing a plate edge or a sym_poly pair gets filled as an extra shape. For the Halo well the
+  ring is a separate sprite, so the well parts are simply stacked ABOVE full plates instead.
+- `inset()` in gen_tremolo.py has the sign inverted for its winding (plates come out ~1.5 px OUTSET); fixed in
+  gen_halo.py only. Tremolo was left untouched (awaiting feedback): fix it when Tremolo is next re-rendered.
 - Never call `bmesh.ops.*` per part in kit.py (O(n²) → a cruiser hung 10+ min). Build primitives vertex by vertex.
 - Symmetry traps (fixed 2026-10-11): (1) per-plate tint used Object Info Random → mirror twins differed; now a
   white-noise hash of the plate centre's (|x|, y) (parts get origin_set to their bounds centre) and the material

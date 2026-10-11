@@ -37,6 +37,11 @@ def build(spec):
         holes = []
         for hentry in L.get("holes", []):
             holes += kit.full_polys(hentry)
+        # holes wound against the outline, so the curve offset (bevel, tier inset) grows them instead of shrinking
+        if holes:
+            sa = lambda p: sum(p[i][0] * p[i - 1][1] - p[i - 1][0] * p[i][1] for i in range(len(p)))
+            outer = sa(polys[0]) > 0
+            holes = [h if (sa(h) > 0) != outer else list(reversed(h)) for h in holes]
         layer_polys[L["name"]] = polys
         z0, z1 = L["z"]
         ob = kit.slab(ctx, L["name"], polys, z0, z1, L.get("bevel", 0.5), L.get("mat", "ivory"), holes)
@@ -56,7 +61,7 @@ def build(spec):
         for k, T in enumerate(L.get("tiers", [])):
             zt = ztop + T.get("dz", 0.6)
             tob = kit.slab(ctx, "%s_t%d" % (L["name"], k), polys, ztop - 0.2, zt, T.get("bevel", 0.35),
-                           T.get("mat", L.get("mat", "ivory")), (), T.get("inset", 1.5))
+                           T.get("mat", L.get("mat", "ivory")), holes, T.get("inset", 1.5))
             tcuts = kit.expand_sym(T.get("cuts", []))
             if tcuts:
                 tob = kit.cut(ctx, tob, tcuts, zt)

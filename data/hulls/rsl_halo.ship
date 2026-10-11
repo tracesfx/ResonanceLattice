@@ -1,0 +1,353 @@
+{
+  "bounds": [
+    -175.0,
+    -40.0,
+    -175.0,
+    40.0,
+    -147.0,
+    62.0,
+    -143.0,
+    78.0,
+    -124.0,
+    85.0,
+    -116.0,
+    105.0,
+    -90.0,
+    118.0,
+    -91.0,
+    150.0,
+    -38.0,
+    130.0,
+    30.0,
+    136.0,
+    43.0,
+    152.0,
+    179.0,
+    113.0,
+    111.0,
+    81.0,
+    136.0,
+    35.0,
+    149.0,
+    37.0,
+    149.0,
+    16.0,
+    205.0,
+    1.0,
+    149.0,
+    -16.0,
+    149.0,
+    -37.0,
+    136.0,
+    -35.0,
+    111.0,
+    -79.0,
+    177.0,
+    -111.0,
+    173.0,
+    -118.0,
+    43.0,
+    -152.0,
+    30.0,
+    -136.0,
+    -38.0,
+    -130.0,
+    -91.0,
+    -150.0,
+    -92.0,
+    -116.0,
+    -116.0,
+    -105.0,
+    -124.0,
+    -85.0,
+    -142.0,
+    -79.0,
+    -147.0,
+    -62.0
+  ],
+  "builtInMods": [
+    "expanded_deck_crew",
+    "hardened_subsystems"
+  ],
+  "center": [
+    155.0,
+    175.0
+  ],
+  "collisionRadius": 258,
+  "coversColor": "",
+  "engineSlots": [
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -175.0,
+        -11.0
+      ],
+      "style": "MIDLINE",
+      "width": 10.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -175.0,
+        11.0
+      ],
+      "style": "MIDLINE",
+      "width": 10.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -175.0,
+        -28.0
+      ],
+      "style": "MIDLINE",
+      "width": 10.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -175.0,
+        28.0
+      ],
+      "style": "MIDLINE",
+      "width": 10.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -146.0,
+        -70.0
+      ],
+      "style": "MIDLINE",
+      "width": 9.0
+    },
+    {
+      "angle": 180.0,
+      "contrailSize": 64.0,
+      "length": 48.0,
+      "location": [
+        -146.0,
+        70.0
+      ],
+      "style": "MIDLINE",
+      "width": 9.0
+    }
+  ],
+  "height": 380,
+  "hullId": "rsl_halo",
+  "hullName": "Halo",
+  "hullSize": "CAPITAL_SHIP",
+  "shieldCenter": [
+    15.0,
+    0
+  ],
+  "shieldRadius": 202,
+  "spriteName": "graphics/rsl/ships/rsl_halo.png",
+  "style": "MIDLINE",
+  "viewOffset": 0,
+  "weaponSlots": [
+    {
+      "angle": 0.0,
+      "arc": 180.0,
+      "id": "WS0001",
+      "locations": [
+        131.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "LARGE",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 20.0,
+      "arc": 240.0,
+      "id": "WS0002",
+      "locations": [
+        143.0,
+        -111.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "HYBRID"
+    },
+    {
+      "angle": -20.0,
+      "arc": 240.0,
+      "id": "WS0002R",
+      "locations": [
+        143.0,
+        111.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "HYBRID"
+    },
+    {
+      "angle": 30.0,
+      "arc": 270.0,
+      "id": "WS0003",
+      "locations": [
+        123.0,
+        -44.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -30.0,
+      "arc": 270.0,
+      "id": "WS0003R",
+      "locations": [
+        123.0,
+        44.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 80.0,
+      "arc": 200.0,
+      "id": "WS0004",
+      "locations": [
+        47.0,
+        -124.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -80.0,
+      "arc": 200.0,
+      "id": "WS0004R",
+      "locations": [
+        47.0,
+        124.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 120.0,
+      "arc": 210.0,
+      "id": "WS0005",
+      "locations": [
+        -47.0,
+        -112.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -120.0,
+      "arc": 210.0,
+      "id": "WS0005R",
+      "locations": [
+        -47.0,
+        112.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 150.0,
+      "arc": 180.0,
+      "id": "WS0006",
+      "locations": [
+        -105.0,
+        -96.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "MISSILE"
+    },
+    {
+      "angle": -150.0,
+      "arc": 180.0,
+      "id": "WS0006R",
+      "locations": [
+        -105.0,
+        96.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "MISSILE"
+    },
+    {
+      "angle": 0.0,
+      "arc": 360.0,
+      "id": "WS0007",
+      "locations": [
+        81.0,
+        -131.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": -0.0,
+      "arc": 360.0,
+      "id": "WS0007R",
+      "locations": [
+        81.0,
+        131.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 360.0,
+      "id": "WS0008",
+      "locations": [
+        -7.0,
+        -129.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": -0.0,
+      "arc": 360.0,
+      "id": "WS0008R",
+      "locations": [
+        -7.0,
+        129.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 360.0,
+      "id": "WS0009",
+      "locations": [
+        15.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "LARGE",
+      "type": "DECORATIVE"
+    }
+  ],
+  "width": 310
+}
