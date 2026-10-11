@@ -106,7 +106,11 @@ def _shape_mask(L, W, H):
             if zz:
                 ph = np.mod(v / zz, 1.0)
                 u = u + L.get("amp", 2.0) * (np.abs(ph - 0.5) * 4 - 1)
-            idx = np.floor((u - L.get("offset", 0)) / L["period"]).astype(np.int64)
+            if "widths" in L:      # irregular band widths, cycling (less mechanical than one period)
+                cum = np.concatenate([[0.0], np.cumsum(L["widths"])]).astype(np.float32)
+                idx = np.searchsorted(cum, np.mod(u - L.get("offset", 0), cum[-1]), side="right") - 1
+            else:
+                idx = np.floor((u - L.get("offset", 0)) / L["period"]).astype(np.int64)
             if "colors" in L:      # painted bands: 1 where this band carries paint, the colour is L["color"]
                 on = np.array([c is not None for c in L["colors"]], np.float32)
                 return mask * on[np.mod(idx, len(on))], None

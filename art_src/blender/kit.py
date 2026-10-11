@@ -57,7 +57,6 @@ def material(name):
         bsdf.inputs["Emission Strength"].default_value = EMISSIVE[name]
     else:
         # subtle object-space noise so large plates are not flat; per-object random tint for plate variety
-        tc = nt.nodes.new("ShaderNodeTexCoord")
         noise = nt.nodes.new("ShaderNodeTexNoise")
         noise.inputs["Scale"].default_value = 0.12 if name.startswith("ivory") else 0.6
         noise.inputs["Detail"].default_value = 4.0
@@ -65,15 +64,40 @@ def material(name):
         brush = nt.nodes.new("ShaderNodeMapping")
         brush.inputs["Scale"].default_value = (6.0, 0.25, 6.0) if name.startswith("ivory") else (1, 1, 1)
         info = nt.nodes.new("ShaderNodeObjectInfo")
+        # per-plate tint hashed from the MIRRORED position (|x|, y): left/right twins get the same tone
+        # (Object Info "Random" differs between mirror twins and made symmetric hulls look lopsided)
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        absx = nt.nodes.new("ShaderNodeMath")
+        absx.operation = "ABSOLUTE"
+        comb = nt.nodes.new("ShaderNodeCombineXYZ")
+        hsh = nt.nodes.new("ShaderNodeTexWhiteNoise")
+        hsh.noise_dimensions = "3D"
+        nt.links.new(info.outputs["Location"], sep.inputs["Vector"])
+        nt.links.new(sep.outputs["X"], absx.inputs[0])
+        nt.links.new(absx.outputs[0], comb.inputs["X"])
+        nt.links.new(sep.outputs["Y"], comb.inputs["Y"])
+        nt.links.new(sep.outputs["Z"], comb.inputs["Z"])
+        nt.links.new(comb.outputs["Vector"], hsh.inputs["Vector"])
         mix = nt.nodes.new("ShaderNodeMath")
         mix.operation = "MULTIPLY_ADD"
         mix.inputs[1].default_value = 0.16 if name.startswith("ivory") else 0.5
-        nt.links.new(tc.outputs["Object"], brush.inputs["Vector"])
+        # world position mirrored about the centre line, so the noise is symmetric left/right
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        sep2 = nt.nodes.new("ShaderNodeSeparateXYZ")
+        abs2 = nt.nodes.new("ShaderNodeMath")
+        abs2.operation = "ABSOLUTE"
+        comb2 = nt.nodes.new("ShaderNodeCombineXYZ")
+        nt.links.new(geo.outputs["Position"], sep2.inputs["Vector"])
+        nt.links.new(sep2.outputs["X"], abs2.inputs[0])
+        nt.links.new(abs2.outputs[0], comb2.inputs["X"])
+        nt.links.new(sep2.outputs["Y"], comb2.inputs["Y"])
+        nt.links.new(sep2.outputs["Z"], comb2.inputs["Z"])
+        nt.links.new(comb2.outputs["Vector"], brush.inputs["Vector"])
         nt.links.new(brush.outputs["Vector"], noise.inputs["Vector"])
         nt.links.new(noise.outputs["Fac"], mix.inputs[0])
         rnd = nt.nodes.new("ShaderNodeMath")
         rnd.operation = "MULTIPLY_ADD"
-        nt.links.new(info.outputs["Random"], rnd.inputs[0])
+        nt.links.new(hsh.outputs["Value"], rnd.inputs[0])
         rnd.inputs[1].default_value = 0.16 if name.startswith("ivory") else 0.08
         rnd.inputs[2].default_value = 0.91 - (0.05 if name.startswith("ivory") else 0.25)
         nt.links.new(rnd.outputs[0], mix.inputs[2])
@@ -287,19 +311,27 @@ def cut(ctx, ob, cuts, ztop):
     """Boolean-subtract thickened polylines (panel lines / seam grooves) from ob."""
     if not cuts:
         return ob
-    bm = bmesh.new()
-    for c in cuts:
+    # One boolean per cut: a single combined cutter sometimes failed silently for ONE of a mirrored pair, leaving
+    # that glow strip buried (lopsided seams). If EXACT leaves the mesh unchanged, retry with FAST.
+    for i, c in enumerate(cuts):
+        bm = bmesh.new()
         depth = c.get("depth", 0.7)
         prism(bm, ctx, offset_polyline(c["pts"], c.get("w", 0.8)), ztop - depth, ztop + 2)
-    cutter = mesh_obj(ob.name + "_cut", bm, None)
-    mod = ob.modifiers.new("cut", "BOOLEAN")
-    mod.operation = "DIFFERENCE"
-    mod.solver = "EXACT"
-    mod.use_self = True
-    mod.object = cutter
-    new = bake(ob)
-    bpy.data.objects.remove(cutter)
-    return new
+        cutter = mesh_obj("%s_cut%d" % (ob.name, i), bm, None)
+        before = len(ob.data.vertices)
+        for solver in ("EXACT", "FAST"):
+            mod = ob.modifiers.new("cut", "BOOLEAN")
+            mod.operation = "DIFFERENCE"
+            mod.solver = solver
+            if solver == "EXACT":
+                mod.use_self = True
+            mod.object = cutter
+            new = bake(ob)
+            ob = new
+            if len(ob.data.vertices) != before:
+                break
+        bpy.data.objects.remove(cutter)
+    return ob
 
 
 def strips(ctx, name, cuts, mat):
@@ -307,7 +339,9 @@ def strips(ctx, name, cuts, mat):
     bm = bmesh.new()
     for c in cuts:
         w = c.get("w", 0.8) * 0.7
-        z1 = c["_ztop"] - c.get("inset", 0.5)
+        # flush with the surface (not buried in the groove): if a boolean groove silently fails, the seam still shows
+        # (one of a mirrored pair went missing on Staccato/Refrain before). The groove still frames it when it exists.
+        z1 = c["_ztop"] + 0.04
         prism(bm, ctx, offset_polyline(c["pts"], w), z1 - 0.5, z1)
     return mesh_obj(name, bm, mat)
 
@@ -321,6 +355,8 @@ def separate_loose(ob):
     bpy.ops.mesh.select_all(action="SELECT")
     bpy.ops.mesh.separate(type="LOOSE")
     bpy.ops.object.mode_set(mode="OBJECT")
+    # each part's origin -> its own centre, so the mirrored-position tint hash sees where the plate is
+    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
 
 
 # ------------------------------------------------------------------ surface queries

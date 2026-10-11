@@ -15,9 +15,11 @@ feedback.
 - Stage 1 (proposal): done. Stage 2 (prototype sprites): in progress.
 - Sprites done: Grace Note, Refrain, Staccato, Cadence — user approved the steel + dark-blue art direction
   ("I really enjoy the art direction now") and asked for one final iteration (Cadence: no round blisters, sharp
-  swept rail tips, gradients on flat areas; Refrain: gradient on the flat centre). That iteration is done and
-  awaits a last look: `art_src/review/final_v1.png` (all four hulls + Eagle/Medusa).
-- Older review sheets: `cadence_v2.png`, `steel_livery_v1.png` (yellow test, rejected), `cadence_options.png`
+  swept rail tips, gradients on flat areas; Refrain: gradient on the flat centre), then one more quick fix
+  (Cadence: asymmetric rail/body gap, unnecessary grey web platform, livery stripes all parallel). Both done;
+  current sheet: `art_src/review/final_v2.png` (all four hulls + Eagle/Medusa). User said "before we move on" —
+  next session continues with the Tremolo unless the user objects to final_v2.
+- Older review sheets: `final_v1.png`, `cadence_v2.png`, `steel_livery_v1.png` (yellow test, rejected), `cadence_options.png`
   (silhouette options; user chose C), `styletest_v*.png`.
 - Next, in order: Tremolo → Conductor → **Virtuoso (+ Unsung skin)** → Halo → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
@@ -42,19 +44,24 @@ shreds frigate/fighter swarms. Quest not designed yet.
 2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
    splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
    **Vary the technique per ship — not stripes everywhere; use gradients too.**
+   **Vary splinters within a hull too:** different angle and irregular band widths (`widths`) per region, never one
+   parallel pattern over the whole ship.
    **No large flat single-tone steel areas may remain** — check every big plate at 2x; fix with a gradient (keep
    any splinter on top). Current set:
    Grace Note = dark-blue gradient deepening aft + gunmetal chevron band; Refrain = dark-blue zigzag splinter +
    dark-blue gradient down the centre spine and aft deck, vanes = gradient from the tip; Staccato = wing gradients
    deepening to the tips + short dark-blue "staccato" dashes on the leading edges; Cadence = gradients deepening
-   towards bow and stern + on the webs + down the barbs, with dark-blue splinter chevrons (60%) on top.
+   towards bow and stern + down the barbs, with three regional splinters on top (bow: tight forward chevrons;
+   midship: broad reversed-slant zigzag; barbs: cross-bands tightening towards the tips).
 3. **Busy, DA density:** exposed machinery bands, many small parts — but no speckle noise on big plates.
 4. **Sharp, angular, intricate engineering.** No geometric primitives as silhouettes: no isosceles triangles, no
    rectangles/boxes, no eggs, no rockets, no parallelogram panels. A silhouette = several distinct masses with
    different edge angles, notches between them, protrusions (prongs, pods, fins, canards, swept tips — not round blisters). DA sharpness:
    split bows (stepped spear + mandibles), diagonal tip cuts, chamfers, segmented armour, stepped edges.
-5. **Nothing fragile:** parts must be structurally attached (no free-standing "solar panel" rails, no big gaps
-   between rails and hull, no splayed "legs"). Long attachment roots, clamps, web plates.
+5. **Nothing fragile:** parts must be structurally attached (no free-standing "solar panel" rails, no splayed
+   "legs"). Long attachment roots and clamps. But no filler "platforms" either: the user had the Cadence's grey web
+   plates removed — an arrowhead's barb notch may stay open.
+5b. **Symmetry must be exact.** Check with the mirror-diff snippet (Gotchas) after every render.
 6. **Moving parts are centerpieces:** big, angular, with their own prominent seams (Refrain vanes).
 6b. **No round/octagonal blisters bulging out of the silhouette** (user disliked the Cadence's "circles"); put turrets
    on the existing structure. Wing/rail ends are **sharp swept tips** (outer edge runs on to a point, inner edge
@@ -79,11 +86,12 @@ shreds frigate/fighter swarms. Quest not designed yet.
   slots WS0009 (+x, angle -162, deployed 12) / WS0010 (-x, 162, deployed -12).
 - **Staccato** 150×186, mass 11,340: needle fuselage, stepped spear, strakes, forward-swept segmented wings with
   tip prongs and a sawtooth notch.
-- **Cadence** 194×308 (SCALE 1.10), mass 21,005 (cruiser p10 20,876): **arrowhead** (user picked option C, "rails
+- **Cadence** 200×320 (SCALE 1.14), mass 21,288 (cruiser p10 20,876): **arrowhead** (user picked option C, "rails
   longer, goal is an arrowhead"): long stepped needle bow → faceted head with canards → two long rails swept back
-  from the shoulders as **barbs** (attached along a long root by web plates; last third free = arrowhead notch; two
-  raised segments stepping outward + a tapering swept-tip blade, gunmetal clamps, accelerator seams with coil nodes;
-  medium/small turrets sit on the rails) → waist → engine block with pods. Generated by `art_src/gen/gen_cadence.py`
+  from the shoulders as **barbs** (rooted in the hull at the shoulders, open arrowhead notch behind — no web
+  platform; two raised segments stepping outward + a tapering swept-tip blade, gunmetal clamps, accelerator seams
+  with coil nodes; medium/small turrets sit on the rails; core conduit enters the rails at their root) → waist →
+  engine block with pods. Generated by `art_src/gen/gen_cadence.py`
   (edit the generator, never the spec). Mass is right at the band floor: removing area needs SCALE up.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
@@ -140,7 +148,8 @@ skill's scripts folder.
 - `livery[]` (applied in order, only on plate materials; `on` = matid list, default [2] = bright/mid steel; `sym`
   mirrors shapes, `mirror` uses |x| for patterns; `alpha`):
   `poly` {poly, color}; `band` {pts, w, color}; `stripes` {poly?, angle, period, w, color};
-  `splinter` {poly?, angle, period, zigzag, amp, colors: [null, "navy"] (painted bands) or tones: [1.0, 0.74]};
+  `splinter` {poly?, angle, period or widths: [..] (irregular, cycling), zigzag, amp,
+  colors: [null, "navy", ...] (painted bands; one entry per band) or tones: [1.0, 0.74]};
   `gradient` {poly?, color, a: [x,y], b: [x,y], a0, a1} (opacity ramp a→b).
   Paints (finish.PAINT): navy, blue, white, steel_light, steel_dark, gunmetal, black. Paint keeps the rendered
   shading; ink lines cut through it afterwards. Bands/periods must be broad (≥ ~1/4 hull width) or they read as noise.
@@ -152,6 +161,12 @@ skill's scripts folder.
 - Deco sprites rotate about their centre (pivot at image centre). Smaller deco angle folds INWARD; negative sweeps
   out. The game never flips deco sprites: asymmetric parts need an R spec + `mirror_of` L spec, two non-sym slots.
 - Never call `bmesh.ops.*` per part in kit.py (O(n²) → a cruiser hung 10+ min). Build primitives vertex by vertex.
+- Symmetry traps (fixed 2026-10-11): (1) per-plate tint used Object Info Random → mirror twins differed; now a
+  white-noise hash of the plate centre's (|x|, y) (parts get origin_set to their bounds centre) and the material
+  noise uses world position with |x|. (2) EXACT booleans sometimes skip ONE of a mirrored groove pair; glow strips
+  now sit flush with the surface so the seam shows even then; cuts are applied one boolean each, FAST fallback.
+  Check: `python -c "import numpy as np;from PIL import Image;a=np.asarray(Image.open(P)).astype(int);
+  d=np.abs(a-a[:,::-1])[...,:3].mean(-1)*(a[...,3]>0);print((d>60).sum())"` — a few dozen edge pixels is fine.
 - Tone match pulls bright paint toward the mean: bright paints must be protected (done for white; yellow is banned).
 - Judge at 1x first; check mass band after every pass; scale via the generator's SCALE or `scale_spec.py`.
 - Silhouette lessons (Cadence took 6 versions): parallel rails = rectangle; straight diagonals = triangle; all-rect

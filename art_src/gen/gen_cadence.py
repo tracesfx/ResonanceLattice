@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from scale_spec import walk  # noqa: E402
 
-SCALE = 1.10        # final size factor (keeps the cruiser in the vanilla pixel-mass band)
+SCALE = 1.14        # final size factor (keeps the cruiser in the vanilla pixel-mass band)
 
 r = lambda v: round(v, 2)
 
@@ -92,7 +92,6 @@ POD = [P(29, 224), P(36, 222), P(41, 230), P(42, 252), P(36.5, 260), P(30.5, 258
 
 # ------------------------------------------------------------------ silhouette
 frame("f_body", half=BODY)
-frame("f_web", sym_poly=WEB)
 frame("f_rail", sym_poly=RAIL)
 frame("f_pod", sym_poly=POD)
 frame("f_vane", sym_poly=[P(12.4, 62), P(17.5, 60), P(20, 64), P(16.4, 70)])         # small forward canards
@@ -116,7 +115,6 @@ plate("body2", "ivory", PL, half=[P(0, 145), P(25.8, 149), P(26, 190), P(22.8, 1
             "cuts": [{"pts": [P(-20, 172), P(0, 168), P(20, 172)], "w": 0.55, "depth": 0.5}]})
 plate("spine", "slate", [6.8, 8.4], half=[P(0, 92), P(4.6, 95), P(5, 192), P(3, 197), P(0, 198)],
       tier={"inset": 0.8, "dz": 0.45, "mat": "ivory2"})
-plate("web", "ivory2", PL, sym_poly=shrink(WEB, 1.4), tier={"inset": 1.3, "dz": 0.5, "mat": "slate"})
 # barb: three raised segments stepping outward + a gunmetal tip
 for k, (t0, t1, so) in enumerate(((0.0, 0.355, RW / 2), (0.375, 0.69, RW / 2 + 2.2))):
     tier = {"inset": 1.3, "dz": 0.6, "mat": "ivory"}
@@ -143,22 +141,20 @@ details = [
     {"type": "node", "pos": [0, 150], "r": 3.0, "shape": "diamond"},
     {"type": "cell", "pos": [0, 66], "size": [4.6, 4.6], "n": 2, "v": 1.0},
     {"type": "conduit", "pos": [0, 0], "pts": [[0, 9], [0, 54]], "w": 1.1},
-    # core feeds both barbs through the web
-    {"type": "conduit", "pos": [0, 0], "pts": [P(5, 150), P(26, 150), CP(0.52, -2.4)], "w": 1.3, "sym": True},
+    # core feeds both barbs where they are rooted in the hull (the web platform was removed, user 2026-10-11)
+    {"type": "conduit", "pos": [0, 0], "pts": [P(5, 150), P(14, 150), P(14, 116), P(21, 109), CP(0.15, -2.4)], "w": 1.3, "sym": True},
     {"type": "node", "pos": CP(0.52, 0.6), "r": 2.4, "sym": True},
     {"type": "node", "pos": CP(0.20, 0.6), "r": 2.2, "sym": True},
     {"type": "node", "pos": CP(0.80, 4.2), "r": 2.0, "sym": True},
     {"type": "cell", "pos": [12, 124], "size": [6.4, 16], "n": 4, "v": 1.4, "sym": True},
     {"type": "cell", "pos": [12, 176], "size": [6.6, 18], "n": 4, "v": 1.5, "sym": True},
-    {"type": "cell", "pos": P(33, 132), "size": [5.6, 12], "n": 3, "v": 1.3, "sym": True},
     {"type": "conduit", "pos": [0, 0], "pts": [P(12, 186.6), P(12, 232), P(17, 237), P(17, 244)], "w": 1.1, "sym": True},
-    {"type": "conduit", "pos": [0, 0], "pts": [P(24, 104), P(16, 104), P(16, 112)], "w": 1.0, "sym": True},
     {"type": "vent", "pos": [0, 100], "w": 8, "n": 4, "step": 1.3},
     {"type": "vent", "pos": [19, 216], "w": 4, "n": 6, "step": 1.2, "sym": True},
     {"type": "vent", "pos": [0, 244], "w": 10, "n": 6, "step": 1.3},
     {"type": "block", "pos": [14, 80], "size": [2.6, 5], "h": 0.5, "mat": "steel", "sym": True},
     {"type": "block", "pos": [8, 230], "size": [3, 7], "h": 0.4, "mat": "steel", "sym": True},
-    {"type": "hatch", "pos": P(31, 156), "r": 1.8, "sym": True},
+    {"type": "hatch", "pos": P(21, 156), "r": 1.8, "sym": True},
     {"type": "light", "pos": CP(TIP - 0.08, RW / 2 + 2.4), "r": 0.6, "sym": True},
     {"type": "light", "pos": P(18.6, 61), "r": 0.5, "sym": True},
     {"type": "mark", "pos": [0, 0], "pts": [P(8.4, 96), P(8.4, 102)], "w": 0.7, "sym": True},
@@ -177,13 +173,23 @@ engines = [{"pos": [0, 276], "width": 10}, {"pos": [17.5, 266], "width": 7, "sym
 # livery: dark-blue splinter chevrons angled with the barbs (they read as the arrowhead's fletching), a dark-blue
 # gradient deepening towards the barb tips, gunmetal needle tip. No yellow (user, 2026-10-11).
 ang = math.degrees(math.atan2(N[1], N[0])) + 180
+BOW = [P(0, 0), P(30, 0), P(30, 92), P(0, 92)]
+MID = [P(0, 92), P(27.5, 92), P(27.5, 200), P(0, 200)]
+rail_ang = math.degrees(math.atan2(D[1], D[0]))
 livery = [
+    # gradients first (no flat steel left), splinters on top -- each region has its own angle and rhythm
     {"type": "gradient", "color": "navy", "a": [0, 150], "b": [0, 276], "a0": 0.0, "a1": 0.75},
     {"type": "gradient", "color": "navy", "a": [0, 112], "b": [0, 40], "a0": 0.0, "a1": 0.6},
-    {"type": "gradient", "color": "navy", "poly": WEB, "a": [26, 120], "b": [44, 170], "a0": 0.15, "a1": 0.7},
-    {"type": "splinter", "color": "navy", "colors": [None, "navy"], "alpha": 0.6, "angle": 62, "period": 22,
-     "poly": BODY[:1] + [P(30, 0)] + [P(30, 278)] + [P(0, 278)]},
     {"type": "gradient", "color": "navy", "poly": RAIL, "a": list(C(0.3)), "b": list(C(TIP)), "a0": 0.0, "a1": 0.9},
+    # bow: forward chevrons, tight irregular rhythm
+    {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy"], "widths": [7, 4, 11, 6],
+     "alpha": 0.6, "angle": 62, "poly": BOW},
+    # midship: reversed slant + zigzag, broad irregular bands
+    {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy", None, "navy"],
+     "widths": [14, 6, 9, 15, 7, 4], "alpha": 0.55, "angle": -38, "zigzag": 16, "amp": 3, "poly": MID},
+    # rails: bands across the barbs (perpendicular to their sweep), getting tighter towards the tips
+    {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy", None, "navy"],
+     "widths": [16, 5, 11, 4, 7, 3], "alpha": 0.5, "angle": rail_ang, "poly": RAIL},
     {"type": "poly", "color": "gunmetal", "sym": False, "poly": [P(-2.6, 0), P(2.6, 0), P(2.6, 12), P(-2.6, 12)]},
 ]
 for part in (layers, details, slots, engines, livery):
