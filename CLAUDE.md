@@ -28,7 +28,10 @@ feedback.
 - **Halo v1 (awaiting user feedback; user jumped to it ahead of Conductor/Virtuoso):** user picked option C "Eye" of
   `art_src/review/halo_options.png`. Sheet `art_src/review/halo_v1.png`; generator `art_src/gen/gen_halo.py` writes
   BOTH `rsl_halo.json` and the deco `rsl_halo_ring.json`.
-- Next, in order: Tremolo + Halo (feedback) → Conductor → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
+- **Conductor v1 (awaiting user feedback):** user picked option C "Split blade" of `art_src/review/conductor_options.png`
+  and "inner blades close" for the moving part. Sheet `art_src/review/conductor_v1.png`; generator
+  `art_src/gen/gen_conductor.py` writes `rsl_conductor.json` + deco `rsl_conductor_blade_r.json` (+ `_l` mirror_of).
+- Next, in order: Tremolo + Halo + Conductor (feedback) → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -121,6 +124,18 @@ shreds frigate/fighter swarms. Quest not designed yet.
   seam, 3 spokes + hub (hollow centre shows the core); alternate segments navy so rotation reads. In game it needs an
   EveryFrameWeaponEffectPlugin to spin it (faster while the system is on). Livery: "Stillwater" broken concentric
   ripple arcs + flank gradient deepening outward + prong gradients + engine cross-bands.
+- **Conductor** 254×410, mass 52,808 (capital band 45,219–146,692): ONE solid blade split only at the bow (not a
+  second Tremolo): two short spear prongs with deep swept teeth on the outer edge, open slot (inner faces x=±16, open
+  to y 77–84) holding the baked-in spinal Harmonic Driver barrel (muzzle brake, coil collars) rooted in a long raised
+  breech cradle carrying the core diamond → shoulders → forward-swept crossguard wings (emitter leading edges, large
+  turrets) → waist slanting in → flare tooth → stern slanting in → swept engine fins → gunmetal engine block with tail
+  tooth. Inner emitter blades = deco `rsl_conductor_blade_r/_l` (18×180, pivot at centre = blade root, slots
+  WS0010/WS0011 at (±21,118), angle 0, deco_alt_angle ±7 → the tips fold in to just touch the barrel while
+  Sympathetic Strike charges; needs an EveryFrameWeaponEffectPlugin). WS0001 = spinal LARGE ENERGY hardpoint at the
+  muzzle (the barrel is in the hull sprite; the weapon sprite should be muzzle/charge FX only). Livery "tempered
+  blade": prongs deepen to the tips, crossguards gradient to the tip + one bold band along the leading edge, shoulders/
+  midship deepen outward + steep irregular splinter (reads as chevrons), waist deepens to the flanks, stern forward
+  "fermata" chevron bands + gradient, fins gradient.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)
