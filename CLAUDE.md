@@ -41,7 +41,7 @@ shreds frigate/fighter swarms. Quest not designed yet.
    legacy: bright steel / brushed mid steel / gunmetal).
 2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
    splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
-   **Vary the technique per ship — not stripes everywhere; use gradients too.** Current set:
+   **Vary the technique per ship — not stripes everywhere; use gradients too.**
    **No large flat single-tone steel areas may remain** — check every big plate at 2x; fix with a gradient (keep
    any splinter on top). Current set:
    Grace Note = dark-blue gradient deepening aft + gunmetal chevron band; Refrain = dark-blue zigzag splinter +
@@ -51,7 +51,7 @@ shreds frigate/fighter swarms. Quest not designed yet.
 3. **Busy, DA density:** exposed machinery bands, many small parts — but no speckle noise on big plates.
 4. **Sharp, angular, intricate engineering.** No geometric primitives as silhouettes: no isosceles triangles, no
    rectangles/boxes, no eggs, no rockets, no parallelogram panels. A silhouette = several distinct masses with
-   different edge angles, notches between them, protrusions (blisters, prongs, pods, fins, canards). DA sharpness:
+   different edge angles, notches between them, protrusions (prongs, pods, fins, canards, swept tips — not round blisters). DA sharpness:
    split bows (stepped spear + mandibles), diagonal tip cuts, chamfers, segmented armour, stepped edges.
 5. **Nothing fragile:** parts must be structurally attached (no free-standing "solar panel" rails, no big gaps
    between rails and hull, no splayed "legs"). Long attachment roots, clamps, web plates.
