@@ -256,31 +256,59 @@ _d = (_d[0] / _n, _d[1] / _n)
 LEN = (-_d[1], _d[0])
 pin = lambda off, t0, t1: [P(LE0[0] + _d[0] * _n * t + LEN[0] * off, LE0[1] + _d[1] * _n * t + LEN[1] * off)
                           for t in (t0, t1)]
-# v3 stripes (user: no gold; light blue instead of grey; bending, angular stripes; soft edges via gradients).
-# Each stripe is an angular polyline that follows the part it sits on, feathered ("soft") so it fades at its edges.
-ice = lambda pts, w, soft=0.9, wing=False: {"type": "band", "pts": [P(SX(x) if wing else x, y) for x, y in pts],
-                                            "w": w * 1.4, "color": "ice", "sym": True, "soft": soft, "alpha": 1.0}
-livery = [
-    # the sash (crisp, one cohesive shape; its edges are the conduits above)
+# v4: the user removed the light-blue stripes and asked for three livery designs to choose from. All three keep
+# the sash (its edges are the seams); RSL_LIVERY=A|B|C picks one (default: the user's choice once made).
+LIVERY = os.environ.get("RSL_LIVERY", "A")
+dark = lambda pts, wing=False, color="navy", alpha=1.0: {"type": "poly", "color": color, "alpha": alpha, "sym": True,
+                                                       "poly": [P(SX(x) if wing else x, y) for x, y in pts]}
+along_u = lambda v: [r(U[0] * v), r(U[1] * v)]           # point whose projection on the wing axis is v
+COMMON_HEAD = [{"type": "poly", "color": "gunmetal", "poly": [P(-2.2, 0), P(2.2, 0), P(2.8, 10), P(-2.8, 10)]}]
+COMMON_TAIL = [
+    # the sash (crisp, one cohesive shape; its edges are the conduits above) -- painted last so it stays clean
     {"type": "poly", "color": "navy", "poly": [P(*q) for q in SASH], "sym": True},
-    # wings: a stripe along the leading edge that jogs out with the stepped tooth and turns in at the clamp, with a
-    # thinner companion that breaks away at 45 deg; a trailing-edge stripe that kinks up at the notch tooth
-    ice([(28.6, 160.4), (32.9, 167.2), (48.9, 199.2), (57.4, 201.1), (74.4, 246.1), (68.6, 254.6)], 2.4, wing=True),
-    ice([(30.4, 172), (43.6, 198.6), (40.2, 206.4), (44.6, 218)], 1.1, 0.6, wing=True),
-    ice([(27.4, 263.2), (38.5, 275.7), (52.5, 283.7), (61.6, 286.6), (59.0, 280.8)], 2.0, wing=True),
-    # waist: parallel to the sash's inner edge, then straight down the waist, then 45 deg in
-    ice([(7.6, 193), (21.4, 215.4), (21.4, 236), (14.6, 248.6)], 1.9),
-    # sponsons: follow the stepped outline round to the engines
-    ice([(18.6, 262.4), (26.4, 274.2), (32.2, 291.4), (27.4, 297.6)], 1.7),
-    # guard: a dark-blue band along each quillon's leading edge (crisp paint, part of the hilt)
-    {"type": "band", "pts": [P(19.8, 109.6), P(29.8, 113.4), P(36.4, 111.2)], "w": 2.2, "color": "navy", "sym": True},
-    # gradients only at the extremities: wing tips deepen towards the vane mounts, tail spike to its tip
-    {"type": "gradient", "color": "navy", "poly": [P(*q) for q in WING], "a": [SX(62), 250], "b": [SX(94), 306],
-     "a0": 0.0, "a1": 0.55},
+    # tail spike darkens to its tip
     {"type": "gradient", "color": "navy", "poly": [P(0, 320), P(10, 320), P(10, 374), P(0, 374)], "a": [0, 326],
      "b": [0, 372], "a0": 0.0, "a1": 0.6},
-    {"type": "poly", "color": "gunmetal", "poly": [P(-2.2, 0), P(2.2, 0), P(2.8, 10), P(-2.8, 10)]},
 ]
+LE_PTS = [(24, 148), (38, 164), (54, 196), (63, 199), (80, 244), (99, 298)]        # wing leading edge (pre-SX)
+LE_IN = [(90.6, 301.2), (71.6, 247.2), (54.6, 202.2), (46.4, 200.8), (30.4, 168.8), (22, 156)]
+VARIANTS = {
+    # A "Dipped tips": every sharp extremity dipped in crisp dark blue (like the Conductor's caps); the wing tips
+    # fade into their caps; nothing else on the steel
+    "A": [
+        {"type": "gradient", "color": "navy", "poly": clip_dir(WING, U, 226, 266), "a": along_u(226),
+         "b": along_u(266), "a0": 0.0, "a1": 0.55},
+        {"type": "poly", "color": "navy", "poly": clip_dir(WING, U, 266, 340), "sym": True},
+        dark([(52, 194), (63, 198.6), (66, 207), (56, 204)], wing=True),                       # wing tooth
+        dark([(34, 106.4), (46, 102), (43.6, 113), (39, 112.4)]),                               # guard tooth
+        dark([(33, 287.6), (38, 294), (33, 300), (31, 295.6)]),                                 # sponson tooth
+        dark([(4.4, 352), (4, 356), (0, 374), (0, 352)]),                                       # spike tip
+    ],
+    # B "Splinter wings": broad dark-blue splinter bands on the wings only (Zepporia-style), each wing segment its
+    # own angle and rhythm (root: across the sweep; mid: steeper), tips fade dark
+    "B": [
+        {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy", None],
+         "widths": [166, 14, 10, 5, 400], "angle": 58.2, "alpha": 0.85, "mirror": True, "poly": clip_dir(WING, U, 144, 200)},
+        {"type": "splinter", "color": "navy", "colors": [None, "navy", None, "navy", None],
+         "widths": [238, 6, 8, 17, 400], "angle": 78, "alpha": 0.85, "mirror": True, "poly": clip_dir(WING, U, 204, 256)},
+        {"type": "gradient", "color": "navy", "poly": clip_dir(WING, U, 258, 340), "a": along_u(258),
+         "b": along_u(316), "a0": 0.2, "a1": 0.8},
+        {"type": "band", "pts": [P(19.8, 109.6), P(29.8, 113.4), P(36.4, 111.2)], "w": 2.2, "color": "navy",
+         "sym": True},
+    ],
+    # C "Shadowed edges": two-tone steel -- a dark-steel band frames every forward edge (wing leading edges with
+    # the tooth jog, guard quillons, sponsons) and runs into the sash at the wing tips; tips fade dark
+    "C": [
+        dark(LE_PTS + LE_IN, wing=True, color="steel_dark", alpha=1.0),
+        dark([(18, 104), (30, 108), (46, 102), (44, 118), (36, 116), (30, 114), (19, 111)], color="steel_dark",
+             alpha=1.0),
+        dark([(21, 262), (30, 274), (38, 294), (33, 300), (29, 296), (26, 280), (19, 268)], color="steel_dark",
+             alpha=1.0),
+        {"type": "gradient", "color": "navy", "poly": clip_dir(WING, U, 250, 340), "a": along_u(250),
+         "b": along_u(316), "a0": 0.0, "a1": 0.6},
+    ],
+}
+livery = COMMON_HEAD + VARIANTS[LIVERY] + COMMON_TAIL
 for part in (hs.layers, details, slots, engines, livery):
     walk(part, SCALE)
 W = 2 * int(max(p[0] for p in WING) * SCALE + 10)                    # + room for the flared vanes
@@ -318,9 +346,7 @@ vane_details = [
 # the sash runs on along the vane between its two glow lines, deepening to the tip
 vane_livery = [{"type": "poly", "color": "navy", "poly": [P(-3.4, PY - VL + 8), P(-1.2, PY - 34), P(1.6, PY - 16),
                                                           P(1.6, PY - 4), P(-3.4, PY - 4)]},
-               {"type": "gradient", "color": "navy", "a": [0, PY - 10], "b": [0, PY - VL], "a0": 0.0, "a1": 0.5},
-               {"type": "band", "pts": [P(-4.2, PY - 6), P(-4.2, PY - 22), P(-2.6, PY - 30), P(-3.4, PY - VL + 8)],
-                "w": 1.3, "color": "ice", "soft": 0.6, "alpha": 0.95}]
+               {"type": "gradient", "color": "navy", "a": [0, PY - 10], "b": [0, PY - VL], "a0": 0.0, "a1": 0.5}]
 vane = {"id": "rsl_virtuoso_vane_r", "kind": "deco", "size": [VW, int(VH)], "layers": vs.layers,
         "greebles": {"layers": ["vf_vane"], "z0": 2.4, "zmax": 3.1, "density": 1.0, "seed": 13},
         "details": vane_details, "livery": [dict(L, sym=False, mirror=False) for L in vane_livery],
