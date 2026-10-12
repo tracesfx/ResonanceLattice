@@ -43,7 +43,10 @@ feedback.
   add gold accents on parts of the edge; the dual Sforzando mounts are its identity — work them into the seams;
   wings slightly wider. → v2 (`virtuoso_v2.png`). User: remove the yellow/gold, livery looks worse; light-blue
   (not teal) soft angular stripes instead of grey straight ones; no box-like sectioning; likes the white Bravura.
-  → **v3 (awaiting feedback):** `virtuoso_v3.png`, all hulls `sheet_v7.png`.
+  → v3 (`virtuoso_v3.png`). User: remove the light-blue stripes ("look bad"); unsure about the livery → I made 3
+  designs (`virtuoso_livery_options.png`: A dipped tips / B splinter wings / C shadowed edges, `RSL_LIVERY` env in
+  the generator); **user chose A "Dipped tips"** (now the default). v4 sheet `virtuoso_v4.png`, all hulls
+  `sheet_v8.png`. Awaiting approval before the Unsung skin.
 - Next, in order: Virtuoso feedback → Unsung skin → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
@@ -188,10 +191,10 @@ shreds frigate/fighter swarms. Quest not designed yet.
   `slant`: emit explicit L/R cells). v2: wings stretched outboard of x=30 by 1.1 (`SX`), W 248, mass 33,249; the
   OUTER seam wraps each Sforzando mount in a glowing ring (spine → 45° → ring over the front/outside → 45° → spine
   → wing; still one run) and the sash reaches each gun as a lobe; hexagonal mount housings. Livery per region:
-  v3: gold and all tone splinters removed; soft (`soft` 0.6-0.9) angular `ice` stripes: wing leading-edge stripe
-  jogging at the tooth and turning in at the clamp (+ thin companion breaking away at 45°), trailing-edge stripe
-  kinking at the notch, waist stripe parallel to the sash then down then 45° in, sponson stripe following the
-  stepped outline, vane stripe; guard keeps its navy band. Waist = 2 plates with chevron joints parallel to the
+  v4 livery A "Dipped tips" (user's pick): the sash + crisp navy caps on every sharp extremity (wing tips beyond
+  the last clamp with a gradient lead-in, wing teeth, guard teeth, sponson teeth, spike tip), clean steel elsewhere;
+  no stripes (the light-blue `ice` stripes of v3 were rejected; `ice` paint and the `soft` option remain in finish).
+  Waist = 2 plates with chevron joints parallel to the
   sash, chamfered guard collar, irregular angular mount housings, stepped sponsons/engine block with chevron joints.
   Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
   `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (gold 255,200,110); preview shows a "bravura" column.
