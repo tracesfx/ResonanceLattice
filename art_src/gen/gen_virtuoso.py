@@ -278,7 +278,7 @@ VARIANTS = {
     "A": [
         {"type": "gradient", "color": "navy", "poly": clip_dir(WING, U, 226, 266), "a": along_u(226),
          "b": along_u(266), "a0": 0.0, "a1": 0.55},
-        {"type": "poly", "color": "navy", "poly": clip_dir(WING, U, 266, 340), "sym": True},
+        {"type": "poly", "color": "navy", "poly": clip_dir(WING, U, 266, 360), "sym": True},
         dark([(52, 194), (63, 198.6), (66, 207), (56, 204)], wing=True),                       # wing tooth
         dark([(34, 106.4), (46, 102), (43.6, 113), (39, 112.4)]),                               # guard tooth
         dark([(33, 287.6), (38, 294), (33, 300), (31, 295.6)]),                                 # sponson tooth
@@ -309,6 +309,46 @@ VARIANTS = {
     ],
 }
 livery = COMMON_HEAD + VARIANTS[LIVERY] + COMMON_TAIL
+d = os.path.dirname(sys.argv[1])
+# ================================================================== Virtuoso (Unsung) skin
+# User (2026-10-11): NOT a broken-down Virtuoso but one that feels less "upgraded" -- still powerful, clearly weaker.
+# Same hull and silhouette (it is a .skin of rsl_virtuoso), differences:
+#  - the sash is UNPAINTED dark steel (the Virtuoso earns its dark-blue sash); its edges still carry the seams
+#  - no tip vanes: each wing ends in a short, sharp armoured tip blade (dipped dark blue like the other tips)
+#  - a younger lattice: the inner seam stops at the engines (tail spike unlit), smaller resonator cells (3 bars),
+#    dimmer seams overall; no Bravura glow
+import copy  # noqa: E402
+WING_U = WING[:6] + [(SX(111), 348), (SX(95), 324)] + WING[8:]     # long swept tip blade
+us_layers = copy.deepcopy(hs.layers)
+for L in us_layers:
+    if L["name"] == "f_wing":
+        L["sym_poly"] = [P(*q) for q in WING_U]
+us_layers = [L for L in us_layers if L["name"] != "w_mount"]
+us_layers.append({"name": "w_tip", "mat": "ivory", "z": RL, "bevel": 0.45,
+                  "sym_poly": clip_dir(inset(WING_U, 1.1), U, 305, 380),
+                  "tiers": [{"inset": 0.8, "dz": 0.4, "mat": "ivory"}]})
+us_layers.append({"name": "w_tclamp", "mat": "slate", "z": [6.6, 8.8], "bevel": 0.3,
+                  "sym_poly": clip_dir(inset(WING_U, 0.6), U, 301.6, 304.8)})
+us_details = []
+for it in copy.deepcopy(details):
+    if it["type"] == "conduit" and it["pts"][0] == P(*SASH_IN[0]):
+        it["pts"] = [P(*q) for q in SASH_IN[:3]]                   # inner seam ends at the engines
+    if it["type"] == "node" and it["pos"] == P(0, 364):
+        continue                                                     # spike unlit
+    if it["type"] == "cell" and it["size"] == [8.4, 22]:
+        it["size"], it["n"] = [8.4, 14], 3
+        it["slant"] = r(it["slant"] * 14 / 22)
+        it["pos"][0] = r(it["pos"][0] + (cell_slant - cell_slant * 14 / 22) / 2 * (1 if it["pos"][0] > 0 else -1))
+    us_details.append(it)
+us_details.append({"type": "node", "pos": P(3, 318), "r": 1.8, "sym": True})
+us_slots = [copy.deepcopy(sl) for sl in slots if sl.get("type") != "DECORATIVE"]
+_A = [dict(L) for L in VARIANTS["A"]]
+_A[0] = dict(_A[0], poly=clip_dir(WING_U, U, 226, 266))
+_A[1] = dict(_A[1], poly=clip_dir(WING_U, U, 266, 380))
+us_livery = COMMON_HEAD + _A + [dict(COMMON_TAIL[0], color="steel_dark", alpha=0.95)] + COMMON_TAIL[1:]
+us_engines = copy.deepcopy(engines)
+for part in (us_layers, us_details, us_slots, us_engines, us_livery):
+    walk(part, SCALE)
 for part in (hs.layers, details, slots, engines, livery):
     walk(part, SCALE)
 W = 2 * int(max(p[0] for p in WING) * SCALE + 10)                    # + room for the flared vanes
@@ -352,8 +392,13 @@ vane = {"id": "rsl_virtuoso_vane_r", "kind": "deco", "size": [VW, int(VH)], "lay
         "details": vane_details, "livery": [dict(L, sym=False, mirror=False) for L in vane_livery],
         "bravura_glow": True}
 
-d = os.path.dirname(sys.argv[1])
 json.dump(hull, open(sys.argv[1], "w", newline="\n"), indent=1)
+unsung = {"id": "rsl_virtuoso_unsung", "name": "Virtuoso (Unsung)", "hullSize": "CAPITAL_SHIP", "kind": "skin",
+          "size": hull["size"], "layers": us_layers, "greebles": hull["greebles"],
+          "surface_detail": hull["surface_detail"], "details": us_details, "slots": us_slots,
+          "engines": us_engines, "livery": us_livery,
+          "finish": {"seam_base": 0.72, "seam_hot": 0.28, "halo": 0.42}}
+json.dump(unsung, open(os.path.join(d, "rsl_virtuoso_unsung.json"), "w", newline="\n"), indent=1)
 json.dump(vane, open(os.path.join(d, "rsl_virtuoso_vane_r.json"), "w", newline="\n"), indent=1)
 json.dump({"id": "rsl_virtuoso_vane_l", "kind": "deco", "mirror_of": "rsl_virtuoso_vane_r"},
           open(os.path.join(d, "rsl_virtuoso_vane_l.json"), "w", newline="\n"), indent=1)

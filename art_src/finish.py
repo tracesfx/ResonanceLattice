@@ -255,7 +255,7 @@ def finish(spec, rdir, mod, params):
 
     sid = spec["id"]
     kind = spec.get("kind", "ship")
-    folder = "graphics/rsl/ships" if kind == "ship" else "graphics/rsl/weapons/deco"
+    folder = "graphics/rsl/ships" if kind in ("ship", "skin") else "graphics/rsl/weapons/deco"
     save(sprite, "%s/%s.png" % (folder, sid))
     save(glow_im, "%s/%s_glow.png" % (folder, sid))
     if bravura_im is not None:
