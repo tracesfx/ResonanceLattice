@@ -22,7 +22,13 @@ upgrades extremely expensive. Ids stay `rsl_*` (faction id stays `rsl_choir`).
 Stage 2 DONE: campaign data lives in `tools/campaign_data.py` (faction, ship names, Pitch Glass commodity, 3
 `no_drop` blueprint packages via `rsl_bp_hulls|weapons|wings` tags added by gen_data `split_bp`, Nexerelin config),
 called from gen_data.py; relations applied once per save by `rsl.world.RslRelations` (skipped in new Nex games).
-Cargo icons: `python art_src/gen/gen_campaign_icons.py art_src/review/campaign_icons_v1.png`.
+Cargo icons: `python art_src/gen/gen_campaign_icons.py art_src/review/campaign_icons_v2.png` (also the Lattice
+Nurseries condition icon and the Cantor Array industry image).
+Stage 3 DONE: `rsl.world.VellGen` (pulsar system at (14500,-13000) + free-spot search; markets rsl_coda / rsl_glasshouse
+/ rsl_tacet; people rsl_precentor / rsl_tanh / rsl_abelard), `CantorArrayIndustry` (OrbitalStation subclass, hidden
+from build menus, spawns on the pre-made `use_station_visual` entity), `LatticeNurseries` condition, `RslNex`
+(direct Nex calls in a nested class; nexerelin is in validate_config optional_mods so the build compiles against it).
+Generated in onNewGame + once from onGameLoad (`$rsl_vellGenerated`); skipped in Nex random sectors.
 
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.

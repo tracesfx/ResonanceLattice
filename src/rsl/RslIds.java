@@ -24,6 +24,28 @@ public final class RslIds {
 
     /** Sector memory: the Cantorate's starting relations were applied to this save. */
     public static final String MEM_RELATIONS_SET = "$rsl_relationsSet";
+    /** Sector memory: Vell was generated in this save (never regenerated, even if it is later destroyed). */
+    public static final String MEM_VELL_GENERATED = "$rsl_vellGenerated";
+
+    // Vell (rsl.world.VellGen)
+    public static final String INDUSTRY_CANTOR_ARRAY = "rsl_cantor_array";
+    public static final String CONDITION_NURSERIES = "rsl_lattice_nurseries";
+    public static final String MARKET_CODA = "rsl_coda";
+    public static final String MARKET_GLASSHOUSE = "rsl_glasshouse";
+    public static final String MARKET_TACET = "rsl_tacet";
+    public static final String ID_VELL_STAR = "rsl_vell_star";
+    public static final String ID_TACET = "rsl_tacet_station";
+    public static final String ID_TENUTO = "rsl_tenuto";
+    public static final String ID_BASSO = "rsl_basso";
+    public static final String ID_CODA = "rsl_coda_planet";
+    public static final String ID_GLASSHOUSE = "rsl_glasshouse_planet";
+    public static final String ID_CANTOR_ARRAY = "rsl_cantor_array_station";
+    public static final String ID_VELL_RELAY = "rsl_vell_relay";
+    public static final String ID_VELL_BUOY = "rsl_vell_buoy";
+    public static final String ID_VELL_SENSOR = "rsl_vell_sensor";
+    public static final String PERSON_PRECENTOR = "rsl_precentor";
+    public static final String PERSON_TANH = "rsl_tanh";
+    public static final String PERSON_ABELARD = "rsl_abelard";
 
     public static final String HULL_GRACENOTE = "rsl_gracenote";
     public static final String HULL_CONDUCTOR = "rsl_conductor";

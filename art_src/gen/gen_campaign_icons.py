@@ -164,6 +164,50 @@ def blueprint(kind):
     return finish(rgb, a)
 
 
+def starfield(w, h, seed):
+    rng = np.random.default_rng(seed)
+    yy, xx = np.mgrid[0:h, 0:w].astype(float)
+    bg = np.zeros((h, w, 3))
+    bg[:] = np.array([6, 9, 18.0])
+    bg += (NAVY * 0.5) * np.clip(1 - np.hypot(xx / w - 0.7, yy / h - 0.3) * 1.4, 0, 1)[..., None]
+    for _ in range(int(w * h / 260)):
+        x, y = rng.integers(0, w), rng.integers(0, h)
+        bg[y, x] = np.clip(bg[y, x] + rng.uniform(60, 200), 0, 255)
+    return bg
+
+
+def nurseries():
+    """Market condition icon (40x40, full bleed like vanilla's): glowing shards in a dark vault."""
+    rgb = starfield(N, N, 3) * 0.6
+    a = np.ones((N, N))
+    halo = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(halo).ellipse([6 * S, 4 * S, 74 * S, 76 * S], fill=200)
+    comp(rgb, a, TEAL, np.asarray(halo.filter(ImageFilter.GaussianBlur(S * 9))).astype(float) / 255.0 * 0.55)
+    shard(18, 84, 22, 8.0, -8, rgb, a, 0.6)
+    shard(62, 84, 18, 8.0, 8, rgb, a, 0.5)
+    shard(40, 86, 2, 11.0, 0, rgb, a, 0.12)
+    shard(29, 88, 40, 6.0, -4, rgb, a, 0.85)
+    shard(52, 88, 36, 6.0, 4, rgb, a, 0.3)
+    im = finish(rgb, a)
+    return im.resize((40, 40), Image.LANCZOS)
+
+
+def cantor_industry():
+    """Industry image (190x95, vanilla station images are close crops): the glow-on Cantor Array on a starfield."""
+    sys.path.insert(0, os.path.join(ROOT, "art_src"))
+    import station_preview
+    st = station_preview.composite("rsl_cantor", glow=True, ring_angle=20.0)
+    bb = st.getbbox()
+    st = st.crop(bb)
+    scale = 300.0 / st.width
+    st = st.resize((int(st.width * scale), int(st.height * scale)), Image.LANCZOS).rotate(-18, Image.BICUBIC,
+                                                                                         expand=True)
+    w, h = 190, 95
+    bg = Image.fromarray(np.clip(starfield(w, h, 7), 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+    bg.alpha_composite(st, (w // 2 - st.width // 2 + 40, h // 2 - st.height // 2 + 10))
+    return bg
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     icons = {"rsl_pitchglass": pitchglass()}
@@ -172,19 +216,26 @@ def main():
     for name, im in icons.items():
         im.save(os.path.join(OUT, name + ".png"))
         print("wrote", name)
+    extra = {os.path.join(ROOT, "graphics", "rsl", "icons", "markets", "rsl_lattice_nurseries.png"): nurseries(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry()}
+    for path, im in extra.items():
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        im.save(path)
+        print("wrote", os.path.relpath(path, ROOT))
+    icons.update({os.path.basename(p): im for p, im in extra.items()})
     if len(sys.argv) > 1:
-        refs = [Image.open(os.path.join(GAME, "starsector-core", "graphics", "icons", "cargo", f)).convert("RGBA")
-                for f in ("ai_core_beta.png", "blueprint_hightech.png", "survey_data3.png")]
+        icons_dir = os.path.join(GAME, "starsector-core", "graphics", "icons")
+        refs = [Image.open(os.path.join(icons_dir, f)).convert("RGBA")
+                for f in ("cargo/ai_core_beta.png", "cargo/blueprint_hightech.png", "markets/rareore_rich.png",
+                          "industry/star_fortress.png")]
         tiles = list(icons.values()) + refs
-        sheet = Image.new("RGBA", (len(tiles) * 90 * 3, 270), (36, 38, 44, 255))
-        for i, t in enumerate(tiles):
-            sheet.alpha_composite(t.resize((240, 240), Image.NEAREST), (i * 270 + 15, 15))
-        small = Image.new("RGBA", (len(tiles) * 90, 90), (36, 38, 44, 255))
-        for i, t in enumerate(tiles):
-            small.alpha_composite(t, (i * 90 + 5, 5))
-        full = Image.new("RGBA", (sheet.width, 360), (36, 38, 44, 255))
-        full.alpha_composite(sheet, (0, 0))
-        full.alpha_composite(small, (0, 270))
+        width = sum(t.width * 2 + 20 for t in tiles) + 20
+        full = Image.new("RGBA", (width, 2 * 190 + 60), (36, 38, 44, 255))
+        x = 20
+        for t in tiles:   # 2x row on top, 1x row below
+            full.alpha_composite(t.resize((t.width * 2, t.height * 2), Image.NEAREST), (x, 20))
+            full.alpha_composite(t, (x, 2 * 95 + 60 + 120))
+            x += t.width * 2 + 20
         full.save(sys.argv[1])
         print("sheet", sys.argv[1])
 

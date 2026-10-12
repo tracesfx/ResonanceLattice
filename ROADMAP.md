@@ -65,7 +65,7 @@ Exit: user approves CAMPAIGN.md; DESIGN.md and CLAUDE.md point to it.
   presets, invasion/diplomacy traits) — only loaded by Nex, so no hard dependency.
 - Validator: faction knows every weapon/wing its role variants use (already checked), new files clean.
 
-## Stage 3 — Home in the Sector (worldgen)
+## Stage 3 — Home in the Sector (worldgen) — DONE (2026-10-12; `rsl.world.VellGen`)
 
 - `rsl.world.RslWorldGen`: home star system per CAMPAIGN.md (star, planets, jump points, hyperspace clearing,
   market conditions, industries, submarkets, admin and important people), created in `onNewGame` and, behind a

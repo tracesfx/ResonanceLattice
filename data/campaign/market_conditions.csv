@@ -1,0 +1,2 @@
+name,id,tags,planetary,decivRemove,script,desc,icon,order
+Lattice Nurseries,rsl_lattice_nurseries,,,,rsl.world.LatticeNurseries,"Lattice crystal is grown on $market in pressurised vaults timed to the pulsar of Vell. The tailings feed the mines, and the hum of the nurseries carries through every corridor.",graphics/rsl/icons/markets/rsl_lattice_nurseries.png,1390

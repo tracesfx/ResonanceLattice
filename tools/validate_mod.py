@@ -1448,7 +1448,7 @@ class Validator:
         dep_ids = {d.get("id") for d in self.info.get("dependencies", []) or [] if isinstance(d, dict)}
         dep_ids.add(self.info.get("id"))
         lib_pkgs = {"org.lazywizard": "lw_lazylib", "org.magiclib": "MagicLib", "data.scripts.util.Magic": "MagicLib",
-                    "org.dark.shaders": "shaderLib", "lunalib": "lunalib"}
+                    "org.dark.shaders": "shaderLib", "lunalib": "lunalib", "exerelin": "nexerelin"}
         newest_src = 0
         all_src = ""
         unknown_lits = {}
@@ -1501,8 +1501,14 @@ class Validator:
                     r.warn("static field '%s %s' holds game objects: it survives loading another save and leaks the "
                            "old sector (wiki); use persistent data or instance fields" % (typ, m.group(2)), rel)
             for pkg, mid in lib_pkgs.items():
-                if re.search(r"^\s*import\s+%s" % re.escape(pkg), src, re.M) and mid not in dep_ids:
-                    if 'isModEnabled("%s")' % mid not in all_src and 'isModEnabled("%s")' % mid not in _read_all(files):
+                uses = (re.search(r"^\s*import\s+%s" % re.escape(pkg), src, re.M)
+                        or re.search(r"(?<![\w.\"])%s\.[a-z]+\.[A-Z]" % re.escape(pkg), src))   # fully qualified use
+                if uses and mid not in dep_ids:
+                    every = _read_all(files)
+                    consts = re.findall(r'static\s+final\s+String\s+(\w+)\s*=\s*"%s"' % re.escape(mid), every)
+                    guarded = 'isModEnabled("%s")' % mid in every or any(
+                        re.search(r"isModEnabled\([\w.]*%s\)" % c, every) for c in consts)
+                    if not guarded:
                         r.warn("imports %s classes but %s is not a dependency and no isModEnabled(\"%s\") guard was "
                                "found (NoClassDefFoundError when it is absent)" % (pkg, mid, mid), rel)
         # A prefixed string that is not a data id is usually an entity/market/stat/key id (fine). Flag only the ones

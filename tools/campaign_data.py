@@ -208,6 +208,60 @@ def special_items(g):
     g.write_csv("data/campaign/special_items.csv", hdr, rows)
 
 
+PLACES = {
+    # (id, CUSTOM) descriptions, set on the entities by rsl.world.VellGen
+    "rsl_desc_vell": "A neutron star that turns once every 1.3 seconds and sweeps the system with a beam of hard "
+                     "radiation. Its beat is steadier than any clock humanity has built, and it is the only reason "
+                     "anyone lives here: lattice crystal grows true only to a pulsar's rhythm.",
+    "rsl_desc_tacet": "A listening station in a tight orbit around Vell, shielded against the beam that crosses it "
+                      "every rotation. Tacet Station records the pulsar and broadcasts the Cantorate's reference "
+                      "pitch, the tone every lattice core in Vell is tuned against. Its archives hold what the "
+                      "refugees managed to save of the Antiphon Institute, and some of what they chose to forget.",
+    "rsl_desc_tenuto": "A scorched rock that holds its orbit through the pulsar's beam. Nothing grows here and nobody "
+                       "has tried; the Cantorate's tuners use it as a reference target.",
+    "rsl_desc_basso": "A cold, slow ice giant whose low radio drone gave it its name. Its moons are the Cantorate's "
+                      "home: Coda, where the refugees settled, and Glasshouse, where they grow the crystal.",
+    "rsl_desc_coda": "A frozen moon of Basso and the capital of the Cantorate of Vell. Its habitats were dug by a "
+                     "refugee fleet that had run out of places to go, and they still hum: every district keeps a "
+                     "tuning shift, and the whole city falls silent at the change of watch.\n\nAbove it turns the "
+                     "Cantor Array, the largest lattice instrument the Cantorate has ever grown.",
+    "rsl_desc_glasshouse": "An airless moon of Basso where lattice crystal is grown in pressurised vaults timed to "
+                           "the pulsar. The nurseries are tended in shifts by workers who can hear a flawed crystal "
+                           "before any instrument can find it, and who lose that hearing young.",
+    "rsl_desc_cantor_array": "A lattice station of six petals around a crystal heart, turning slowly above Coda. "
+                             "When one petal is lost, its stored resonance floods the others.",
+}
+
+INDUSTRY_DESC = (
+    "The Cantor Array: a six-petal lattice station grown around a crystal heart. Its Spires hold the long lances, its "
+    "Bells the flak and point defense, its Lofts the Cantorate's fighters, and every petal that falls makes the rest "
+    "stronger.\n\nMust be reduced before a bombardment can be attempted.")
+
+NURSERIES_DESC = (
+    "Lattice crystal is grown on $market in pressurised vaults timed to the pulsar of Vell. The tailings feed the "
+    "mines, and the hum of the nurseries carries through every corridor.")
+
+
+def industries(g):
+    hdr = g.V.header("industries.csv")
+    r = g.V.clone_row("industries.csv", "starfortress_high", **{
+        "id": "rsl_cantor_array", "name": "Cantor Array", "downgrade": "", "upgrade": "",
+        "tags": "station, starfortress, unraidable, structure",
+        "data": "{\nradius:110,\nvariant:rsl_cantor_Standard,\nfleetName:Cantor Array\n}",   # as vanilla
+        "image": "graphics/rsl/icons/industry/rsl_cantor_array.png",
+        "plugin": "rsl.world.CantorArrayIndustry", "desc": INDUSTRY_DESC})
+    g.write_csv("data/campaign/industries.csv", hdr, [r])
+
+
+def conditions(g):
+    hdr = g.V.header("market_conditions.csv")
+    r = {c: "" for c in hdr}
+    r.update({"name": "Lattice Nurseries", "id": "rsl_lattice_nurseries", "planetary": "",
+              "script": "rsl.world.LatticeNurseries", "desc": NURSERIES_DESC,
+              "icon": "graphics/rsl/icons/markets/rsl_lattice_nurseries.png", "order": 1390})
+    g.write_csv("data/campaign/market_conditions.csv", hdr, [r])
+
+
 def nexerelin(g):
     """Read only when Nexerelin is enabled; harmless otherwise. Keys copied from Nex's own faction configs."""
     g.write_csv("data/config/exerelinFactionConfig/mod_factions.csv", ["faction"], [{"faction": g.FACTION}])
@@ -245,7 +299,9 @@ def nexerelin(g):
 
 
 def descriptions():
-    return [{"id": "rsl_choir", "type": "FACTION", "text1": FACTION_DESC}]
+    rows = [{"id": "rsl_choir", "type": "FACTION", "text1": FACTION_DESC}]
+    rows += [{"id": k, "type": "CUSTOM", "text1": v} for k, v in PLACES.items()]
+    return rows
 
 
 def build(g):
@@ -253,4 +309,6 @@ def build(g):
     ship_names(g)
     commodities(g)
     special_items(g)
+    industries(g)
+    conditions(g)
     nexerelin(g)

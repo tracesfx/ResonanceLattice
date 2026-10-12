@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (campaign Stage 3: Vell)
+
+- New star system **Vell** (south-east fringe): a pulsar with its beam, Tacet Station (size 3, high-tech orbital
+  station), the ice giant Basso with Coda (capital, size 5: megaport, military base, orbital works, refining, heavy
+  batteries) and Glasshouse (size 4: mining, patrol HQ, new condition **Lattice Nurseries**: +1 stability, +1
+  transplutonics), the rock Tenuto, an outer belt, relay, buoy and sensor array.
+- The **Cantor Array** is Coda's defence station (industry `rsl_cantor_array`, star-fortress tier, cannot be built
+  elsewhere).
+- Named people: Precentor Ilian Okoro-Vass (faction leader, Coda's administrator), Luthier Corvin Abelard (Coda),
+  Archivist Mireille Tanh (Tacet Station).
+- Generated in new games and once in existing saves; skipped in Nexerelin random sectors.
+
 ## Unreleased - 2026-10-12 (campaign Stage 2: faction foundation)
 
 - The faction is now **the Cantorate of Vell** (id still `rsl_choir`): own ranks and posts (Precentor, Maestro,
