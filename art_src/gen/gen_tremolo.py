@@ -6,9 +6,11 @@ Direction chosen by the user (2026-10-11, option A of art_src/review/tremolo_opt
   a catamaran of two narrow hulls. Each hull: stepped spear bow with an inner mandible tooth -> shoulder steps ->
   sponson with a sharp forward-out tooth -> notch -> mid section -> engine block flaring into a swept aft tip.
   A forward bridge with the lattice core joins the hulls behind the open fork; glowing X-spars (open girders: twin
-  steel chords with glow lines + gunmetal Warren webbing, no hub at the crossing) and a cross bar span the open gap
-  aft. v3 (user: the X looked auxiliary): broader girders at hull-plate height, rooted in long steel gussets faired
-  into the hulls' inner faces, with the chord seams running on across the gussets into the hull. Real empty space: the fork between the bows and the truss windows.
+  steel chords with glow lines + gunmetal Warren webbing, no hub at the crossing) span the open gap
+  aft (cross bar removed in v4). v3 (user: the X looked auxiliary): broader girders at hull-plate height, rooted in long steel gussets faired
+  into the hulls' inner faces, with the chord seams running on across the gussets into the hull.
+  v4: cross bar removed; the zig-zag webbing is armoured (solid steel deck between the chords, the zig-zag
+  struts raised on top) + segmented chamfered armour cladding along both outer girder edges. Real empty space: the fork between the bows and the truss windows.
 Plates are made from the frame outline (inset + clipped to bands), so the gaps between them expose machinery.
 """
 import json
@@ -119,7 +121,6 @@ HULL = [(44, 0), (46, 10), (47.5, 26), (52, 29), (54, 46), (58, 49),            
 BRIDGE = [P(0, 74), P(5, 84), P(14, 88), P(40, 99), P(45, 104), P(45.5, 134), P(30, 138), P(18, 148), P(8, 152),
           P(4, 162), P(0, 164)]
 XA, XB = (51, 174), (-51, 224)                    # X-spar (the other one is its mirror image)
-HY = 199                                          # cross bar
 
 # ------------------------------------------------------------------ silhouette
 frame("f_hull", sym_poly=[P(*p) for p in HULL])
@@ -127,7 +128,6 @@ frame("f_bridge", half=BRIDGE)
 SW = 15                                           # X girder width (twin chords + webbing)
 frame("f_spar_x1", poly=bar(XA, XB, SW))
 frame("f_spar_x2", poly=bar((-XA[0], XA[1]), (-XB[0], XB[1]), SW))
-frame("f_spar_h", sym_poly=[P(52, HY - 3), P(52, HY + 3), P(12, HY + 3), P(12, HY - 3)])
 
 # ------------------------------------------------------------------ hull plates (bands of the frame outline)
 glow = lambda pts, w=1.5, d=2.0: {"pts": pts, "w": w, "depth": d, "glow": True, "sym": True}
@@ -199,20 +199,37 @@ for k, o in enumerate((-RO, RO)):
     glow_cut = lambda pts: [{"pts": pts, "w": 0.8, "depth": 1.2, "glow": True}]
     plate("gx1_rail%d" % k, "ivory2", [5.0, 6.9], bevel=0.35, poly=rail, cuts=glow_cut(line))
     plate("gx2_rail%d" % k, "ivory2", [5.0, 6.9], bevel=0.35, poly=mir(rail), cuts=glow_cut(mir(line)))
-# Warren-truss bracing between the rails (zig-zag struts), none near the crossing
+# Warren truss between the chords, ARMOURED (user: the open zig-zag felt fragile): a solid chamfered steel deck spans
+# the chords on each truss half, the zig-zag struts are raised gunmetal ribs on top of it. None near the crossing.
 k = 0
 for t_a, t_b in ((0.15, 0.43), (0.57, 0.85)):
+    c = 0.012
+    plate("gx_deck%d" % k, "ivory2", [4.2, 5.6], bevel=0.35,
+          sym_poly=[P(*spar_pt(t_a, -RO + 0.8)), P(*spar_pt(t_a + c, -RO - 1.2)), P(*spar_pt(t_b - c, -RO - 1.2)),
+                    P(*spar_pt(t_b, -RO + 0.8)), P(*spar_pt(t_b, RO - 0.8)), P(*spar_pt(t_b - c, RO + 1.2)),
+                    P(*spar_pt(t_a + c, RO + 1.2)), P(*spar_pt(t_a, RO - 0.8))],
+          tier={"inset": 0.7, "dz": 0.3, "mat": "ivory"})
     m = 8
+    pts = [spar_pt(t_a + (t_b - t_a) * q / m, (-RO if q % 2 == 0 else RO) * 0.82) for q in range(m + 1)]
     for q in range(m):
-        ta, tb = t_a + (t_b - t_a) * q / m, t_a + (t_b - t_a) * (q + 1) / m
-        oa, ob = (-RO, RO) if q % 2 == 0 else (RO, -RO)
-        plate("gx_brace%d" % k, "slate", [4.2, 5.9], bevel=0.25, sym_poly=bar(spar_pt(ta, oa), spar_pt(tb, ob), 1.6))
-        k += 1
+        plate("gx_brace%d_%d" % (k, q), "slate", [6.0, 7.2], bevel=0.3, sym_poly=bar(pts[q], pts[q + 1], 2.4))
+    # armour cladding along both outer edges of the girder: one strip per side, its outer edge stepped into 3
+    # segments (notches), chamfered ends; low bevel so the thin strip stays crisp (no rounded blisters)
+    for sg in (-1, 1):
+        o0, o1, on = sg * (RO + RW_ / 2 - 0.4), sg * (RO + RW_ / 2 + 2.4), sg * (RO + RW_ / 2 + 1.3)
+        edge = []
+        for j in range(3):
+            u0 = t_a + 0.012 + (t_b - t_a - 0.024) * j / 3
+            u1 = t_a + 0.012 + (t_b - t_a - 0.024) * (j + 1) / 3
+            edge += [spar_pt(u0 + (0.016 if j == 0 else 0.004), o1), spar_pt(u1 - (0.016 if j == 2 else 0.004), o1)]
+            if j < 2:
+                edge += [spar_pt(u1 - 0.004, on), spar_pt(u1 + 0.004, on)]
+        poly = [spar_pt(t_a + 0.012, o0)] + edge + [spar_pt(t_b - 0.012, o0)]
+        plate("gx_clad%d_%d" % (k, sg + 1), "ivory", [5.6, 7.4], bevel=0.15, sym_poly=[P(*q) for q in poly])
+    k += 1
 D1 = (XB[0] - XA[0], XB[1] - XA[1])
 RAIL_X = [isect(spar_pt(0, o1), D1, (-spar_pt(0, o2)[0], spar_pt(0, o2)[1]), (-D1[0], D1[1]))
           for o1 in (-RO, RO) for o2 in (-RO, RO)]
-plate("s_h", "slate", [4.4, 6.0], bevel=0.4, sym_poly=[P(13, HY - 1.8), P(49, HY - 1.8), P(49, HY + 1.8), P(13, HY + 1.8)],
-      cuts=[{"pts": [P(15, HY), P(46, HY)], "w": 0.9, "depth": 1.3, "glow": True, "sym": True}])
 # spar root gussets: long steel knees faired into the hull's inner face, so the X reads as load-bearing structure
 # grown out of the hulls (user: the spars looked auxiliary). The chord glow lines run on across them into the hull.
 GA = [P(53, 157), P(47.4, 157), P(*spar_pt(0.16, RO + RW_ / 2 + 1.2)), P(*spar_pt(0.16, -RO - RW_ / 2 - 1.2)),
@@ -228,8 +245,7 @@ for k, t in enumerate((0.16, 0.84)):                               # gunmetal co
     plate("gcollar%d" % k, "slate", [6.0, 8.0], bevel=0.3,
           sym_poly=[P(*spar_pt(t - 0.012, -RO - RW_ / 2 - 1.6)), P(*spar_pt(t - 0.012, RO + RW_ / 2 + 1.6)),
                     P(*spar_pt(t + 0.012, RO + RW_ / 2 + 1.6)), P(*spar_pt(t + 0.012, -RO - RW_ / 2 - 1.6))])
-plate("clamp_h", "slate", [6.2, 8.4], bevel=0.4, sym_poly=[P(46.6, HY - 5), P(53.5, HY - 6.4), P(53.5, HY + 6.4),
-                                                          P(46.6, HY + 5)])
+
 for k, y in enumerate((102, 132)):                                # bridge root clamps
     plate("bclamp%d" % k, "slate", [6.2, 8.4], bevel=0.4,
           sym_poly=[P(41.5, y - 3), P(48, y - 4), P(48, y + 4), P(41.5, y + 3)])

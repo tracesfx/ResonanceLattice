@@ -31,9 +31,10 @@ feedback.
 - **Conductor** (option C "Split blade" of `conductor_options.png`, inner blades close). v1 rejected ("extremely bulky,
   tin-foil like", gradients uncohesive, dots ≠ detail) → **v2** slim segmented spine (awaiting feedback). Generator
   `art_src/gen/gen_conductor.py` writes `rsl_conductor.json` + deco `rsl_conductor_blade_r.json` (+ `_l` mirror_of).
-- **Round 3 (awaiting feedback), sheet `art_src/review/sheet_v3.png`:** Conductor v2, Tremolo v3 (X-spars integral:
-  steel chords + gussets), Halo v2 (hollow well). Per-hull sheets `conductor_v2.png`, `tremolo_v3.png`, `halo_v2.png`.
-- Next, in order: round-3 feedback → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
+- Round 3 (`sheet_v3.png`): user: "Conductor looks good" (APPROVED v2). Tremolo: remove the cross bar, armour the
+  zig-zag. Halo: struts to the core more intricate with seams, at regular intervals.
+- **Round 4 (awaiting feedback), sheet `art_src/review/sheet_v4.png`:** Tremolo v4, Halo v3.
+- Next, in order: round-4 feedback → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -149,11 +150,16 @@ shreds frigate/fighter swarms. Quest not designed yet.
   tips + spine stripe": crisp navy caps + a second dip band on prong tips, navy wing caps with the only wing gradient
   leading into them, a bold navy stripe each side of the keel, stern + nacelles deepen aft. Weak: wing segments
   still read a little boxy.
-- **Tremolo v3:** X-spars made integral: chords are brushed steel at hull-plate height (RO 4.6, RW 3.6, SW 15) with
+- **Tremolo v4:** cross bar removed; each truss half has a solid steel deck between the chords, raised gunmetal
+  zig-zag struts on top, and a crisp armour strip (bevel 0.15, outer edge notched into 3 segments) along both outer
+  girder edges (thin plates with normal bevel/tiers render as round scallops — avoid).
+  v3: X-spars made integral: chords are brushed steel at hull-plate height (RO 4.6, RW 3.6, SW 15) with
   gunmetal Warren webbing, rooted in long steel gussets faired into the hulls' inner faces (chord glow runs on across
   the gussets into the hull, root nodes), gunmetal collars where gusset meets girder.
-- **Halo v2:** well floor cut open (finish `cutouts`) between 12 brushed-steel radial struts (4.4 px), hub collar
-  around the core; the flank flight decks/bay hatches, lip and bearing race unchanged.
+- **Halo v3:** well floor cut open (finish `cutouts`) into 6 windows whose sides hug the strut profile (`window()`),
+  between SIX struts on a 60° grid = the ring spokes' grid (12 off-grid struts + 3 ring spokes read as irregular).
+  Strut: slate root gusset on the hub collar, brushed-steel beam with a core-fed glow seam, mid clamp, outer bracket
+  on the lip with a node; hub collar carries a glow ring. Ring deco_alt_angle 60 (spokes stay on the grid).
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)

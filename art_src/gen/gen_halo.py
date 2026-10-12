@@ -6,7 +6,7 @@ Direction chosen by the user (2026-10-11, option C of art_src/review/halo_option
   a wide carrier hull that wraps around a ring spinning in a central well. Stepped spear bow with canards ->
   head whose shoulders sweep back into a deep V notch -> two forward claw prongs with swept tips -> fore flight
   deck slanting out to a tooth -> aft deck slanting in -> swept aft fins -> stepped engine block. The well is
-  ringed by a raised bearing race with clamps; its floor is dark with static radial ribs and a glow ring, and the
+  ringed by a raised bearing race with clamps; six struts on the ring's 60 degree grid carry the hub, and the
   lattice core sits at its centre under the ring's hub.
   The ring (deco, rotates about its image centre) has 6 armoured segments with swept teeth (show the spin
   direction), bay hatches, a glowing seam, 3 spokes to a hub; alternate segments are painted dark blue so the
@@ -222,11 +222,8 @@ hs.plate("spine_b", "slate", [6.8, 8.6], half=[P(0, 30), P(2.6, 32), P(3.2, 54),
          tier={"inset": 0.6, "dz": 0.3, "mat": "ivory2"})
 hs.plate("spine_s", "slate", [6.6, 8.4], half=[P(0, 293), P(5, 296), P(5.4, 340), P(3, 372), P(0, 374)],
          tier={"inset": 0.8, "dz": 0.4, "mat": "ivory2", "cuts": [glow([P(0, 300), P(0, 366)], 1.1, 1.6, False)]})
-# well floor: dark plate (no greebles), static radial ribs and a glow ring that flicker through the spinning ring
+# well floor (dark; mostly cut away, see CUTOUTS) + lip
 hs.plate("well_floor", "graphite", [7.0, 7.4], bevel=0.3, poly=circle(WC, 95))
-for k, a in enumerate((15, 45, 75)):
-    hs.plate("rib%d" % k, "ivory2", [7.4, 8.4], bevel=0.3, sym_poly=bar(pol(WC, 24, a), pol(WC, 89, a), 4.4))
-    hs.plate("ribu%d" % k, "ivory2", [7.4, 8.4], bevel=0.3, sym_poly=bar(pol(WC, 24, -a), pol(WC, 89, -a), 4.4))
 hs.plate("well_lip", "slate", [7.4, 8.4], bevel=0.3, poly=circle(WC, 94), holes=[{"poly": circle(WC, 88)}])
 # bearing race around the well + clamps
 hs.plate("race", "slate", [8.0, 9.8], bevel=0.4, poly=circle(WC, 106), holes=[{"poly": circle(WC, 93)}],
@@ -237,18 +234,52 @@ for k, a in enumerate(CLAMP_A):
     hs.plate("clamp%d" % k, "slate", [8.6, 10.6], bevel=0.4, sym_poly=quad_at(WC, a, 101, 113, 5))
 for k, a in enumerate((-90, 90)):
     hs.plate("clampc%d" % k, "slate", [8.6, 10.6], bevel=0.4, poly=quad_at(WC, a, 101, 113, 6))
-# the well is HOLLOW (user: the flat grey inner platform was ugly): open sectors between the 12 radial struts are cut
-# out of the finished sprite (finish.py "cutouts"), leaving struts, inner hub collar, lip and bearing race.
-hs.plate("hub_collar", "slate", [7.4, 8.6], bevel=0.3, poly=circle(WC, 27), holes=[{"poly": circle(WC, 19.5)}],
-         tier={"inset": 0.8, "dz": 0.3, "mat": "ivory2"})
+# the well is HOLLOW (user: the flat grey inner platform was ugly): six struts carry the core hub, the windows between
+# them are cut out of the finished sprite (finish.py "cutouts"). Struts sit on a 60 degree grid, the same grid as the
+# ring's spokes (user: struts must be at regular intervals). Each strut: root gusset on the hub, steel beam with a seam
+# fed from the core, mid clamp, outer bracket on the lip with a lattice node.
+STRUT_A = [-60, 0, 60]                     # right side; sym_poly mirrors them to 240 / 180 / 120
+hs.plate("hub_collar", "slate", [7.4, 8.8], bevel=0.3, poly=circle(WC, 28), holes=[{"poly": circle(WC, 19.5)}],
+         tier={"inset": 0.9, "dz": 0.3, "mat": "ivory2", "cuts": ring_cuts(WC, 23.8, 0.9, 1.2, 6, 9)})
 
 
-def sector(c, a, r0, r1, d0, d1):
-    """Open window between two struts centred on angle a: inner arc r0 (half-angle d0), outer arc r1 (d1)."""
-    return arc(c, r1, a - d1, a + d1, 6) + list(reversed(arc(c, r0, a - d0, a + d0, 3)))
+def strut_hw(rad):
+    """Half-width profile of a strut along its radius (gusset -> beam -> clamp -> bracket)."""
+    if rad < 38:
+        return 6.4 - (rad - 26) / 12 * 3.0
+    if 57.5 <= rad <= 63.5:
+        return 4.6
+    if rad > 81:
+        return 5.6
+    return 3.3
 
 
-CUTOUTS = [sector(WC, 30 * k, 28.5, 86.5, 15 - 7.6, 15 - 2.6) for k in range(12)]
+for k, a in enumerate(STRUT_A):
+    hs.plate("s_gusset%d" % k, "slate", [7.6, 9.4], bevel=0.35, sym_poly=quad_at(WC, a, 25, 38.5, 6.4),
+             tier={"inset": 0.8, "dz": 0.3, "mat": "ivory2",
+                   "cuts": [{"pts": [P(*pol(WC, 28.5, a)), P(*pol(WC, 37.5, a))], "w": 1.0, "depth": 1.4,
+                             "glow": True, "sym": True}]})
+    hs.plate("s_beam%d" % k, "ivory2", [7.6, 9.0], bevel=0.35, sym_poly=bar(pol(WC, 37, a), pol(WC, 83, a), 6.6),
+             tier={"inset": 0.9, "dz": 0.4, "mat": "ivory2",
+                   "cuts": [{"pts": [P(*pol(WC, 38.5, a)), P(*pol(WC, 81, a))], "w": 1.1, "depth": 1.5,
+                             "glow": True, "sym": True}]})
+    hs.plate("s_clamp%d" % k, "slate", [8.6, 10.0], bevel=0.3, sym_poly=quad_at(WC, a, 57.5, 63.5, 4.6))
+    hs.plate("s_bracket%d" % k, "slate", [7.8, 9.8], bevel=0.35, sym_poly=quad_at(WC, a, 81, 93, 5.6 / 0.9),
+             tier={"inset": 0.8, "dz": 0.3, "mat": "ivory2"})
+
+
+def window(c, a_mid, r0=29.0, r1=86.8, half=30.0, n=24):
+    """Open window between two struts (centred on a_mid), its sides hugging the strut profile (+0.9 px)."""
+    rs = [r0 + (r1 - r0) * i / n for i in range(n + 1)] + [37.9, 38.1, 57.4, 57.6, 63.4, 63.6, 80.9, 81.1]
+    rs = sorted(set(rs))
+    d = lambda rad: math.degrees((strut_hw(rad) + 0.9) / rad)
+    left = [P(*pol(c, rad, a_mid - half + d(rad))) for rad in rs]
+    right = [P(*pol(c, rad, a_mid + half - d(rad))) for rad in reversed(rs)]
+    return arc(c, r0, a_mid + half - d(r0), a_mid - half + d(r0), 4) + left + arc(c, r1, a_mid - half + d(r1),
+                                                                                    a_mid + half - d(r1), 8) + right
+
+
+CUTOUTS = [window(WC, 30 + 60 * k) for k in range(6)]
 # lattice core under the ring hub
 hs.plate("core", "slate", [7.4, 9.2], bevel=0.4, poly=[P(*pol(WC, 19, 30 + 60 * i)) for i in range(6)],
          tier={"inset": 1.5, "dz": 0.4, "mat": "ivory2"})
@@ -259,6 +290,7 @@ details = [
     {"type": "node", "pos": list(WC), "r": 6.5, "shape": "diamond"},
     {"type": "cell", "pos": [0, 38], "size": [3.6, 4.4], "n": 2, "v": 0.9},                 # nose glyph
     *[{"type": "node", "pos": P(*CL[a]), "r": 2.2, "sym": True} for a in CLAMP_A],
+    *[{"type": "node", "pos": P(*pol(WC, 86.5, a)), "r": 2.1, "sym": True} for a in STRUT_A],     # strut brackets
     {"type": "node", "pos": P(0, 107), "r": 2.4},
     {"type": "node", "pos": P(0, 273), "r": 2.4},
     # race clamps -> prong turret / fore turret / aft turret / engines (45/90 degree runs, no branching)
@@ -296,7 +328,7 @@ slots = [
     {"id": "WS0007", "pos": P(131, 124), "size": "LARGE", "type": "LAUNCH_BAY", "mount": "HIDDEN", "angle": 0, "arc": 360, "sym": True},
     {"id": "WS0008", "pos": P(129, 212), "size": "LARGE", "type": "LAUNCH_BAY", "mount": "HIDDEN", "angle": 0, "arc": 360, "sym": True},
     {"id": "WS0009", "pos": list(WC), "size": "LARGE", "type": "DECORATIVE", "mount": "TURRET", "angle": 0, "arc": 360,
-     "deco": "rsl_halo_ring", "deco_alt_angle": 30},
+     "deco": "rsl_halo_ring", "deco_alt_angle": 60},
 ]
 engines = [{"pos": [11, 380], "width": 10, "sym": True}, {"pos": [28, 380], "width": 10, "sym": True},
            {"pos": [70, 351], "width": 9, "sym": True}]
