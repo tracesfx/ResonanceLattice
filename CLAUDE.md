@@ -12,6 +12,14 @@ sounds), `references/pitfalls.md` (symptom/cause/fix rows), `references/sprites.
 `scripts/validate_mod.py` (keep the mod's vendored `tools/validate_mod.py` in sync) when a tool can catch it. Run
 `python ~/.claude/skills/starsector-modding/scripts/selftest.py` after changing the skill's scripts.
 
+**Campaign plan: `ROADMAP.md`** (stages 1-7 for faction, worldgen, quests, secrets; user decisions 2026-10-12).
+Stage 1 produces `CAMPAIGN.md` (lore bible, names, quest beats, secrets); later stages implement it.
+Stage 1 DONE (CAMPAIGN.md v2): faction **the Cantorate** of Vell, Halo -> **Fermata**, Virtuoso's original name
+**Lacrimosa**, currency **Pitch Glass** (Luthier's Workshop), unique officer Concertmaster Odile Marchetti. User rules:
+music must be purposeful (a jam-proof, AI-free network; scores = memorised engineering; tuning = labour), Unbound Core
+never hinges on a quest choice, quest ~30 min, bosses genuinely hard (3 S-mods, level-7 elite officers), Virtuoso
+upgrades extremely expensive. Ids stay `rsl_*` (faction id stays `rsl_choir`).
+
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
 **Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user
