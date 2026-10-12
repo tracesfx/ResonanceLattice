@@ -14,7 +14,7 @@ rsl_harmonic_spinal,WEAPON,The Conductor's spine is the gun. Its prongs wind the
 rsl_sostenuto,WEAPON,"A rapid heavy rail held on one note. Its slugs ring a shield at the pitch of the emitter's own dissipation band, and part of the load simply stays.",,,,,
 rsl_bloom,WEAPON,"A slow torpedo carrying an unstable lattice bloom. On impact the bloom flowers outward as a ring of crystal fragments, and the shock arcs through anything nearby.",,,,,
 rsl_bloom_shard,WEAPON,A crystal fragment of a Resonance Bloom.,,,,,
-rsl_sforzando,WEAPON,The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing small has time to move. Slugs that kill a fighter or a frigate carry on to the next target in line.,,,,,
+rsl_sforzando,WEAPON,"The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing has time to move. Once a hull is bare, a slug goes straight through it and on into the next ship in line.",,,,,
 rsl_sforzando_untuned,WEAPON,"The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.",,,,,
 rsl_deco_halo_ring,WEAPON,A moving part of a Lattice hull.,,,,,
 rsl_deco_cantor_ring,WEAPON,A moving part of a Lattice hull.,,,,,

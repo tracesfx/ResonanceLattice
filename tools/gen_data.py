@@ -369,24 +369,24 @@ def weapons():
     # ---- Virtuoso built-ins ---------------------------------------------------------------------------------
     for wid, name, cd, spd, turn, dmg, tags_extra, text in (
             ("rsl_sforzando", "Sforzando Lance", 0.4, 2600, 45, 200, "",
-             "The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing small has "
-             "time to move. Slugs that kill a fighter or a frigate carry on to the next target in line."),
+             "The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing has time to "
+             "move. Once a hull is bare, a slug goes straight through it and on into the next ship in line."),
             ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 2000, 30, 180, "",
              "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
         w = wpn_base(wid, "ENERGY", "LARGE")
         w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(WHITE, 40, 4, 20, 10),
                  projectileSpecId=wid + "_shot", fireSoundTwo="rsl_sforzando_fire")
         add_weapon(blank_row(name=name, id=wid, tier=3, **{
-            "base value": 0, "range": 1000 if wid == "rsl_sforzando" else 900, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
+            "base value": 0, "range": 1200 if wid == "rsl_sforzando" else 1000, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
             "type": "ENERGY", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
             "max spread": 0, "spread/shot": 0, "spread decay/sec": 0, "proj speed": spd,
             "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
             "tech/manufacturer": MFR, "primaryRoleStr": "Swarm Breaker",
-            "customPrimary": ("+%s damage to fighters and frigates. Cascade: a slug that destroys a fighter or frigate "
-                              "pierces on with %s of its damage. Accented after a Glissando dash, at high speed or in "
-                              "Bravura: every slug deals %s damage, pierces and arcs EMP." if wid == "rsl_sforzando" else
-                              "+%s damage to fighters and frigates. %s"),
-            "customPrimaryHL": "50% | 60% | +50%" if wid == "rsl_sforzando" else "50% | No Cascade"}), w,
+            "customPrimary": ("+%s damage to fighters and frigates. Skewer: a slug that hits hull or armor passes "
+                              "through at full damage into the next target, up to %s ships in a row. Accented after a "
+                              "Glissando dash, at high speed or in Bravura: every hit deals %s damage and arcs EMP."
+                              if wid == "rsl_sforzando" else "+%s damage to fighters and frigates. %s"),
+            "customPrimaryHL": "50% | 6 | +50%" if wid == "rsl_sforzando" else "50% | No Skewer"}), w,
             [bolt(wid + "_shot", 170 if wid == "rsl_sforzando" else 120, 7, [120, 240, 230, 255],
                   glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit", fade=0.15)], text)
 
@@ -1091,16 +1091,17 @@ def config():
 
 
 # ===================================================================================================== sounds + trails
-# Sound files are synthesised by art_src/gen/gen_sounds.py (no vanilla samples). id -> (file, volume)
+# Sound files are processed derivatives of vanilla sounds (art_src/gen/gen_sounds.py).
+# id -> ([files], volume); volumes follow the vanilla sound each one is derived from
 SOUNDS = {
-    "rsl_chime_fire": ("rsl_chime_fire", 0.45), "rsl_pizzicato_fire": ("rsl_pizzicato_fire", 0.7),
-    "rsl_shard_fire": ("rsl_shard_fire", 0.55), "rsl_flechette_fire": ("rsl_flechette_fire", 0.6),
-    "rsl_lance_fire": ("rsl_lance_fire", 0.65), "rsl_arpeggio_fire": ("rsl_arpeggio_fire", 0.6),
-    "rsl_sostenuto_fire": ("rsl_sostenuto_fire", 0.55), "rsl_charge": ("rsl_charge", 0.45),
-    "rsl_driver_fire": ("rsl_driver_fire", 0.9), "rsl_spinal_fire": ("rsl_spinal_fire", 1.0),
-    "rsl_sforzando_fire": ("rsl_sforzando_fire", 0.75), "rsl_flak_fire": ("rsl_flak_fire", 0.6),
-    "rsl_spike_fire": ("rsl_spike_fire", 0.55), "rsl_bloom_fire": ("rsl_bloom_fire", 0.8),
-    "rsl_impact_shield": ("rsl_impact_shield", 0.6), "rsl_impact_hull": ("rsl_impact_hull", 0.6),
+    "rsl_chime_fire": (["rsl_chime_fire_1", "rsl_chime_fire_2", "rsl_chime_fire_3"], 0.3),
+    "rsl_pizzicato_fire": (["rsl_pizzicato_fire"], 0.6), "rsl_shard_fire": (["rsl_shard_fire"], 0.55),
+    "rsl_flechette_fire": (["rsl_flechette_fire"], 0.7), "rsl_lance_fire": (["rsl_lance_fire"], 0.7),
+    "rsl_arpeggio_fire": (["rsl_arpeggio_fire_1", "rsl_arpeggio_fire_2", "rsl_arpeggio_fire_3"], 0.45),
+    "rsl_sostenuto_fire": (["rsl_sostenuto_fire"], 0.45), "rsl_charge": (["rsl_charge"], 0.9),
+    "rsl_driver_fire": (["rsl_driver_fire"], 0.9), "rsl_spinal_fire": (["rsl_spinal_fire"], 1.0),
+    "rsl_sforzando_fire": (["rsl_sforzando_fire"], 0.7), "rsl_flak_fire": (["rsl_flak_fire"], 0.6),
+    "rsl_spike_fire": (["rsl_spike_fire"], 0.8), "rsl_bloom_fire": (["rsl_bloom_fire"], 1.0),
 }
 # MagicLib trails: projectile id -> visual weight (core wake + ion haze scale with it)
 TRAILS = {"rsl_chime_shot": 0.5, "rsl_chime_bell": 0.6, "rsl_pizzicato_shot": 0.8, "rsl_shard_shot": 0.5,
@@ -1117,10 +1118,12 @@ TRAIL_HDR = ["trail", "projectile", "sprite", "minLength", "fadeIn", "duration",
 
 def sounds_and_trails():
     sj = {}
-    for sid, (f, vol) in SOUNDS.items():
-        if not os.path.isfile(P("sounds/rsl/%s.ogg" % f)):
-            raise FileNotFoundError("sounds/rsl/%s.ogg (run art_src/gen/gen_sounds.py)" % f)
-        sj[sid] = [{"file": "sounds/rsl/%s.ogg" % f, "pitch": p, "volume": vol} for p in (0.97, 1.0, 1.03)]
+    for sid, (files, vol) in SOUNDS.items():
+        for f in files:
+            if not os.path.isfile(P("sounds/rsl/%s.ogg" % f)):
+                raise FileNotFoundError("sounds/rsl/%s.ogg (run art_src/gen/gen_sounds.py)" % f)
+        pitches = (1.0,) if len(files) > 1 else (0.97, 1.0, 1.03)   # one file: vary it a little
+        sj[sid] = [{"file": "sounds/rsl/%s.ogg" % f, "pitch": p, "volume": vol} for f in files for p in pitches]
     write_json("data/config/sounds.json", sj)
 
     def trail(tid, pid, sprite, w, dur, fade, s_in, s_out, c_in, c_out, opacity, dist, disp, additive=True):
@@ -1141,6 +1144,9 @@ def sounds_and_trails():
                           [90, 210, 220], 0.75, round(length * 0.5), 0))
         rows.append(trail(pid + "_haze", pid, "base_trail_fuzzy", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
                           [150, 110, 230], 0.3, round(length * 0.5), 12 * w))
+    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: their wake hangs in the air much longer
+        if r["projectile"] == "rsl_sforzando_shot":
+            r["duration"], r["fadeOut"] = r["duration"] * 4, round(r["fadeOut"] * 3, 2)
     for pid, w in MISSILE_TRAILS.items():
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],
                           [140, 110, 220], 0.4, 6, 10 * w, additive=False))

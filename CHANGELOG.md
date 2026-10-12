@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Sforzando skewer, sounds v2)
+
+- Sforzando Lance: 1,200 range (Untuned 1,000). Skewer: slugs that hit hull or armor go straight through at full
+  damage into the next target, up to 6 ships in a row (replaces Cascade and the Accent pierce). Its trail lingers
+  about three times longer.
+- Sounds rebuilt as processed derivatives of the vanilla sounds the weapons used before (pitch, EQ, layering, a short
+  metallic slap-back); the synthesised bell/string set and the custom impact sounds are gone (vanilla hit sounds play).
+
 ## Unreleased - 2026-10-12 (rail doctrine + fighters)
 
 - Weapon doctrine: every gun is now a long-range, high-velocity rail (ranges 700-1500, slug speeds 1800-2800),

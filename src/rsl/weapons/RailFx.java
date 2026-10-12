@@ -1,6 +1,5 @@
 package rsl.weapons;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
 import com.fs.starfarer.api.combat.CombatEntityAPI;
 import com.fs.starfarer.api.combat.DamagingProjectileAPI;
@@ -21,7 +20,7 @@ import java.util.List;
  * <ul>
  * <li>{@link #impact}: called from every rail projectile's on-hit. Shields ring - a flash, a ripple of light running
  * along the shield's curve and a spray of glints back towards the shooter; hull and armor crack - sparks, a molten
- * spatter and a puff of crystal dust. Each with its own sound.</li>
+ * spatter and a puff of crystal dust (the game's own hit sounds play as usual).</li>
  * <li>{@link #advanceProjectiles}: called once per frame by the combat plugin. A fresh slug kicks two vent jets out
  * of the muzzle sideways; slugs in flight shed small glinting motes.</li>
  * </ul>
@@ -31,17 +30,12 @@ public final class RailFx {
     private RailFx() {
     }
 
-    public static final String SOUND_SHIELD = "rsl_impact_shield";
-    public static final String SOUND_HULL = "rsl_impact_hull";
     private static final Color SPARK = new Color(255, 230, 190, 255);
     private static final Color DUST = new Color(150, 210, 210, 120);
     private static final Color RIPPLE = new Color(140, 245, 235, 255);
     private static final Color MOTE = new Color(120, 240, 230, 200);
     private static final Color VENT = new Color(170, 230, 255, 160);
     private static final float MOTE_INTERVAL = 0.04f;
-    /** At most this many impact sounds per second (a Chime burst would otherwise stack dozens). */
-    private static final float SOUND_GAP = 0.05f;
-    private static float lastSound = -1f;
     private static float moteTimer;
 
     /** 0.4 (PD tick) .. ~3 (heavy driver): visual and sound weight of a hit. */
@@ -64,10 +58,8 @@ public final class RailFx {
         double back = Math.toRadians(proj.getFacing() + 180f);
         if (shieldHit && target instanceof ShipAPI && ((ShipAPI) target).getShield() != null) {
             shieldRing(((ShipAPI) target).getShield(), point, tv, back, w, engine);
-            sound(SOUND_SHIELD, 0.9f + 0.25f / w, Math.min(1f, 0.35f + 0.25f * w), point, tv);
         } else {
             hullCrack(point, tv, back, w, engine);
-            sound(SOUND_HULL, 0.85f + 0.3f / w, Math.min(1f, 0.3f + 0.25f * w), point, tv);
         }
     }
 
@@ -114,13 +106,6 @@ public final class RailFx {
         engine.addNebulaSmokeParticle(point, tv, 20f * w, 2.2f, 0.1f, 0.2f, 0.9f + 0.3f * w, DUST);
     }
 
-    private static void sound(String id, float pitch, float volume, Vector2f loc, Vector2f vel) {
-        float now = RslUtil.now();
-        if (now - lastSound < SOUND_GAP && now >= lastSound) return;
-        lastSound = now;
-        Global.getSoundPlayer().playSound(id, pitch, volume, loc, vel);
-    }
-
     /** Per frame (from {@link rsl.combat.RslCombatPlugin}): muzzle vent jets on new slugs, motes on slugs in flight. */
     public static void advanceProjectiles(CombatEngineAPI engine, float amount) {
         moteTimer += amount;
@@ -131,10 +116,12 @@ public final class RailFx {
             DamagingProjectileAPI p = projs.get(i);
             if (p instanceof MissileAPI || p.isFading() || p.didDamage()) continue;
             String id = p.getProjectileSpecId();
-            if (id == null || !id.startsWith("rsl_") || p.getCustomData().containsKey(RslIds.KEY_PIERCED)) continue;
+            if (id == null || !id.startsWith("rsl_")) continue;
             if (!visible(engine, p.getLocation(), 100f)) continue;
             float w = weight(p);
-            if (p.getElapsed() <= amount + 0.001f) vent(engine, p, w);
+            if (p.getElapsed() <= amount + 0.001f) {
+                if (!p.getCustomData().containsKey(RslIds.KEY_PIERCED)) vent(engine, p, w);   // not mid-air pierces
+            }
             else if (motes && Math.random() < 0.35f * w) {
                 Vector2f v = new Vector2f(p.getVelocity());
                 v.scale(0.08f);
