@@ -162,7 +162,8 @@ def weapons():
         "discharge is allowed to ring, and the chime spills over as an EMP arc that snaps at nearby missiles and fighters.")
     # the chime shot is spawned from a hidden weapon so it can carry its own projectile spec
     hid = wpn_base("rsl_chime", "ENERGY", "SMALL", glow=False)
-    hid.update(id="rsl_chime_bell", projectileSpecId="rsl_chime_bell")
+    hid.update(id="rsl_chime_bell", projectileSpecId="rsl_chime_bell", animationType="MUZZLE_FLASH",
+               muzzleFlashSpec=muzzle_flash(VIOLET, 18, 6, 10, 6))
     add_weapon(blank_row(name="Chime (bell)", id="rsl_chime_bell", **{
         "range": 450, "damage/shot": 30, "emp": 150, "type": "ENERGY", "energy/shot": 0, "chargedown": 1,
         "proj speed": 1000, "tags": "SYSTEM", "tech/manufacturer": MFR}), hid, [],
@@ -355,7 +356,8 @@ def weapons():
         "A slow torpedo carrying an unstable lattice bloom. On impact the bloom flowers outward as a ring of crystal "
         "fragments, and the shock arcs through anything nearby.")
     hid = wpn_base("rsl_bloom", "MISSILE", "LARGE", glow=False)
-    hid.update(id="rsl_bloom_shard", type="ENERGY", projectileSpecId="rsl_bloom_shard_shot")
+    hid.update(id="rsl_bloom_shard", type="ENERGY", projectileSpecId="rsl_bloom_shard_shot",
+               animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(VIOLET, 10, 10, 6, 4))
     add_weapon(blank_row(name="Bloom Shard", id="rsl_bloom_shard", **{
         "range": 400, "damage/shot": 120, "type": "FRAGMENTATION", "chargedown": 1, "proj speed": 700,
         "tags": "SYSTEM", "tech/manufacturer": MFR}), hid,

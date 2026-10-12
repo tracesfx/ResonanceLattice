@@ -20,5 +20,20 @@
         0
     ],
     "barrelMode": "ALTERNATING",
-    "projectileSpecId": "rsl_bloom_shard_shot"
+    "projectileSpecId": "rsl_bloom_shard_shot",
+    "animationType": "MUZZLE_FLASH",
+    "muzzleFlashSpec": {
+        "length": 10,
+        "spread": 10,
+        "particleSizeMin": 6,
+        "particleSizeRange": 4.800000000000001,
+        "particleDuration": 0.12,
+        "particleCount": 4,
+        "particleColor": [
+            160,
+            120,
+            240,
+            255
+        ]
+    }
 }
