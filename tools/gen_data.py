@@ -1125,9 +1125,10 @@ def sounds_and_trails():
 
     def trail(tid, pid, sprite, w, dur, fade, s_in, s_out, c_in, c_out, opacity, dist, disp, additive=True):
         return {"trail": tid, "projectile": pid, "sprite": sprite, "minLength": 15, "fadeIn": 0, "duration": dur,
-                "fadeOut": fade, "sizeIn": round(s_in * w, 1), "sizeOut": round(s_out * w, 1),
-                "colorIn": json.dumps(c_in), "colorOut": json.dumps(c_out), "opacity": opacity, "textLength": 256,
-                "textScroll": 0, "randomTextureOffset": "TRUE", "distance": dist, "dispersion": disp, "drift": 1,
+                "fadeOut": round(fade, 2), "sizeIn": round(s_in * w, 1), "sizeOut": round(s_out * w, 1),
+                # MagicLib parses colours with Integer.parseInt on each item: no spaces ("[210,255,250]")
+                "colorIn": json.dumps(c_in, separators=(",", ":")), "colorOut": json.dumps(c_out, separators=(",", ":")),
+                "opacity": opacity, "textLength": 256, "textScroll": 0, "randomTextureOffset": "TRUE", "distance": dist, "dispersion": disp, "drift": 1,
                 "frameOffsetMult": 1, "fadeOnFadeOut": "TRUE", "angleAdjustment": "FALSE",
                 "additive": "TRUE" if additive else "FALSE", "velocityIn": 0, "velocityOut": 0, "randomVelocity": 0,
                 "angle": 0, "rotationIn": 0, "rotationOut": 0, "randomRotation": "FALSE",
