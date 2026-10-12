@@ -40,7 +40,7 @@ public class LatticeData {
     public boolean bravura;
     public float bravuraLevel;
     public float peakBonus;
-    /** The shield's own colours, captured before Bravura tints them white-gold. */
+    /** The shield's own colours, captured before Bravura tints them white-teal. */
     public java.awt.Color shieldInner, shieldRing;
     // Tremolo
     public Vector2f waveNode;

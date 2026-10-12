@@ -38,7 +38,7 @@ public class PierceOnHit implements OnHitEffectPlugin {
         p.setDamageAmount(proj.getDamageAmount() * keep);
         p.setCustomData(RslIds.KEY_PIERCED, Boolean.TRUE);
         p.addDamagedAlready(target);
-        engine.addHitParticle(exit, new Vector2f(), 70f, 1f, 0.2f, RslUtil.TEAL);
+        engine.addHitParticle(exit, new Vector2f(), 30f, 0.6f, 0.15f, RslUtil.TEAL);
         return p;
     }
 }

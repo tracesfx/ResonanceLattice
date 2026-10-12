@@ -90,6 +90,10 @@ feedback.
   bells/strings as "a musical instrument, not an energy weapon"): no tonal synthesis, keep them vanilla-like. Fighters: `art_src/gen/gen_fighters.py`
   (rsl_trill / rsl_cadenza / rsl_requiem, sheet `art_src/review/fighters_v1.png`, awaiting feedback), wings in
   gen_data `WINGS` (variants `<hull>_Wing`, written after variants() because that clears data/variants/rsl).
+- **Sforzando look (user, 2026-10-12):** white-teal, mostly white - NOT gold/yellow (gold slugs were rejected; gold is
+  only the Bravura seam glow). Keep impact FX subtle (user: big hit flashes read as "a large circle of light").
+  Unsung shows Bravura as `rsl_bravura_locked` (inactive). Concert Pitch (`rsl_concert_pitch`) = rare augment, built
+  into both Virtuosos; it owns the EMP resistance.
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started

@@ -61,7 +61,8 @@
         "rsl_lattice_core",
         "auxiliarythrusters",
         "rsl_stolen_time",
-        "rsl_bravura"
+        "rsl_bravura",
+        "rsl_concert_pitch"
     ],
     "center": [
         124.0,

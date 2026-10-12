@@ -22,8 +22,9 @@ SYSTEMS = {  # id: glyph
 HULLMODS = {
     "rsl_lattice_core": "diamond", "rsl_conductors_bridge": "fork", "rsl_fracture": "fracture",
     "rsl_stolen_time": "hourglass", "rsl_bravura": "star", "rsl_unbound": "unbound", "rsl_phase_locked": "chorus",
-    "rsl_tuned_wings": "ring",
+    "rsl_tuned_wings": "ring", "rsl_concert_pitch": "wave",
 }
+LOCKED = {"rsl_bravura_locked": "star"}   # inactive versions: dim grey glyph, struck through
 
 
 def frame(d, n, field=NAVY):
@@ -134,7 +135,14 @@ def main():
     for sid, g in SYSTEMS.items():
         save(icon(64, g, VIOLET if sid == "rsl_glissando_unsung" else TEAL), "graphics/rsl/icons/hullsys/%s.png" % sid)
     for hid, g in HULLMODS.items():
-        save(icon(32, g), "graphics/rsl/icons/hullmods/%s.png" % hid)
+        save(icon(32, g, (235, 255, 252) if hid == "rsl_concert_pitch" else TEAL),
+             "graphics/rsl/icons/hullmods/%s.png" % hid)
+    for hid, g in LOCKED.items():
+        im = icon(32 * SS, g, (120, 126, 134)).convert("RGBA")
+        d = ImageDraw.Draw(im)
+        n = 32 * SS
+        d.line([(n * 0.18, n * 0.82), (n * 0.82, n * 0.18)], fill=(200, 60, 60, 255), width=int(n * 0.09))
+        save(im.resize((32, 32), Image.LANCZOS), "graphics/rsl/icons/hullmods/%s.png" % hid)
     # faction crest (256) and flag (410x256)
     crest = icon(256, "chorus")
     save(crest, "graphics/rsl/factions/rsl_crest.png")

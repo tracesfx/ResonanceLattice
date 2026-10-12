@@ -5,29 +5,29 @@
     "collisionClass": "RAY",
     "collisionClassByFighter": "RAY_FIGHTER",
     "length": 190,
-    "width": 13,
+    "width": 10,
     "fadeTime": 0.15,
     "fringeColor": [
-        255,
-        215,
-        120,
+        190,
+        245,
+        238,
         255
     ],
     "coreColor": [
         255,
         255,
-        240,
+        255,
         255
     ],
     "textureScrollSpeed": 64.0,
     "pixelsPerTexel": 5.0,
     "glowColor": [
-        255,
-        215,
-        120,
-        200
+        190,
+        245,
+        238,
+        140
     ],
-    "glowRadius": 55,
-    "hitGlowRadius": 130,
+    "glowRadius": 38,
+    "hitGlowRadius": 60,
     "onHitEffect": "rsl.weapons.SforzandoOnHit"
 }

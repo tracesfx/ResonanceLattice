@@ -65,13 +65,13 @@ public final class RailFx {
 
     private static void shieldRing(ShieldAPI shield, Vector2f point, Vector2f tv, double back, float w,
                                    CombatEngineAPI engine) {
-        engine.addHitParticle(point, tv, 60f * w, 1f, 0.12f, RslUtil.WHITE);
-        engine.addSmoothParticle(point, tv, 110f * w, 0.7f, 0.3f, RslUtil.TEAL);
+        engine.addHitParticle(point, tv, 18f * w, 0.6f, 0.1f, RslUtil.WHITE);
+        engine.addSmoothParticle(point, tv, 34f * w, 0.3f, 0.25f, RslUtil.TEAL);
         // the ripple: motes placed on the shield circle either side of the impact, sliding away along it
         Vector2f c = shield.getLocation();
         float r = shield.getRadius();
         double a0 = Math.atan2(point.y - c.y, point.x - c.x);
-        int n = 4 + Math.round(3f * w);
+        int n = 3 + Math.round(2f * w);
         for (int i = 1; i <= n; i++) {
             for (int side = -1; side <= 1; side += 2) {
                 double a = a0 + side * i * (0.045 + 0.01 * w);
@@ -79,31 +79,31 @@ public final class RailFx {
                 float speed = 60f + 40f * w;
                 Vector2f v = new Vector2f(tv.x - (float) Math.sin(a) * side * speed,
                         tv.y + (float) Math.cos(a) * side * speed);
-                engine.addHitParticle(p, v, (14f + 6f * w) * (1f - i / (n + 2f)), 0.9f, 0.08f * i + 0.15f, RIPPLE);
+                engine.addHitParticle(p, v, (6f + 3f * w) * (1f - i / (n + 2f)), 0.5f, 0.06f * i + 0.12f, RIPPLE);
             }
         }
         // glints thrown back towards the shooter
-        int g = 3 + Math.round(3f * w);
+        int g = 2 + Math.round(1.5f * w);
         for (int i = 0; i < g; i++) {
             double a = back + (Math.random() - 0.5) * 1.4;
             float s = 120f + (float) Math.random() * 220f * w;
             Vector2f v = new Vector2f(tv.x + (float) Math.cos(a) * s, tv.y + (float) Math.sin(a) * s);
-            engine.addHitParticle(point, v, 5f + 3f * w, 1f, 0.25f + 0.2f * (float) Math.random(), RslUtil.WHITE);
+            engine.addHitParticle(point, v, 3f + 1.5f * w, 0.7f, 0.2f + 0.15f * (float) Math.random(), RslUtil.WHITE);
         }
     }
 
     private static void hullCrack(Vector2f point, Vector2f tv, double back, float w, CombatEngineAPI engine) {
-        engine.addHitParticle(point, tv, 50f * w, 1f, 0.1f, SPARK);
-        engine.addSmoothParticle(point, tv, 80f * w, 0.6f, 0.25f, RslUtil.TEAL);
-        int n = 4 + Math.round(5f * w);
+        engine.addHitParticle(point, tv, 16f * w, 0.6f, 0.08f, SPARK);
+        engine.addSmoothParticle(point, tv, 28f * w, 0.3f, 0.2f, RslUtil.TEAL);
+        int n = 3 + Math.round(2.5f * w);
         for (int i = 0; i < n; i++) {
             double a = back + (Math.random() - 0.5) * 2.2;
             float s = 80f + (float) Math.random() * 260f * w;
             Vector2f v = new Vector2f(tv.x + (float) Math.cos(a) * s, tv.y + (float) Math.sin(a) * s);
-            engine.addHitParticle(point, v, 3f + 3f * w * (float) Math.random(), 1f, 0.3f + 0.4f * (float) Math.random(),
+            engine.addHitParticle(point, v, 2f + 1.5f * w * (float) Math.random(), 0.8f, 0.25f + 0.3f * (float) Math.random(),
                     i % 3 == 0 ? RslUtil.TEAL : SPARK);
         }
-        engine.addNebulaSmokeParticle(point, tv, 20f * w, 2.2f, 0.1f, 0.2f, 0.9f + 0.3f * w, DUST);
+        engine.addNebulaSmokeParticle(point, tv, 10f * w, 1.8f, 0.1f, 0.2f, 0.7f + 0.2f * w, DUST);
     }
 
     /** Per frame (from {@link rsl.combat.RslCombatPlugin}): muzzle vent jets on new slugs, motes on slugs in flight. */
@@ -142,6 +142,6 @@ public final class RailFx {
             Vector2f v = new Vector2f(sv.x + (float) Math.cos(a) * s, sv.y + (float) Math.sin(a) * s);
             engine.addNebulaParticle(new Vector2f(p.getLocation()), v, 10f * w, 1.8f, 0.05f, 0.2f, 0.45f, VENT);
         }
-        engine.addHitParticle(new Vector2f(p.getLocation()), sv, 30f * w, 1f, 0.06f, RslUtil.WHITE);
+        engine.addHitParticle(new Vector2f(p.getLocation()), sv, 16f * w, 0.7f, 0.05f, RslUtil.WHITE);
     }
 }

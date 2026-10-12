@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Sforzando tuning, Concert Pitch)
+
+- Sforzando: slug width 10, head glow radius and intensity -30%, colour white-teal (mostly white) instead of gold,
+  trail 20% less vivid; Skewer reaches 12 ships. Internal (through-hull) damage is now a fixed share of the slug's
+  damage by hull size - +20% frigate, +40% destroyer, +60% cruiser, +80% capital - spread along the wound; shield
+  hits unchanged.
+- Rail impact effects (shield ripple, hull sparks, muzzle flash, pierce exits) toned down to roughly a third of
+  their size and brightness.
+- Bravura: the shield turns white-teal; EMP resistance moved to Concert Pitch.
+- Unsung: 2 Glissando charges; its Bravura is now a separate "Bravura (Silent)" hullmod with a struck-through icon
+  and a red INACTIVE section in the tooltip.
+- New rare hullmod Concert Pitch (Lattice hulls only, 6/10/15/25 OP, not known from the start): +200 range for
+  Resonance Lattice weapons, +15% max CR, +60 s peak performance time, 90% EMP resistance. Built into the Virtuoso
+  and the Unsung.
+
 ## Unreleased - 2026-10-12 (Sforzando bore, gold slug, sounds v3)
 
 - Skewer now bores through the inside of the hull instead of jumping to the far side: the slug carries on from the

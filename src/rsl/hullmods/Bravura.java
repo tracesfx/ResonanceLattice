@@ -16,11 +16,11 @@ import java.awt.Color;
 
 /**
  * Virtuoso: at 100% CR the ship enters Bravura (hysteresis down to 92%). The glow renderer cross-fades the seams to
- * the gold sprite, the wing vanes flare and the shield turns white-gold, all from {@link LatticeData#bravuraLevel}.
+ * the gold sprite, the wing vanes flare and the shield turns white-teal, all from {@link LatticeData#bravuraLevel}.
  * Locked on the Unsung.
  *
  * Also carries the full Virtuoso's base tuning (applied before ship creation, so refit stat cards show it): a fast
- * shield and heavy EMP resistance.
+ * shield. (EMP resistance lives in {@link ConcertPitch}.)
  */
 public class Bravura extends BaseHullMod {
     public static final float ENTER = 0.995f;
@@ -32,12 +32,11 @@ public class Bravura extends BaseHullMod {
     public static final float SYSTEM_REGEN = 100f;
     /** Glissando charges in Bravura; outside it the ship is held one charge below this. */
     public static final int CHARGES = 3;
-    /** Virtuoso base: shield turn and unfold rate multiplier, EMP damage taken (Bravura: EMP_BRAVURA). */
+    /** Virtuoso base: shield turn and unfold rate multiplier. */
     public static final float SHIELD_RATE_MULT = 2f;
-    public static final float EMP_TAKEN = 0.25f;
-    public static final float EMP_BRAVURA = 0.1f;
-    private static final Color SHIELD_INNER = new Color(255, 225, 160, 90);
-    private static final Color SHIELD_RING = new Color(255, 248, 225, 255);
+    /** Bravura shield: white-teal, mostly white. */
+    private static final Color SHIELD_INNER = new Color(205, 245, 240, 90);
+    private static final Color SHIELD_RING = new Color(240, 255, 252, 255);
     private static final String ID = "rsl_bravura";
     private static final Object STATUS = new Object();
 
@@ -48,7 +47,6 @@ public class Bravura extends BaseHullMod {
         }
         stats.getShieldTurnRateMult().modifyMult(id, SHIELD_RATE_MULT);
         stats.getShieldUnfoldRateMult().modifyMult(id, SHIELD_RATE_MULT);
-        stats.getEmpDamageTakenMult().modifyMult(id, EMP_TAKEN);
     }
 
     @Override
@@ -70,7 +68,6 @@ public class Bravura extends BaseHullMod {
             s.getEnergyRoFMult().modifyPercent(ID, ROF);
             s.getDamageToTargetShieldsMult().modifyPercent(ID, SHIELD_DAMAGE);
             s.getSystemRegenBonus().modifyPercent(ID, SYSTEM_REGEN);
-            s.getEmpDamageTakenMult().modifyMult(ID, EMP_BRAVURA / EMP_TAKEN);
             if (ship == engine.getPlayerShip()) {
                 engine.maintainStatusForPlayerShip(STATUS, "graphics/rsl/icons/hullmods/rsl_bravura.png", "BRAVURA",
                         "full voice: faster, hotter, every lance accented", false);
@@ -85,7 +82,6 @@ public class Bravura extends BaseHullMod {
             s.getEnergyRoFMult().unmodify(ID);
             s.getDamageToTargetShieldsMult().unmodify(ID);
             s.getSystemRegenBonus().unmodify(ID);
-            s.getEmpDamageTakenMult().unmodify(ID);
         }
         holdCharges(ship.getSystem(), d.bravura);
         tintShield(ship.getShield(), d);

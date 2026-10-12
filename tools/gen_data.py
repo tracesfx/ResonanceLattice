@@ -38,8 +38,6 @@ TEAL = [100, 230, 220, 255]
 TEAL_SOFT = [60, 200, 190, 255]
 VIOLET = [160, 120, 240, 255]
 WHITE = [235, 255, 252, 255]
-GOLD = [255, 215, 120, 255]          # the Virtuoso's own colour (Bravura seams, full Sforzando slugs)
-GOLD_WHITE = [255, 245, 210, 255]
 OFFS = json.load(open(os.path.join(ROOT, "art_src", "gen", "weapon_offsets.json")))
 
 
@@ -377,7 +375,7 @@ def weapons():
              "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
         full = wid == "rsl_sforzando"
         w = wpn_base(wid, "ENERGY", "LARGE")
-        w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(GOLD_WHITE if full else WHITE,
+        w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(WHITE,
                                                                                55 if full else 40, 4, 26 if full else 20,
                                                                                14 if full else 10),
                  projectileSpecId=wid + "_shot", fireSoundTwo="rsl_sforzando_fire")
@@ -392,10 +390,10 @@ def weapons():
                               "through at full damage into the next target, up to %s ships in a row. Accented after a "
                               "Glissando dash, at high speed or in Bravura: every hit deals %s damage and arcs EMP."
                               if wid == "rsl_sforzando" else "+%s damage to fighters and frigates. %s"),
-            "customPrimaryHL": "50% | 6 | +50%" if wid == "rsl_sforzando" else "50% | No Skewer"}), w,
-            # the full lance stands apart from every other Lattice gun: a wide, hot, yellow-white slug
-            [bolt(wid + "_shot", 190, 13, GOLD, core=[255, 255, 240, 255], glow_r=55, hit_glow=130,
-                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=200) if full else
+            "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | No Skewer"}), w,
+            # the full lance stands apart from every other Lattice gun: a wide, bright, white-teal slug
+            [bolt(wid + "_shot", 190, 10, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=38, hit_glow=60,
+                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=140) if full else
              bolt(wid + "_shot", 120, 7, [120, 240, 230, 255], glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit",
                   fade=0.15)], text)
 
@@ -470,8 +468,8 @@ BUILTIN_MODS = {
     "rsl_tremolo": [CORE, "auxiliarythrusters"],
     "rsl_halo": [CORE, "expanded_deck_crew", "hardened_subsystems", "rsl_tuned_wings"],
     "rsl_conductor": [CORE, "stabilizedshieldemitter", "operations_center", "rsl_conductors_bridge"],
-    "rsl_virtuoso": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura"],
-    "rsl_virtuoso_unsung": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura"],
+    "rsl_virtuoso": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura", "rsl_concert_pitch"],
+    "rsl_virtuoso_unsung": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura_locked", "rsl_concert_pitch"],
     "rsl_cantor": [CORE, "rsl_phase_locked", "vastbulk", "axialrotation", "supercomputer"],
     "rsl_cantor_spire": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
     "rsl_cantor_bell": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
@@ -921,10 +919,10 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
      "enemy projectiles that cross it - then snaps: 400 energy damage to every enemy touching it (fighters and "
      "missiles are destroyed) and 2% CR stolen from each ship hit. For 2 seconds after a dash the Sforzando lances "
      "are Accented. Overtone: the string snaps twice and the dash refunds half a charge."),
-    ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 1, "regen": 0.125, "charge up": 0.05, "active": 0.3,
+    ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 2, "regen": 0.125, "charge up": 0.05, "active": 0.3,
                                                     "down": 0.1, "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "An untuned blink-dash: 1 charge, 1.5% combat readiness per dash, untargetable for 0.2 seconds. The string it "
+     "An untuned blink-dash: 2 charges, 1.5% combat readiness per dash, untargetable for 0.2 seconds. The string it "
      "leaves blocks projectiles for 1.2 seconds but never snaps."),
     ("rsl_grandchorus", "Grand Chorus", {"charge up": 1, "active": 0.5, "down": 0.5, "cooldown": 25},
      {"aiType": "CUSTOM", "aiScript": SYS + "GrandChorusAI", "useSound": "tachyon_lance_fire"},
@@ -979,13 +977,22 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
     ("rsl_bravura", "Bravura", "Bravura",
      "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
      "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to shields, %s faster "
-     "system recharge and %s Glissando charges, EMP damage taken cut to a tenth, and the Sforzando lances are always "
-     "Accented (%s damage). The seams and the shield burn white-gold. Locked on the Unsung.", True, (0, 0, 0, 0)),
+     "system recharge and %s Glissando charges, and the Sforzando lances are always Accented (%s damage). The seams "
+     "burn gold-white and the shield turns white-teal.", True, (0, 0, 0, 0)),
     ("rsl_unbound", "Unbound Core", "UnboundCore",
      "The Virtuoso's core can drop its safety tuning, as Safety Overrides does for lesser hulls: +%s top speed, "
      "flux dissipation multiplied by %s, the zero-flux boost at any flux level and no active venting; peak "
      "performance time is cut to a third, but weapon range is untouched. Stolen Time pays the readiness back. "
      "Only the full Virtuoso can install it.", False, (0, 0, 0, 50)),
+    ("rsl_bravura_locked", "Bravura (Silent)", "BravuraLocked",
+     "INACTIVE on the Unsung. On the restored Virtuoso: at %s combat readiness it enters Bravura until its CR drops "
+     "below %s: +%s top speed and maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to "
+     "shields, %s faster system recharge and %s Glissando charges, and the Sforzando lances are always Accented (%s "
+     "damage).", True, (0, 0, 0, 0)),
+    ("rsl_concert_pitch", "Concert Pitch", "ConcertPitch",
+     "A rare lattice augment that retunes the core to a perfect reference pitch. +%s range for every Resonance Lattice "
+     "weapon, +%s maximum combat readiness, +%s seconds of peak performance time and %s resistance to EMP damage. "
+     "Lattice hulls only.", False, (6, 10, 15, 25)),
     ("rsl_phase_locked", "Phase-Locked Petals", "PhaseLockedPetals",
      "When a petal of the array is destroyed, its stored Resonance floods the core and the surviving petals, which "
      "jump straight into Overtone and gain %s weapon damage for the rest of the battle.", True, (0, 0, 0, 0)),
@@ -993,6 +1000,11 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
      "Fighters within %s units of the ship are tuned to its ring: fighter replacement rate is %s faster while any "
      "of its wings fight inside the zone.", True, (0, 0, 0, 0)),
 ]
+
+
+# rare: high tier, low drop rarity, not known from the start (must be learned); built into both Virtuosos regardless
+HULLMOD_OVERRIDES = {"rsl_concert_pitch": {"tier": 3, "rarity": 0.1, "base value": 150000, "unlocked": "",
+                                           "tags": BP}}
 
 
 def hullmods():
@@ -1006,6 +1018,7 @@ def hullmods():
                   "cost_dest": costs[1], "cost_cruiser": costs[2], "cost_capital": costs[3], "script": HM + cls,
                   "desc": text, "short": text.split(".")[0] + ".",
                   "sprite": "graphics/rsl/icons/hullmods/%s.png" % hid})
+        r.update(HULLMOD_OVERRIDES.get(hid, {}))
         rows.append(r)
     write_csv("data/hullmods/hull_mods.csv", hdr, rows)
 
@@ -1154,13 +1167,13 @@ def sounds_and_trails():
                           [90, 210, 220], 0.75, round(length * 0.5), 0))
         rows.append(trail(pid + "_haze", pid, "base_trail_fuzzy", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
                           [150, 110, 230], 0.3, round(length * 0.5), 12 * w))
-    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: a gold-white wake that hangs much longer
+    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: a white-teal wake that hangs much longer
         if r["projectile"] == "rsl_sforzando_shot":
             r["duration"], r["fadeOut"] = r["duration"] * 4, round(r["fadeOut"] * 3, 2)
             core = r["trail"].endswith("_core")
-            r["colorIn"] = "[255,250,225]" if core else "[255,220,140]"
-            r["colorOut"] = "[255,210,130]" if core else "[255,160,80]"
-            r["opacity"] = 0.95 if core else 0.45
+            r["colorIn"] = "[245,255,255]" if core else "[215,250,245]"
+            r["colorOut"] = "[190,240,236]" if core else "[130,215,210]"
+            r["opacity"] = 0.76 if core else 0.36   # user: 20% less vivid than the first gold version
             r["sizeIn"], r["sizeOut"] = round(r["sizeIn"] * 1.6, 1), round(r["sizeOut"] * 1.4, 1)
     for pid, w in MISSILE_TRAILS.items():
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],
