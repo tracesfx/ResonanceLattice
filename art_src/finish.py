@@ -226,6 +226,12 @@ def finish(spec, rdir, mod, params):
     ga = np.maximum(ga, np.clip(hullgen.blur(ga, 1.4) * params["halo"], 0, 1))
     glow = np.concatenate([np.broadcast_to(seam_col, (H, W, 3)) * (1 - hot * 0.5) + hot * 0.5, ga[..., None]], -1)
     glow_im = Image.fromarray((np.clip(glow, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA")
+    # Bravura (Virtuoso at 100% CR): same seam mask, radiant gold-white; the combat plugin cross-fades the two
+    bravura_im = None
+    if spec.get("bravura_glow"):
+        gold = np.array([255, 200, 110], np.float32) / 255
+        gb = np.concatenate([np.broadcast_to(gold, (H, W, 3)) * (1 - hot * 0.3) + hot * 0.3, ga[..., None]], -1)
+        bravura_im = Image.fromarray((np.clip(gb, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA")
 
     # --- GraphicsLib maps (normal: R = +right, G = +down, B = +z)
     n1 = box_down(nrm * A4[..., None], SS)
@@ -249,6 +255,8 @@ def finish(spec, rdir, mod, params):
     folder = "graphics/rsl/ships" if kind == "ship" else "graphics/rsl/weapons/deco"
     save(sprite, "%s/%s.png" % (folder, sid))
     save(glow_im, "%s/%s_glow.png" % (folder, sid))
+    if bravura_im is not None:
+        save(bravura_im, "%s/%s_glow_bravura.png" % (folder, sid))
     save(nmap, "graphics/rsl/maps/%s_normal.png" % sid)
     save(matmap, "graphics/rsl/maps/%s_material.png" % sid)
     save(surf, "graphics/rsl/maps/%s_surface.png" % sid)
@@ -272,9 +280,12 @@ def mirror(spec, mod):
     (pixel-exact; the normal map's x channel is inverted)."""
     src, dst = spec["mirror_of"], spec["id"]
     base = "graphics/rsl/weapons/deco/%s"
-    pairs = [(base + ".png", False), (base + "_glow.png", False), ("graphics/rsl/maps/%s_normal.png", True),
+    pairs = [(base + ".png", False), (base + "_glow.png", False), (base + "_glow_bravura.png", False),
+             ("graphics/rsl/maps/%s_normal.png", True),
              ("graphics/rsl/maps/%s_material.png", False), ("graphics/rsl/maps/%s_surface.png", False)]
     for rel, is_normal in pairs:
+        if not os.path.exists(os.path.join(mod, rel % src)):
+            continue
         im = Image.open(os.path.join(mod, rel % src)).convert("RGBA").transpose(Image.FLIP_LEFT_RIGHT)
         if is_normal:
             a = np.asarray(im).copy()

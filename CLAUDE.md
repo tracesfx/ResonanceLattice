@@ -33,8 +33,13 @@ feedback.
   `art_src/gen/gen_conductor.py` writes `rsl_conductor.json` + deco `rsl_conductor_blade_r.json` (+ `_l` mirror_of).
 - Round 3 (`sheet_v3.png`): user: "Conductor looks good" (APPROVED v2). Tremolo: remove the cross bar, armour the
   zig-zag. Halo: struts to the core more intricate with seams, at regular intervals.
-- **Round 4 (awaiting feedback), sheet `art_src/review/sheet_v4.png`:** Tremolo v4, Halo v3.
-- Next, in order: round-4 feedback → **Virtuoso (+ Unsung skin)** → Cantor Array (station last).
+- Round 4 (`sheet_v4.png`): Tremolo v4, Halo v3 — user moved on to the Virtuoso without further notes.
+- **Virtuoso v1 (awaiting feedback):** user (2026-10-11): "stand out above the rest while cohesive, not overly large;
+  seams + livery must complement each other". Picked option C "Swallowtail" of `virtuoso_options.png` with wings
+  extending wider and the stem base sharper/longer; size "compact"; livery "Sash"; Unsung AFTER the Virtuoso is
+  approved. Sheet `art_src/review/virtuoso_v1.png` (incl. Bravura gold), all hulls: `sheet_v5.png`.
+  Generator `art_src/gen/gen_virtuoso.py` (hull + `rsl_virtuoso_vane_r` + `_l` mirror).
+- Next, in order: Virtuoso feedback → Unsung skin → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -160,6 +165,16 @@ shreds frigate/fighter swarms. Quest not designed yet.
   between SIX struts on a 60° grid = the ring spokes' grid (12 off-grid struts + 3 ring spokes read as irregular).
   Strut: slate root gusset on the hub collar, brushed-steel beam with a core-fed glow seam, mid clamp, outer bracket
   on the lip with a node; hub collar carries a glow ring. Ring deco_alt_angle 60 (spokes stay on the grid).
+- **Virtuoso v1** 232×404 (SCALE 1.08), mass 31,556 (compact on purpose, below the capital p10 45k; user chose it):
+  stepped needle → swept guard (quillons, forward tooth) with the Sforzando mounts (WS0001 LARGE ENERGY TURRET arc
+  300) → waist → swallowtail wings (stepped leading-edge tooth, trailing notch, 3 segments cut perpendicular to the
+  sweep via `clip_dir`, clamps, gunmetal leading-edge armour, vane mount) → sponsons + engines → long stepped tail
+  spike. **Sash livery = seams:** one navy ribbon (needle → spine → splits at the core → both wings → onto the vanes;
+  narrow arm down the stern to the spike tip); its edges are the main conduits (2 continuous runs per side:
+  `SASH_OUT`, `SASH_IN`, no branching); the biggest cells sit inside it, slanted with it (kit does NOT mirror
+  `slant`: emit explicit L/R cells). Steel tone splinter (tones only, no paint) parallel to the sash at angle -30.3.
+  Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
+  `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (gold 255,200,110); preview shows a "bravura" column.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)

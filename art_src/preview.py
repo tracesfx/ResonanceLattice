@@ -24,9 +24,9 @@ def vanilla_sprite(hull):
     return Image.open(os.path.join(core, ship["spriteName"])).convert("RGBA")
 
 
-def with_glow(sid, strength=1.0):
-    base = Image.open(os.path.join(MOD, "graphics/rsl/ships/%s.png" % sid)).convert("RGBA")
-    gp = os.path.join(MOD, "graphics/rsl/ships/%s_glow.png" % sid)
+def with_glow(sid, strength=1.0, suffix="_glow", folder="ships"):
+    base = Image.open(os.path.join(MOD, "graphics/rsl/%s/%s.png" % (folder, sid))).convert("RGBA")
+    gp = os.path.join(MOD, "graphics/rsl/%s/%s%s.png" % (folder, sid, suffix))
     if not os.path.exists(gp):
         return base
     b = np.asarray(base).astype(np.float32) / 255
@@ -35,7 +35,7 @@ def with_glow(sid, strength=1.0):
     return Image.fromarray((np.concatenate([rgb, b[..., 3:4]], -1) * 255).astype(np.uint8), "RGBA")
 
 
-def with_deco(sid, im, alt=False):
+def with_deco(sid, im, alt=False, suffix=None):
     """Paste decorative-slot sprites (rotated about their centre) onto the hull, as the game would draw them."""
     import json
     sp = os.path.join(HERE, "specs", sid + ".json")
@@ -52,6 +52,8 @@ def with_deco(sid, im, alt=False):
     W = im.width
     for s in decos:
         deco = Image.open(os.path.join(MOD, "graphics/rsl/weapons/deco/%s.png" % s["deco"])).convert("RGBA")
+        if suffix:                                 # deco seams in the same glow state as the hull
+            deco = with_glow(s["deco"], suffix=suffix, folder="weapons/deco")
         ang = s.get("deco_alt_angle", s.get("angle", 0)) if alt else s.get("angle", 0)
         for sx in ([1, -1] if s.get("sym") else [1]):
             r = deco.rotate(ang * sx, resample=Image.BICUBIC, expand=True)
@@ -75,6 +77,9 @@ def main():
         base = Image.open(os.path.join(MOD, "graphics/rsl/ships/%s.png" % sid)).convert("RGBA")
         items.append((sid, with_deco(sid, base)))
         items.append((sid + " +glow", with_deco(sid, with_glow(sid), alt=True)))
+        if os.path.exists(os.path.join(MOD, "graphics/rsl/ships/%s_glow_bravura.png" % sid)):
+            items.append((sid + " bravura", with_deco(sid, with_glow(sid, suffix="_glow_bravura"), alt=True,
+                                                      suffix="_glow_bravura")))
     for p in filter(None, a.peers.split(",")):
         items.append((p, vanilla_sprite(p)))
     for p in filter(None, a.refs.split(",")):
