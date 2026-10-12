@@ -3,7 +3,7 @@
     "hullId": "rsl_virtuoso_unsung",
     "displayName": "Unsung",
     "fluxVents": 50,
-    "fluxCapacitors": 23,
+    "fluxCapacitors": 21,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",

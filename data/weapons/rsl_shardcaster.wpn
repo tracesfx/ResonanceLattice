@@ -56,5 +56,5 @@
         ]
     },
     "projectileSpecId": "rsl_shard_shot",
-    "fireSoundTwo": "mining_blaster_fire"
+    "fireSoundTwo": "rsl_shard_fire"
 }

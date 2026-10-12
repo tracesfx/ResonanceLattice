@@ -6,7 +6,7 @@
     "fluxCapacitors": 4,
     "hullMods": [
         "hardenedshieldemitter",
-        "fluxbreakers"
+        "turretgyros"
     ],
     "permaMods": [],
     "sMods": [],

@@ -44,6 +44,6 @@
         ]
     },
     "projectileSpecId": "rsl_pizzicato_shot",
-    "fireSoundTwo": "pulse_laser_fire",
+    "fireSoundTwo": "rsl_pizzicato_fire",
     "onFireEffect": "rsl.weapons.PizzicatoEffect"
 }

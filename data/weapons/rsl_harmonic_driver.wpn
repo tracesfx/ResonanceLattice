@@ -44,8 +44,8 @@
         ]
     },
     "projectileSpecId": "rsl_harmonic_shot",
-    "fireSoundOne": "tachyon_lance_fire",
-    "fireSoundTwo": "heavy_blaster_fire",
+    "fireSoundOne": "rsl_charge",
+    "fireSoundTwo": "rsl_driver_fire",
     "autocharge": true,
     "requiresFullCharge": true
 }

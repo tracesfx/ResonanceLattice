@@ -147,57 +147,57 @@ def weapons():
     # ---- SMALL ---------------------------------------------------------------------------------------------
     w = wpn_base("rsl_chime", "ENERGY", "SMALL")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 18, 6, 10, 6),
-             projectileSpecId="rsl_chime_shot", fireSoundTwo="ir_pulse_laser_fire",
+             projectileSpecId="rsl_chime_shot", fireSoundTwo="rsl_chime_fire",
              onFireEffect=PKG + "ChimeRepeaterEffect", autocharge=True)
     add_weapon(blank_row(name="Chime Repeater", id="rsl_chime", tier=1, **{
-        "base value": 1400, "range": 450, "damage/shot": 30, "emp": 0, "impact": 0, "turn rate": 120, "OPs": 5,
+        "base value": 1400, "range": 500, "damage/shot": 30, "emp": 0, "impact": 0, "turn rate": 120, "OPs": 5,
         "type": "ENERGY", "energy/shot": 22, "chargeup": 0, "chargedown": 0.55, "burst size": 2, "burst delay": 0.1,
-        "min spread": 0, "max spread": 4, "spread/shot": 1, "spread decay/sec": 8, "proj speed": 1000,
+        "min spread": 0, "max spread": 3, "spread/shot": 1, "spread decay/sec": 8, "proj speed": 1800,
         "hints": "PD, ANTI_FTR", "tags": "pd8, energy7, SR, " + BP, "tech/manufacturer": MFR,
         "primaryRoleStr": "Point Defense", "customPrimary": "Every %s shot is a resonant chime: %s EMP damage and an arc to a nearby missile or fighter.",
         "customPrimaryHL": "4th | 150"}), w,
-        [bolt("rsl_chime_shot", 22, 7, TEAL_SOFT, hit_glow=22, fade=0.2),
-         bolt("rsl_chime_bell", 30, 11, VIOLET, hit_glow=40, glow_r=18, on_hit=PKG + "ChimeBellOnHit", fade=0.2)],
-        "A compact repeater built around a pair of tuning prongs. Its crystal discharges in short pairs of bolts; every fourth "
-        "discharge is allowed to ring, and the chime spills over as an EMP arc that snaps at nearby missiles and fighters.")
+        [bolt("rsl_chime_shot", 40, 4, TEAL_SOFT, hit_glow=22, fade=0.15, on_hit=PKG + "RailImpactOnHit"),
+         bolt("rsl_chime_bell", 50, 6, VIOLET, hit_glow=40, glow_r=18, on_hit=PKG + "ChimeBellOnHit", fade=0.15)],
+        "A compact micro-rail built around a pair of tuning prongs. It flicks needles out in short pairs; every fourth "
+        "needle is allowed to ring, and the chime spills over as an EMP arc that snaps at nearby missiles and fighters.")
     # the chime shot is spawned from a hidden weapon so it can carry its own projectile spec
     hid = wpn_base("rsl_chime", "ENERGY", "SMALL", glow=False)
     hid.update(id="rsl_chime_bell", projectileSpecId="rsl_chime_bell", animationType="MUZZLE_FLASH",
                muzzleFlashSpec=muzzle_flash(VIOLET, 18, 6, 10, 6))
     add_weapon(blank_row(name="Chime (bell)", id="rsl_chime_bell", **{
         "range": 450, "damage/shot": 30, "emp": 150, "type": "ENERGY", "energy/shot": 0, "chargedown": 1,
-        "proj speed": 1000, "tags": "SYSTEM", "tech/manufacturer": MFR}), hid, [],
+        "proj speed": 1800, "tags": "SYSTEM", "tech/manufacturer": MFR}), hid, [],
         "The ringing fourth shot of a Chime Repeater.")
 
     w = wpn_base("rsl_pizzicato", "ENERGY", "SMALL")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 26, 4, 12, 8),
-             projectileSpecId="rsl_pizzicato_shot", fireSoundTwo="pulse_laser_fire",
+             projectileSpecId="rsl_pizzicato_shot", fireSoundTwo="rsl_pizzicato_fire",
              onFireEffect=PKG + "PizzicatoEffect")
     add_weapon(blank_row(name="Pizzicato Lancet", id="rsl_pizzicato", tier=1, **{
-        "base value": 1800, "range": 600, "damage/shot": 110, "impact": 4, "turn rate": 30, "OPs": 6,
-        "type": "ENERGY", "energy/shot": 100, "chargeup": 0, "chargedown": 0.9, "proj speed": 1200,
+        "base value": 1800, "range": 800, "damage/shot": 110, "impact": 4, "turn rate": 30, "OPs": 7,
+        "type": "ENERGY", "energy/shot": 100, "chargeup": 0, "chargedown": 0.9, "proj speed": 2200,
         "tags": "energy8, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
         "customPrimary": "A shot fired after at least %s of silence is plucked: it deals %s damage.",
         "customPrimaryHL": "2.5 seconds | double"}), w,
-        [bolt("rsl_pizzicato_shot", 34, 6, TEAL, glow_r=12, hit_glow=30)],
-        "A single needle-thin lancet with a tensioned crystal at its breech. Left alone, the crystal stores its charge and "
-        "the next shot leaves with a sharp, plucked report - and twice the bite.")
+        [bolt("rsl_pizzicato_shot", 80, 5, TEAL, glow_r=12, hit_glow=30, on_hit=PKG + "RailImpactOnHit")],
+        "A needle-thin rail with a tensioned crystal at its breech. Left alone, the crystal stores its charge and "
+        "the next slug leaves with a sharp, plucked report - and twice the bite.")
 
     w = wpn_base("rsl_shardcaster", "BALLISTIC", "SMALL", barrel="LINKED")
     w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 16, 20, 8, 10),
-             projectileSpecId="rsl_shard_shot", fireSoundTwo="mining_blaster_fire")
+             projectileSpecId="rsl_shard_shot", fireSoundTwo="rsl_shard_fire")
     add_weapon(blank_row(name="Shard Caster", id="rsl_shardcaster", tier=1, **{
-        "base value": 1100, "range": 400, "damage/shot": 30, "impact": 2, "turn rate": 50, "OPs": 5,
-        "type": "KINETIC", "energy/shot": 18, "chargeup": 0, "chargedown": 0.6, "min spread": 4, "max spread": 10,
-        "spread/shot": 2, "spread decay/sec": 12, "proj speed": 850, "hints": "ANTI_FTR",
-        "tags": "kinetic6, energy6, SR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Assault"}), w,
+        "base value": 1100, "range": 700, "damage/shot": 30, "impact": 2, "turn rate": 50, "OPs": 6,
+        "type": "KINETIC", "energy/shot": 18, "chargeup": 0, "chargedown": 0.6, "min spread": 1, "max spread": 4,
+        "spread/shot": 1, "spread decay/sec": 12, "proj speed": 1800, "hints": "ANTI_FTR",
+        "tags": "kinetic6, energy6, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Assault"}), w,
         [bolt("rsl_shard_shot", 10, 5, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF", coll_f="PROJECTILE_FIGHTER",
-              sprite=OFFS["rsl_shard_proj"]["sprite"], fade=0.15)],
-        "Three crystal throats fire grown shards in a tight fan. Crude by Choir standards, the Shard Caster is what the "
-        "lattice yards fit when a hull needs teeth and has no flux to spare for them.")
+              sprite=OFFS["rsl_shard_proj"]["sprite"], fade=0.15, on_hit=PKG + "RailImpactOnHit")],
+        "Three short rails throw grown crystal shards in a near-parallel volley. Crude by Choir standards, the Shard "
+        "Caster is what the lattice yards fit when a hull needs reach and has little flux to spare.")
 
     w = wpn_base("rsl_tuningspike", "MISSILE", "SMALL", glow=False)
-    w.update(animationType="SMOKE", projectileSpecId="rsl_tuningspike_msl", fireSoundTwo="swarmer_fire",
+    w.update(animationType="SMOKE", projectileSpecId="rsl_tuningspike_msl", fireSoundTwo="rsl_spike_fire",
              smokeSpec={"particleSizeMin": 8.0, "particleSizeRange": 8.0, "cloudParticleCount": 4,
                         "cloudDuration": 1.0, "cloudRadius": 8.0, "blowbackParticleCount": 3, "blowbackDuration": 1.5,
                         "blowbackLength": 14.0, "blowbackSpread": 10.0, "particleColor": [120, 140, 160, 160]})
@@ -233,53 +233,53 @@ def weapons():
         "Four Tuning Spike racks in an armored pod, for hulls that build their whole battle plan around the combo.")
 
     # ---- MEDIUM --------------------------------------------------------------------------------------------
-    w = wpn_base("rsl_lattice_lance", "ENERGY", "MEDIUM", spec_class="beam")
-    w.update(beamEffect=PKG + "LatticeLanceEffect", fringeColor=[40, 170, 170, 255], coreColor=[220, 255, 250, 255],
-             glowColor=TEAL, width=12.0, textureType="ROUGH", textureScrollSpeed=160.0, pixelsPerTexel=5.0,
-             fireSoundOne="beam_heavy_intro", fireSoundTwo="graviton_beam_loop",
-             pierceSet=["PROJECTILE_FF", "PROJECTILE_NO_FF", "PROJECTILE_FIGHTER"])
+    w = wpn_base("rsl_lattice_lance", "ENERGY", "MEDIUM")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 34, 4, 16, 8),
+             projectileSpecId="rsl_lance_shot", fireSoundTwo="rsl_lance_fire")
     add_weapon(blank_row(name="Lattice Lance", id="rsl_lattice_lance", tier=2, **{
-        "base value": 3200, "range": 700, "damage/second": 150, "impact": 2, "turn rate": 25, "OPs": 11,
-        "type": "ENERGY", "energy/second": 110, "chargeup": 0.2, "chargedown": 0.2, "beam speed": 2400,
-        "tags": "beam10, energy10, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Sustained",
-        "customPrimary": "Damage rises by up to %s while the beam stays on the same target (full after %s), and resets when it switches.",
-        "customPrimaryHL": "75% | 3 seconds"}), w, [],
-        "A beam that tunes itself to whatever it is touching. The longer it holds one target, the closer its resonance "
-        "comes to the target's own, and the deeper it cuts. Switching targets throws the tuning away.")
+        "base value": 3200, "range": 1000, "damage/shot": 140, "impact": 6, "turn rate": 25, "OPs": 12,
+        "type": "ENERGY", "energy/shot": 120, "chargeup": 0, "chargedown": 0.7, "min spread": 0, "max spread": 0,
+        "proj speed": 2400, "tags": "energy10, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Sustained",
+        "customPrimary": "Each consecutive hit on the same ship adds %s damage, up to %s; switching targets or %s "
+                         "without a hit resets it.",
+        "customPrimaryHL": "15% | 75% | 2.5 seconds"}), w,
+        [bolt("rsl_lance_shot", 110, 6, [40, 190, 185, 255], glow_r=16, hit_glow=45, on_hit=PKG + "LatticeLanceOnHit")],
+        "A long rail that tunes itself to whatever it keeps hitting. Every slug that lands on the same hull brings its "
+        "resonance closer to the target's own, and the next one cuts deeper. Switching targets throws the tuning away.")
 
     w = wpn_base("rsl_flechette", "BALLISTIC", "MEDIUM", barrel="LINKED")
     w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 22, 24, 10, 14),
-             projectileSpecId="rsl_flechette_shot", fireSoundTwo="flak_fire")
+             projectileSpecId="rsl_flechette_shot", fireSoundTwo="rsl_flechette_fire")
     add_weapon(blank_row(name="Crystal Flechette", id="rsl_flechette", tier=2, **{
-        "base value": 2600, "range": 450, "damage/shot": 60, "impact": 3, "turn rate": 35, "OPs": 10,
-        "type": "KINETIC", "energy/shot": 45, "chargeup": 0, "chargedown": 0.75, "min spread": 6, "max spread": 14,
-        "spread/shot": 3, "spread decay/sec": 12, "proj speed": 900, "tags": "kinetic9, SR, " + BP,
+        "base value": 2600, "range": 850, "damage/shot": 60, "impact": 3, "turn rate": 35, "OPs": 10,
+        "type": "KINETIC", "energy/shot": 45, "chargeup": 0, "chargedown": 0.75, "min spread": 1, "max spread": 5,
+        "spread/shot": 1, "spread decay/sec": 12, "proj speed": 1900, "tags": "kinetic9, LR, " + BP,
         "tech/manufacturer": MFR, "primaryRoleStr": "Assault",
         "customPrimary": "Shards that hit armor or hull splinter and keep cutting: %s energy damage over %s.",
         "customPrimaryHL": "45 | 3 seconds"}), w,
         [bolt("rsl_flechette_shot", 14, 6, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF",
               coll_f="PROJECTILE_FIGHTER", sprite=OFFS["rsl_shard_proj"]["sprite"], on_hit=PKG + "FlechetteOnHit",
               fade=0.15)],
-        "A three-throat shard thrower. The flechettes are grown with fracture planes along their length, so a shard "
+        "A three-rail shard thrower. The flechettes are grown with fracture planes along their length, so a shard "
         "that lodges in plating keeps splitting - and cutting - for seconds after impact.")
 
     w = wpn_base("rsl_arpeggio", "ENERGY", "MEDIUM")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 26, 6, 14, 8),
-             projectileSpecId="rsl_arpeggio_shot", fireSoundTwo="pulse_laser_fire",
+             projectileSpecId="rsl_arpeggio_shot", fireSoundTwo="rsl_arpeggio_fire",
              onFireEffect=PKG + "ArpeggioEffect")
     add_weapon(blank_row(name="Arpeggio Pulser", id="rsl_arpeggio", tier=2, **{
-        "base value": 2800, "range": 650, "damage/shot": 100, "impact": 3, "turn rate": 25, "OPs": 10,
+        "base value": 2800, "range": 900, "damage/shot": 100, "impact": 3, "turn rate": 25, "OPs": 10,
         "type": "ENERGY", "energy/shot": 85, "chargeup": 0, "chargedown": 1.2, "burst size": 3, "burst delay": 0.15,
-        "proj speed": 1100, "tags": "energy10, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
+        "proj speed": 2000, "tags": "energy10, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
         "customPrimary": "Fires a rising three-note burst: the notes deal %s of the listed damage.",
         "customPrimaryHL": "80% | 100% | 140%"}), w,
-        [bolt("rsl_arpeggio_shot", 40, 9, TEAL, glow_r=16, hit_glow=40)],
-        "Three coil barrels of different length, fired in sequence. Each note is driven harder than the last, and the "
+        [bolt("rsl_arpeggio_shot", 90, 6, TEAL, glow_r=16, hit_glow=40, on_hit=PKG + "RailImpactOnHit")],
+        "Three rails of different length, fired in sequence. Each note is driven harder than the last, and the "
         "third one lands like a struck bell.")
 
     w = wpn_base("rsl_cantus", "BALLISTIC", "MEDIUM", glow=False)
     w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 34, 26, 14, 30),
-             projectileSpecId="rsl_cantus_shot", fireSoundTwo="flak_fire", displayArcRadius=400)
+             projectileSpecId="rsl_cantus_shot", fireSoundTwo="rsl_flak_fire", displayArcRadius=400)
     flak = V.spec("proj", "flak_shot")
     flak.update(id="rsl_cantus_shot", fringeColor=TEAL_SOFT, coreColor=[230, 255, 250, 160])
     flak["behaviorSpec"]["explosionSpec"]["particleColor"] = [120, 240, 230, 255]
@@ -295,47 +295,48 @@ def weapons():
     # ---- LARGE ---------------------------------------------------------------------------------------------
     w = wpn_base("rsl_harmonic_driver", "ENERGY", "LARGE")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 50, 10, 30, 14),
-             projectileSpecId="rsl_harmonic_shot", fireSoundOne="tachyon_lance_fire",
-             fireSoundTwo="heavy_blaster_fire", autocharge=True, requiresFullCharge=True)
+             projectileSpecId="rsl_harmonic_shot", fireSoundOne="rsl_charge",
+             fireSoundTwo="rsl_driver_fire", autocharge=True, requiresFullCharge=True)
     add_weapon(blank_row(name="Harmonic Driver", id="rsl_harmonic_driver", tier=3, **{
-        "base value": 9000, "range": 900, "damage/shot": 900, "impact": 20, "turn rate": 10, "OPs": 24,
-        "type": "ENERGY", "energy/shot": 900, "chargeup": 1.5, "chargedown": 2.0, "proj speed": 1400,
+        "base value": 9000, "range": 1200, "damage/shot": 900, "impact": 20, "turn rate": 10, "OPs": 26,
+        "type": "ENERGY", "energy/shot": 900, "chargeup": 1.5, "chargedown": 2.0, "proj speed": 2600,
         "proj hitpoints": 500, "hints": "STRIKE", "tags": "energy20, LR, " + BP, "tech/manufacturer": MFR,
         "primaryRoleStr": "Anti Armor",
         "customPrimary": "A fully charged shot that breaks through hull or armor pierces the ship and carries on with %s of its damage.",
         "customPrimaryHL": "50%"}), w,
-        [bolt("rsl_harmonic_shot", 70, 20, TEAL, glow_r=40, hit_glow=110, on_hit=PKG + "PierceOnHit")],
-        "The Choir's standard heavy gun: a fork of conductive prongs that winds a lattice crystal up to its breaking "
-        "frequency and releases it as a single bolt. A clean hit on plating does not stop it.")
+        [bolt("rsl_harmonic_shot", 180, 12, TEAL, glow_r=40, hit_glow=110, on_hit=PKG + "PierceOnHit")],
+        "The Choir's standard heavy gun: a fork of conductive rails that winds a lattice slug up to its breaking "
+        "frequency and throws it across the battlefield. A clean hit on plating does not stop it.")
     w = wpn_base("rsl_harmonic_spinal", "ENERGY", "LARGE")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 80, 12, 44, 20),
-             projectileSpecId="rsl_harmonic_spinal_shot", fireSoundOne="tachyon_lance_fire",
-             fireSoundTwo="heavy_blaster_fire", autocharge=True, requiresFullCharge=True)
+             projectileSpecId="rsl_harmonic_spinal_shot", fireSoundOne="rsl_charge",
+             fireSoundTwo="rsl_spinal_fire", autocharge=True, requiresFullCharge=True)
     add_weapon(blank_row(name="Harmonic Driver (Spinal)", id="rsl_harmonic_spinal", tier=3, **{
-        "base value": 0, "range": 1100, "damage/shot": 1500, "impact": 40, "turn rate": 0, "OPs": 0,
-        "type": "ENERGY", "energy/shot": 1400, "chargeup": 2.0, "chargedown": 3.0, "proj speed": 1500,
+        "base value": 0, "range": 1500, "damage/shot": 1500, "impact": 40, "turn rate": 0, "OPs": 0,
+        "type": "ENERGY", "energy/shot": 1400, "chargeup": 2.0, "chargedown": 3.0, "proj speed": 2800,
         "proj hitpoints": 1000, "hints": "STRIKE", "tags": "no_drop, no_sell, no_dealer, restricted",
         "tech/manufacturer": MFR, "primaryRoleStr": "Anti Armor",
         "customPrimary": "Pierces ships it breaks through, keeping %s of its damage.", "customPrimaryHL": "50%"}), w,
-        [bolt("rsl_harmonic_spinal_shot", 100, 28, TEAL, glow_r=60, hit_glow=160, on_hit=PKG + "PierceOnHit")],
+        [bolt("rsl_harmonic_spinal_shot", 240, 16, TEAL, glow_r=60, hit_glow=160, on_hit=PKG + "PierceOnHit")],
         "The Conductor's spine is the gun. Its prongs wind the core crystal to a frequency no turret could survive.")
 
-    w = wpn_base("rsl_sostenuto", "ENERGY", "LARGE", spec_class="beam")
-    w.update(beamEffect=PKG + "SostenutoEffect", fringeColor=[50, 120, 210, 255], coreColor=[225, 245, 255, 255],
-             glowColor=TEAL, width=22.0, textureType="ROUGH", textureScrollSpeed=220.0, pixelsPerTexel=5.0,
-             fireSoundTwo="high_intensity_laser_loop",
-             pierceSet=["PROJECTILE_FF", "PROJECTILE_NO_FF", "PROJECTILE_FIGHTER", "MISSILE_FF", "MISSILE_NO_FF"])
-    add_weapon(blank_row(name="Sostenuto Beam", id="rsl_sostenuto", tier=3, **{
-        "base value": 8000, "range": 1000, "damage/second": 380, "impact": 4, "turn rate": 8, "OPs": 22,
-        "type": "ENERGY", "energy/second": 330, "chargeup": 0.3, "chargedown": 0.3, "beam speed": 2400,
-        "tags": "beam18, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Anti Shield",
-        "customPrimary": "%s of the damage this beam deals to shields is converted to hard flux.",
-        "customPrimaryHL": "35%"}), w, [],
-        "A sustained beam held on one note. Shields can bleed off most beams, but the Sostenuto's tone sits under the "
-        "emitter's dissipation band and some of the load simply stays.")
+    w = wpn_base("rsl_sostenuto", "ENERGY", "LARGE")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash([90, 160, 255, 255], 40, 5, 22, 10),
+             projectileSpecId="rsl_sostenuto_shot", fireSoundTwo="rsl_sostenuto_fire")
+    add_weapon(blank_row(name="Sostenuto Rail", id="rsl_sostenuto", tier=3, **{
+        "base value": 8000, "range": 1100, "damage/shot": 100, "impact": 4, "turn rate": 8, "OPs": 22,
+        "type": "ENERGY", "energy/shot": 95, "chargeup": 0, "chargedown": 0.33, "min spread": 0, "max spread": 1,
+        "spread/shot": 0.2, "spread decay/sec": 4, "proj speed": 2400,
+        "tags": "energy18, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Anti Shield",
+        "customPrimary": "Slugs that hit a shield add another %s of the flux they caused, as hard flux.",
+        "customPrimaryHL": "35%"}), w,
+        [bolt("rsl_sostenuto_shot", 120, 7, [50, 120, 210, 255], core=[225, 245, 255, 255], glow_r=20, hit_glow=50,
+              on_hit=PKG + "SostenutoOnHit")],
+        "A rapid heavy rail held on one note. Its slugs ring a shield at the pitch of the emitter's own dissipation "
+        "band, and part of the load simply stays.")
 
     w = wpn_base("rsl_bloom", "MISSILE", "LARGE", glow=False)
-    w.update(animationType="SMOKE", projectileSpecId="rsl_bloom_msl", fireSoundTwo="reaper_fire",
+    w.update(animationType="SMOKE", projectileSpecId="rsl_bloom_msl", fireSoundTwo="rsl_bloom_fire",
              smokeSpec=WPN["rsl_tuningspike"]["smokeSpec"])
     bloom = {"id": "rsl_bloom_msl", "specClass": "missile", "missileType": "MISSILE",
              "sprite": OFFS["rsl_bloom_msl"]["sprite"], "size": OFFS["rsl_bloom_msl"]["size"],
@@ -367,16 +368,16 @@ def weapons():
 
     # ---- Virtuoso built-ins ---------------------------------------------------------------------------------
     for wid, name, cd, spd, turn, dmg, tags_extra, text in (
-            ("rsl_sforzando", "Sforzando Lance", 0.4, 2000, 45, 200, "",
+            ("rsl_sforzando", "Sforzando Lance", 0.4, 2600, 45, 200, "",
              "The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing small has "
              "time to move. Slugs that kill a fighter or a frigate carry on to the next target in line."),
-            ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 1600, 30, 180, "",
+            ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 2000, 30, 180, "",
              "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
         w = wpn_base(wid, "ENERGY", "LARGE")
         w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(WHITE, 40, 4, 20, 10),
-                 projectileSpecId=wid + "_shot", fireSoundTwo="railgun_fire", fireSoundOne="pulse_laser_fire")
+                 projectileSpecId=wid + "_shot", fireSoundTwo="rsl_sforzando_fire")
         add_weapon(blank_row(name=name, id=wid, tier=3, **{
-            "base value": 0, "range": 800, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
+            "base value": 0, "range": 1000 if wid == "rsl_sforzando" else 900, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
             "type": "ENERGY", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
             "max spread": 0, "spread/shot": 0, "spread decay/sec": 0, "proj speed": spd,
             "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
@@ -386,7 +387,7 @@ def weapons():
                               "Bravura: every slug deals %s damage, pierces and arcs EMP." if wid == "rsl_sforzando" else
                               "+%s damage to fighters and frigates. %s"),
             "customPrimaryHL": "50% | 60% | +50%" if wid == "rsl_sforzando" else "50% | No Cascade"}), w,
-            [bolt(wid + "_shot", 150 if wid == "rsl_sforzando" else 110, 8, [120, 240, 230, 255],
+            [bolt(wid + "_shot", 170 if wid == "rsl_sforzando" else 120, 7, [120, 240, 230, 255],
                   glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit", fade=0.15)], text)
 
     # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
@@ -731,7 +732,7 @@ def variants(ships):
         free = budget - used
         if not hid.startswith("rsl_cantor"):
             mods = list(mods)
-            pref = ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull", "turretgyros", "advancedoptics"]
+            pref = ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull", "turretgyros"]  # no beams left: no Advanced Optics
             if "dedicated_targeting_core" not in BUILTIN_MODS[hid]:
                 pref.insert(1, "targetingunit")
             for m in pref:
@@ -1011,6 +1012,62 @@ def config():
     write_csv("data/lights/rsl_texture_data.csv", ["id", "type", "frame", "magnitude", "map", "path"], rows)
 
 
+# ===================================================================================================== sounds + trails
+# Sound files are synthesised by art_src/gen/gen_sounds.py (no vanilla samples). id -> (file, volume)
+SOUNDS = {
+    "rsl_chime_fire": ("rsl_chime_fire", 0.45), "rsl_pizzicato_fire": ("rsl_pizzicato_fire", 0.7),
+    "rsl_shard_fire": ("rsl_shard_fire", 0.55), "rsl_flechette_fire": ("rsl_flechette_fire", 0.6),
+    "rsl_lance_fire": ("rsl_lance_fire", 0.65), "rsl_arpeggio_fire": ("rsl_arpeggio_fire", 0.6),
+    "rsl_sostenuto_fire": ("rsl_sostenuto_fire", 0.55), "rsl_charge": ("rsl_charge", 0.45),
+    "rsl_driver_fire": ("rsl_driver_fire", 0.9), "rsl_spinal_fire": ("rsl_spinal_fire", 1.0),
+    "rsl_sforzando_fire": ("rsl_sforzando_fire", 0.75), "rsl_flak_fire": ("rsl_flak_fire", 0.6),
+    "rsl_spike_fire": ("rsl_spike_fire", 0.55), "rsl_bloom_fire": ("rsl_bloom_fire", 0.8),
+    "rsl_impact_shield": ("rsl_impact_shield", 0.6), "rsl_impact_hull": ("rsl_impact_hull", 0.6),
+}
+# MagicLib trails: projectile id -> visual weight (core wake + ion haze scale with it)
+TRAILS = {"rsl_chime_shot": 0.5, "rsl_chime_bell": 0.6, "rsl_pizzicato_shot": 0.8, "rsl_shard_shot": 0.5,
+          "rsl_lance_shot": 1.1, "rsl_flechette_shot": 0.7, "rsl_arpeggio_shot": 0.9, "rsl_sostenuto_shot": 1.1,
+          "rsl_harmonic_shot": 1.8, "rsl_harmonic_spinal_shot": 2.4, "rsl_sforzando_shot": 1.3,
+          "rsl_sforzando_untuned_shot": 1.0, "rsl_bloom_shard_shot": 0.5}
+MISSILE_TRAILS = {"rsl_tuningspike_msl": 0.7, "rsl_bloom_msl": 1.6}
+TRAIL_HDR = ["trail", "projectile", "sprite", "minLength", "fadeIn", "duration", "fadeOut", "sizeIn", "sizeOut",
+             "colorIn", "colorOut", "opacity", "textLength", "textScroll", "randomTextureOffset", "distance",
+             "dispersion", "drift", "frameOffsetMult", "fadeOnFadeOut", "angleAdjustment", "additive", "velocityIn",
+             "velocityOut", "randomVelocity", "angle", "rotationIn", "rotationOut", "randomRotation",
+             "renderBelowExplosions"]
+
+
+def sounds_and_trails():
+    sj = {}
+    for sid, (f, vol) in SOUNDS.items():
+        if not os.path.isfile(P("sounds/rsl/%s.ogg" % f)):
+            raise FileNotFoundError("sounds/rsl/%s.ogg (run art_src/gen/gen_sounds.py)" % f)
+        sj[sid] = [{"file": "sounds/rsl/%s.ogg" % f, "pitch": p, "volume": vol} for p in (0.97, 1.0, 1.03)]
+    write_json("data/config/sounds.json", sj)
+
+    def trail(tid, pid, sprite, w, dur, fade, s_in, s_out, c_in, c_out, opacity, dist, disp, additive=True):
+        return {"trail": tid, "projectile": pid, "sprite": sprite, "minLength": 15, "fadeIn": 0, "duration": dur,
+                "fadeOut": fade, "sizeIn": round(s_in * w, 1), "sizeOut": round(s_out * w, 1),
+                "colorIn": json.dumps(c_in), "colorOut": json.dumps(c_out), "opacity": opacity, "textLength": 256,
+                "textScroll": 0, "randomTextureOffset": "TRUE", "distance": dist, "dispersion": disp, "drift": 1,
+                "frameOffsetMult": 1, "fadeOnFadeOut": "TRUE", "angleAdjustment": "FALSE",
+                "additive": "TRUE" if additive else "FALSE", "velocityIn": 0, "velocityOut": 0, "randomVelocity": 0,
+                "angle": 0, "rotationIn": 0, "rotationOut": 0, "randomRotation": "FALSE",
+                "renderBelowExplosions": "FALSE"}
+    rows = []
+    for pid, w in TRAILS.items():
+        length = PROJ[pid]["length"]
+        # a thin white-teal wake right behind the streak, then a wide teal->violet ion haze that lingers
+        rows.append(trail(pid + "_core", pid, "base_trail_smooth", w, 0.04, 0.3, 4, 1.5, [210, 255, 250],
+                          [90, 210, 220], 0.75, round(length * 0.5), 0))
+        rows.append(trail(pid + "_haze", pid, "base_trail_fuzzy", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
+                          [150, 110, 230], 0.3, round(length * 0.5), 12 * w))
+    for pid, w in MISSILE_TRAILS.items():
+        rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],
+                          [140, 110, 220], 0.4, 6, 10 * w, additive=False))
+    write_csv("data/config/modFiles/magicTrail_data.csv", TRAIL_HDR, rows)
+
+
 def descriptions():
     hdr = V.header("descriptions.csv")
     rows = [{"id": d, "type": t, "text1": a, "text2": b, "text3": c} for d, t, a, b, c in DESC]
@@ -1125,6 +1182,7 @@ def main():
     hullmods()
     faction()
     config()
+    sounds_and_trails()
     descriptions()
     missions()
     print("ok: %d weapons, %d hulls, %d systems, %d hullmods, %d descriptions" % (

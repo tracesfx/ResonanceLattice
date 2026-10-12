@@ -3,7 +3,7 @@
     "hullId": "rsl_halo",
     "displayName": "Standard",
     "fluxVents": 50,
-    "fluxCapacitors": 15,
+    "fluxCapacitors": 13,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",

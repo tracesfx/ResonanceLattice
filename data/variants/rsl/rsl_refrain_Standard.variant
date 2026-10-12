@@ -3,7 +3,7 @@
     "hullId": "rsl_refrain",
     "displayName": "Standard",
     "fluxVents": 20,
-    "fluxCapacitors": 5,
+    "fluxCapacitors": 4,
     "hullMods": [
         "hardenedshieldemitter",
         "fluxbreakers"

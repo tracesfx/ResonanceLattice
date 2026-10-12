@@ -44,6 +44,5 @@
         ]
     },
     "projectileSpecId": "rsl_sforzando_shot",
-    "fireSoundTwo": "railgun_fire",
-    "fireSoundOne": "pulse_laser_fire"
+    "fireSoundTwo": "rsl_sforzando_fire"
 }

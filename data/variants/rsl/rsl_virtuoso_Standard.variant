@@ -3,14 +3,13 @@
     "hullId": "rsl_virtuoso",
     "displayName": "Soloist",
     "fluxVents": 50,
-    "fluxCapacitors": 8,
+    "fluxCapacitors": 31,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",
         "fluxbreakers",
         "reinforcedhull",
-        "turretgyros",
-        "advancedoptics"
+        "turretgyros"
     ],
     "permaMods": [],
     "sMods": [],

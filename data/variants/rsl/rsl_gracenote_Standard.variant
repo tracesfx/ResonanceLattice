@@ -3,12 +3,11 @@
     "hullId": "rsl_gracenote",
     "displayName": "Standard",
     "fluxVents": 10,
-    "fluxCapacitors": 4,
+    "fluxCapacitors": 6,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",
         "fluxbreakers",
-        "reinforcedhull",
         "turretgyros"
     ],
     "permaMods": [],

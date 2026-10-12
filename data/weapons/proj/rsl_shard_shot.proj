@@ -21,5 +21,6 @@
     ],
     "textureScrollSpeed": 64.0,
     "pixelsPerTexel": 5.0,
-    "bulletSprite": "graphics/rsl/missiles/rsl_shard_proj.png"
+    "bulletSprite": "graphics/rsl/missiles/rsl_shard_proj.png",
+    "onHitEffect": "rsl.weapons.RailImpactOnHit"
 }

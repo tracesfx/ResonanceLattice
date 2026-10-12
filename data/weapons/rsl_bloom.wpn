@@ -22,7 +22,7 @@
     "barrelMode": "ALTERNATING",
     "animationType": "SMOKE",
     "projectileSpecId": "rsl_bloom_msl",
-    "fireSoundTwo": "reaper_fire",
+    "fireSoundTwo": "rsl_bloom_fire",
     "smokeSpec": {
         "particleSizeMin": 8.0,
         "particleSizeRange": 8.0,

@@ -20,6 +20,7 @@ public class PierceOnHit implements OnHitEffectPlugin {
     @Override
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                       ApplyDamageResultAPI result, CombatEngineAPI engine) {
+        RailFx.impact(proj, target, point, shieldHit, engine);
         if (shieldHit || !(target instanceof ShipAPI) || ((ShipAPI) target).isFighter()) return;
         if (proj.getCustomData().containsKey(RslIds.KEY_PIERCED) || proj.getWeapon() == null) return;
         continueThrough(proj, target, point, KEEP, engine);

@@ -9,6 +9,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import org.apache.log4j.Logger;
 import org.lwjgl.util.vector.Vector2f;
 import rsl.RslIds;
+import rsl.weapons.RailFx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 /**
  * One instance per battle (registered in data/config/settings.json). Registers the global damage listener and the
  * glow renderer, and runs the battle-wide effects that outlive a single hit: Crystal Flechette damage-over-time and
- * embedded Tuning Spikes. Errors disable the plugin for the rest of the battle instead of crashing it.
+ * embedded Tuning Spikes, plus the rail slugs' in-flight effects ({@link RailFx}). Errors disable the plugin for
+ * the rest of the battle instead of crashing it.
  */
 public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
     private static final Logger log = Global.getLogger(RslCombatPlugin.class);
@@ -135,6 +137,7 @@ public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
                 Attached a = spikes.get(i);
                 if (now > a.until || !RslUtil.alive(a.target)) spikes.remove(i);
             }
+            RailFx.advanceProjectiles(engine, amount);
         } catch (Throwable t) {
             broken = true;
             log.error("Resonance Lattice combat plugin disabled after an error", t);

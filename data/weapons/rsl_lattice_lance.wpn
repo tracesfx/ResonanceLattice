@@ -1,6 +1,6 @@
 {
     "id": "rsl_lattice_lance",
-    "specClass": "beam",
+    "specClass": "projectile",
     "type": "ENERGY",
     "size": "MEDIUM",
     "turretSprite": "graphics/rsl/weapons/rsl_lattice_lance_turret.png",
@@ -28,28 +28,21 @@
         220,
         255
     ],
-    "beamEffect": "rsl.weapons.LatticeLanceEffect",
-    "fringeColor": [
-        40,
-        170,
-        170,
-        255
-    ],
-    "coreColor": [
-        220,
-        255,
-        250,
-        255
-    ],
-    "width": 12.0,
-    "textureType": "ROUGH",
-    "textureScrollSpeed": 160.0,
-    "pixelsPerTexel": 5.0,
-    "fireSoundOne": "beam_heavy_intro",
-    "fireSoundTwo": "graviton_beam_loop",
-    "pierceSet": [
-        "PROJECTILE_FF",
-        "PROJECTILE_NO_FF",
-        "PROJECTILE_FIGHTER"
-    ]
+    "animationType": "GLOW_AND_FLASH",
+    "muzzleFlashSpec": {
+        "length": 34,
+        "spread": 4,
+        "particleSizeMin": 16,
+        "particleSizeRange": 12.8,
+        "particleDuration": 0.12,
+        "particleCount": 8,
+        "particleColor": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "projectileSpecId": "rsl_lance_shot",
+    "fireSoundTwo": "rsl_lance_fire"
 }

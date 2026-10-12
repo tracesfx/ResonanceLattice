@@ -4,8 +4,8 @@
     "spawnType": "BALLISTIC_AS_BEAM",
     "collisionClass": "RAY",
     "collisionClassByFighter": "RAY_FIGHTER",
-    "length": 34,
-    "width": 6,
+    "length": 80,
+    "width": 5,
     "fadeTime": 0.25,
     "fringeColor": [
         100,
@@ -28,5 +28,6 @@
         90
     ],
     "glowRadius": 12,
-    "hitGlowRadius": 30
+    "hitGlowRadius": 30,
+    "onHitEffect": "rsl.weapons.RailImpactOnHit"
 }

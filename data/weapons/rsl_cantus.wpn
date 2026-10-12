@@ -42,6 +42,6 @@
         ]
     },
     "projectileSpecId": "rsl_cantus_shot",
-    "fireSoundTwo": "flak_fire",
+    "fireSoundTwo": "rsl_flak_fire",
     "displayArcRadius": 400
 }

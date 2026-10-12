@@ -40,7 +40,7 @@
     "barrelMode": "ALTERNATING",
     "animationType": "SMOKE",
     "projectileSpecId": "rsl_tuningspike_msl",
-    "fireSoundTwo": "swarmer_fire",
+    "fireSoundTwo": "rsl_spike_fire",
     "smokeSpec": {
         "particleSizeMin": 8.0,
         "particleSizeRange": 8.0,

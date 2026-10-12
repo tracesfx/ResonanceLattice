@@ -44,7 +44,7 @@
         ]
     },
     "projectileSpecId": "rsl_chime_shot",
-    "fireSoundTwo": "ir_pulse_laser_fire",
+    "fireSoundTwo": "rsl_chime_fire",
     "onFireEffect": "rsl.weapons.ChimeRepeaterEffect",
     "autocharge": true
 }

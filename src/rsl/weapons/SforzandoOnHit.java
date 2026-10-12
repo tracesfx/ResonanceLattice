@@ -30,6 +30,7 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
     @Override
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                       ApplyDamageResultAPI result, CombatEngineAPI engine) {
+        RailFx.impact(proj, target, point, shieldHit, engine);
         if (!(target instanceof ShipAPI)) return;
         ShipAPI t = (ShipAPI) target;
         ShipAPI src = proj.getSource();

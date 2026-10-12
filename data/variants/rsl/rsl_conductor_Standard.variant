@@ -3,13 +3,12 @@
     "hullId": "rsl_conductor",
     "displayName": "Standard",
     "fluxVents": 50,
-    "fluxCapacitors": 5,
+    "fluxCapacitors": 7,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",
         "fluxbreakers",
-        "reinforcedhull",
-        "turretgyros"
+        "reinforcedhull"
     ],
     "permaMods": [],
     "sMods": [],

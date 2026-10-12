@@ -56,6 +56,6 @@
         ]
     },
     "projectileSpecId": "rsl_arpeggio_shot",
-    "fireSoundTwo": "pulse_laser_fire",
+    "fireSoundTwo": "rsl_arpeggio_fire",
     "onFireEffect": "rsl.weapons.ArpeggioEffect"
 }

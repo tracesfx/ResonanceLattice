@@ -56,5 +56,5 @@
         ]
     },
     "projectileSpecId": "rsl_flechette_shot",
-    "fireSoundTwo": "flak_fire"
+    "fireSoundTwo": "rsl_flechette_fire"
 }

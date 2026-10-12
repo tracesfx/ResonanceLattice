@@ -17,6 +17,7 @@ public class FlechetteOnHit implements OnHitEffectPlugin {
     @Override
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                       ApplyDamageResultAPI result, CombatEngineAPI engine) {
+        RailFx.impact(proj, target, point, shieldHit, engine);
         if (shieldHit || !(target instanceof ShipAPI) || ((ShipAPI) target).isFighter()) return;
         RslCombatPlugin p = RslCombatPlugin.get();
         if (p != null) p.addDot((ShipAPI) target, proj.getSource(), point, DOT, DURATION);
