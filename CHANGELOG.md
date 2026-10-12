@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Glissando steering, kinetic Sforzando)
+
+- Glissando: 720-unit dash (+20%), lasting 0.4 s; its heading swings towards the direction the ship is being flown
+  (agility x3 while dashing), so thrusting mid-dash changes its direction (Virtuoso and Unsung). Activation glow 40%
+  smaller and dimmer, white on the Virtuoso; the dash leaves a fading trail of afterimages.
+- Sforzando: 160 damage (Untuned 144, both -20%), KINETIC damage (bonus and through-hull damage too). A slug
+  stopped by a shield is removed on contact, so nothing renders inside the shield.
+- Unsung: its untuned lance now skewers too (up to 3 ships); slug white, width 9, glow +15%.
+- Virtuoso: shield raise rate x3 (was x2).
+
 ## Unreleased - 2026-10-12 (Sforzando tuning, Concert Pitch)
 
 - Sforzando: slug width 10, head glow radius and intensity -30%, colour white-teal (mostly white) instead of gold,

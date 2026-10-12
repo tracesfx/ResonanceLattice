@@ -22,7 +22,8 @@ import java.util.List;
  * Sforzando Lance (DESIGN.md 3.9):
  * <ul>
  * <li>+50% damage to fighters and frigates (both lances).</li>
- * <li>Skewer (full Virtuoso): a slug that hits hull or armor (not a shield) passes through at full damage and hits
+ * <li>All hits and bonus damage are KINETIC. A slug stopped by a shield is removed on the spot.</li>
+ * <li>Skewer (full Virtuoso; the Unsung's untuned lance up to {@link #MAX_PIERCE_UNTUNED} ships): a slug that hits hull or armor (not a shield) passes through at full damage and hits
  * whatever is behind it, up to {@link #MAX_PIERCE} ships in a row. It bores through the inside of the hull rather than
  * jumping to the far side: {@link SkewerFx} damages the armor along the path (+20% of the slug's damage in a frigate,
  * +40% destroyer, +60% cruiser, +80% capital, spread along the wound).</li>
@@ -37,6 +38,8 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
     static final Color TEAL_EDGE = new Color(150, 235, 225, 255);
     /** Ships one slug can pass through (each at full damage) before it stops. */
     public static final int MAX_PIERCE = 12;
+    /** The Unsung's untuned lance skewers too, but stops after this many ships. */
+    public static final int MAX_PIERCE_UNTUNED = 3;
     private static final String KEY_PIERCES = "rsl_sforzando_pierces";
     public static final float ACCENT_ARC_RANGE = 250f;
     /**
@@ -70,22 +73,25 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                       ApplyDamageResultAPI result, CombatEngineAPI engine) {
         RailFx.impact(proj, target, point, shieldHit, engine);
+        // a slug stopped by a shield is removed at once, so no part of its head or glow is drawn inside the bubble
+        if (shieldHit) engine.removeEntity(proj);
         if (!(target instanceof ShipAPI)) return;
         ShipAPI t = (ShipAPI) target;
         ShipAPI src = proj.getSource();
         if (src == null) return;
         boolean small = t.isFighter() || t.isFrigate();
         if (small && !t.isHulk()) {
-            engine.applyDamage(t, point, proj.getDamageAmount() * SMALL_BONUS, DamageType.ENERGY, 0f, false, false, src,
-                    false);
+            engine.applyDamage(t, point, proj.getDamageAmount() * SMALL_BONUS, DamageType.KINETIC, 0f, false, false,
+                    src, false);
         }
         String wid = proj.getWeapon() != null ? proj.getWeapon().getId() : null;
-        if (!RslIds.WEAPON_SFORZANDO.equals(wid)) return;
+        boolean full = RslIds.WEAPON_SFORZANDO.equals(wid);
+        if (!full && !RslIds.WEAPON_SFORZANDO_UNTUNED.equals(wid)) return;
         LatticeData d = LatticeData.get(src);
-        boolean accent = d.bravura || RslUtil.now() < d.accentUntil
-                || src.getVelocity().length() > src.getMaxSpeed() * 0.8f;
+        boolean accent = full && (d.bravura || RslUtil.now() < d.accentUntil
+                || src.getVelocity().length() > src.getMaxSpeed() * 0.8f);
         if (accent && !t.isHulk()) {
-            engine.applyDamage(t, point, proj.getDamageAmount() * ACCENT_DAMAGE, DamageType.ENERGY, 0f, false, false,
+            engine.applyDamage(t, point, proj.getDamageAmount() * ACCENT_DAMAGE, DamageType.KINETIC, 0f, false, false,
                     src, false);
         }
         // Skewer: a slug that strikes hull or armor (not a shield) bores straight through the ship - a fresh slug
@@ -93,7 +99,7 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
         // into whatever is behind, up to MAX_PIERCE ships in a row.
         Object o = proj.getCustomData().get(KEY_PIERCES);
         int pierced = o instanceof Integer ? (Integer) o : 0;
-        if (!shieldHit && pierced < MAX_PIERCE && proj.getWeapon() != null) {
+        if (!shieldHit && pierced < (full ? MAX_PIERCE : MAX_PIERCE_UNTUNED) && proj.getWeapon() != null) {
             double f = Math.toRadians(proj.getFacing());
             Vector2f from = new Vector2f(point.x + (float) Math.cos(f) * 4f, point.y + (float) Math.sin(f) * 4f);
             Object n = engine.spawnProjectile(src, proj.getWeapon(), proj.getWeapon().getId(), from, proj.getFacing(),
@@ -166,7 +172,7 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
                     hitsLeft--;
                     float k = 1f - carried / d;
                     Vector2f at = new Vector2f(last.x + dx * k, last.y + dy * k);
-                    engine.applyDamage(target, at, perHit, DamageType.ENERGY, 0f, true, false, src, false);
+                    engine.applyDamage(target, at, perHit, DamageType.KINETIC, 0f, true, false, src, false);
                     engine.addHitParticle(at, target.getVelocity(), 10f, 0.5f, 0.1f, WHITE_TEAL);
                     for (int i = 0; i < 2; i++) {
                         Vector2f v = new Vector2f(target.getVelocity());

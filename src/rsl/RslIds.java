@@ -40,6 +40,7 @@ public final class RslIds {
     public static final String WEAPON_CHIME_BELL = "rsl_chime_bell";
     public static final String WEAPON_BLOOM_SHARD = "rsl_bloom_shard";
     public static final String WEAPON_SFORZANDO = "rsl_sforzando";
+    public static final String WEAPON_SFORZANDO_UNTUNED = "rsl_sforzando_untuned";
     public static final String WEAPON_HARMONIC_SPINAL = "rsl_harmonic_spinal";
 
     public static final String WEAPON_DECO_HALO_RING = "rsl_deco_halo_ring";

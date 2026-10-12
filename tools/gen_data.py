@@ -368,10 +368,10 @@ def weapons():
 
     # ---- Virtuoso built-ins ---------------------------------------------------------------------------------
     for wid, name, cd, spd, turn, dmg, tags_extra, text in (
-            ("rsl_sforzando", "Sforzando Lance", 0.4, 2600, 45, 200, "",
+            ("rsl_sforzando", "Sforzando Lance", 0.4, 2600, 45, 160, "",
              "The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing has time to "
              "move. Once a hull is bare, a slug goes straight through it and on into the next ship in line."),
-            ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 2000, 30, 180, "",
+            ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 2000, 30, 144, "",
              "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
         full = wid == "rsl_sforzando"
         w = wpn_base(wid, "ENERGY", "LARGE")
@@ -382,20 +382,23 @@ def weapons():
         add_weapon(blank_row(name=name, id=wid, tier=3, **{
             "base value": 0, "range": 1200 if full else 1000, "damage/shot": dmg, "impact": 10, "turn rate": turn,
             "OPs": 0,
-            "type": "ENERGY", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
+            "type": "KINETIC", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
             "max spread": 0, "spread/shot": 0, "spread decay/sec": 0, "proj speed": spd,
             "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
             "tech/manufacturer": MFR, "primaryRoleStr": "Swarm Breaker",
             "customPrimary": ("+%s damage to fighters and frigates. Skewer: a slug that hits hull or armor passes "
                               "through at full damage into the next target, up to %s ships in a row. Accented after a "
                               "Glissando dash, at high speed or in Bravura: every hit deals %s damage and arcs EMP."
-                              if wid == "rsl_sforzando" else "+%s damage to fighters and frigates. %s"),
-            "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | No Skewer"}), w,
+                              if wid == "rsl_sforzando" else
+                              "+%s damage to fighters and frigates. Skewer: a slug that hits hull or armor passes "
+                              "through at full damage into the next target, up to %s ships in a row."),
+            "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | 3"}), w,
             # the full lance stands apart from every other Lattice gun: a wide, bright, white-teal slug
             [bolt(wid + "_shot", 190, 10, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=38, hit_glow=60,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=140) if full else
-             bolt(wid + "_shot", 120, 7, [120, 240, 230, 255], glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit",
-                  fade=0.15)], text)
+             # the Unsung's lance: white as well, a little narrower and dimmer than the full Virtuoso's
+             bolt(wid + "_shot", 130, 9, [200, 240, 236, 255], core=[255, 255, 255, 255], glow_r=23, hit_glow=55,
+                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=104)], text)
 
     # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
     for wid, size, mount, sprite, glow, effect in (
@@ -910,19 +913,19 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
      "After a 1.5 second charge, the prongs discharge a resonant beam into the target (2,000 range, 800 energy "
      "damage) and mark it for 8 seconds: all Lattice ships deal +20% damage to it. Overtone: the beam chains to a "
      "second enemy, which is marked as well."),
-    ("rsl_glissando", "Glissando", {"max uses": 3, "regen": 0.1667, "charge up": 0.05, "active": 0.35, "down": 0.1,
+    ("rsl_glissando", "Glissando", {"max uses": 3, "regen": 0.1667, "charge up": 0.05, "active": 0.45, "down": 0.1,
                                     "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "A 600-unit blink-dash in the direction of movement; the ship can still turn and thrust, steering the dash. 2 "
+     "A 720-unit blink-dash in the direction of movement; thrusting mid-dash bends its path, so it can change direction. 2 "
      "charges (3 in Bravura). The ship cannot be hit mid-dash. Costs 1% combat readiness "
      "per dash and cannot be used below 30%. The path stays behind as a taut string for 1.2 seconds - it deletes "
      "enemy projectiles that cross it - then snaps: 400 energy damage to every enemy touching it (fighters and "
      "missiles are destroyed) and 2% CR stolen from each ship hit. For 2 seconds after a dash the Sforzando lances "
      "are Accented. Overtone: the string snaps twice and the dash refunds half a charge."),
-    ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 2, "regen": 0.125, "charge up": 0.05, "active": 0.3,
+    ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 2, "regen": 0.125, "charge up": 0.05, "active": 0.45,
                                                     "down": 0.1, "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "An untuned blink-dash: 2 charges, 1.5% combat readiness per dash, untargetable for 0.2 seconds. The string it "
+     "An untuned, steerable 720-unit blink-dash: 2 charges, 1.5% combat readiness per dash, untargetable for 0.2 seconds. The string it "
      "leaves blocks projectiles for 1.2 seconds but never snaps."),
     ("rsl_grandchorus", "Grand Chorus", {"charge up": 1, "active": 0.5, "down": 0.5, "cooldown": 25},
      {"aiType": "CUSTOM", "aiScript": SYS + "GrandChorusAI", "useSound": "tachyon_lance_fire"},
@@ -1174,6 +1177,10 @@ def sounds_and_trails():
             r["colorIn"] = "[245,255,255]" if core else "[215,250,245]"
             r["colorOut"] = "[190,240,236]" if core else "[130,215,210]"
             r["opacity"] = 0.76 if core else 0.36   # user: 20% less vivid than the first gold version
+        elif r["projectile"] == "rsl_sforzando_untuned_shot":   # white too, normal length
+            core = r["trail"].endswith("_core")
+            r["colorIn"] = "[240,255,255]" if core else "[200,240,236]"
+            r["colorOut"] = "[180,232,228]" if core else "[120,200,196]"
             r["sizeIn"], r["sizeOut"] = round(r["sizeIn"] * 1.6, 1), round(r["sizeOut"] * 1.4, 1)
     for pid, w in MISSILE_TRAILS.items():
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],

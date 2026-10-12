@@ -32,8 +32,9 @@ public class Bravura extends BaseHullMod {
     public static final float SYSTEM_REGEN = 100f;
     /** Glissando charges in Bravura; outside it the ship is held one charge below this. */
     public static final int CHARGES = 3;
-    /** Virtuoso base: shield turn and unfold rate multiplier. */
+    /** Virtuoso base: shield turn rate and shield raise (unfold) rate multipliers. */
     public static final float SHIELD_RATE_MULT = 2f;
+    public static final float SHIELD_UNFOLD_MULT = 3f;
     /** Bravura shield: white-teal, mostly white. */
     private static final Color SHIELD_INNER = new Color(205, 245, 240, 90);
     private static final Color SHIELD_RING = new Color(240, 255, 252, 255);
@@ -46,7 +47,7 @@ public class Bravura extends BaseHullMod {
             return;
         }
         stats.getShieldTurnRateMult().modifyMult(id, SHIELD_RATE_MULT);
-        stats.getShieldUnfoldRateMult().modifyMult(id, SHIELD_RATE_MULT);
+        stats.getShieldUnfoldRateMult().modifyMult(id, SHIELD_UNFOLD_MULT);
     }
 
     @Override
