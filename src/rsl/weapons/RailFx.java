@@ -12,6 +12,7 @@ import rsl.RslIds;
 import rsl.combat.RslUtil;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,6 +114,25 @@ public final class RailFx {
         engine.addNebulaSmokeParticle(point, tv, 10f * w, 1.8f, 0.1f, 0.2f, 0.7f + 0.2f * w, DUST);
     }
 
+    private static final String KEY_ORIGIN = "rsl_range_origin";
+    /** Scratch list, filled and cleared within one advanceProjectiles call. */
+    private static final List<DamagingProjectileAPI> expired = new ArrayList<>();
+    private static final String KEY_MAX_RANGE = "rsl_range_max";
+
+    /**
+     * A pierce continuation is a freshly spawned projectile, which would get a whole new flight range. This hands
+     * it the original shot's firing point and range instead; {@link #advanceProjectiles} removes it once it has
+     * travelled the weapon's range from that point.
+     */
+    public static void inheritRange(DamagingProjectileAPI from, DamagingProjectileAPI to) {
+        Object o = from.getCustomData().get(KEY_ORIGIN);
+        Vector2f origin = o instanceof Vector2f ? (Vector2f) o : new Vector2f(from.getSpawnLocation());
+        Object r = from.getCustomData().get(KEY_MAX_RANGE);
+        float range = r instanceof Float ? (Float) r : (from.getWeapon() != null ? from.getWeapon().getRange() : 0f);
+        to.setCustomData(KEY_ORIGIN, origin);
+        to.setCustomData(KEY_MAX_RANGE, range);
+    }
+
     /** Per frame (from {@link rsl.combat.RslCombatPlugin}): muzzle vent jets on new slugs, motes on slugs in flight. */
     public static void advanceProjectiles(CombatEngineAPI engine, float amount) {
         moteTimer += amount;
@@ -121,6 +141,16 @@ public final class RailFx {
         List<DamagingProjectileAPI> projs = engine.getProjectiles();
         for (int i = 0; i < projs.size(); i++) {
             DamagingProjectileAPI p = projs.get(i);
+            Object origin = p.getCustomData().get(KEY_ORIGIN);
+            if (origin instanceof Vector2f) {
+                Object r = p.getCustomData().get(KEY_MAX_RANGE);
+                Vector2f o = (Vector2f) origin;
+                float dx = p.getLocation().x - o.x, dy = p.getLocation().y - o.y;
+                if (r instanceof Float && dx * dx + dy * dy >= (Float) r * (Float) r) {
+                    expired.add(p);
+                    continue;
+                }
+            }
             if (p instanceof MissileAPI || p.isFading() || p.didDamage()) continue;
             String id = p.getProjectileSpecId();
             if (id == null || !id.startsWith("rsl_")) continue;
@@ -138,6 +168,8 @@ public final class RailFx {
                         0.35f + 0.3f * (float) Math.random(), MOTE);
             }
         }
+        for (int i = 0; i < expired.size(); i++) engine.removeEntity(expired.get(i));
+        expired.clear();   // never keep projectiles past this frame
     }
 
     private static void vent(CombatEngineAPI engine, DamagingProjectileAPI p, float w) {

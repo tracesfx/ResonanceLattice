@@ -2,6 +2,10 @@ package rsl.systems;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.BaseEveryFrameCombatPlugin;
+import com.fs.starfarer.api.graphics.SpriteAPI;
+import com.fs.starfarer.api.combat.ViewportAPI;
+import com.fs.starfarer.api.combat.CombatEngineLayers;
+import com.fs.starfarer.api.combat.BaseCombatLayeredRenderingPlugin;
 import com.fs.starfarer.api.combat.CollisionClass;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
 import com.fs.starfarer.api.combat.DamageType;
@@ -22,6 +26,7 @@ import rsl.hullmods.StolenTime;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -39,8 +44,9 @@ public class GlissandoStats extends BaseShipSystemScript {
     private static final Color GLOW_VIRTUOSO = new Color(235, 255, 252, 255);
     /** The String's arcs and snap: white with a faint teal fringe (the Unsung's never snaps and stays dim teal). */
     static final Color STRING_WHITE = new Color(225, 250, 248, 255);
-    private static final Color IMAGE_VIRTUOSO = new Color(210, 250, 245, 90);
-    private static final Color IMAGE_UNSUNG = new Color(90, 200, 190, 70);
+    /** Afterimage tints: white on the Virtuoso, teal on the Unsung (drawn additively by {@link Afterimages}). */
+    private static final Color IMAGE_VIRTUOSO = new Color(225, 252, 250, 255);
+    private static final Color IMAGE_UNSUNG = new Color(80, 205, 195, 255);
     public static final float CR_COST = 0.01f;
     public static final float CR_COST_UNSUNG = 0.015f;
     public static final float MIN_CR = 0.30f;
@@ -50,6 +56,7 @@ public class GlissandoStats extends BaseShipSystemScript {
     static class Dash {
         Vector2f from, dir;
         float t0, done, imageTimer;
+        Afterimages images;
         boolean unsung, overtone;
     }
 
@@ -127,14 +134,16 @@ public class GlissandoStats extends BaseShipSystemScript {
         if (amount > 0f) {
             engine.addSmoothParticle(new Vector2f(ship.getLocation()), new Vector2f(), ship.getCollisionRadius() * 0.6f,
                     0.087f, 0.35f, dash.unsung ? RslUtil.TEAL_DIM : GLOW_VIRTUOSO);
-            // a fading trail of afterimages along the dash
+            // a fading trail of afterimages along the dash, left in place
+            if (dash.images == null) {
+                dash.images = new Afterimages(ship, dash.unsung ? IMAGE_UNSUNG : IMAGE_VIRTUOSO,
+                        dash.unsung ? 0.35f : 0.45f);
+                engine.addLayeredRenderingPlugin(dash.images);
+            }
             dash.imageTimer -= amount;
             if (dash.imageTimer <= 0f) {
                 dash.imageTimer = 0.03f;
-                // an afterimage is left where the ship was when it is spawned and moves only with the velocity
-                // given here: zero, so each image stays in place while the ship dashes on
-                ship.addAfterimage(dash.unsung ? IMAGE_UNSUNG : IMAGE_VIRTUOSO, 0f, 0f, 0f, 0f, 0f, 0f, 0.08f, 0.5f,
-                        true, false, false);
+                dash.images.snapshot();
             }
         }
     }
@@ -187,6 +196,78 @@ public class GlissandoStats extends BaseShipSystemScript {
     @Override
     public StatusData getStatusData(int index, State state, float effectLevel) {
         return index == 0 ? new StatusData("glissando", false) : null;
+    }
+
+    /**
+     * Afterimages of one dash: snapshots of the hull sprite (position and facing) that stay where they were taken,
+     * drawn additively in the ship's tint under the ships, fading out over {@link #LIFE} seconds. Our own renderer
+     * rather than ShipAPI.addAfterimage, whose images did not stay in place.
+     */
+    static class Afterimages extends BaseCombatLayeredRenderingPlugin {
+        static final float LIFE = 0.5f;
+        static final int MAX = 24;
+        private static final EnumSet<CombatEngineLayers> LAYERS = EnumSet.of(CombatEngineLayers.UNDER_SHIPS_LAYER);
+        private final SpriteAPI sprite;
+        private final Color tint;
+        private final float alpha;
+        private final ShipAPI ship;
+        private final float[] x = new float[MAX], y = new float[MAX], ang = new float[MAX], born = new float[MAX];
+        private int n;
+
+        Afterimages(ShipAPI ship, Color tint, float alpha) {
+            this.ship = ship;
+            this.tint = tint;
+            this.alpha = alpha;
+            SpriteAPI sp = null;
+            try {
+                sp = Global.getSettings().getSprite(ship.getHullSpec().getSpriteName());
+                if (sp != null && ship.getSpriteAPI() != null) {
+                    sp.setCenter(ship.getSpriteAPI().getCenterX(), ship.getSpriteAPI().getCenterY());
+                }
+            } catch (Throwable ignored) {
+                sp = null;
+            }
+            this.sprite = sp;
+        }
+
+        void snapshot() {
+            if (n >= MAX) return;
+            x[n] = ship.getLocation().x;
+            y[n] = ship.getLocation().y;
+            ang[n] = ship.getFacing() - 90f;
+            born[n] = RslUtil.now();
+            n++;
+        }
+
+        @Override
+        public EnumSet<CombatEngineLayers> getActiveLayers() {
+            return LAYERS;
+        }
+
+        @Override
+        public float getRenderRadius() {
+            return 100000f;
+        }
+
+        @Override
+        public boolean isExpired() {
+            return n == 0 || sprite == null || RslUtil.now() - born[n - 1] > LIFE + 0.1f;
+        }
+
+        @Override
+        public void render(CombatEngineLayers layer, ViewportAPI viewport) {
+            if (sprite == null) return;
+            float now = RslUtil.now();
+            sprite.setColor(tint);
+            sprite.setAdditiveBlend();
+            for (int i = 0; i < n; i++) {
+                float f = 1f - (now - born[i]) / LIFE;
+                if (f <= 0f) continue;
+                sprite.setAngle(ang[i]);
+                sprite.setAlphaMult(alpha * f * f * viewport.getAlphaMult());
+                sprite.renderAtCenter(x[i], y[i]);
+            }
+        }
     }
 
     /**

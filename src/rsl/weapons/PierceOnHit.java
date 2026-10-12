@@ -37,6 +37,7 @@ public class PierceOnHit implements OnHitEffectPlugin {
         DamagingProjectileAPI p = (DamagingProjectileAPI) o;
         p.setDamageAmount(proj.getDamageAmount() * keep);
         p.setCustomData(RslIds.KEY_PIERCED, Boolean.TRUE);
+        RailFx.inheritRange(proj, p);
         p.addDamagedAlready(target);
         engine.addHitParticle(exit, new Vector2f(), 30f, 0.6f, 0.15f, RslUtil.TEAL);
         return p;

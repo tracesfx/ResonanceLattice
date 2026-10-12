@@ -113,6 +113,7 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
                 next.addDamagedAlready(t);
                 next.setCustomData(RslIds.KEY_PIERCED, Boolean.TRUE);
                 next.setCustomData(KEY_PIERCES, pierced + 1);
+                RailFx.inheritRange(proj, next);
                 float len = Vector2f.sub(RslUtil.exitPoint(t, from, proj.getFacing()), from, null).length();
                 int steps = Math.max(1, Math.round(len / STEP));
                 float share = internalShare(t);
