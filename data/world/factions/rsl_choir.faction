@@ -6,26 +6,21 @@
         220,
         255
     ],
-    "displayName": "Choir",
-    "displayNameWithArticle": "the Choir",
-    "displayNameLong": "the Resonance Choir",
-    "displayNameLongWithArticle": "the Resonance Choir",
+    "displayName": "Cantorate",
+    "displayNameWithArticle": "the Cantorate",
+    "displayNameLong": "Cantorate of Vell",
+    "displayNameLongWithArticle": "the Cantorate of Vell",
     "logo": "graphics/rsl/factions/rsl_flag.png",
     "crest": "graphics/rsl/factions/rsl_crest.png",
-    "shipNamePrefix": "RCS",
+    "shipNamePrefix": "CCS",
     "shipNameSources": {
-        "JAPANESE": 2,
-        "EGYPTIAN": 2,
-        "NORSE": 1,
-        "MERCANTILE": 2,
-        "SPACE": 2,
-        "GENERAL": 2
+        "RSL_CANTORATE": 4,
+        "GENERAL": 1
     },
     "names": {
         "modern": 1,
         "world": 1,
-        "future": 1,
-        "myth": 1
+        "future": 1
     },
     "variantOverrides": {},
     "hullFrequency": {
@@ -113,14 +108,16 @@
         ],
         "commanderSkillsShuffleProbability": 1,
         "commanderSkills": [
-            "electronic_warfare",
+            "coordinated_maneuvers",
             "flux_regulation",
-            "cybernetic_augmentation"
+            "electronic_warfare"
         ]
     },
-    "illegalCommodities": [],
+    "illegalCommodities": [
+        "ai_cores"
+    ],
     "music": {
-        "theme": "music_tritach_encounter_neutral",
+        "theme": "music_galatia_academy",
         "market_neutral": "music_tritach_market_neutral",
         "market_hostile": "music_tritach_market_hostile",
         "market_friendly": "music_tritach_market_friendly",
@@ -128,88 +125,127 @@
         "encounter_hostile": "music_tritach_encounter_hostile",
         "encounter_friendly": "music_tritach_encounter_friendly"
     },
-    "internalComms": "tritachyon_internal",
     "portraits": {
         "standard_male": [
-            "graphics/portraits/portrait_corporate01.png",
-            "graphics/portraits/portrait_corporate03.png",
-            "graphics/portraits/portrait_corporate05.png",
-            "graphics/portraits/portrait_corporate06.png",
-            "graphics/portraits/portrait_corporate08.png",
-            "graphics/portraits/portrait_corporate10.png",
-            "graphics/portraits/portrait13.png",
+            "graphics/portraits/portrait12.png",
             "graphics/portraits/portrait18.png",
             "graphics/portraits/portrait25.png",
             "graphics/portraits/portrait26.png",
             "graphics/portraits/portrait30.png",
-            "graphics/portraits/portrait35.png"
+            "graphics/portraits/portrait33.png",
+            "graphics/portraits/portrait35.png",
+            "graphics/portraits/portrait36.png",
+            "graphics/portraits/portrait38.png",
+            "graphics/portraits/portrait48.png",
+            "graphics/portraits/portrait_league02.png",
+            "graphics/portraits/portrait_league09.png"
         ],
         "standard_female": [
-            "graphics/portraits/portrait_corporate02.png",
-            "graphics/portraits/portrait_corporate04.png",
-            "graphics/portraits/portrait_corporate07.png",
-            "graphics/portraits/portrait_corporate09.png",
-            "graphics/portraits/portrait_corporate11.png",
-            "graphics/portraits/portrait_mercenary02.png",
-            "graphics/portraits/portrait_mercenary08.png",
+            "graphics/portraits/portrait14.png",
             "graphics/portraits/portrait16.png",
             "graphics/portraits/portrait21.png",
+            "graphics/portraits/portrait22.png",
+            "graphics/portraits/portrait27.png",
             "graphics/portraits/portrait28.png",
+            "graphics/portraits/portrait29.png",
             "graphics/portraits/portrait32.png",
-            "graphics/portraits/portrait34.png",
-            "graphics/portraits/portrait41.png"
+            "graphics/portraits/portrait37.png",
+            "graphics/portraits/portrait41.png",
+            "graphics/portraits/portrait_league08.png",
+            "graphics/portraits/portrait_league10.png"
         ]
     },
     "ranks": {
         "ranks": {
+            "factionLeader": {
+                "name": "Precentor"
+            },
             "spaceAdmiral": {
-                "name": "Senior Operation Manager"
+                "name": "Maestro"
             },
             "spaceCommander": {
-                "name": "Operation Manager"
+                "name": "Principal"
             },
-            "factionLeader": {
-                "name": "CEO"
+            "spaceCaptain": {
+                "name": "Chorister"
+            },
+            "spaceLieutenant": {
+                "name": "Cantor"
+            },
+            "spaceEnsign": {
+                "name": "Cantor"
+            },
+            "spaceChief": {
+                "name": "Voice"
+            },
+            "spaceSailor": {
+                "name": "Voice"
+            },
+            "groundGeneral": {
+                "name": "Warden of the Score"
+            },
+            "groundColonel": {
+                "name": "Warden"
+            },
+            "groundMajor": {
+                "name": "Keeper"
+            },
+            "groundCaptain": {
+                "name": "Keeper"
             }
         },
         "posts": {
             "factionLeader": {
-                "name": "CEO"
+                "name": "Precentor"
             },
-            "patrolCommander": {
-                "name": "Patrol Director"
+            "administrator": {
+                "name": "Cantor-Steward"
             },
-            "fleetCommander": {
-                "name": "Fleet Director"
+            "stationCommander": {
+                "name": "Keeper of the Array"
             },
             "baseCommander": {
-                "name": "Base Director"
+                "name": "Keeper of the Array"
+            },
+            "patrolCommander": {
+                "name": "Watch Principal"
+            },
+            "fleetCommander": {
+                "name": "Maestro"
+            },
+            "portmaster": {
+                "name": "Harbour Cantor"
+            },
+            "supplyOfficer": {
+                "name": "Quartermaster"
             },
             "intelligenceDirector": {
-                "name": "Director of Special Acquisitions"
+                "name": "Archivist of the Score"
+            },
+            "scientist": {
+                "name": "Luthier"
             }
         }
     },
     "voices": {
         "LOW": {
-            "soldier": 10,
-            "spacer": 5
+            "spacer": 10,
+            "soldier": 5
         },
         "MEDIUM": {
-            "business": 10
+            "spacer": 5,
+            "scientist": 5,
+            "soldier": 5
         },
         "HIGH": {
-            "business": 10,
-            "aristo": 10,
-            "scientist": 3
+            "scientist": 10,
+            "aristo": 3
         }
     },
     "custom": {
-        "offersCommissions": false,
-        "engagesInHostilities": false,
+        "offersCommissions": true,
+        "engagesInHostilities": true,
         "buysAICores": false,
-        "AICoreValueMult": 3,
-        "AICoreRepMult": 0.5,
         "buysSurveyData": true,
         "hostilityImpactOnGrowth": true,
         "simulatorData": {
@@ -217,18 +253,18 @@
         }
     },
     "fleetTypeNames": {
-        "trade": "Corporate Trader",
-        "tradeLiner": "TriWay Spaceline Flight",
-        "tradeSmuggler": "Expedited Trader",
-        "smallTrader": "Distribution Convoy",
-        "patrolSmall": "Security Patrol",
-        "patrolMedium": "Security Flotilla",
-        "patrolLarge": "Capital Assurance Fleet",
-        "inspectionFleet": "QA Inspector",
-        "taskForce": "Special Affairs Fleet",
-        "foodReliefFleet": "Relief Convoy",
-        "mercBountyHunter": "Retrieval Contractor",
-        "mercPrivateer": "Security Contractor"
+        "trade": "Crystal Convoy",
+        "tradeLiner": "Choir Liner",
+        "tradeSmuggler": "Quiet Trader",
+        "smallTrader": "Tuners' Run",
+        "patrolSmall": "Watch Quartet",
+        "patrolMedium": "Patrol Ensemble",
+        "patrolLarge": "Grand Choir",
+        "inspectionFleet": "Pitch Inspection",
+        "taskForce": "Concert Fleet",
+        "foodReliefFleet": "Relief Choir",
+        "mercBountyHunter": "Hired Voice",
+        "mercPrivateer": "Hired Voice"
     },
-    "showInIntelTab": false
+    "showInIntelTab": true
 }

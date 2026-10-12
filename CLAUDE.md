@@ -19,6 +19,10 @@ Stage 1 DONE (CAMPAIGN.md v2): faction **the Cantorate** of Vell, Halo -> **Ferm
 music must be purposeful (a jam-proof, AI-free network; scores = memorised engineering; tuning = labour), Unbound Core
 never hinges on a quest choice, quest ~30 min, bosses genuinely hard (3 S-mods, level-7 elite officers), Virtuoso
 upgrades extremely expensive. Ids stay `rsl_*` (faction id stays `rsl_choir`).
+Stage 2 DONE: campaign data lives in `tools/campaign_data.py` (faction, ship names, Pitch Glass commodity, 3
+`no_drop` blueprint packages via `rsl_bp_hulls|weapons|wings` tags added by gen_data `split_bp`, Nexerelin config),
+called from gen_data.py; relations applied once per save by `rsl.world.RslRelations` (skipped in new Nex games).
+Cargo icons: `python art_src/gen/gen_campaign_icons.py art_src/review/campaign_icons_v1.png`.
 
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.

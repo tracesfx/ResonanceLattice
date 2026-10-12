@@ -2,14 +2,14 @@ id,type,text1,text2,text3,text4,text5,notes
 rsl_chime,WEAPON,"A compact micro-rail built around a pair of tuning prongs. It flicks needles out in short pairs; every fourth needle is allowed to ring, and the chime spills over as an EMP arc that snaps at nearby missiles and fighters.",,,,,
 rsl_chime_bell,WEAPON,The ringing fourth shot of a Chime Repeater.,,,,,
 rsl_pizzicato,WEAPON,"A needle-thin rail with a tensioned crystal at its breech. Left alone, the crystal stores its charge and the next slug leaves with a sharp, plucked report - and twice the bite.",,,,,
-rsl_shardcaster,WEAPON,"Three short rails throw grown crystal shards in a near-parallel volley. Crude by Choir standards, the Shard Caster is what the lattice yards fit when a hull needs reach and has little flux to spare.",,,,,
+rsl_shardcaster,WEAPON,"Three short rails throw grown crystal shards in a near-parallel volley. Crude by Cantorate standards, the Shard Caster is what the lattice yards fit when a hull needs reach and has little flux to spare.",,,,,
 rsl_tuningspike,WEAPON,A lattice shard grown around a tuned core. It buries itself in the target's plating and hums there until an energy weapon strikes the same hull; the matching frequency shatters it from the inside. The lattice regrows spent spikes slowly.,,,,,
 rsl_tuningspike_pod,WEAPON,"Four Tuning Spike racks in an armored pod, for hulls that build their whole battle plan around the combo.",,,,,
 rsl_lattice_lance,WEAPON,"A long rail that tunes itself to whatever it keeps hitting. Every slug that lands on the same hull brings its resonance closer to the target's own, and the next one cuts deeper. Switching targets throws the tuning away.",,,,,
 rsl_flechette,WEAPON,"A three-rail shard thrower. The flechettes are grown with fracture planes along their length, so a shard that lodges in plating keeps splitting - and cutting - for seconds after impact.",,,,,
 rsl_arpeggio,WEAPON,"Three rails of different length, fired in sequence. Each note is driven harder than the last, and the third one lands like a struck bell.",,,,,
 rsl_cantus,WEAPON,Twin flak barrels that fire tuned fragmentation shells. The shells listen for missile drives and burst when the pitch is right.,,,,,
-rsl_harmonic_driver,WEAPON,The Choir's standard heavy gun: a fork of conductive rails that winds a lattice slug up to its breaking frequency and throws it across the battlefield. A clean hit on plating does not stop it.,,,,,
+rsl_harmonic_driver,WEAPON,The Cantorate's standard heavy gun: a fork of conductive rails that winds a lattice slug up to its breaking frequency and throws it across the battlefield. A clean hit on plating does not stop it.,,,,,
 rsl_harmonic_spinal,WEAPON,The Conductor's spine is the gun. Its prongs wind the core crystal to a frequency no turret could survive.,,,,,
 rsl_sostenuto,WEAPON,"A rapid heavy rail held on one note. Its slugs ring a shield at the pitch of the emitter's own dissipation band, and part of the load simply stays.",,,,,
 rsl_bloom,WEAPON,"A slow torpedo carrying an unstable lattice bloom. On impact the bloom flowers outward as a ring of crystal fragments, and the shock arcs through anything nearby.",,,,,
@@ -37,19 +37,19 @@ In battle: a fleet escort. Sympathetic Ward soaks part of an ally's damage on th
 rsl_staccato,SHIP,"A needle hull with forward-swept wings and a drive tuned for short, violent bursts. Its weapons leave fracture lines in whatever they hit, and enough of them make plating simply come apart.
 
 In battle: a destroyer striker. Grace Dash in, unload, dash out; Fracture turns sustained hits into armor-shattering bursts. Built in: Fracture, Unstable Injector.",,,,,
-rsl_cadence,SHIP,"The Choir's line cruiser: an arrowhead with two accelerator rails swept back as barbs. Its Crescendo lets the energy batteries feed on their own rhythm, every hit quickening the next.
+rsl_cadence,SHIP,"The Cantorate's line cruiser: an arrowhead with two accelerator rails swept back as barbs. Its Crescendo lets the energy batteries feed on their own rhythm, every hit quickening the next.
 
 In battle: the line cruiser. Crescendo rewards keeping its energy guns on target. Built in: Dedicated Targeting Core.",,,,,
 rsl_tremolo,SHIP,"Two narrow hulls joined by lattice girders, with real empty space between them. The Tremolo marks a point in space with a standing wave and can snap back to it, shedding the damage it took since.
 
 In battle: a skirmishing cruiser. Standing Wave lets it commit hard and then snap back to safety, repairing part of what it lost. Built in: Auxiliary Thrusters.",,,,,
-rsl_halo,SHIP,"A carrier threaded through a great ring that turns in a well at its heart. When the ring spins up, the space around the Halo goes still: shots slow to a crawl and missile seekers lose their song.
+rsl_halo,SHIP,"A carrier threaded through a great ring that turns in a well at its heart. When the ring spins up, the space around the Fermata goes still: shots slow to a crawl and missile seekers lose their song.
 
-In battle: a carrier that protects itself. Stillwater Halo slows incoming fire around it; Tuned Wings speeds up fighter replacement near the ship. Built in: Expanded Deck Crew, Hardened Subsystems.",,,,,
+In battle: a carrier that protects itself. Fermata Field slows incoming fire around it; Tuned Wings speeds up fighter replacement near the ship. Built in: Expanded Deck Crew, Hardened Subsystems.",,,,,
 rsl_conductor,SHIP,"A long steel blade split into two prongs with the Harmonic Driver set between them. The Conductor's core does not just resonate, it leads: every Lattice ship near it tunes to it, and what it marks, the whole chorus strikes.
 
 In battle: the fleet flagship. Its spinal Harmonic Driver outranges almost anything, and Sympathetic Strike marks a target for every Lattice ship. Conductor's Bridge feeds the whole chorus Resonance. Built in: Stabilized Shields, Operations Center.",,,,,
-rsl_virtuoso,SHIP,"The Choir's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds on the readiness of everything it wounds. At full voice, its seams burn gold.
+rsl_virtuoso,SHIP,"The Cantorate's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds on the readiness of everything it wounds. At full voice, its seams burn gold.
 
 In battle: a unique duelist capital. Glissando dashes through fire, the Sforzando lances skewer lines of ships, Stolen Time feeds on readiness and kills, and at 100% CR Bravura takes over. Built in: Concert Pitch, Auxiliary Thrusters.",,,,,
 rsl_virtuoso_unsung,SHIP,"A prototype that sang alone after its chorus died. The sash is bare metal, the lances are out of true and half the cells are dark, but it is still the fastest capital you have ever seen move, and it still takes what it needs from its enemies.
@@ -83,9 +83,9 @@ Overtone: reaching 20 stacks fires a Fortissimo - every energy weapon releases o
 rsl_standingwave,SHIP_SYSTEM,"First use drops a standing-wave node at the ship's position. Using it again within 8 seconds snaps the ship back to the node and restores 40% of the armor and hull lost since.
 
 Overtone: the afterimage left behind detonates for 400 energy damage and 600 EMP.",Defensive,"Marks a point in space and snaps back to it, undoing damage.",,,
-rsl_stillwater,SHIP_SYSTEM,"Creates a 700-unit zone of still space around the Halo for 8 seconds. Enemy projectiles inside slow by 60% and enemy missiles lose their lock.
+rsl_stillwater,SHIP_SYSTEM,"Creates a 700-unit zone of still space around the Fermata for 8 seconds. Enemy projectiles inside slow by 60% and enemy missiles lose their lock.
 
-Cost: the Halo's own flux dissipation drops by 30% while it runs.
+Cost: the Fermata's own flux dissipation drops by 30% while it runs.
 
 Overtone: damage the zone absorbs becomes Resonance for every Lattice ship inside it.",Defensive,Slows enemy shots and breaks missile locks around the ship.,,,
 rsl_symstrike,SHIP_SYSTEM,"After a 1.5 second charge, the prongs discharge a resonant strike into the target (2,000 range, 800 energy damage) and mark it for 8 seconds: all Lattice ships deal +20% damage to it.
@@ -108,4 +108,8 @@ The string it leaves blocks projectiles for 1.2 seconds but never snaps.",Moveme
 rsl_grandchorus,SHIP_SYSTEM,"Every petal discharges a synchronized resonant lance into the nearest enemy in its sector (600 energy damage each).
 
 Overtone: an expanding harmonic ring flames out fighters and throws missiles off their targets.",Offensive,Every petal fires at once.,,,
-rsl_choir,FACTION,A refugee research polity grown out of a Domain-era harmonic-flux laboratory. The Choir builds its ships around crystalline lattice cores and fights the way it sings: together.,,,,,
+rsl_choir,FACTION,"A small refugee polity in the pulsar system of Vell, descended from the staff of a Domain harmonic-flux laboratory that was cut off by the Collapse. The Cantorate builds its ships around crystalline lattice cores that lock to one another's pitch: a battle network with no comm traffic to jam and no AI core to ban.
+
+Everything the Cantorate knows survives as scores, tuning protocols memorised by its engineers after the databanks were lost. Its crews hold their cores in tune through long shifts, its government rules by consensus, and dissent is treated as what it is in a choir: a fault that weakens everyone. Its first and oldest law is that no voice sings alone.
+
+Poor in everything but crystal, the Cantorate cannot leave Vell, the only star whose beat its crystals grow true to. The Hegemony inspects its cores for artificial minds, Tri-Tachyon wants to buy or steal them, and the Luddic Path calls them machine-worship.",,,,,

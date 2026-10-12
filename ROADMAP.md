@@ -51,7 +51,7 @@ after it is built is expensive.
 
 Exit: user approves CAMPAIGN.md; DESIGN.md and CLAUDE.md point to it.
 
-## Stage 2 — Faction foundation
+## Stage 2 — Faction foundation — DONE (2026-10-12; relations in `rsl.world.RslRelations`, data in `tools/campaign_data.py`)
 
 - Rewrite the faction in `gen_data.py`: own ranks and posts (musical titles), name lists, portraits (vanilla subset
   for now), music choice, doctrine, known/priority weapons, hullmods and fighters, sell frequencies, illegal

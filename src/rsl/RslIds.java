@@ -12,7 +12,18 @@ public final class RslIds {
     private RslIds() {
     }
 
+    /** The Cantorate of Vell (display name; the id predates the rename). */
     public static final String FACTION_CHOIR = "rsl_choir";
+
+    public static final String COMMODITY_PITCHGLASS = "rsl_pitchglass";
+    public static final String ITEM_BP_HULLS = "rsl_bp_hulls_package";
+    public static final String ITEM_BP_WEAPONS = "rsl_bp_weapons_package";
+    public static final String ITEM_BP_WINGS = "rsl_bp_wings_package";
+
+    public static final String MOD_NEXERELIN = "nexerelin";
+
+    /** Sector memory: the Cantorate's starting relations were applied to this save. */
+    public static final String MEM_RELATIONS_SET = "$rsl_relationsSet";
 
     public static final String HULL_GRACENOTE = "rsl_gracenote";
     public static final String HULL_CONDUCTOR = "rsl_conductor";

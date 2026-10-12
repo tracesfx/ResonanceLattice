@@ -1,0 +1,104 @@
+{
+    "playableFaction": true,
+    "corvusCompatible": true,
+    "rebelFleetSuffix": "Dissonants",
+    "directoryUseShortName": true,
+    "marketSpawnWeight": 0.6,
+    "startRelationships": {
+        "independent": 0.3,
+        "persean": 0.2,
+        "tritachyon": -0.2,
+        "hegemony": -0.3,
+        "luddic_church": -0.2,
+        "luddic_path": -0.6
+    },
+    "morality": "neutral",
+    "alignments": {
+        "technocratic": 1,
+        "diplomatic": 0.5,
+        "ideological": 0.5,
+        "corporate": -0.5,
+        "militarist": 0
+    },
+    "diplomacyTraits": [
+        "dislikes_ai",
+        "lowprofile",
+        "helps_allies",
+        "pacifist"
+    ],
+    "vengeanceLevelNames": [
+        "Dissonance",
+        "Discord",
+        "Requiem"
+    ],
+    "vengeanceFleetNames": [
+        "Dissonance",
+        "Discord",
+        "Requiem"
+    ],
+    "vengeanceFleetNamesSingle": [
+        "a Dissonance Choir",
+        "a Discord Choir",
+        "a Requiem Choir"
+    ],
+    "startShipsSolo": [
+        [
+            "rsl_gracenote_Pluck"
+        ],
+        [
+            "rsl_gracenote_Warden"
+        ]
+    ],
+    "startShipsCombatSmall": [
+        [
+            "rsl_staccato_Burst",
+            "rsl_gracenote_Standard",
+            "rsl_gracenote_Warden"
+        ],
+        [
+            "rsl_refrain_Chorister",
+            "rsl_gracenote_Pluck",
+            "rsl_gracenote_Standard"
+        ]
+    ],
+    "startShipsCombatLarge": [
+        [
+            "rsl_cadence_Battery",
+            "rsl_refrain_Bulwark",
+            "rsl_gracenote_Warden"
+        ],
+        [
+            "rsl_tremolo_Waveform",
+            "rsl_staccato_Lancer",
+            "rsl_gracenote_Pluck"
+        ]
+    ],
+    "startShipsCarrierLarge": [
+        [
+            "rsl_halo_Sanctuary",
+            "rsl_refrain_Standard"
+        ]
+    ],
+    "startSpecialItems": [
+        [
+            [
+                "rsl_bp_weapons_package",
+                ""
+            ]
+        ]
+    ],
+    "industrySeeds": [
+        {
+            "id": "orbitalworks",
+            "mult": 0.1
+        },
+        {
+            "id": "militarybase",
+            "mult": 0.1
+        },
+        {
+            "id": "refining",
+            "mult": 0.1
+        }
+    ]
+}

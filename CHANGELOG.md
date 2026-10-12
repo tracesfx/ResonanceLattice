@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (campaign Stage 2: faction foundation)
+
+- The faction is now **the Cantorate of Vell** (id still `rsl_choir`): own ranks and posts (Precentor, Maestro,
+  Principal, Chorister...), fleet names, ship-name list (`CCS` prefix, data/strings/ship_names.json), spacer portraits,
+  voices, music, doctrine skills; offers commissions, takes part in hostilities, AI cores are contraband, no punitive
+  expeditions. Longer faction description (CAMPAIGN.md).
+- Renamed Halo -> **Fermata**, Stillwater Halo -> **Fermata Field** (ids unchanged).
+- New commodity **Pitch Glass** (`rsl_pitchglass`, non-economy, ~5 credits to outsiders) with its own icon.
+- Three blueprint packages (hulls / weapons / wings; `no_drop`), backed by new `rsl_bp_hulls|weapons|wings` tags.
+- Starting relations (Independents +30, League +20, TT -20, Hegemony -30, Church -20, Path -60), applied once per
+  save by `rsl.world.RslRelations` (Nexerelin new games use the Nex config instead).
+- Nexerelin: playable faction config (`data/config/exerelinFactionConfig/`): alignments, diplomacy traits, start
+  fleets from the presets, starting relations. Only read when Nexerelin is enabled.
+
 ## Unreleased - 2026-10-12 (readability, S-mods, icons)
 
 - Hullmod tooltips rebuilt in sections (Resonance / Overtone / Bonuses / Tradeoffs ...) with bulleted, highlighted

@@ -1,11 +1,11 @@
 # Resonance Lattice
 
-The Resonance Choir: ships grown around crystalline lattice cores. Every hull builds **Resonance** from shield hits
+The Cantorate of Vell: a refugee polity whose ships are grown around crystalline lattice cores. Every hull builds **Resonance** from shield hits
 and from landing its own guns, shares it with nearby Lattice ships, and at 60+ Resonance its next ship-system use is
 an **Overtone** (an empowered version).
 
-This is the **ships-and-weapons build**: no campaign content (no markets, no quests). Spawn everything with Console
-Commands or play the two included missions.
+This build has the ships, weapons and the faction (relations, items, Nexerelin support) but no territory or
+quests yet (ROADMAP.md). Spawn everything with Console Commands or play the two included missions.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ addship rsl_refrain_Standard
 addship rsl_staccato_Standard
 addship rsl_cadence_Standard
 addship rsl_tremolo_Standard
-addship rsl_halo_Standard
+addship rsl_halo_Standard        # the Fermata (id predates the rename)
 addship rsl_conductor_Standard
 addship rsl_virtuoso_Standard
 addship rsl_virtuoso_unsung_Standard
@@ -69,7 +69,7 @@ addwing rsl_requiem_wing 2
 ```
 
 Fighter wings: Trill (interceptor, micro-rail), Cadenza (heavy fighter, twin rails), Requiem (rail bomber: a
-piercing heavy slug + two Tuning Spikes). The Halo and the Cantor Array's Lofts carry them.
+piercing heavy slug + two Tuning Spikes). The Fermata and the Cantor Array's Lofts carry them.
 
 The Sforzando lances and the Conductor's spinal Harmonic Driver are built in (no cargo item). The Tuning Spike Pod
 (medium missile) and Resonance Bloom (large missile) have no matching slot on Lattice hulls; mount them on vanilla
@@ -78,8 +78,17 @@ ships.
 Hullmods: all Lattice hullmods are built in, except **Unbound Core** (`addhullmod rsl_unbound`; Virtuoso only, the
 Safety Overrides of a capital).
 
-Fleets: `spawnfleet rsl_choir 150` spawns an AI Choir fleet (start a new game first if the save predates the mod: the
+Fleets: `spawnfleet rsl_choir 150` spawns an AI Cantorate fleet (start a new game first if the save predates the mod: the
 faction is created with the sector).
+
+Campaign items (Stage 2 of ROADMAP.md; the Workshop that spends them comes later):
+
+```
+additem rsl_pitchglass 100          # Pitch Glass, the Cantorate's currency
+addspecial rsl_bp_hulls_package
+addspecial rsl_bp_weapons_package
+addspecial rsl_bp_wings_package
+```
 
 Handy: `god`, `nocooldown`, `infiniteammo`, `addcredits 1000000`, `allhullmods`.
 
@@ -92,7 +101,7 @@ Handy: `god`, `nocooldown`, `infiniteammo`, `addcredits 1000000`, `allhullmods`.
 | Staccato | destroyer | Grace Dash | Fracture: 6th hit shatters armor |
 | Cadence | cruiser | Crescendo (energy hits stack rate of fire) | Overtone: Fortissimo volley |
 | Tremolo | cruiser | Standing Wave (node, snap back, restore 40% damage) | Overtone: afterimage detonates |
-| Halo | capital carrier | Stillwater Halo (slows shots, breaks missile locks) | ring spins up; Tuned Wings |
+| Fermata | capital carrier | Fermata Field (slows shots, breaks missile locks) | ring spins up; Tuned Wings |
 | Conductor | capital | Sympathetic Strike (resonant strike + mark +20% damage) | Conductor's Bridge: double Sympathy |
 | Virtuoso | unique capital | Glissando (blink-dash, the String snaps) | Stolen Time (CR theft), Bravura at 100% CR |
 | Virtuoso (Unsung) | prototype | Glissando (Unsung) | Stolen Time, no Bravura |
@@ -111,7 +120,8 @@ visuals in motion and the station deployment need an in-game session. See BALANC
 
 ## Save compatibility
 
-The mod adds no campaign scripts and saves no custom classes. Ships bought or spawned are ordinary fleet members;
+The mod saves no custom classes. On first load it sets the Cantorate's starting relations once (a sector memory
+flag remembers it). Ships bought or spawned are ordinary fleet members;
 removing the mod from a save that contains them will break that save, as with any ship mod.
 
 ## Credits

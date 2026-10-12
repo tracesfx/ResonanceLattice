@@ -1,4 +1,4 @@
 id,variant,tags,tier,rarity,fleet pts,op cost,formation,range,attackRunRange,attackPositionOffset,num,role,role desc,refit,base value,,,,,,,,,,,,,number
-rsl_trill_wing,rsl_trill_Wing,"fighter3, interceptor, rsl_bp",2,,4,8,V,6000,500,900,3,FIGHTER,Interceptor,10,6000,,,,,,,,,,,,,5
-rsl_cadenza_wing,rsl_cadenza_Wing,"fighter4, fighter, rsl_bp",0,,6,12,V,4000,500,,3,FIGHTER,Heavy Fighter,12,8000,,,,,,,,,,,,,1
-rsl_requiem_wing,rsl_requiem_Wing,"bomber4, bomber, rsl_bp",2,,6,16,V,4000,2000,600,3,BOMBER,Rail Bomber,18,10000,,,,,,,,,,,,,11
+rsl_trill_wing,rsl_trill_Wing,"fighter3, interceptor, rsl_bp, rsl_bp_wings",2,,4,8,V,6000,500,900,3,FIGHTER,Interceptor,10,6000,,,,,,,,,,,,,5
+rsl_cadenza_wing,rsl_cadenza_Wing,"fighter4, fighter, rsl_bp, rsl_bp_wings",0,,6,12,V,4000,500,,3,FIGHTER,Heavy Fighter,12,8000,,,,,,,,,,,,,1
+rsl_requiem_wing,rsl_requiem_Wing,"bomber4, bomber, rsl_bp, rsl_bp_wings",2,,6,16,V,4000,2000,600,3,BOMBER,Rail Bomber,18,10000,,,,,,,,,,,,,11

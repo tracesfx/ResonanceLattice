@@ -12,7 +12,7 @@ public class MissionDefinition implements MissionDefinitionPlugin {
 
     public void defineMission(MissionDefinitionAPI api) {
         api.initFleet(FleetSide.PLAYER, "ISS", FleetGoal.ATTACK, false);
-        api.initFleet(FleetSide.ENEMY, "RCS", FleetGoal.ATTACK, true);
+        api.initFleet(FleetSide.ENEMY, "CCS", FleetGoal.ATTACK, true);
         api.setFleetTagline(FleetSide.PLAYER, "Strike force with orders to silence the array.");
         api.setFleetTagline(FleetSide.ENEMY, "The Cantor Array and its squadron.");
         api.addBriefingItem("Destroy the Cantor Array");

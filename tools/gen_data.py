@@ -30,6 +30,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(os.path.expanduser("~"), ".claude", "skills", "starsector-modding", "scripts"))
 import ssdata  # noqa: E402
 import sslib  # noqa: E402
+import campaign_data  # noqa: E402
 
 V = ssdata.Vanilla()
 MFR = "Resonance Lattice"
@@ -69,6 +70,15 @@ def write_csv(rel, header, rows):
 
 
 DESC = []   # (id, type, text1, text2, text3)
+
+
+def split_bp(rows, kind):
+    """Every rsl_bp row also gets rsl_bp_<kind>, the tag its blueprint package (campaign_data) provides."""
+    for r in rows:
+        tags = [t.strip() for t in str(r.get("tags") or "").split(",") if t.strip()]
+        if BP in tags and "rsl_bp_" + kind not in tags:
+            r["tags"] = ", ".join(tags + ["rsl_bp_" + kind])
+    return rows
 
 
 def desc(did, dtype, t1, t2="", t3=""):
@@ -194,7 +204,7 @@ def weapons():
         "tags": "kinetic6, energy6, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Assault"}), w,
         [bolt("rsl_shard_shot", 10, 5, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF", coll_f="PROJECTILE_FIGHTER",
               sprite=OFFS["rsl_shard_proj"]["sprite"], fade=0.15, on_hit=PKG + "RailImpactOnHit")],
-        "Three short rails throw grown crystal shards in a near-parallel volley. Crude by Choir standards, the Shard "
+        "Three short rails throw grown crystal shards in a near-parallel volley. Crude by Cantorate standards, the Shard "
         "Caster is what the lattice yards fit when a hull needs reach and has little flux to spare.")
 
     w = wpn_base("rsl_tuningspike", "MISSILE", "SMALL", glow=False)
@@ -307,7 +317,7 @@ def weapons():
         "customPrimary": "A fully charged shot that breaks through hull or armor pierces the ship and carries on with %s of its damage.",
         "customPrimaryHL": "50%"}), w,
         [bolt("rsl_harmonic_shot", 180, 12, TEAL, glow_r=40, hit_glow=110, on_hit=PKG + "PierceOnHit")],
-        "The Choir's standard heavy gun: a fork of conductive rails that winds a lattice slug up to its breaking "
+        "The Cantorate's standard heavy gun: a fork of conductive rails that winds a lattice slug up to its breaking "
         "frequency and throws it across the battlefield. A clean hit on plating does not stop it.")
     w = wpn_base("rsl_harmonic_spinal", "ENERGY", "LARGE")
     w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 80, 12, 44, 20),
@@ -422,7 +432,7 @@ def weapons():
         add_weapon(blank_row(name="Lattice part", id=wid, tags="SYSTEM", **{"tech/manufacturer": MFR}), w, [],
                    "A moving part of a Lattice hull.")
 
-    # ---- fighter guns (HIDDEN mounts on the Choir wings; sprites borrowed, never drawn) ---------------------
+    # ---- fighter guns (HIDDEN mounts on the Lattice wings; sprites borrowed, never drawn) ---------------------
     for wid, src, size, rng, dmg, cd, burst, spd, snd, onhit, hints, role, length in (
             ("rsl_microrail_ftr", "rsl_chime", "SMALL", 600, 30, 0.35, 2, 2000, "rsl_chime_fire", "RailImpactOnHit",
              "ANTI_FTR", "Point Defense", 45),
@@ -452,7 +462,7 @@ def weapons():
     hdr = V.header("weapon_data.csv")
     for r in WEAPONS:
         r["number"] = ""
-    write_csv("data/weapons/weapon_data.csv", hdr, WEAPONS)
+    write_csv("data/weapons/weapon_data.csv", hdr, split_bp(WEAPONS, "weapons"))
     for wid, w in WPN.items():
         write_json("data/weapons/%s.wpn" % wid, w)
     for pid, p in PROJ.items():
@@ -522,7 +532,7 @@ HULLS = {
         "max turn rate": 25, "turn acceleration": 45, "mass": 1500, "shield type": "OMNI", "shield arc": 200,
         "shield upkeep": 0.3, "shield efficiency": 0.75, "supplies/rec": 22, "supplies/mo": 22,
         "base value": 120000})),
-    "rsl_halo": ("astral", dict(name="Halo", designation="Carrier", **{
+    "rsl_halo": ("astral", dict(name="Fermata", designation="Carrier", **{
         "system id": "rsl_stillwater", "fleet pts": 26, "hitpoints": 12000, "armor rating": 1100, "max flux": 14000,
         "flux dissipation": 700, "ordnance points": 270, "fighter bays": 4, "max speed": 35, "acceleration": 20,
         "deceleration": 15, "max turn rate": 8, "turn acceleration": 6, "mass": 3200, "shield type": "FRONT",
@@ -583,16 +593,16 @@ HULL_DESC = {
                    "Refrain's shield instead.",
     "rsl_staccato": "A needle hull with forward-swept wings and a drive tuned for short, violent bursts. Its weapons "
                     "leave fracture lines in whatever they hit, and enough of them make plating simply come apart.",
-    "rsl_cadence": "The Choir's line cruiser: an arrowhead with two accelerator rails swept back as barbs. Its "
+    "rsl_cadence": "The Cantorate's line cruiser: an arrowhead with two accelerator rails swept back as barbs. Its "
                    "Crescendo lets the energy batteries feed on their own rhythm, every hit quickening the next.",
     "rsl_tremolo": "Two narrow hulls joined by lattice girders, with real empty space between them. The Tremolo marks "
                    "a point in space with a standing wave and can snap back to it, shedding the damage it took since.",
     "rsl_halo": "A carrier threaded through a great ring that turns in a well at its heart. When the ring spins up, "
-                "the space around the Halo goes still: shots slow to a crawl and missile seekers lose their song.",
+                "the space around the Fermata goes still: shots slow to a crawl and missile seekers lose their song.",
     "rsl_conductor": "A long steel blade split into two prongs with the Harmonic Driver set between them. The "
                      "Conductor's core does not just resonate, it leads: every Lattice ship near it tunes to it, and "
                      "what it marks, the whole chorus strikes.",
-    "rsl_virtuoso": "The Choir's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its "
+    "rsl_virtuoso": "The Cantorate's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its "
                     "shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds "
                     "on the readiness of everything it wounds. At full voice, its seams burn gold.",
     "rsl_virtuoso_unsung": "A prototype that sang alone after its chorus died. The sash is bare metal, the lances are "
@@ -624,7 +634,7 @@ HULL_ROLE = {
                    "Dedicated Targeting Core.",
     "rsl_tremolo": "In battle: a skirmishing cruiser. Standing Wave lets it commit hard and then snap back to safety, "
                    "repairing part of what it lost. Built in: Auxiliary Thrusters.",
-    "rsl_halo": "In battle: a carrier that protects itself. Stillwater Halo slows incoming fire around it; Tuned Wings "
+    "rsl_halo": "In battle: a carrier that protects itself. Fermata Field slows incoming fire around it; Tuned Wings "
                 "speeds up fighter replacement near the ship. Built in: Expanded Deck Crew, Hardened Subsystems.",
     "rsl_conductor": "In battle: the fleet flagship. Its spinal Harmonic Driver outranges almost anything, and "
                      "Sympathetic Strike marks a target for every Lattice ship. Conductor's Bridge feeds the whole "
@@ -654,7 +664,7 @@ def hull_rows():
         r = V.clone_row("ship_data.csv", peer, id=hid, number="", **ch)
         rows.append(r)
         desc(hid, "SHIP", HULL_DESC[hid] + ("\n\n" + HULL_ROLE[hid] if hid in HULL_ROLE else ""))
-    write_csv("data/hulls/ship_data.csv", V.header("ship_data.csv"), rows)
+    write_csv("data/hulls/ship_data.csv", V.header("ship_data.csv"), split_bp(rows, "hulls"))
 
 
 def ship_files():
@@ -669,6 +679,8 @@ def ship_files():
         p = "data/hulls/%s.ship" % hid
         s = sslib.load_loose_json(P(p))
         s["style"] = "RSL"
+        if hid == "rsl_halo":
+            s["hullName"] = "Fermata"   # renamed in CAMPAIGN.md; the art spec keeps its old name
         for e in s.get("engineSlots", []):
             e["style"] = "RSL"
         s["builtInMods"] = BUILTIN_MODS[hid]
@@ -996,7 +1008,7 @@ def wings():
             "hullMods": ["no_weapon_flux"], "permaMods": [], "sMods": [], "wings": [], "weaponGroups": groups,
             "quality": 0.5})
         rows.append(V.clone_row("wing_data.csv", peer, id=wing, variant=vid, **ch))
-    write_csv("data/hulls/wing_data.csv", V.header("wing_data.csv"), rows)
+    write_csv("data/hulls/wing_data.csv", V.header("wing_data.csv"), split_bp(rows, "wings"))
 
 
 WINGS_NAME = {"rsl_trill_wing": "Interceptor", "rsl_cadenza_wing": "Heavy Fighter", "rsl_requiem_wing": "Bomber"}
@@ -1037,11 +1049,11 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
      "First use drops a standing-wave node at the ship's position. Using it again within 8 seconds snaps the ship "
      "back to the node and restores 40% of the armor and hull lost since. Overtone: the afterimage left behind "
      "detonates for 400 energy damage and 600 EMP around it."),
-    ("rsl_stillwater", "Stillwater Halo", {"charge up": 1, "active": 8, "down": 1, "cooldown": 20},
+    ("rsl_stillwater", "Fermata Field", {"charge up": 1, "active": 8, "down": 1, "cooldown": 20},
      {"aiType": "CUSTOM", "aiScript": SYS + "StillwaterHaloAI", "useSound": "system_temporalshell",
       "loopSound": "system_temporalshell_loop"},
-     "Creates a 700-unit zone of still space around the Halo. Enemy projectiles inside slow by 60% and enemy missiles "
-     "lose their lock. The Halo's own flux dissipation drops by 30% while it runs. Overtone: damage the zone absorbs "
+     "Creates a 700-unit zone of still space around the Fermata. Enemy projectiles inside slow by 60% and enemy missiles "
+     "lose their lock. The Fermata's own flux dissipation drops by 30% while it runs. Overtone: damage the zone absorbs "
      "is turned into Resonance for every Lattice ship inside it."),
     ("rsl_symstrike", "Sympathetic Strike", {"charge up": 1.5, "active": 0.3, "down": 0.5, "cooldown": 18,
                                              "flux/use": 1500},
@@ -1116,9 +1128,9 @@ SYS_TEXT = {  # id: (vanilla category, one-line summary, description with paragr
            "the ship back to the node and restores 40%% of the armor and hull lost since.\n\n"
            "Overtone: the afterimage left behind detonates for 400 energy damage and 600 EMP."),
     "rsl_stillwater": ('Defensive', 'Slows enemy shots and breaks missile locks around the ship.',
-           "Creates a 700-unit zone of still space around the Halo for 8 seconds. Enemy projectiles inside slow "
+           "Creates a 700-unit zone of still space around the Fermata for 8 seconds. Enemy projectiles inside slow "
            "by 60%% and enemy missiles lose their lock.\n\n"
-           "Cost: the Halo's own flux dissipation drops by 30%% while it runs.\n\n"
+           "Cost: the Fermata's own flux dissipation drops by 30%% while it runs.\n\n"
            "Overtone: damage the zone absorbs becomes Resonance for every Lattice ship inside it."),
     "rsl_symstrike": ('Offensive', 'A resonant strike that marks its target for the whole chorus.',
            "After a 1.5 second charge, the prongs discharge a resonant strike into the target (2,000 range, 800 "
@@ -1175,7 +1187,7 @@ HULLMODS = [  # id, name, script, desc, hidden, costs
     ("rsl_phase_locked", "Phase-Locked Petals", "PhaseLockedPetals",
      "The Cantor Array's petals share one phase: when one falls, the others take up its voice.", True, (0, 0, 0, 0)),
     ("rsl_tuned_wings", "Tuned Wings", "TunedWings",
-     "The Halo's fighters are tuned to its ring and come home to it faster.", True, (0, 0, 0, 0)),
+     "The Fermata's fighters are tuned to its ring and come home to it faster.", True, (0, 0, 0, 0)),
 ]
 # S-mod effects (vanilla rule: cheap hullmods get a bonus when built in with a story point, expensive ones a
 # penalty; enhancing a hull's own built-in - nearly free - gets the strongest bonus). %s = getSModDescriptionParam.
@@ -1218,42 +1230,7 @@ FACTION = "rsl_choir"
 
 
 def faction():
-    f = V.spec("faction", "tritachyon")
-    f.update({"id": FACTION, "color": [100, 230, 220, 255], "displayName": "Choir", "displayNameWithArticle": "the Choir",
-              "displayNameLong": "the Resonance Choir", "displayNameLongWithArticle": "the Resonance Choir",
-              "logo": "graphics/rsl/factions/rsl_flag.png", "crest": "graphics/rsl/factions/rsl_crest.png",
-              "shipNamePrefix": "RCS", "variantOverrides": {}, "hullFrequency": {"tags": {}, "hulls": {}},
-              "shipsWhenImporting": {"tags": [], "hulls": []},
-              "knownShips": {"tags": [BP], "hulls": ["rsl_gracenote", "rsl_refrain", "rsl_staccato", "rsl_cadence",
-                                                      "rsl_tremolo", "rsl_halo", "rsl_conductor"]},
-              "priorityShips": {"tags": [BP], "hulls": []},
-              "knownFighters": {"tags": [BP], "fighters": ["rsl_trill_wing", "rsl_cadenza_wing", "rsl_requiem_wing"]},
-              "priorityFighters": {"tags": [BP], "fighters": []},
-              "knownWeapons": {"tags": [BP], "weapons": []}, "priorityWeapons": {"tags": [BP], "weapons": []},
-              "knownHullMods": {"tags": ["standard"], "hullMods": []},
-              "weaponSellFrequency": {}, "hullmodSellFrequency": {}, "illegalCommodities": []})
-    f["factionDoctrine"].update({"warships": 5, "carriers": 1, "phaseShips": 1})
-    f["custom"]["offersCommissions"] = False
-    f["custom"]["engagesInHostilities"] = False
-    f["custom"]["buysAICores"] = False
-    f["custom"].pop("punitiveExpeditionData", None)
-    f["showInIntelTab"] = False
-    write_json("data/world/factions/%s.faction" % FACTION, f)
-    write_csv("data/world/factions/factions.csv", ["faction"], [{"faction": "data/world/factions/%s.faction" % FACTION}])
-    write_json("data/world/factions/default_ship_roles.json", {
-        "combatSmall": {"rsl_gracenote_Standard": 6, "rsl_gracenote_Pluck": 6},
-        "combatSmallForSmallFleet": {"rsl_gracenote_Standard": 6, "rsl_gracenote_Pluck": 6},
-        "fastAttack": {"rsl_gracenote_Pluck": 5, "rsl_staccato_Burst": 5},
-        "escortSmall": {"rsl_gracenote_Warden": 10},
-        "combatMedium": {"rsl_refrain_Chorister": 4, "rsl_staccato_Standard": 4, "rsl_staccato_Burst": 4,
-                         "rsl_staccato_Lancer": 4},
-        "escortMedium": {"rsl_refrain_Standard": 4, "rsl_refrain_Bulwark": 6},
-        "combatLarge": {"rsl_cadence_Standard": 3, "rsl_cadence_Battery": 4, "rsl_cadence_Drumline": 3,
-                        "rsl_tremolo_Standard": 3, "rsl_tremolo_Waveform": 4, "rsl_tremolo_Riptide": 3},
-        "carrierLarge": {"rsl_halo_Standard": 4, "rsl_halo_Nocturne": 5, "rsl_halo_Sanctuary": 5},
-        "combatCapital": {"rsl_conductor_Standard": 3, "rsl_conductor_Maestro": 4, "rsl_conductor_Fortissimo": 3,
-                          "rsl_halo_Nocturne": 2},
-    })
+    campaign_data.build(sys.modules[__name__])
 
 
 def config():
@@ -1388,9 +1365,7 @@ def sounds_and_trails():
 def descriptions():
     hdr = V.header("descriptions.csv")
     rows = [{"id": d, "type": t, "text1": a, "text2": b, "text3": c} for d, t, a, b, c in DESC]
-    rows.append({"id": FACTION, "type": "FACTION",
-                 "text1": "A refugee research polity grown out of a Domain-era harmonic-flux laboratory. The Choir "
-                          "builds its ships around crystalline lattice cores and fights the way it sings: together."})
+    rows += campaign_data.descriptions()
     write_csv("data/strings/descriptions.csv", hdr, rows)
 
 
@@ -1401,7 +1376,7 @@ MISSIONS = {
         text="Test mission (Resonance Lattice). Every Lattice hull against a mixed Hegemony-style line.\n\n"
              "Watch the Resonance bar (bottom left) fill as your shields absorb fire and your guns land; at 60 the next "
              "ship system use is an Overtone. The Virtuoso starts at 100% CR, i.e. in Bravura.",
-        player_tag="The Choir's full chorus, every hull in the book.", enemy_tag="A Hegemony-pattern battle line.",
+        player_tag="A full Cantorate choir, every hull in the book.", enemy_tag="A Hegemony-pattern battle line.",
         briefing=["Fly the Virtuoso: Glissando (system key) dashes and leaves a string that snaps",
                   "Switch ships to try every Lattice system",
                   "Point defense and fighters test the Chime Repeater and Cantus Flak"],
@@ -1485,7 +1460,7 @@ def missions():
                     adds.append("        m.getRepairTracker().setCR(1f);")
         brief = "\n".join('        api.addBriefingItem("%s");' % b for b in m["briefing"])
         write_text("data/missions/%s/MissionDefinition.java" % mid, MISSION_JAVA % {
-            "id": mid, "ptag": "RCS" if mid == "rsl_proving" else "ISS", "etag": "ISS" if mid == "rsl_proving" else "RCS",
+            "id": mid, "ptag": "CCS" if mid == "rsl_proving" else "ISS", "etag": "ISS" if mid == "rsl_proving" else "CCS",
             "player_tag": m["player_tag"], "enemy_tag": m["enemy_tag"], "briefing": brief, "adds": "\n".join(adds)})
 
 

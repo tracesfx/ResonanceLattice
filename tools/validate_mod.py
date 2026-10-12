@@ -1292,6 +1292,22 @@ class Validator:
                     elif col in ("icon", "sprite", "image") or v.startswith("graphics/"):
                         if "/" in v and re.search(r"\.(png|jpg|jpeg)$", v, re.I):
                             self.path_ok(v, where, col)
+        # blueprint packages: MultiBlueprintItemPlugin gives every hull/weapon/wing carrying ALL its params tags
+        for k, row in self.mod_ids["item"].items():
+            if not (row.get("plugin") or "").strip().endswith("MultiBlueprintItemPlugin"):
+                continue
+            want = [t.strip() for t in (row.get("plugin params") or "").split(",") if t.strip()]
+            if not want:
+                continue
+            n = 0
+            for kind in ("hull", "weapon", "wing"):
+                for v in self.reg[kind].values():
+                    tags = {t.strip() for t in (v[0].get("tags") or "").split(",")}
+                    if all((t[1:] not in tags) if t.startswith("!") else (t in tags) for t in want):
+                        n += 1
+            if n == 0:
+                r.warn("blueprint package provides nothing: no hull, weapon or wing carries all of its plugin params "
+                       "tags %s" % want, "data/campaign/special_items.csv line %s (%s)" % (row.get("_line"), k))
         ents = self.modsrc.json.get("data/config/custom_entities.json") or {}
         for eid, e in ents.items():
             if not isinstance(e, dict):

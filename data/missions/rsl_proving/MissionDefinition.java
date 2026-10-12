@@ -11,9 +11,9 @@ import com.fs.starfarer.api.mission.MissionDefinitionPlugin;
 public class MissionDefinition implements MissionDefinitionPlugin {
 
     public void defineMission(MissionDefinitionAPI api) {
-        api.initFleet(FleetSide.PLAYER, "RCS", FleetGoal.ATTACK, false);
+        api.initFleet(FleetSide.PLAYER, "CCS", FleetGoal.ATTACK, false);
         api.initFleet(FleetSide.ENEMY, "ISS", FleetGoal.ATTACK, true);
-        api.setFleetTagline(FleetSide.PLAYER, "The Choir's full chorus, every hull in the book.");
+        api.setFleetTagline(FleetSide.PLAYER, "A full Cantorate choir, every hull in the book.");
         api.setFleetTagline(FleetSide.ENEMY, "A Hegemony-pattern battle line.");
         api.addBriefingItem("Fly the Virtuoso: Glissando (system key) dashes and leaves a string that snaps");
         api.addBriefingItem("Switch ships to try every Lattice system");
