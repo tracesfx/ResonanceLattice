@@ -91,7 +91,7 @@
       "arc": 360.0,
       "id": "WS0001",
       "locations": [
-        31.0,
+        29.0,
         -22.0
       ],
       "mount": "HIDDEN",
@@ -103,7 +103,7 @@
       "arc": 360.0,
       "id": "WS0001R",
       "locations": [
-        31.0,
+        29.0,
         22.0
       ],
       "mount": "HIDDEN",
@@ -115,7 +115,7 @@
       "arc": 260.0,
       "id": "WS0002",
       "locations": [
-        57.0,
+        61.0,
         -44.0
       ],
       "mount": "TURRET",
@@ -127,7 +127,7 @@
       "arc": 260.0,
       "id": "WS0002R",
       "locations": [
-        57.0,
+        61.0,
         44.0
       ],
       "mount": "TURRET",
@@ -139,7 +139,7 @@
       "arc": 300.0,
       "id": "WS0003",
       "locations": [
-        -1.0,
+        -3.0,
         0.0
       ],
       "mount": "TURRET",

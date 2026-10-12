@@ -55,6 +55,8 @@ feedback.
   `rsl_cantor`, ring deco `rsl_cantor_ring`, modules `rsl_cantor_spire` / `_bell` / `_loft`. Composite sheet:
   `python art_src/station_preview.py art_src/review/cantor_v1.png` (core + ring + modules on their
   STATION_MODULE slots, glow-on, vanilla station2_hightech core, the 4 big hulls).
+- Cantor v1 feedback: more detail; Halo/Conductor-style gradients, no flat grey; many more seams. → **v2 (awaiting
+  feedback):** `art_src/review/cantor_v2.png`.
 - Next: Cantor feedback → data/code stage.
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
@@ -220,8 +222,13 @@ shreds frigate/fighter swarms. Quest not designed yet.
   Modules (drawn pointing up = outward, root = bottom edge): Spire 72×236 (stepped spear with glowing spine on a navy
   ribbon, 2 LARGE energy turrets, bearing collar ~55 px from the root where the ring passes), Bell 128×156 (flared
   mouth with a glowing rim, 2 M hybrid flak + 4 S PD), Loft 140×156 (deck, 2 HIDDEN LAUNCH_BAY, fins). Module
-  `.ship` files are written by hullgen; moduleAnchor/variants/hints are for the data stage. Weak: still white and
-  plain next to vanilla stations, loft bays read boxy.
+  `.ship` files are written by hullgen; moduleAnchor/variants/hints are for the data stage.
+  v2: core annulus in two staggered layers (12 inner + 24 outer sectors), socket side strakes, gradients deepening
+  outward over the rosette and along every socket, painted gap sectors carry glow arcs, twin accelerator lines on every
+  socket, race->tooth conduits, 12-arc race ring, heart ring; ring segments get 3 glow arcs + a node each, steel
+  segments deepen along their length; each module deepens root->tip (`deepen()`), sash ribbon down its axis, emitter
+  glow cuts along the spear/mouth/throat/fin edges, glowing collar lines, a conduit + node per weapon; Spire side
+  prongs + 2-part body; Bell mouth ribs + throat strakes; Loft bow plate, deck rails with guide lights, framed bays.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)
