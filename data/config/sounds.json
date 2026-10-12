@@ -3,34 +3,34 @@
         {
             "file": "sounds/rsl/rsl_chime_fire_1.ogg",
             "pitch": 1.0,
-            "volume": 0.3
+            "volume": 0.25
         },
         {
             "file": "sounds/rsl/rsl_chime_fire_2.ogg",
             "pitch": 1.0,
-            "volume": 0.3
+            "volume": 0.25
         },
         {
             "file": "sounds/rsl/rsl_chime_fire_3.ogg",
             "pitch": 1.0,
-            "volume": 0.3
+            "volume": 0.25
         }
     ],
     "rsl_pizzicato_fire": [
         {
             "file": "sounds/rsl/rsl_pizzicato_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.6
+            "volume": 0.45
         },
         {
             "file": "sounds/rsl/rsl_pizzicato_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.6
+            "volume": 0.45
         },
         {
             "file": "sounds/rsl/rsl_pizzicato_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.6
+            "volume": 0.45
         }
     ],
     "rsl_shard_fire": [
@@ -54,34 +54,34 @@
         {
             "file": "sounds/rsl/rsl_flechette_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.7
+            "volume": 0.45
         },
         {
             "file": "sounds/rsl/rsl_flechette_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.7
+            "volume": 0.45
         },
         {
             "file": "sounds/rsl/rsl_flechette_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.7
+            "volume": 0.45
         }
     ],
     "rsl_lance_fire": [
         {
             "file": "sounds/rsl/rsl_lance_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.7
+            "volume": 0.5
         },
         {
             "file": "sounds/rsl/rsl_lance_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.7
+            "volume": 0.5
         },
         {
             "file": "sounds/rsl/rsl_lance_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.7
+            "volume": 0.5
         }
     ],
     "rsl_arpeggio_fire": [
@@ -122,68 +122,68 @@
         {
             "file": "sounds/rsl/rsl_charge.ogg",
             "pitch": 0.97,
-            "volume": 0.9
+            "volume": 0.6
         },
         {
             "file": "sounds/rsl/rsl_charge.ogg",
             "pitch": 1.0,
-            "volume": 0.9
+            "volume": 0.6
         },
         {
             "file": "sounds/rsl/rsl_charge.ogg",
             "pitch": 1.03,
-            "volume": 0.9
+            "volume": 0.6
         }
     ],
     "rsl_driver_fire": [
         {
             "file": "sounds/rsl/rsl_driver_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.9
+            "volume": 0.75
         },
         {
             "file": "sounds/rsl/rsl_driver_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.9
+            "volume": 0.75
         },
         {
             "file": "sounds/rsl/rsl_driver_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.9
+            "volume": 0.75
         }
     ],
     "rsl_spinal_fire": [
         {
             "file": "sounds/rsl/rsl_spinal_fire.ogg",
             "pitch": 0.97,
-            "volume": 1.0
+            "volume": 0.7
         },
         {
             "file": "sounds/rsl/rsl_spinal_fire.ogg",
             "pitch": 1.0,
-            "volume": 1.0
+            "volume": 0.7
         },
         {
             "file": "sounds/rsl/rsl_spinal_fire.ogg",
             "pitch": 1.03,
-            "volume": 1.0
+            "volume": 0.7
         }
     ],
     "rsl_sforzando_fire": [
         {
             "file": "sounds/rsl/rsl_sforzando_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.7
+            "volume": 0.6
         },
         {
             "file": "sounds/rsl/rsl_sforzando_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.7
+            "volume": 0.6
         },
         {
             "file": "sounds/rsl/rsl_sforzando_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.7
+            "volume": 0.6
         }
     ],
     "rsl_flak_fire": [
@@ -207,17 +207,17 @@
         {
             "file": "sounds/rsl/rsl_spike_fire.ogg",
             "pitch": 0.97,
-            "volume": 0.8
+            "volume": 0.3
         },
         {
             "file": "sounds/rsl/rsl_spike_fire.ogg",
             "pitch": 1.0,
-            "volume": 0.8
+            "volume": 0.3
         },
         {
             "file": "sounds/rsl/rsl_spike_fire.ogg",
             "pitch": 1.03,
-            "volume": 0.8
+            "volume": 0.3
         }
     ],
     "rsl_bloom_fire": [

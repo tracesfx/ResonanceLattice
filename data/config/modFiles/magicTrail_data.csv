@@ -19,8 +19,8 @@ rsl_harmonic_shot_core,rsl_harmonic_shot,base_trail_smooth,15,0,0.04,0.3,7.2,2.7
 rsl_harmonic_shot_haze,rsl_harmonic_shot,base_trail_fuzzy,15,0,0.08,1.06,12.6,36.0,"[100,230,220]","[150,110,230]",0.3,256,0,TRUE,90,21.6,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_harmonic_spinal_shot_core,rsl_harmonic_spinal_shot,base_trail_smooth,15,0,0.04,0.3,9.6,3.6,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,120,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_harmonic_spinal_shot_haze,rsl_harmonic_spinal_shot,base_trail_fuzzy,15,0,0.08,1.18,16.8,48.0,"[100,230,220]","[150,110,230]",0.3,256,0,TRUE,120,28.799999999999997,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
-rsl_sforzando_shot_core,rsl_sforzando_shot,base_trail_smooth,15,0,0.16,0.9,5.2,2.0,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,85,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
-rsl_sforzando_shot_haze,rsl_sforzando_shot,base_trail_fuzzy,15,0,0.32,2.88,9.1,26.0,"[100,230,220]","[150,110,230]",0.3,256,0,TRUE,85,15.600000000000001,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
+rsl_sforzando_shot_core,rsl_sforzando_shot,base_trail_smooth,15,0,0.16,0.9,8.3,2.8,"[255,250,225]","[255,210,130]",0.95,256,0,TRUE,95,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
+rsl_sforzando_shot_haze,rsl_sforzando_shot,base_trail_fuzzy,15,0,0.32,2.88,14.6,36.4,"[255,220,140]","[255,160,80]",0.45,256,0,TRUE,95,15.600000000000001,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_sforzando_untuned_shot_core,rsl_sforzando_untuned_shot,base_trail_smooth,15,0,0.04,0.3,4.0,1.5,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,60,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_sforzando_untuned_shot_haze,rsl_sforzando_untuned_shot,base_trail_fuzzy,15,0,0.08,0.9,7.0,20.0,"[100,230,220]","[150,110,230]",0.3,256,0,TRUE,60,12.0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_bloom_shard_shot_core,rsl_bloom_shard_shot,base_trail_smooth,15,0,0.04,0.3,2.0,0.8,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,6,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE

@@ -30,16 +30,16 @@
     ],
     "animationType": "GLOW_AND_FLASH",
     "muzzleFlashSpec": {
-        "length": 40,
+        "length": 55,
         "spread": 4,
-        "particleSizeMin": 20,
-        "particleSizeRange": 16.0,
+        "particleSizeMin": 26,
+        "particleSizeRange": 20.8,
         "particleDuration": 0.12,
-        "particleCount": 10,
+        "particleCount": 14,
         "particleColor": [
-            235,
             255,
-            252,
+            245,
+            210,
             255
         ]
     },

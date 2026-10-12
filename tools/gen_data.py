@@ -38,6 +38,8 @@ TEAL = [100, 230, 220, 255]
 TEAL_SOFT = [60, 200, 190, 255]
 VIOLET = [160, 120, 240, 255]
 WHITE = [235, 255, 252, 255]
+GOLD = [255, 215, 120, 255]          # the Virtuoso's own colour (Bravura seams, full Sforzando slugs)
+GOLD_WHITE = [255, 245, 210, 255]
 OFFS = json.load(open(os.path.join(ROOT, "art_src", "gen", "weapon_offsets.json")))
 
 
@@ -104,12 +106,12 @@ def wpn_base(wid, mount_type, size, spec_class="projectile", glow=True, barrel="
 
 
 def bolt(pid, length, width, fringe, core=WHITE, glow_r=0, hit_glow=0, sprite=None, on_hit=None, spawn="BALLISTIC_AS_BEAM",
-         coll="RAY", coll_f="RAY_FIGHTER", fade=0.25):
+         coll="RAY", coll_f="RAY_FIGHTER", fade=0.25, glow_a=90):
     p = {"id": pid, "specClass": "projectile", "spawnType": spawn, "collisionClass": coll,
          "collisionClassByFighter": coll_f, "length": length, "width": width, "fadeTime": fade,
          "fringeColor": fringe, "coreColor": core, "textureScrollSpeed": 64.0, "pixelsPerTexel": 5.0}
     if glow_r:
-        p["glowColor"] = fringe[:3] + [90]
+        p["glowColor"] = fringe[:3] + [glow_a]
         p["glowRadius"] = glow_r
     if hit_glow:
         p["hitGlowRadius"] = hit_glow
@@ -373,11 +375,15 @@ def weapons():
              "move. Once a hull is bare, a slug goes straight through it and on into the next ship in line."),
             ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 2000, 30, 180, "",
              "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
+        full = wid == "rsl_sforzando"
         w = wpn_base(wid, "ENERGY", "LARGE")
-        w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(WHITE, 40, 4, 20, 10),
+        w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(GOLD_WHITE if full else WHITE,
+                                                                               55 if full else 40, 4, 26 if full else 20,
+                                                                               14 if full else 10),
                  projectileSpecId=wid + "_shot", fireSoundTwo="rsl_sforzando_fire")
         add_weapon(blank_row(name=name, id=wid, tier=3, **{
-            "base value": 0, "range": 1200 if wid == "rsl_sforzando" else 1000, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
+            "base value": 0, "range": 1200 if full else 1000, "damage/shot": dmg, "impact": 10, "turn rate": turn,
+            "OPs": 0,
             "type": "ENERGY", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
             "max spread": 0, "spread/shot": 0, "spread decay/sec": 0, "proj speed": spd,
             "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
@@ -387,8 +393,11 @@ def weapons():
                               "Glissando dash, at high speed or in Bravura: every hit deals %s damage and arcs EMP."
                               if wid == "rsl_sforzando" else "+%s damage to fighters and frigates. %s"),
             "customPrimaryHL": "50% | 6 | +50%" if wid == "rsl_sforzando" else "50% | No Skewer"}), w,
-            [bolt(wid + "_shot", 170 if wid == "rsl_sforzando" else 120, 7, [120, 240, 230, 255],
-                  glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit", fade=0.15)], text)
+            # the full lance stands apart from every other Lattice gun: a wide, hot, yellow-white slug
+            [bolt(wid + "_shot", 190, 13, GOLD, core=[255, 255, 240, 255], glow_r=55, hit_glow=130,
+                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=200) if full else
+             bolt(wid + "_shot", 120, 7, [120, 240, 230, 255], glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit",
+                  fade=0.15)], text)
 
     # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
     for wid, size, mount, sprite, glow, effect in (
@@ -1092,16 +1101,17 @@ def config():
 
 # ===================================================================================================== sounds + trails
 # Sound files are processed derivatives of vanilla sounds (art_src/gen/gen_sounds.py).
-# id -> ([files], volume); volumes follow the vanilla sound each one is derived from
+# id -> ([files], volume). Files are peak-normalised to -1 dB; volumes put each back near the vanilla level of
+# the sound it is derived from (louder for the Sforzando, the Virtuoso's signature)
 SOUNDS = {
-    "rsl_chime_fire": (["rsl_chime_fire_1", "rsl_chime_fire_2", "rsl_chime_fire_3"], 0.3),
-    "rsl_pizzicato_fire": (["rsl_pizzicato_fire"], 0.6), "rsl_shard_fire": (["rsl_shard_fire"], 0.55),
-    "rsl_flechette_fire": (["rsl_flechette_fire"], 0.7), "rsl_lance_fire": (["rsl_lance_fire"], 0.7),
+    "rsl_chime_fire": (["rsl_chime_fire_1", "rsl_chime_fire_2", "rsl_chime_fire_3"], 0.25),
+    "rsl_pizzicato_fire": (["rsl_pizzicato_fire"], 0.45), "rsl_shard_fire": (["rsl_shard_fire"], 0.55),
+    "rsl_flechette_fire": (["rsl_flechette_fire"], 0.45), "rsl_lance_fire": (["rsl_lance_fire"], 0.5),
     "rsl_arpeggio_fire": (["rsl_arpeggio_fire_1", "rsl_arpeggio_fire_2", "rsl_arpeggio_fire_3"], 0.45),
-    "rsl_sostenuto_fire": (["rsl_sostenuto_fire"], 0.45), "rsl_charge": (["rsl_charge"], 0.9),
-    "rsl_driver_fire": (["rsl_driver_fire"], 0.9), "rsl_spinal_fire": (["rsl_spinal_fire"], 1.0),
-    "rsl_sforzando_fire": (["rsl_sforzando_fire"], 0.7), "rsl_flak_fire": (["rsl_flak_fire"], 0.6),
-    "rsl_spike_fire": (["rsl_spike_fire"], 0.8), "rsl_bloom_fire": (["rsl_bloom_fire"], 1.0),
+    "rsl_sostenuto_fire": (["rsl_sostenuto_fire"], 0.45), "rsl_charge": (["rsl_charge"], 0.6),
+    "rsl_driver_fire": (["rsl_driver_fire"], 0.75), "rsl_spinal_fire": (["rsl_spinal_fire"], 0.7),
+    "rsl_sforzando_fire": (["rsl_sforzando_fire"], 0.6), "rsl_flak_fire": (["rsl_flak_fire"], 0.6),
+    "rsl_spike_fire": (["rsl_spike_fire"], 0.3), "rsl_bloom_fire": (["rsl_bloom_fire"], 1.0),
 }
 # MagicLib trails: projectile id -> visual weight (core wake + ion haze scale with it)
 TRAILS = {"rsl_chime_shot": 0.5, "rsl_chime_bell": 0.6, "rsl_pizzicato_shot": 0.8, "rsl_shard_shot": 0.5,
@@ -1144,9 +1154,14 @@ def sounds_and_trails():
                           [90, 210, 220], 0.75, round(length * 0.5), 0))
         rows.append(trail(pid + "_haze", pid, "base_trail_fuzzy", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
                           [150, 110, 230], 0.3, round(length * 0.5), 12 * w))
-    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: their wake hangs in the air much longer
+    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: a gold-white wake that hangs much longer
         if r["projectile"] == "rsl_sforzando_shot":
             r["duration"], r["fadeOut"] = r["duration"] * 4, round(r["fadeOut"] * 3, 2)
+            core = r["trail"].endswith("_core")
+            r["colorIn"] = "[255,250,225]" if core else "[255,220,140]"
+            r["colorOut"] = "[255,210,130]" if core else "[255,160,80]"
+            r["opacity"] = 0.95 if core else 0.45
+            r["sizeIn"], r["sizeOut"] = round(r["sizeIn"] * 1.6, 1), round(r["sizeOut"] * 1.4, 1)
     for pid, w in MISSILE_TRAILS.items():
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],
                           [140, 110, 220], 0.4, 6, 10 * w, additive=False))

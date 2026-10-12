@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Sforzando bore, gold slug, sounds v3)
+
+- Skewer now bores through the inside of the hull instead of jumping to the far side: the slug carries on from the
+  impact point, and every 25 units of path inside the hull deal 20% of its damage to the armor there (sparks along
+  the wound), then it exits and continues to the next ship.
+- The full Sforzando's slug is wider (13), hotter (glow radius 55, strong glow) and yellow-white, with a gold wake;
+  its muzzle flash is gold-white. The Unsung's untuned lance stays teal.
+- Sounds v3: stronger pitch shifts, a quiet octave-up shimmer layer, flanger/phaser/chorus modulation, light grit on
+  the shard guns; every file peak-normalised, volumes re-levelled against vanilla.
+
 ## Unreleased - 2026-10-12 (Sforzando skewer, sounds v2)
 
 - Sforzando Lance: 1,200 range (Untuned 1,000). Skewer: slugs that hit hull or armor go straight through at full
