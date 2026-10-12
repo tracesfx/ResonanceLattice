@@ -5,12 +5,19 @@ Deps: LazyLib, MagicLib (hard); GraphicsLib optional (guard with `isModEnabled("
 Use the **starsector-modding** skill (`~/.claude/skills/starsector-modding/`) for all data, code, balance and validation.
 Never launch the game or edit vanilla / other mods without the user's explicit OK.
 
+**ALWAYS update the starsector-modding skill with every insight gained about Starsector modding** (user, 2026-10-12):
+a new crash cause, API behaviour, engine quirk, file-format detail, art/sound technique or balance judgement goes
+into the skill in the same session - `references/ships-and-combat.md` (ships, weapons, systems, hullmods, FX,
+sounds), `references/pitfalls.md` (symptom/cause/fix rows), `references/sprites.md`, or a validator check in
+`scripts/validate_mod.py` (keep the mod's vendored `tools/validate_mod.py` in sync) when a tool can catch it. Run
+`python ~/.claude/skills/starsector-modding/scripts/selftest.py` after changing the skill's scripts.
+
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
 **Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user
 feedback.
 
-## Status (2026-10-11)
+## Status (2026-10-12: playable; iterating on in-game feedback)
 
 - Stage 1 (proposal): done. Stage 2 (prototype sprites): in progress.
 - Sprites done: Grace Note, Refrain, Staccato, Cadence — user approved the steel + dark-blue art direction
@@ -94,17 +101,29 @@ feedback.
   only the Bravura seam glow). Keep impact FX subtle (user: big hit flashes read as "a large circle of light").
   Unsung shows Bravura as `rsl_bravura_locked` (inactive). Concert Pitch (`rsl_concert_pitch`) = rare augment, built
   into both Virtuosos; it owns the EMP resistance.
+- **Descriptions / S-mods / icons (2026-10-12):** hullmod csv `desc` = 1-2 plain sentences (String.format: `%%`);
+  the numbers are in tooltip sections built by `rsl.hullmods.Tip` (`addPostDescriptionSection`, Bonuses /
+  Tradeoffs headings, bulleted). S-mod effects per the vanilla rule the user stated: cheap hullmods get a bonus when
+  built in with a story point, expensive ones a penalty (Unbound Core: -10% max CR, `isSModEffectAPenalty`),
+  enhancing a hull's own built-in gets the strongest bonus (`sModDesc` column, `RslUtil.enhanced()` /
+  `sModded()`). System descriptions: paragraphs + vanilla `text2` category + `text3` one-liner (gen_data
+  `SYS_TEXT`); ship descriptions: lore + "In battle:" paragraph (`HULL_ROLE`). Hullmod icons are vanilla-style
+  painted close-ups built from the 4x hull renders: `python art_src/gen/gen_hullmod_icons.py` (review sheet
+  `art_src/review/hullmod_icons_v2.png`); `gen_icons.py` now only does system icons + crest/flag.
+- **Presets:** two intentional loadouts per hull in gen_data `PRESETS` (hand-picked weapons + hullmods, leftover OP
+  -> vents then caps); Choir fleets use them via `default_ship_roles.json`; the Virtuoso ones are player-only.
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
-### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started
-Two stages: Unsung skin (55 DP, questline start) upgraded via `variant.setHullSpecAPI` to the full Virtuoso (80 DP;
-the user's "OP cost 80" = DP). Power comes from its kit like Ziggurat (user: Ziggurat is strong because of system,
-dissipation, phase, Phase Anchor — not raw stats): Glissando dash (2 charges, i-frames, **costs 1% CR** (user 2026-10-12; kills refund 5-18% CR), leaves
-"the String" that snaps after 1.2 s: line damage + CR drain, blocks projectiles), 1,200 dissipation, SO allowed on a
-capital, Stolen Time (CR theft), Bravura at 100% CR (buffs + **seams cross-fade to gold-white** via a 2nd glow
-sprite — gold glow is fine; the "no yellow" rule is about paint). Sforzando Lance ×2 = semi-rapid railgun TURRETS
-(2,000 proj speed, zero spread, 45°/s turn, ANTI_FTR + USE_VS_FRIGATES, Cascade pierce on small-ship kills) so it
-shreds frigate/fighter swarms. Quest not designed yet.
+### Virtuoso (unique player capital, DESIGN.md §3.9) — built; current state (2026-10-12)
+Two hulls: Unsung (45 DP, 250 OP, questline start; a full `.ship` derived from the Virtuoso's) and the full Virtuoso
+(120 DP, 15,000 hull / 1,200 armor - user: keep armor light). Power comes from its kit like the Ziggurat (user):
+Glissando (720-unit steerable dash, 3 charges, 1% CR per use, white afterimages, the String snaps), Stolen Time (CR
+theft + 5-18% CR per kill), Bravura at 100% CR (+75% dissipation, +50% energy ROF, +20% vs shields, 3rd charge,
+0.5%/s hull repair, white-teal shield, gold-white seam glow), Concert Pitch built in (+200 Lattice weapon range,
++15% max CR, +60 s peak, 90% EMP resistance). Sforzando Lance x2 = built-in kinetic rail turrets (160 dmg, 1,200
+range, white-teal slug width 12, skewers up to 12 ships boring through the hull; Unsung: 144 dmg, 3 ships, width
+10). All balance numbers live in tools/gen_data.py and the Java constants; CHANGELOG.md has every change.
+Quest not designed yet.
 
 ## STANDING ART DIRECTION (all user feedback so far — follow on every hull)
 1. **Colours: clean stainless steel + dark blue + teal seams. NO YELLOW anywhere** (paint, markings; it read as

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (readability, S-mods, icons)
+
+- Hullmod tooltips rebuilt in sections (Resonance / Overtone / Bonuses / Tradeoffs ...) with bulleted, highlighted
+  numbers; short plain descriptions. Ship-system descriptions in paragraphs with vanilla category and one-line
+  summary; ship descriptions gain an "In battle" paragraph.
+- S-mod effects: Unbound Core (expensive) -10% max CR when built in; Concert Pitch +100 range when built in, plus
+  +5% max CR and +30 s peak when enhanced on the Virtuoso; enhanced built-ins: Lattice Core +50% Resonance gain,
+  Fracture shatters a stack sooner for +50% armor damage, Stolen Time +50%, Bravura from 95% CR (until 87%),
+  Conductor's Bridge 3,000 range, Tuned Wings 1,000 units and 50% faster refits.
+- New vanilla-style hullmod icons (painted close-ups of the hulls with the mechanic in light).
+- Validator: errors on a bare % in hull_mods.csv texts and on spaced colours in MagicLib trail data.
+
 ## Unreleased - 2026-10-12 (final balance pass, presets)
 
 - Fix: pierce continuations (Sforzando, Harmonic Driver) no longer extend the shot's range; they are removed once

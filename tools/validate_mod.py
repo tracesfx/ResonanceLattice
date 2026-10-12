@@ -1264,6 +1264,13 @@ class Validator:
                     r.error("%s must be TRUE/FALSE" % c, where)
             if not (row.get("desc") or "").strip() and (row.get("hidden") or "").strip().upper() != "TRUE":
                 r.warn("empty 'desc' column (the tooltip text)", where)
+            # desc/short/sModDesc are passed through String.format: a bare % (e.g. "100% extends") crashes the refit
+            # screen and the codex with IllegalFormatConversionException ("e != java.lang.String")
+            for c in ("desc", "short", "sModDesc"):
+                txt = row.get(c) or ""
+                if re.search(r"%(?![s%])", txt):
+                    r.error("'%s' has a bare %% sign: write %%%% for a literal percent (String.format crash)" % c,
+                            where)
 
     # .............................................................................. campaign specs and plugins
     def check_campaign(self):
@@ -1561,6 +1568,17 @@ class Validator:
         for rel in self.modsrc.files:
             if rel.lower().startswith("sounds/") and rel.lower().endswith(".wav"):
                 r.warn("WAV file: macOS builds cannot play .wav (wiki); use .ogg", rel)
+
+        # MagicLib trails: colours are parsed item by item with Integer.parseInt and no trim
+        trails = os.path.join(self.mod, "data", "config", "modFiles", "magicTrail_data.csv")
+        if os.path.isfile(trails):
+            with open(trails, encoding="utf-8", errors="replace") as f:
+                for n, row in enumerate(csv.DictReader(f), 2):
+                    for c in ("colorIn", "colorOut"):
+                        v = (row.get(c) or "")
+                        if v and " " in v:
+                            r.error("MagicLib trail %s %r has spaces: write [r,g,b] (launch crash: For input string "
+                                    "\" 255\")" % (c, v), "magicTrail_data.csv line %d" % n)
 
     # .............................................................................. descriptions
     def check_descriptions(self):
