@@ -126,7 +126,7 @@ public class GlissandoStats extends BaseShipSystemScript {
         if (dash.unsung && now - dash.t0 > IFRAMES_UNSUNG) setInvulnerable(stats, id, false);
         if (amount > 0f) {
             engine.addSmoothParticle(new Vector2f(ship.getLocation()), new Vector2f(), ship.getCollisionRadius() * 0.6f,
-                    0.145f, 0.35f, dash.unsung ? RslUtil.TEAL_DIM : GLOW_VIRTUOSO);
+                    0.087f, 0.35f, dash.unsung ? RslUtil.TEAL_DIM : GLOW_VIRTUOSO);
             // a fading trail of afterimages along the dash
             dash.imageTimer -= amount;
             if (dash.imageTimer <= 0f) {

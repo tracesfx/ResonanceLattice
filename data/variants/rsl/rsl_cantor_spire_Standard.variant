@@ -13,12 +13,18 @@
             "autofire": false,
             "mode": "LINKED",
             "weapons": {
-                "WS0001": "rsl_harmonic_driver",
-                "WS0002": "rsl_harmonic_driver"
+                "WS0001": "rsl_harmonic_driver"
             }
         },
         {
             "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_sostenuto"
+            }
+        },
+        {
+            "autofire": true,
             "mode": "LINKED",
             "weapons": {
                 "WS0004": "rsl_lattice_lance"

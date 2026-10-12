@@ -394,10 +394,10 @@ def weapons():
                               "through at full damage into the next target, up to %s ships in a row."),
             "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | 3"}), w,
             # the full lance stands apart from every other Lattice gun: a wide, bright, white-teal slug
-            [bolt(wid + "_shot", 190, 10, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=30, hit_glow=36,
+            [bolt(wid + "_shot", 190, 12, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=30, hit_glow=36,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=112) if full else
              # the Unsung's lance: white as well, a little narrower and dimmer than the full Virtuoso's
-             bolt(wid + "_shot", 130, 9, [200, 240, 236, 255], core=[255, 255, 255, 255], glow_r=23, hit_glow=55,
+             bolt(wid + "_shot", 130, 10, [200, 240, 236, 255], core=[255, 255, 255, 255], glow_r=23, hit_glow=55,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=104)], text)
 
     # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
@@ -536,7 +536,7 @@ HULLS = {
         "system id": "rsl_glissando", "fleet pts": 40, "hitpoints": 12000, "armor rating": 1200, "max flux": 15000,
         "flux dissipation": 1200, "ordnance points": 260, "fighter bays": "", "max speed": 70, "acceleration": 85,
         "deceleration": 75, "max turn rate": 24, "turn acceleration": 45, "mass": 2600, "shield type": "OMNI",
-        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.5, "supplies/rec": 80, "supplies/mo": 80,
+        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.5, "supplies/rec": 120, "supplies/mo": 120,
         "peak CR sec": 420, "CR loss/sec": 0.3, "base value": 1200000, "hints": "UNBOARDABLE",
         "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
     "rsl_virtuoso_unsung": ("odyssey", dict(name="Virtuoso (Unsung)", designation="Duelist Prototype", **{
@@ -544,20 +544,25 @@ HULLS = {
         "max flux": 12500, "flux dissipation": 950, "ordnance points": 220, "fighter bays": "", "max speed": 55,
         "acceleration": 38, "deceleration": 34, "max turn rate": 12, "turn acceleration": 17, "mass": 2600,
         "shield type": "OMNI", "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.85,
-        "supplies/rec": 55, "supplies/mo": 55, "peak CR sec": 360, "CR loss/sec": 0.3, "base value": 700000,
+        "supplies/rec": 45, "supplies/mo": 45, "peak CR sec": 360, "CR loss/sec": 0.3, "base value": 700000,
         "hints": "UNBOARDABLE", "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
-    "rsl_cantor": ("station2_hightech", dict(name="Cantor Array", designation="Lattice Station", **{
-        "system id": "rsl_grandchorus", "hitpoints": 40000, "armor rating": 1800, "max flux": 20000,
+    # Balanced against the high-tech Star Fortress (station3_hightech): core 160k hull / 2,400 armor, petals bring the
+    # total to ~232k (vanilla ~239k), 0.6-efficiency shields on the Spires and Bells (vanilla fortress shields),
+    # 1,000-OP petals (as vanilla modules) carrying heavy rails, 4 fighter bays.
+    "rsl_cantor": ("station3_hightech", dict(name="Cantor Array", designation="Lattice Station", **{
+        "system id": "rsl_grandchorus", "hitpoints": 160000, "armor rating": 2400, "max flux": 20000,
         "flux dissipation": 1200, "ordnance points": 300, "tags": "", "tech/manufacturer": MFR})),
-    "rsl_cantor_spire": ("module_hightech_attack", dict(name="Spire", designation="Lance Petal", **{
-        "hitpoints": 12000, "armor rating": 1500, "max flux": 12000, "flux dissipation": 800,
-        "ordnance points": 200, "supplies/rec": 1, "supplies/mo": 1})),
-    "rsl_cantor_bell": ("module_hightech_attack", dict(name="Bell", designation="Defense Petal", **{
-        "hitpoints": 9000, "armor rating": 1250, "max flux": 9000, "flux dissipation": 700, "ordnance points": 160,
-        "shield type": "FRONT", "shield arc": 150, "shield upkeep": 0.4, "shield efficiency": 1, "supplies/rec": 1, "supplies/mo": 1})),
+    "rsl_cantor_spire": ("module_hightech_citadel", dict(name="Spire", designation="Lance Petal", **{
+        "system id": "", "hitpoints": 14000, "armor rating": 1750, "max flux": 22000, "flux dissipation": 1000,
+        "ordnance points": 1000, "shield type": "FRONT", "shield arc": 180, "shield upkeep": 0.4,
+        "shield efficiency": 0.6, "supplies/rec": 1, "supplies/mo": 1})),
+    "rsl_cantor_bell": ("module_hightech_shield", dict(name="Bell", designation="Defense Petal", **{
+        "system id": "fortressshield", "hitpoints": 12000, "armor rating": 1500, "max flux": 18000,
+        "flux dissipation": 1000, "ordnance points": 1000, "shield type": "FRONT", "shield arc": 220,
+        "shield upkeep": 0.4, "shield efficiency": 0.6, "supplies/rec": 1, "supplies/mo": 1})),
     "rsl_cantor_loft": ("module_hightech_hangar", dict(name="Choir Loft", designation="Hangar Petal", **{
-        "system id": "", "hitpoints": 8000, "armor rating": 1100, "max flux": 8000, "flux dissipation": 600,
-        "ordnance points": 150, "fighter bays": 2, "supplies/rec": 1, "supplies/mo": 1})),
+        "system id": "", "hitpoints": 10000, "armor rating": 1250, "max flux": 10000, "flux dissipation": 700,
+        "ordnance points": 1000, "fighter bays": 2, "supplies/rec": 1, "supplies/mo": 1})),
     # fighters: Thunder / Broadsword / Dagger peers
     "rsl_trill": ("thunder", dict(name="Trill", designation="Interceptor", **{
         "hitpoints": 350, "armor rating": 50, "max speed": 470, "acceleration": 1000, "deceleration": 800,
@@ -749,14 +754,14 @@ LOADOUTS = {  # variant id: (hull, display name, {slot: weapon}, wings, hullmods
         "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime", "WS0005R": "rsl_chime",
         "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [], []),
     "rsl_cantor_spire_Standard": ("rsl_cantor_spire", "Standard", {
-        "WS0001": "rsl_harmonic_driver", "WS0002": "rsl_harmonic_driver", "WS0003": "rsl_chime", "WS0003R": "rsl_chime",
+        "WS0001": "rsl_harmonic_driver", "WS0002": "rsl_sostenuto", "WS0003": "rsl_chime", "WS0003R": "rsl_chime",
         "WS0004": "rsl_lattice_lance"}, [], []),
     "rsl_cantor_bell_Standard": ("rsl_cantor_bell", "Standard", {
         "WS0001": "rsl_cantus", "WS0001R": "rsl_cantus", "WS0002": "rsl_chime", "WS0002R": "rsl_chime",
         "WS0003": "rsl_chime", "WS0003R": "rsl_chime", "WS0004": "rsl_arpeggio"}, [], []),
     "rsl_cantor_loft_Standard": ("rsl_cantor_loft", "Standard", {
         "WS0002": "rsl_chime", "WS0002R": "rsl_chime", "WS0003": "rsl_lattice_lance", "WS0004": "rsl_cantus"},
-        ["rsl_trill_wing", "rsl_cadenza_wing"], []),
+        ["rsl_requiem_wing", "rsl_cadenza_wing"], []),
 }
 
 
@@ -980,8 +985,8 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
     ("rsl_bravura", "Bravura", "Bravura",
      "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
      "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to shields, %s faster "
-     "system recharge and %s Glissando charges, and the Sforzando lances are always Accented (%s damage). The seams "
-     "burn gold-white and the shield turns white-teal.", True, (0, 0, 0, 0)),
+     "system recharge and %s Glissando charges, the Sforzando lances are always Accented (%s damage), and the hull "
+     "repairs %s of its maximum per second. The seams burn gold-white and the shield turns white-teal.", True, (0, 0, 0, 0)),
     ("rsl_unbound", "Unbound Core", "UnboundCore",
      "The Virtuoso's core can drop its safety tuning, as Safety Overrides does for lesser hulls: +%s top speed, "
      "flux dissipation multiplied by %s, the zero-flux boost at any flux level and no active venting; peak "
@@ -990,8 +995,8 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
     ("rsl_bravura_locked", "Bravura (Silent)", "BravuraLocked",
      "INACTIVE on the Unsung. On the restored Virtuoso: at %s combat readiness it enters Bravura until its CR drops "
      "below %s: +%s top speed and maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to "
-     "shields, %s faster system recharge and %s Glissando charges, and the Sforzando lances are always Accented (%s "
-     "damage).", True, (0, 0, 0, 0)),
+     "shields, %s faster system recharge and %s Glissando charges, the Sforzando lances are always Accented (%s "
+     "damage), and the hull repairs %s of its maximum per second.", True, (0, 0, 0, 0)),
     ("rsl_concert_pitch", "Concert Pitch", "ConcertPitch",
      "A rare lattice augment that retunes the core to a perfect reference pitch. +%s range for every Resonance Lattice "
      "weapon, +%s maximum combat readiness, +%s seconds of peak performance time and %s resistance to EMP damage. "

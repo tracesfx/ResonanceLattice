@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (DP, Bravura regen, station rebalance)
+
+- Glissando activation glow a further 40% dimmer.
+- Bravura: repairs 0.5% of maximum hull per second while active.
+- Deployment points: Virtuoso 120, Unsung 45 (monthly supplies match).
+- Sforzando slug width 12 (Untuned 10).
+- Cantor Array rebalanced to the high-tech Star Fortress: core 160,000 hull / 2,400 armor (cloned from
+  station3_hightech), Spires 14,000 hull with 0.6-efficiency shields and a Harmonic Driver + Sostenuto Rail each,
+  Bells 12,000 hull with 220-degree 0.6-efficiency shields and Fortress Shield, Lofts 10,000 hull flying Requiem +
+  Cadenza; ~232,000 hull in total (vanilla ~239,000).
+
 ## Unreleased - 2026-10-12 (Glissando/Sforzando visual pass)
 
 - Glissando: the String's arcs and snap are white (Virtuoso); afterimages stay where they were left; activation

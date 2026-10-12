@@ -32,6 +32,8 @@ public class Bravura extends BaseHullMod {
     public static final float SYSTEM_REGEN = 100f;
     /** Glissando charges in Bravura; outside it the ship is held one charge below this. */
     public static final int CHARGES = 3;
+    /** Hull repaired per second in Bravura, as a fraction of maximum hull. */
+    public static final float HULL_REGEN = 0.005f;
     /** Virtuoso base: shield turn rate and shield raise (unfold) rate multipliers. */
     public static final float SHIELD_RATE_MULT = 2f;
     public static final float SHIELD_UNFOLD_MULT = 3f;
@@ -69,6 +71,10 @@ public class Bravura extends BaseHullMod {
             s.getEnergyRoFMult().modifyPercent(ID, ROF);
             s.getDamageToTargetShieldsMult().modifyPercent(ID, SHIELD_DAMAGE);
             s.getSystemRegenBonus().modifyPercent(ID, SYSTEM_REGEN);
+            if (!engine.isPaused() && ship.getHitpoints() < ship.getMaxHitpoints()) {
+                ship.setHitpoints(Math.min(ship.getMaxHitpoints(),
+                        ship.getHitpoints() + ship.getMaxHitpoints() * HULL_REGEN * amount));
+            }
             if (ship == engine.getPlayerShip()) {
                 engine.maintainStatusForPlayerShip(STATUS, "graphics/rsl/icons/hullmods/rsl_bravura.png", "BRAVURA",
                         "full voice: faster, hotter, every lance accented", false);
@@ -138,6 +144,8 @@ public class Bravura extends BaseHullMod {
                 return "" + CHARGES;
             case 8:
                 return "+" + (int) (SforzandoOnHit.ACCENT_DAMAGE * 100f) + "%";
+            case 9:
+                return (HULL_REGEN * 100f) + "%";
             default:
                 return null;
         }
