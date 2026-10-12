@@ -382,10 +382,10 @@ def weapons():
             "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
             "tech/manufacturer": MFR, "primaryRoleStr": "Swarm Breaker",
             "customPrimary": ("+%s damage to fighters and frigates. Cascade: a slug that destroys a fighter or frigate "
-                              "pierces on with %s of its damage. Accented after a Glissando dash or at high speed: "
-                              "every slug pierces and arcs EMP." if wid == "rsl_sforzando" else
+                              "pierces on with %s of its damage. Accented after a Glissando dash, at high speed or in "
+                              "Bravura: every slug deals %s damage, pierces and arcs EMP." if wid == "rsl_sforzando" else
                               "+%s damage to fighters and frigates. %s"),
-            "customPrimaryHL": "50% | 60%" if wid == "rsl_sforzando" else "50% | No Cascade"}), w,
+            "customPrimaryHL": "50% | 60% | +50%" if wid == "rsl_sforzando" else "50% | No Cascade"}), w,
             [bolt(wid + "_shot", 150 if wid == "rsl_sforzando" else 110, 8, [120, 240, 230, 255],
                   glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit", fade=0.15)], text)
 
@@ -494,9 +494,9 @@ HULLS = {
         "base value": 420000})),
     "rsl_virtuoso": ("odyssey", dict(name="Virtuoso", designation="Duelist", **{
         "system id": "rsl_glissando", "fleet pts": 40, "hitpoints": 12000, "armor rating": 1200, "max flux": 15000,
-        "flux dissipation": 1200, "ordnance points": 260, "fighter bays": "", "max speed": 65, "acceleration": 45,
-        "deceleration": 40, "max turn rate": 14, "turn acceleration": 20, "mass": 2600, "shield type": "OMNI",
-        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 80, "supplies/mo": 80,
+        "flux dissipation": 1200, "ordnance points": 260, "fighter bays": "", "max speed": 70, "acceleration": 85,
+        "deceleration": 75, "max turn rate": 24, "turn acceleration": 45, "mass": 2600, "shield type": "OMNI",
+        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.5, "supplies/rec": 80, "supplies/mo": 80,
         "peak CR sec": 420, "CR loss/sec": 0.3, "base value": 1200000, "hints": "UNBOARDABLE",
         "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
     "rsl_virtuoso_unsung": ("odyssey", dict(name="Virtuoso (Unsung)", designation="Duelist Prototype", **{
@@ -824,10 +824,11 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
      "After a 1.5 second charge, the prongs discharge a resonant beam into the target (2,000 range, 800 energy "
      "damage) and mark it for 8 seconds: all Lattice ships deal +20% damage to it. Overtone: the beam chains to a "
      "second enemy, which is marked as well."),
-    ("rsl_glissando", "Glissando", {"max uses": 2, "regen": 0.1667, "charge up": 0.05, "active": 0.35, "down": 0.1,
+    ("rsl_glissando", "Glissando", {"max uses": 3, "regen": 0.1667, "charge up": 0.05, "active": 0.35, "down": 0.1,
                                     "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "A 600-unit blink-dash in the direction of movement. The ship cannot be hit mid-dash. Costs 1% combat readiness "
+     "A 600-unit blink-dash in the direction of movement; the ship can still turn and thrust, steering the dash. 2 "
+     "charges (3 in Bravura). The ship cannot be hit mid-dash. Costs 1% combat readiness "
      "per dash and cannot be used below 30%. The path stays behind as a taut string for 1.2 seconds - it deletes "
      "enemy projectiles that cross it - then snaps: 400 energy damage to every enemy touching it (fighters and "
      "missiles are destroyed) and 2% CR stolen from each ship hit. For 2 seconds after a dash the Sforzando lances "
@@ -889,12 +890,13 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
      "Theft (not kills) is half as effective when not piloted by the player.", True, (0, 0, 0, 0)),
     ("rsl_bravura", "Bravura", "Bravura",
      "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
-     "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, %s faster system recharge, and the "
-     "Sforzando lances are always Accented. The seams burn gold-white. Locked on the Unsung.", True, (0, 0, 0, 0)),
+     "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to shields, %s faster "
+     "system recharge and %s Glissando charges, EMP damage taken cut to a tenth, and the Sforzando lances are always "
+     "Accented (%s damage). The seams and the shield burn white-gold. Locked on the Unsung.", True, (0, 0, 0, 0)),
     ("rsl_unbound", "Unbound Core", "UnboundCore",
      "The Virtuoso's core can drop its safety tuning, as Safety Overrides does for lesser hulls: +%s top speed, "
      "flux dissipation multiplied by %s, the zero-flux boost at any flux level and no active venting; peak "
-     "performance time is cut to a third and weapons lose range beyond %s. Stolen Time pays the readiness back. "
+     "performance time is cut to a third, but weapon range is untouched. Stolen Time pays the readiness back. "
      "Only the full Virtuoso can install it.", False, (0, 0, 0, 50)),
     ("rsl_phase_locked", "Phase-Locked Petals", "PhaseLockedPetals",
      "When a petal of the array is destroyed, its stored Resonance floods the core and the surviving petals, which "

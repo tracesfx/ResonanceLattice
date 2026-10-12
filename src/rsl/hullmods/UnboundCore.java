@@ -10,15 +10,13 @@ import java.awt.Color;
 
 /**
  * The Virtuoso's "unbound core": vanilla Safety Overrides refuses capitals, so the Virtuoso gets its own copy of
- * the SO effects (values from data/hullmods/SafetyOverrides.java, capital column). Only the full Virtuoso can
- * install it; Stolen Time is what pays for the peak-time cut (DESIGN.md 3.9, "Unique synergy").
+ * the SO effects (values from data/hullmods/SafetyOverrides.java, capital column) without the range penalty.
+ * Only the full Virtuoso can install it; Stolen Time is what pays for the peak-time cut (DESIGN.md 3.9, "Unique synergy").
  */
 public class UnboundCore extends BaseHullMod {
     public static final float SPEED = 15f;
     public static final float FLUX_MULT = 2f;
     public static final float PEAK_MULT = 0.33f;
-    public static final float RANGE_THRESHOLD = 450f;
-    public static final float RANGE_MULT = 0.25f;
     private static final Color ENGINE = new Color(255, 214, 140, 255);
 
     @Override
@@ -30,8 +28,6 @@ public class UnboundCore extends BaseHullMod {
         stats.getFluxDissipation().modifyMult(id, FLUX_MULT);
         stats.getPeakCRDuration().modifyMult(id, PEAK_MULT);
         stats.getVentRateMult().modifyMult(id, 0f);
-        stats.getWeaponRangeThreshold().modifyFlat(id, RANGE_THRESHOLD);
-        stats.getWeaponRangeMultPastThreshold().modifyMult(id, RANGE_MULT);
     }
 
     @Override
@@ -62,8 +58,6 @@ public class UnboundCore extends BaseHullMod {
                 return "" + (int) SPEED;
             case 1:
                 return "" + (int) FLUX_MULT;
-            case 2:
-                return "" + (int) RANGE_THRESHOLD;
             default:
                 return null;
         }

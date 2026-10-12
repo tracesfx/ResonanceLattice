@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Virtuoso (and the Unsung, by system id): a blink-dash of {@link #DISTANCE} units in the direction of movement,
- * untargetable mid-dash, paid for in combat readiness. The path stays behind as the String (see {@link StringFx}):
+ * Virtuoso (and the Unsung, by system id): a steerable blink-dash of {@link #DISTANCE} units in the direction of
+ * movement, untargetable mid-dash, paid for in combat readiness. The path stays behind as the String (see {@link StringFx}):
  * a barrier for projectiles, then a snap that damages everything touching it and steals CR.
  */
 public class GlissandoStats extends BaseShipSystemScript {
@@ -38,8 +38,8 @@ public class GlissandoStats extends BaseShipSystemScript {
     public static final float ACCENT_TIME = 2f;
 
     static class Dash {
-        Vector2f from, to;
-        float t0;
+        Vector2f from, dir;
+        float t0, facing0, done;
         boolean unsung, overtone;
     }
 
@@ -75,10 +75,8 @@ public class GlissandoStats extends BaseShipSystemScript {
                 dir.set((float) Math.cos(r), (float) Math.sin(r));
             }
             dir.normalise();
-            float half = Math.min(engine.getMapWidth(), engine.getMapHeight()) * 0.5f - 300f;
-            dash.to = new Vector2f(dash.from.x + dir.x * DISTANCE, dash.from.y + dir.y * DISTANCE);
-            dash.to.x = Math.max(-engine.getMapWidth() * 0.5f + 300f, Math.min(engine.getMapWidth() * 0.5f - 300f, dash.to.x));
-            dash.to.y = Math.max(-half, Math.min(engine.getMapHeight() * 0.5f - 300f, dash.to.y));
+            dash.dir = dir;
+            dash.facing0 = ship.getFacing();
             dash.t0 = now;
             dash.overtone = !dash.unsung && LatticeData.consumeOvertone(ship);
             d.sysObj = dash;
@@ -89,9 +87,20 @@ public class GlissandoStats extends BaseShipSystemScript {
         }
         if (!(d.sysObj instanceof Dash)) return;
         Dash dash = (Dash) d.sysObj;
+        // The dash is added on top of the ship's own movement, and its heading turns with the ship: the pilot can
+        // steer, turn and thrust during the dash instead of being carried along a fixed line.
         float f = Math.min(1f, (now - dash.t0) / DASH_TIME);
         float e = f * f * (3f - 2f * f);
-        ship.getLocation().set(dash.from.x + (dash.to.x - dash.from.x) * e, dash.from.y + (dash.to.y - dash.from.y) * e);
+        float step = (e - dash.done) * DISTANCE;
+        dash.done = e;
+        double turn = Math.toRadians(ship.getFacing() - dash.facing0);
+        float c = (float) Math.cos(turn), sn = (float) Math.sin(turn);
+        Vector2f loc = ship.getLocation();
+        loc.x += (dash.dir.x * c - dash.dir.y * sn) * step;
+        loc.y += (dash.dir.x * sn + dash.dir.y * c) * step;
+        float hw = engine.getMapWidth() * 0.5f - 300f, hh = engine.getMapHeight() * 0.5f - 300f;
+        loc.x = Math.max(-hw, Math.min(hw, loc.x));
+        loc.y = Math.max(-hh, Math.min(hh, loc.y));
         if (dash.unsung && now - dash.t0 > IFRAMES_UNSUNG) setInvulnerable(stats, id, false);
         if (!engine.isPaused()) {
             engine.addSmoothParticle(new Vector2f(ship.getLocation()), new Vector2f(), ship.getCollisionRadius(), 0.4f,
@@ -122,8 +131,7 @@ public class GlissandoStats extends BaseShipSystemScript {
         if (d.sysObj instanceof Dash) {
             Dash dash = (Dash) d.sysObj;
             ship.setCollisionClass(CollisionClass.SHIP);
-            ship.getLocation().set(dash.to);
-            Vector2f to = new Vector2f(dash.to);
+            Vector2f to = new Vector2f(ship.getLocation());
             Global.getCombatEngine().addPlugin(new StringFx(ship, dash.from, to, dash.unsung, dash.overtone));
             if (dash.overtone && ship.getSystem() != null) refundHalf(ship.getSystem());
         }

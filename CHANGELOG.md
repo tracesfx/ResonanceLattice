@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Virtuoso power pass)
+
+- Virtuoso: max speed 70, acceleration 85, deceleration 75, turn rate 24, turn acceleration 45; shield flux/damage
+  0.5, shield turn and raise rate x2, EMP damage taken -75% (-90% in Bravura).
+- Glissando is steerable: the dash adds to the ship's own movement and its heading turns with the ship.
+- Bravura: +75% flux dissipation, +50% energy rate of fire, +20% damage to shields, +100% system recharge, a 3rd
+  Glissando charge, white-gold shield. Accented Sforzando hits deal +50% damage.
+- Unbound Core: no more range penalty.
+
 ## Unreleased - 2026-10-12 (first in-game feedback)
 
 - Fix: crash in the refit/codex tooltip (`e != java.lang.String`): a bare `100%` in the Stolen Time description.

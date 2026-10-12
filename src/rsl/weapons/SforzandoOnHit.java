@@ -18,13 +18,14 @@ import rsl.combat.RslUtil;
  * <li>+50% damage to fighters and frigates (both lances).</li>
  * <li>Cascade (full Virtuoso): a slug that destroys a fighter or frigate pierces on with 60% damage.</li>
  * <li>Accent (full Virtuoso; for 2 s after a Glissando, above 80% top speed, or in Bravura): a hit on hull pierces
- * as well, and every hit arcs EMP into the nearest other enemy within 250 units.</li>
+ * as well, every hit deals +50% damage, and every hit arcs EMP into the nearest other enemy within 250 units.</li>
  * </ul>
  */
 public class SforzandoOnHit implements OnHitEffectPlugin {
     public static final float SMALL_BONUS = 0.5f;
     public static final float CASCADE_KEEP = 0.6f;
     public static final float ACCENT_ARC_RANGE = 250f;
+    public static final float ACCENT_DAMAGE = 0.5f;
 
     @Override
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
@@ -43,6 +44,10 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
         LatticeData d = LatticeData.get(src);
         boolean accent = d.bravura || RslUtil.now() < d.accentUntil
                 || src.getVelocity().length() > src.getMaxSpeed() * 0.8f;
+        if (accent && !t.isHulk()) {
+            engine.applyDamage(t, point, proj.getDamageAmount() * ACCENT_DAMAGE, DamageType.ENERGY, 0f, false, false,
+                    src, false);
+        }
         boolean killed = t.isHulk() || t.getHitpoints() <= 0f;
         if ((small && killed) || (accent && !shieldHit && !t.isFighter())) {
             PierceOnHit.continueThrough(proj, t, point, CASCADE_KEEP, engine);

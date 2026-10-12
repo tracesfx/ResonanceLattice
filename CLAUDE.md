@@ -79,6 +79,9 @@ feedback.
   farthest opaque pixel incl. decos at rest (`shield_fit` in gen_data), keyed MagicUI bar (keyless call keys by
   label), glow drawn in BELOW_PHASED_SHIPS_LAYER, Cantor `STATION_SCALE` 1.45 (= vanilla station2 footprint).
   Hullmod `desc` is run through String.format: a literal % must be `%%` (a bare `100% e` crashed the refit).
+- **Virtuoso power pass (2026-10-12, user: "far weaker than the player Ziggurat")**: see CHANGELOG. Glissando
+  .system has 3 uses; `Bravura.holdCharges` holds the 3rd back outside Bravura. Virtuoso base shield/EMP tuning lives
+  in `Bravura.applyEffectsBeforeShipCreation` (hull-id gated). Unbound Core has no range penalty.
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started

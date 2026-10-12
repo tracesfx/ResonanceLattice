@@ -6,6 +6,6 @@ Crescendo,rsl_crescendo,,,,,,,,,,0.5,6,0.5,14,,,,,,,,,,,,,graphics/rsl/icons/hul
 Standing Wave,rsl_standingwave,,,,,,,,,,0.1,,0.2,12,TRUE,,,,,,,,,,,,graphics/rsl/icons/hullsys/rsl_standingwave.png
 Stillwater Halo,rsl_stillwater,,,,,,,,,,1,8,1,20,,,,,,,,,,,,,graphics/rsl/icons/hullsys/rsl_stillwater.png
 Sympathetic Strike,rsl_symstrike,,,,1500,,,,,,1.5,0.3,0.5,18,,,,,,,,,,,,,graphics/rsl/icons/hullsys/rsl_symstrike.png
-Glissando,rsl_glissando,,,,,,,,2,0.1667,0.05,0.35,0.1,0.5,,,,,TRUE,,,,,,,,graphics/rsl/icons/hullsys/rsl_glissando.png
+Glissando,rsl_glissando,,,,,,,,3,0.1667,0.05,0.35,0.1,0.5,,,,,TRUE,,,,,,,,graphics/rsl/icons/hullsys/rsl_glissando.png
 Glissando (Unsung),rsl_glissando_unsung,,,,,,,,1,0.125,0.05,0.3,0.1,0.5,,,,,TRUE,,,,,,,,graphics/rsl/icons/hullsys/rsl_glissando_unsung.png
 Grand Chorus,rsl_grandchorus,,,,,,,,,,1,0.5,0.5,25,,,,,,,,,,,,,graphics/rsl/icons/hullsys/rsl_grandchorus.png
