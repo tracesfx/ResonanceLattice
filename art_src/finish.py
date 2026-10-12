@@ -56,6 +56,7 @@ PAINT = {
     "navy": (0.13, 0.19, 0.33), "blue": (0.22, 0.32, 0.52), "white": (0.95, 0.96, 0.97),
     "steel_light": (0.80, 0.82, 0.85), "steel_dark": (0.44, 0.47, 0.51), "gunmetal": (0.25, 0.27, 0.30),
     "black": (0.10, 0.11, 0.12),
+    "gold": (0.86, 0.68, 0.34),          # Virtuoso edge accents only (user, 2026-10-11); always pass protect=True
 }
 MAT_PLATE, MAT_SLATE = 2, 7
 

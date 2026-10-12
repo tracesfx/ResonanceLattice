@@ -39,6 +39,9 @@ feedback.
   extending wider and the stem base sharper/longer; size "compact"; livery "Sash"; Unsung AFTER the Virtuoso is
   approved. Sheet `art_src/review/virtuoso_v1.png` (incl. Bravura gold), all hulls: `sheet_v5.png`.
   Generator `art_src/gen/gen_virtuoso.py` (hull + `rsl_virtuoso_vane_r` + `_l` mirror).
+- Virtuoso v1 feedback: silhouette "decent"; repeated grey chevron tone pattern not good (variety + intricacy);
+  add gold accents on parts of the edge; the dual Sforzando mounts are its identity — work them into the seams;
+  wings slightly wider. → **v2 (awaiting feedback):** `virtuoso_v2.png`, all hulls `sheet_v6.png`.
 - Next, in order: Virtuoso feedback → Unsung skin → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
@@ -57,7 +60,8 @@ shreds frigate/fighter swarms. Quest not designed yet.
 
 ## STANDING ART DIRECTION (all user feedback so far — follow on every hull)
 1. **Colours: clean stainless steel + dark blue + teal seams. NO YELLOW anywhere** (paint, markings; it read as
-   caution tape). Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
+   caution tape). Exception (user, 2026-10-11): **gold edge accents on the Virtuoso only** (paint `gold`, always
+   `protect: True`, set ~1.5 px inside the edge or the ink/rim eats it). Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
    legacy: bright steel / brushed mid steel / gunmetal).
 2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
    splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
@@ -172,8 +176,12 @@ shreds frigate/fighter swarms. Quest not designed yet.
   spike. **Sash livery = seams:** one navy ribbon (needle → spine → splits at the core → both wings → onto the vanes;
   narrow arm down the stern to the spike tip); its edges are the main conduits (2 continuous runs per side:
   `SASH_OUT`, `SASH_IN`, no branching); the biggest cells sit inside it, slanted with it (kit does NOT mirror
-  `slant`: emit explicit L/R cells). Steel tone splinter (tones only, no paint) parallel to the sash at angle -30.3.
-  Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
+  `slant`: emit explicit L/R cells). v2: wings stretched outboard of x=30 by 1.1 (`SX`), W 248, mass 33,249; the
+  OUTER seam wraps each Sforzando mount in a glowing ring (spine → 45° → ring over the front/outside → 45° → spine
+  → wing; still one run) and the sash reaches each gun as a lobe; hexagonal mount housings. Livery per region:
+  wing roots tone bands across the sweep, mid wings 2 navy pinstripes along the leading edge + gold edge trim,
+  guard navy band + gold quillon edge, waist horizontal tone ladder, sponsons steep tone bands, gold on needle
+  chamfers / wing + notch teeth / spike tip / vane outer edges. Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
   `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (gold 255,200,110); preview shows a "bravura" column.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 

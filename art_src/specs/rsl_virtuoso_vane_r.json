@@ -248,6 +248,28 @@
    "a1": 0.5,
    "sym": false,
    "mirror": false
+  },
+  {
+   "type": "band",
+   "pts": [
+    [
+     -4.4,
+     44.0
+    ],
+    [
+     -3.8,
+     14.0
+    ]
+   ],
+   "w": 1.5,
+   "color": "gold",
+   "on": [
+    2,
+    7
+   ],
+   "protect": true,
+   "sym": false,
+   "mirror": false
   }
  ],
  "bravura_glow": true
