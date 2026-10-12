@@ -1,0 +1,173 @@
+{
+  "bounds": [
+    160.0,
+    24.0,
+    160.0,
+    -24.0,
+    89.0,
+    -40.0,
+    101.0,
+    -57.0,
+    81.0,
+    -54.0,
+    96.0,
+    -113.0,
+    51.0,
+    -139.0,
+    9.0,
+    -99.0,
+    1.0,
+    -116.0,
+    -12.0,
+    -103.0,
+    -46.0,
+    -140.0,
+    -54.0,
+    -137.0,
+    -98.0,
+    -111.0,
+    -81.0,
+    -57.0,
+    -101.0,
+    -59.0,
+    -89.0,
+    -40.0,
+    -160.0,
+    -24.0,
+    -160.0,
+    24.0,
+    -89.0,
+    40.0,
+    -101.0,
+    59.0,
+    -81.0,
+    57.0,
+    -98.0,
+    111.0,
+    -48.0,
+    140.0,
+    -12.0,
+    103.0,
+    1.0,
+    116.0,
+    5.0,
+    99.0,
+    55.0,
+    137.0,
+    96.0,
+    113.0,
+    81.0,
+    54.0,
+    101.0,
+    57.0,
+    89.0,
+    40.0
+  ],
+  "builtInMods": [],
+  "center": [
+    180.0,
+    180.0
+  ],
+  "collisionRadius": 198,
+  "coversColor": "",
+  "engineSlots": [],
+  "height": 360,
+  "hullId": "rsl_cantor",
+  "hullName": "Cantor Array",
+  "hullSize": "CAPITAL_SHIP",
+  "shieldCenter": [
+    0.0,
+    0
+  ],
+  "shieldRadius": 164,
+  "spriteName": "graphics/rsl/ships/rsl_cantor.png",
+  "style": "MIDLINE",
+  "viewOffset": 0,
+  "weaponSlots": [
+    {
+      "angle": 60.0,
+      "arc": 0.0,
+      "id": "WS0001",
+      "locations": [
+        70.0,
+        121.2
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": 0.0,
+      "arc": 0.0,
+      "id": "WS0002",
+      "locations": [
+        152.0,
+        0.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": -60.0,
+      "arc": 0.0,
+      "id": "WS0003",
+      "locations": [
+        70.0,
+        -121.2
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": -120.0,
+      "arc": 0.0,
+      "id": "WS0004",
+      "locations": [
+        -70.0,
+        -121.2
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": -180.0,
+      "arc": 0.0,
+      "id": "WS0005",
+      "locations": [
+        -152.0,
+        0.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": -240.0,
+      "arc": 0.0,
+      "id": "WS0006",
+      "locations": [
+        -70.0,
+        121.2
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "STATION_MODULE"
+    },
+    {
+      "angle": 0.0,
+      "arc": 360.0,
+      "id": "WS0007",
+      "locations": [
+        0.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "LARGE",
+      "type": "DECORATIVE"
+    }
+  ],
+  "width": 360
+}

@@ -1,0 +1,163 @@
+{
+  "bounds": [
+    72.0,
+    -47.0,
+    64.0,
+    -52.0,
+    35.0,
+    -52.0,
+    23.0,
+    -66.0,
+    11.0,
+    -68.0,
+    13.0,
+    -54.0,
+    -9.0,
+    -50.0,
+    -17.0,
+    -40.0,
+    -37.0,
+    -41.0,
+    -41.0,
+    -34.0,
+    -57.0,
+    -30.0,
+    -74.0,
+    -35.0,
+    -81.0,
+    -30.0,
+    -81.0,
+    30.0,
+    -72.0,
+    36.0,
+    -57.0,
+    30.0,
+    -41.0,
+    34.0,
+    -37.0,
+    41.0,
+    -17.0,
+    40.0,
+    -9.0,
+    50.0,
+    13.0,
+    54.0,
+    11.0,
+    68.0,
+    23.0,
+    66.0,
+    35.0,
+    52.0,
+    66.0,
+    51.0,
+    72.0,
+    44.0,
+    61.0,
+    35.0,
+    67.0,
+    17.0,
+    63.0,
+    2.0,
+    67.0,
+    -18.0,
+    61.0,
+    -35.0
+  ],
+  "builtInMods": [
+    "hardened_subsystems"
+  ],
+  "center": [
+    70.0,
+    81.0
+  ],
+  "collisionRadius": 107,
+  "coversColor": "",
+  "engineSlots": [],
+  "height": 156,
+  "hullId": "rsl_cantor_loft",
+  "hullName": "Cantor Choir Loft",
+  "hullSize": "CRUISER",
+  "shieldCenter": [
+    -4.5,
+    0
+  ],
+  "shieldRadius": 92,
+  "spriteName": "graphics/rsl/ships/rsl_cantor_loft.png",
+  "style": "MIDLINE",
+  "viewOffset": 0,
+  "weaponSlots": [
+    {
+      "angle": 0.0,
+      "arc": 360.0,
+      "id": "WS0001",
+      "locations": [
+        31.0,
+        -22.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": -0.0,
+      "arc": 360.0,
+      "id": "WS0001R",
+      "locations": [
+        31.0,
+        22.0
+      ],
+      "mount": "HIDDEN",
+      "size": "LARGE",
+      "type": "LAUNCH_BAY"
+    },
+    {
+      "angle": 20.0,
+      "arc": 260.0,
+      "id": "WS0002",
+      "locations": [
+        57.0,
+        -44.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": -20.0,
+      "arc": 260.0,
+      "id": "WS0002R",
+      "locations": [
+        57.0,
+        44.0
+      ],
+      "mount": "TURRET",
+      "size": "SMALL",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 300.0,
+      "id": "WS0003",
+      "locations": [
+        -1.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "ENERGY"
+    },
+    {
+      "angle": 0.0,
+      "arc": 300.0,
+      "id": "WS0004",
+      "locations": [
+        -59.0,
+        0.0
+      ],
+      "mount": "TURRET",
+      "size": "MEDIUM",
+      "type": "HYBRID"
+    }
+  ],
+  "width": 140
+}

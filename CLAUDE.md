@@ -49,7 +49,13 @@ feedback.
   `sheet_v8.png`. **Virtuoso APPROVED (2026-10-11).**
 - **Unsung v1 (awaiting feedback):** user: "not a broken-down Virtuoso but one that feels less upgraded; still
   powerful, significantly weaker". Sheet `art_src/review/unsung_v1.png` (Virtuoso vs Unsung), all `sheet_v9.png`.
-- Next, in order: Unsung feedback → Cantor Array (station last) → data/code stage.
+- Unsung: user "looks fine for now".
+- **Cantor Array v1 (awaiting feedback):** user picked option B "Hexad" of `art_src/review/cantor_options.png`
+  (6 petals, mirror-symmetric) at vanilla scale. Generator `art_src/gen/gen_cantor.py` writes 5 specs: core
+  `rsl_cantor`, ring deco `rsl_cantor_ring`, modules `rsl_cantor_spire` / `_bell` / `_loft`. Composite sheet:
+  `python art_src/station_preview.py art_src/review/cantor_v1.png` (core + ring + modules on their
+  STATION_MODULE slots, glow-on, vanilla station2_hightech core, the 4 big hulls).
+- Next: Cantor feedback → data/code stage.
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
@@ -206,6 +212,16 @@ shreds frigate/fighter swarms. Quest not designed yet.
   navy sash), no vanes/vane slots — each wing ends in a long swept armoured tip blade (`WING_U`, dipped navy), inner
   seam stops at the engines (spike unlit), cells 3 bars (14 px), dimmer seams (`finish` seam_base 0.72 / hot 0.28 /
   halo 0.42), no Bravura glow. Mass 34,018.
+- **Cantor Array v1**: core 360×360 (centre (0,180)): rosette with 6 sockets (Spire at -90/90, Bells at
+  -30/-150, Lofts at 30/150 screen angles), notch teeth between, 12-sector armour annulus, bearing race, dark well with
+  a crystal heart (big diamond node + crystals) feeding each petal through one radial conduit on a navy ribbon; the 4
+  diagonal gap sectors navy, teeth dipped navy. Core slots: 6 `STATION_MODULE` (pos = module root, `module` id,
+  `no_socket`) + ring deco WS0007 at the centre. Ring 444 px, r 197-213, 12 toothed segments, alternate navy.
+  Modules (drawn pointing up = outward, root = bottom edge): Spire 72×236 (stepped spear with glowing spine on a navy
+  ribbon, 2 LARGE energy turrets, bearing collar ~55 px from the root where the ring passes), Bell 128×156 (flared
+  mouth with a glowing rim, 2 M hybrid flak + 4 S PD), Loft 140×156 (deck, 2 HIDDEN LAUNCH_BAY, fins). Module
+  `.ship` files are written by hullgen; moduleAnchor/variants/hints are for the data stage. Weak: still white and
+  plain next to vanilla stations, loft bays read boxy.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 
 ## Theme (summary; details in DESIGN.md)
