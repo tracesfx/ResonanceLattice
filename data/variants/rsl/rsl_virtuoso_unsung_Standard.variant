@@ -18,12 +18,20 @@
             "autofire": false,
             "mode": "LINKED",
             "weapons": {
+                "WS0001": "rsl_sforzando_untuned",
+                "WS0001R": "rsl_sforzando_untuned"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
                 "WS0002": "rsl_arpeggio",
                 "WS0002R": "rsl_arpeggio"
             }
         },
         {
-            "autofire": false,
+            "autofire": true,
             "mode": "LINKED",
             "weapons": {
                 "WS0003": "rsl_flechette",

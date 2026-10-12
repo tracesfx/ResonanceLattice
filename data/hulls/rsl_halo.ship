@@ -153,7 +153,7 @@
         20.0,
         0
     ],
-    "shieldRadius": 202,
+    "shieldRadius": 219,
     "spriteName": "graphics/rsl/ships/rsl_halo.png",
     "style": "RSL",
     "viewOffset": 0,

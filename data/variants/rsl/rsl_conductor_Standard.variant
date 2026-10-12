@@ -19,12 +19,19 @@
             "autofire": false,
             "mode": "LINKED",
             "weapons": {
+                "WS0001": "rsl_harmonic_spinal"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
                 "WS0002": "rsl_harmonic_driver",
                 "WS0002R": "rsl_harmonic_driver"
             }
         },
         {
-            "autofire": false,
+            "autofire": true,
             "mode": "LINKED",
             "weapons": {
                 "WS0007": "rsl_sostenuto"
@@ -59,13 +66,7 @@
             "mode": "LINKED",
             "weapons": {
                 "WS0005": "rsl_cantus",
-                "WS0005R": "rsl_cantus"
-            }
-        },
-        {
-            "autofire": true,
-            "mode": "LINKED",
-            "weapons": {
+                "WS0005R": "rsl_cantus",
                 "WS0008": "rsl_chime",
                 "WS0008R": "rsl_chime",
                 "WS0009": "rsl_tuningspike",

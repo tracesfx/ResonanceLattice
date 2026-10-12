@@ -18,6 +18,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from scale_spec import walk  # noqa: E402
 
 SCALE = 1.0
+# Whole-station scale applied to every spec at the end (user, 2026-10-12: "same size as a low-tech battle station").
+# Vanilla station2 (core + modules) reaches ~563 px from its centre; the unscaled array reached ~387 px.
+STATION_SCALE = 1.45
 
 r = lambda v: round(v, 2)
 
@@ -526,4 +529,8 @@ loft = module("rsl_cantor_loft", "Cantor Choir Loft", [140, LOH], LOFT, lo,
 for part in (core["layers"], core["details"], core["slots"], core["livery"]):
     walk(part, SCALE)
 for spec in (core, ring, spire, bell, loft):
+    for key in ("layers", "details", "slots", "engines", "livery"):
+        walk(spec.get(key, []), STATION_SCALE)
+    w, h = spec["size"]
+    spec["size"] = [2 * int(math.ceil(w * STATION_SCALE / 2)), int(math.ceil(h * STATION_SCALE))]
     dump(spec, OUT)

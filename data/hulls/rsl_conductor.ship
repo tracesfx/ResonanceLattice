@@ -175,7 +175,7 @@
         21.0,
         0
     ],
-    "shieldRadius": 241,
+    "shieldRadius": 263,
     "spriteName": "graphics/rsl/ships/rsl_conductor.png",
     "style": "RSL",
     "viewOffset": 0,
@@ -190,7 +190,7 @@
             ],
             "mount": "HARDPOINT",
             "size": "LARGE",
-            "type": "ENERGY"
+            "type": "BUILT_IN"
         },
         {
             "angle": 20.0,
@@ -380,7 +380,7 @@
                 109.2,
                 -22.5
             ],
-            "mount": "HARDPOINT",
+            "mount": "TURRET",
             "size": "MEDIUM",
             "type": "DECORATIVE"
         },
@@ -392,7 +392,7 @@
                 109.2,
                 22.5
             ],
-            "mount": "HARDPOINT",
+            "mount": "TURRET",
             "size": "MEDIUM",
             "type": "DECORATIVE"
         }

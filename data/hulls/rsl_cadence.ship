@@ -134,7 +134,7 @@
         28.5,
         0
     ],
-    "shieldRadius": 160,
+    "shieldRadius": 174,
     "spriteName": "graphics/rsl/ships/rsl_cadence.png",
     "style": "RSL",
     "viewOffset": 0,

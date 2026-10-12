@@ -585,13 +585,55 @@ def ship_files():
         for slot in s["weaponSlots"]:
             if slot["type"] == "DECORATIVE":
                 slot["arc"] = 360.0   # the deco effects set the angle every frame; 360 never clamps it
+                # deco parts pivot about their sprite centre (art + glow renderer); a HARDPOINT mount would draw the
+                # sprite a quarter of its length forward of the slot, detaching it from the hull
+                slot["mount"] = "TURRET"
+            elif slot["id"] in s["builtInWeapons"]:
+                slot["type"] = "BUILT_IN"   # as vanilla (Onslaught TPCs): the weapon cannot be removed in refit
             if slot["type"] == "STATION_MODULE":
                 slot["mount"] = "HARDPOINT"   # as every vanilla station
                 slot["arc"] = 4.0
+        shield_fit(s)
         if hid in ("rsl_cantor_spire", "rsl_cantor_bell", "rsl_cantor_loft"):
             s["moduleAnchor"] = [-float(s["center"][1]), 0.0]   # the module root = the sprite's bottom edge
         write_json(p, s)
     return {hid: sslib.load_loose_json(P("data/hulls/%s.ship" % hid)) for hid in SHIP_IDS}
+
+
+SHIELD_MARGIN = 1.10   # shield radius = 10% beyond the farthest opaque pixel (hull + deco parts at rest)
+
+
+def opaque_points(png):
+    from PIL import Image
+    import numpy as np
+    a = np.asarray(Image.open(P(png)).convert("RGBA"))[..., 3] > 40
+    ys, xs = np.nonzero(a)
+    return xs + 0.5, ys + 0.5, a.shape[1], a.shape[0]
+
+
+def shield_fit(s):
+    """Shield radius from the sprite itself (plus deco parts drawn at their rest angle); collision radius >= it."""
+    import math
+    import numpy as np
+    xs, ys, W, H = opaque_points(s["spriteName"])
+    sx, sy = sslib.image_to_ship(xs, ys, s["center"], H)
+    pts = [(sx, sy)]
+    deco = {sid: wid for sid, wid in s["builtInWeapons"].items() if WPN.get(wid, {}).get("type") == "DECORATIVE"}
+    for slot in s["weaponSlots"]:
+        wid = deco.get(slot["id"])
+        if not wid:
+            continue
+        u, v, w, h = opaque_points(WPN[wid]["turretSprite"])
+        fwd, left = h / 2.0 - v, w / 2.0 - u
+        a = math.radians(slot["angle"])
+        lx, ly = slot["locations"][0], slot["locations"][1]
+        pts.append((lx + fwd * math.cos(a) - left * math.sin(a), ly + fwd * math.sin(a) + left * math.cos(a)))
+    px = np.concatenate([p[0] for p in pts])
+    py = np.concatenate([p[1] for p in pts])
+    cx = float(s["shieldCenter"][0])
+    r = float(np.max(np.hypot(px - cx, py - float(s["shieldCenter"][1]))))
+    s["shieldRadius"] = int(math.ceil(r * SHIELD_MARGIN))
+    s["collisionRadius"] = max(int(s["collisionRadius"]), s["shieldRadius"])
 
 
 # ===================================================================================================== variants
@@ -700,9 +742,10 @@ def variants(ships):
         vents = min(MAXVC[size], free)
         caps = min(MAXVC[size], free - vents)
         groups, by = [], {}
-        for sid, wid in fit.items():
+        built = {sid: wid for sid, wid in BUILTIN_WEAPONS.get(hid, {}).items() if WPN[wid]["type"] != "DECORATIVE"}
+        for sid, wid in list(built.items()) + list(fit.items()):
             by.setdefault(wid, {})[sid] = wid
-        order = sorted(by, key=lambda w: (WPN[w]["type"] == "MISSILE", "PD" in WEAPONS_BY_ID[w]["hints"], -OP[w]))
+        order = sorted(by, key=lambda w: (w not in built.values(), WPN[w]["type"] == "MISSILE", "PD" in WEAPONS_BY_ID[w]["hints"], -OP[w]))
         for i, wid in enumerate(order[:7]):
             pd = "PD" in WEAPONS_BY_ID[wid]["hints"]
             groups.append({"autofire": pd or i >= 2, "mode": "LINKED", "weapons": by[wid]})
@@ -784,7 +827,7 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
     ("rsl_glissando", "Glissando", {"max uses": 2, "regen": 0.1667, "charge up": 0.05, "active": 0.35, "down": 0.1,
                                     "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "A 600-unit blink-dash in the direction of movement. The ship cannot be hit mid-dash. Costs 2% combat readiness "
+     "A 600-unit blink-dash in the direction of movement. The ship cannot be hit mid-dash. Costs 1% combat readiness "
      "per dash and cannot be used below 30%. The path stays behind as a taut string for 1.2 seconds - it deletes "
      "enemy projectiles that cross it - then snaps: 400 energy damage to every enemy touching it (fighters and "
      "missiles are destroyed) and 2% CR stolen from each ship hit. For 2 seconds after a dash the Sforzando lances "
@@ -792,7 +835,7 @@ SYSTEMS = [  # id, name, csv overrides, .system extras, description
     ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 1, "regen": 0.125, "charge up": 0.05, "active": 0.3,
                                                     "down": 0.1, "cooldown": 0.5, "noFiring": "TRUE"},
      {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
-     "An untuned blink-dash: 1 charge, 3% combat readiness per dash, untargetable for 0.2 seconds. The string it "
+     "An untuned blink-dash: 1 charge, 1.5% combat readiness per dash, untargetable for 0.2 seconds. The string it "
      "leaves blocks projectiles for 1.2 seconds but never snaps."),
     ("rsl_grandchorus", "Grand Chorus", {"charge up": 1, "active": 0.5, "down": 0.5, "cooldown": 25},
      {"aiType": "CUSTOM", "aiScript": SYS + "GrandChorusAI", "useSound": "tachyon_lance_fire"},
@@ -841,8 +884,9 @@ HULLMODS = [  # id, name, script, desc, hidden, costs, tags
     ("rsl_stolen_time", "Stolen Time", "StolenTime",
      "Hull and armor damage this ship deals to enemy ships steals combat readiness: about %s CR per %s damage "
      "(scaled by target size), which the target loses and this ship gains. At most %s can be taken from any one "
-     "ship. On the Virtuoso, CR stolen while already at 100% extends peak performance time instead (%s per 1%%). "
-     "Half as effective when not piloted by the player.", True, (0, 0, 0, 0)),
+     "ship. Destroying an enemy ship restores a large amount of CR at once: %s for a frigate up to %s for a capital. "
+     "On the Virtuoso, CR gained while already at 100%% extends peak performance time instead (%s per 1%%). "
+     "Theft (not kills) is half as effective when not piloted by the player.", True, (0, 0, 0, 0)),
     ("rsl_bravura", "Bravura", "Bravura",
      "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
      "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, %s faster system recharge, and the "

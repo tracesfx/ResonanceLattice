@@ -45,6 +45,11 @@ public class RslDamageListener implements DamageListener {
             if (body > 0f && !t.isFighter() && RslUtil.hasMod(src, RslIds.HULLMOD_STOLEN_TIME)) {
                 StolenTime.steal(src, t, body);
             }
+            if (!t.isFighter() && (t.getHitpoints() <= 0f || t.isHulk())
+                    && RslUtil.hasMod(src, RslIds.HULLMOD_STOLEN_TIME) && t.getCustomData().get(RslIds.KEY_KILL_CR) == null) {
+                t.setCustomData(RslIds.KEY_KILL_CR, Boolean.TRUE);
+                StolenTime.onKill(src, t);
+            }
             boolean energy = RslUtil.isEnergyWeaponHit(source);
             if (energy && (shield > 0f || body > 0f)) {
                 RslCombatPlugin p = RslCombatPlugin.get();

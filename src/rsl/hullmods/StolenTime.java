@@ -22,6 +22,11 @@ public class StolenTime extends BaseHullMod {
     public static final float PEAK_SECONDS_PER_PERCENT = 4f;
     public static final float AI_MULT = 0.5f;
     public static final String MOD_ID = "rsl_stolen_time";
+    /** CR restored for destroying a frigate / destroyer / cruiser / capital (not capped per target). */
+    public static final float KILL_CR_FRIGATE = 0.05f;
+    public static final float KILL_CR_DESTROYER = 0.08f;
+    public static final float KILL_CR_CRUISER = 0.12f;
+    public static final float KILL_CR_CAPITAL = 0.18f;
 
     public static boolean isFull(ShipAPI ship) {
         return RslIds.HULL_VIRTUOSO.equals(ship.getHullSpec().getHullId());
@@ -43,7 +48,34 @@ public class StolenTime extends BaseHullMod {
         if (amount <= 0f) return;
         target.setCustomData(RslIds.KEY_STOLEN, taken + amount);
         target.setCurrentCR(target.getCurrentCR() - amount);
+        give(ship, amount);
+        // a violet wisp from the victim to the thief
+        if (Math.random() < 0.35) wisp(ship, target, 22f);
+    }
 
+    /** Called once when this ship lands the killing blow on an enemy ship (not fighters). */
+    public static void onKill(ShipAPI ship, ShipAPI target) {
+        if (ship == null || target == null || target.isFighter() || !RslUtil.isEnemy(ship, target)) return;
+        float amount;
+        switch (target.getHullSize()) {
+            case CAPITAL_SHIP:
+                amount = KILL_CR_CAPITAL;
+                break;
+            case CRUISER:
+                amount = KILL_CR_CRUISER;
+                break;
+            case DESTROYER:
+                amount = KILL_CR_DESTROYER;
+                break;
+            default:
+                amount = KILL_CR_FRIGATE;
+        }
+        give(ship, amount);
+        for (int i = 0; i < 6; i++) wisp(ship, target, 40f);
+    }
+
+    /** Adds CR up to the cap; on the full Virtuoso the overflow extends peak performance time. */
+    private static void give(ShipAPI ship, float amount) {
         float cap = isFull(ship) ? 1f : Math.max(ship.getCRAtDeployment(), 0.7f);
         float cr = ship.getCurrentCR();
         float room = Math.max(0f, cap - cr);
@@ -55,14 +87,14 @@ public class StolenTime extends BaseHullMod {
             d.peakBonus += overflow * 100f * PEAK_SECONDS_PER_PERCENT;
             ship.getMutableStats().getPeakCRDuration().modifyFlat(MOD_ID, d.peakBonus);
         }
-        // a violet wisp from the victim to the thief
-        CombatEngineAPI engine = Global.getCombatEngine();
-        if (Math.random() < 0.35) {
-            Vector2f vel = new Vector2f(ship.getLocation().x - target.getLocation().x,
-                    ship.getLocation().y - target.getLocation().y);
-            vel.scale(0.9f);
-            engine.addSmoothParticle(new Vector2f(target.getLocation()), vel, 22f, 0.9f, 1.1f, RslUtil.VIOLET);
-        }
+    }
+
+    private static void wisp(ShipAPI ship, ShipAPI target, float size) {
+        Vector2f vel = new Vector2f(ship.getLocation().x - target.getLocation().x,
+                ship.getLocation().y - target.getLocation().y);
+        vel.scale(0.6f + 0.4f * (float) Math.random());
+        Global.getCombatEngine().addSmoothParticle(new Vector2f(target.getLocation()), vel, size, 0.9f, 1.1f,
+                RslUtil.VIOLET);
     }
 
     @Override
@@ -75,6 +107,10 @@ public class StolenTime extends BaseHullMod {
             case 2:
                 return (int) (CAP_PER_TARGET * 100f) + "%";
             case 3:
+                return (int) (KILL_CR_FRIGATE * 100f) + "%";
+            case 4:
+                return (int) (KILL_CR_CAPITAL * 100f) + "%";
+            case 5:
                 return (int) PEAK_SECONDS_PER_PERCENT + " seconds";
             default:
                 return null;

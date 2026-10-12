@@ -59,6 +59,7 @@ public final class RslIds {
     public static final String KEY_DATA = "rsl_lattice_data";
     public static final String KEY_MARK_UNTIL = "rsl_mark_until";
     public static final String KEY_STOLEN = "rsl_stolen_total";
+    public static final String KEY_KILL_CR = "rsl_kill_cr_paid";
     public static final String KEY_FRACTURE = "rsl_fracture";
     public static final String KEY_ENGINE_STATE = "rsl_engine_state";
     public static final String KEY_PIERCED = "rsl_pierced";

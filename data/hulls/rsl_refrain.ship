@@ -69,7 +69,7 @@
         53.0,
         73.0
     ],
-    "collisionRadius": 107,
+    "collisionRadius": 117,
     "coversColor": "",
     "engineSlots": [
         {
@@ -125,7 +125,7 @@
         7.5,
         0
     ],
-    "shieldRadius": 83,
+    "shieldRadius": 117,
     "spriteName": "graphics/rsl/ships/rsl_refrain.png",
     "style": "RSL",
     "viewOffset": 0,
@@ -234,7 +234,7 @@
                 29.5,
                 -41.0
             ],
-            "mount": "HARDPOINT",
+            "mount": "TURRET",
             "size": "MEDIUM",
             "type": "DECORATIVE"
         },
@@ -246,7 +246,7 @@
                 29.5,
                 41.0
             ],
-            "mount": "HARDPOINT",
+            "mount": "TURRET",
             "size": "MEDIUM",
             "type": "DECORATIVE"
         }

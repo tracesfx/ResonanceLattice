@@ -21,6 +21,8 @@ import java.awt.Color;
  * per-ship damage modifier. Safety Overrides "detunes" the lattice and is removed with a warning.
  */
 public class LatticeCore extends BaseHullMod {
+    /** One keyed bar: the keyless MagicUI call keys bars by label, so the label switch drew a second bar. */
+    private static final String BAR_KEY = "rsl_resonance";
     private static final Color BAR = new Color(100, 230, 220, 255);
     private static final Color BAR_OVERTONE = new Color(180, 150, 255, 255);
     private static final Color BORDER = new Color(60, 140, 140, 255);
@@ -48,7 +50,7 @@ public class LatticeCore extends BaseHullMod {
         }
         if (ship == engine.getPlayerShip()) {
             boolean over = d.resonance >= LatticeData.OVERTONE;
-            MagicUI.drawInterfaceStatusBar(ship, d.resonance / LatticeData.MAX, over ? BAR_OVERTONE : BAR, BORDER,
+            MagicUI.drawInterfaceStatusBar(ship, BAR_KEY, d.resonance / LatticeData.MAX, over ? BAR_OVERTONE : BAR, BORDER,
                     LatticeData.OVERTONE / LatticeData.MAX, over ? "OVERTONE" : "RESONANCE", (int) d.resonance);
         }
     }

@@ -28,9 +28,14 @@ import java.util.Map;
  */
 public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
     private static final Logger log = Global.getLogger(LatticeGlowRenderer.class);
-    private static final EnumSet<CombatEngineLayers> LAYERS = EnumSet.of(CombatEngineLayers.CAPITAL_SHIPS_LAYER,
-            CombatEngineLayers.CRUISERS_LAYER, CombatEngineLayers.DESTROYERS_LAYER, CombatEngineLayers.FRIGATES_LAYER,
-            CombatEngineLayers.STATION_WEAPONS_LAYER, CombatEngineLayers.ABOVE_SHIPS_LAYER);
+    /**
+     * Seams draw in BELOW_PHASED_SHIPS_LAYER, the first layer after every hull layer. Drawn inside a hull's own
+     * layer the glow never showed in game (most likely it was drawn before the hull sprite).
+     */
+    private static final EnumSet<CombatEngineLayers> LAYERS = EnumSet.of(CombatEngineLayers.BELOW_PHASED_SHIPS_LAYER,
+            CombatEngineLayers.ABOVE_SHIPS_LAYER);
+    /** Seam brightness at zero Resonance; full Resonance (or CR on the Virtuoso) adds the rest. */
+    private static final float BASE_ALPHA = 0.4f;
     private static final Color DISCORD = new Color(255, 120, 255, 255);
 
     private final RslCombatPlugin plugin;
@@ -108,7 +113,7 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
             List<ShipAPI> ships = engine.getShips();
             for (int i = 0; i < ships.size(); i++) {
                 ShipAPI s = ships.get(i);
-                if (!RslUtil.isLattice(s) || s.isHulk() || !matches(s, layer)) continue;
+                if (!RslUtil.isLattice(s) || s.isHulk() || s.isPhased()) continue;
                 if (!viewport.isNearViewport(s.getLocation(), s.getCollisionRadius() + 200f)) continue;
                 renderShip(s, viewport);
             }
@@ -118,23 +123,9 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
         }
     }
 
-    private static boolean matches(ShipAPI s, CombatEngineLayers layer) {
-        if (s.isStationModule() || s.isStation()) return layer == CombatEngineLayers.STATION_WEAPONS_LAYER;
-        switch (s.getHullSize()) {
-            case CAPITAL_SHIP:
-                return layer == CombatEngineLayers.CAPITAL_SHIPS_LAYER;
-            case CRUISER:
-                return layer == CombatEngineLayers.CRUISERS_LAYER;
-            case DESTROYER:
-                return layer == CombatEngineLayers.DESTROYERS_LAYER;
-            default:
-                return layer == CombatEngineLayers.FRIGATES_LAYER;
-        }
-    }
-
     private void renderShip(ShipAPI s, ViewportAPI viewport) {
         LatticeData d = LatticeData.get(s);
-        float alpha = (0.15f + 0.85f * d.glow) * s.getCombinedAlphaMult() * viewport.getAlphaMult();
+        float alpha = (BASE_ALPHA + (1f - BASE_ALPHA) * d.glow) * s.getCombinedAlphaMult() * viewport.getAlphaMult();
         String hullId = s.getHullSpec().getHullId();
         Color tint = d.discord ? DISCORD : Color.WHITE;
         float bl = d.bravuraLevel;

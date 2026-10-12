@@ -31,8 +31,8 @@ import java.util.List;
 public class GlissandoStats extends BaseShipSystemScript {
     public static final float DISTANCE = 600f;
     public static final float DASH_TIME = 0.3f;
-    public static final float CR_COST = 0.02f;
-    public static final float CR_COST_UNSUNG = 0.03f;
+    public static final float CR_COST = 0.01f;
+    public static final float CR_COST_UNSUNG = 0.015f;
     public static final float MIN_CR = 0.30f;
     public static final float IFRAMES_UNSUNG = 0.2f;
     public static final float ACCENT_TIME = 2f;

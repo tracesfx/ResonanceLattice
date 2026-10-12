@@ -74,12 +74,17 @@ feedback.
   `rsl_unbound` (vanilla SO refuses capitals); no custom fighter wing (vanilla wings).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
+- **In-game feedback round 1 (2026-10-12)** fixed (see CHANGELOG): BUILT_IN slots for built-in guns, deco slots
+  forced to TURRET mount (HARDPOINT draws the sprite 1/4 length forward = detached vanes), shield radius = 1.1 x
+  farthest opaque pixel incl. decos at rest (`shield_fit` in gen_data), keyed MagicUI bar (keyless call keys by
+  label), glow drawn in BELOW_PHASED_SHIPS_LAYER, Cantor `STATION_SCALE` 1.45 (= vanilla station2 footprint).
+  Hullmod `desc` is run through String.format: a literal % must be `%%` (a bare `100% e` crashed the refit).
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started
 Two stages: Unsung skin (55 DP, questline start) upgraded via `variant.setHullSpecAPI` to the full Virtuoso (80 DP;
 the user's "OP cost 80" = DP). Power comes from its kit like Ziggurat (user: Ziggurat is strong because of system,
-dissipation, phase, Phase Anchor — not raw stats): Glissando dash (2 charges, i-frames, **costs 2% CR**, leaves
+dissipation, phase, Phase Anchor — not raw stats): Glissando dash (2 charges, i-frames, **costs 1% CR** (user 2026-10-12; kills refund 5-18% CR), leaves
 "the String" that snaps after 1.2 s: line damage + CR drain, blocks projectiles), 1,200 dissipation, SO allowed on a
 capital, Stolen Time (CR theft), Bravura at 100% CR (buffs + **seams cross-fade to gold-white** via a 2nd glow
 sprite — gold glow is fine; the "no yellow" rule is about paint). Sforzando Lance ×2 = semi-rapid railgun TURRETS
