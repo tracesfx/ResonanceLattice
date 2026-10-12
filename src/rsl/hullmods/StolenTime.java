@@ -3,8 +3,9 @@ package rsl.hullmods;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import org.lwjgl.util.vector.Vector2f;
 import rsl.RslIds;
 import rsl.combat.LatticeData;
@@ -27,6 +28,8 @@ public class StolenTime extends BaseHullMod {
     public static final float KILL_CR_DESTROYER = 0.08f;
     public static final float KILL_CR_CRUISER = 0.12f;
     public static final float KILL_CR_CAPITAL = 0.18f;
+    /** Enhanced (story-pointed built-in): theft and kill refunds x this. */
+    public static final float ENHANCED = 1.5f;
 
     public static boolean isFull(ShipAPI ship) {
         return RslIds.HULL_VIRTUOSO.equals(ship.getHullSpec().getHullId());
@@ -38,6 +41,7 @@ public class StolenTime extends BaseHullMod {
         CombatEngineAPI engine = Global.getCombatEngine();
         float amount = damage * CR_PER_DAMAGE * RslUtil.sizeMult(target);
         if (engine.getPlayerShip() != ship) amount *= AI_MULT;
+        if (RslUtil.enhanced(ship, MOD_ID)) amount *= ENHANCED;
         stealAmount(ship, target, amount);
     }
 
@@ -70,6 +74,7 @@ public class StolenTime extends BaseHullMod {
             default:
                 amount = KILL_CR_FRIGATE;
         }
+        if (RslUtil.enhanced(ship, MOD_ID)) amount *= ENHANCED;
         give(ship, amount);
         for (int i = 0; i < 6; i++) wisp(ship, target, 40f);
     }
@@ -98,22 +103,26 @@ public class StolenTime extends BaseHullMod {
     }
 
     @Override
-    public String getDescriptionParam(int index, HullSize hullSize) {
-        switch (index) {
-            case 0:
-                return "1%";
-            case 1:
-                return "600";
-            case 2:
-                return (int) (CAP_PER_TARGET * 100f) + "%";
-            case 3:
-                return (int) (KILL_CR_FRIGATE * 100f) + "%";
-            case 4:
-                return (int) (KILL_CR_CAPITAL * 100f) + "%";
-            case 5:
-                return (int) PEAK_SECONDS_PER_PERCENT + " seconds";
-            default:
-                return null;
-        }
+    public void addPostDescriptionSection(TooltipMakerAPI t, HullSize hullSize, ShipAPI ship, float width,
+                                          boolean isForModSpec) {
+        Tip.section(t, "Theft");
+        Tip.good(t, "Hull and armor damage dealt to enemy ships steals about %s combat readiness per %s damage "
+                + "(scaled by the target's size): the target loses it, this ship gains it.", "1%", "600");
+        Tip.good(t, "At most %s can be taken from any one ship.", Tip.pct(CAP_PER_TARGET));
+        Tip.section(t, "The kill");
+        Tip.good(t, "Destroying an enemy ship restores %s / %s / %s / %s combat readiness at once (frigate to "
+                + "capital).", Tip.pct(KILL_CR_FRIGATE), Tip.pct(KILL_CR_DESTROYER), Tip.pct(KILL_CR_CRUISER),
+                Tip.pct(KILL_CR_CAPITAL));
+        Tip.good(t, "On the full Virtuoso, CR gained above 100%% extends peak performance time instead (%s per 1%%).",
+                (int) PEAK_SECONDS_PER_PERCENT + " seconds");
+        Tip.badSection(t, "Limits");
+        Tip.bad(t, "Theft (not kill refunds) is %s as effective when the ship is not piloted by the player.",
+                "half");
+        Tip.end(t);
+    }
+
+    @Override
+    public String getSModDescriptionParam(int index, HullSize hullSize) {
+        return index == 0 ? Tip.pct(ENHANCED - 1f) : null;
     }
 }

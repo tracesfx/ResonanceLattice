@@ -4,8 +4,9 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import rsl.combat.LatticeData;
 import rsl.combat.RslUtil;
 
@@ -53,7 +54,12 @@ public class PhaseLockedPetals extends BaseHullMod {
     }
 
     @Override
-    public String getDescriptionParam(int index, HullSize hullSize) {
-        return index == 0 ? (int) DAMAGE_BONUS + "%" : null;
+    public void addPostDescriptionSection(TooltipMakerAPI t, HullSize hullSize, ShipAPI ship, float width,
+                                          boolean isForModSpec) {
+        Tip.section(t, "When a petal falls");
+        Tip.good(t, "Its stored Resonance floods the core and every surviving petal: they jump straight to %s.",
+                "Overtone");
+        Tip.good(t, "Survivors gain %s weapon damage for the rest of the battle.", (int) DAMAGE_BONUS + "%");
+        Tip.end(t);
     }
 }

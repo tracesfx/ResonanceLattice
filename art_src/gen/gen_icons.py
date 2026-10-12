@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""gen_icons.py - ship-system icons (64x64), hullmod icons (32x32) and the faction crest/flag, in the hull palette:
+"""gen_icons.py - ship-system icons (64x64) and the faction crest/flag (hullmod icons: gen_hullmod_icons.py), in the hull palette:
 an angular steel frame, a navy field and a teal glyph that names the mechanic (fork, wave, ring, string, ...).
 
     python art_src/gen/gen_icons.py
@@ -134,15 +134,7 @@ def save(im, rel):
 def main():
     for sid, g in SYSTEMS.items():
         save(icon(64, g, VIOLET if sid == "rsl_glissando_unsung" else TEAL), "graphics/rsl/icons/hullsys/%s.png" % sid)
-    for hid, g in HULLMODS.items():
-        save(icon(32, g, (235, 255, 252) if hid == "rsl_concert_pitch" else TEAL),
-             "graphics/rsl/icons/hullmods/%s.png" % hid)
-    for hid, g in LOCKED.items():
-        im = icon(32 * SS, g, (120, 126, 134)).convert("RGBA")
-        d = ImageDraw.Draw(im)
-        n = 32 * SS
-        d.line([(n * 0.18, n * 0.82), (n * 0.82, n * 0.18)], fill=(200, 60, 60, 255), width=int(n * 0.09))
-        save(im.resize((32, 32), Image.LANCZOS), "graphics/rsl/icons/hullmods/%s.png" % hid)
+    # hullmod icons: art_src/gen/gen_hullmod_icons.py (vanilla-style painted close-ups)
     # faction crest (256) and flag (410x256)
     crest = icon(256, "chorus")
     save(crest, "graphics/rsl/factions/rsl_crest.png")

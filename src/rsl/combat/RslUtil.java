@@ -57,6 +57,16 @@ public final class RslUtil {
         return ship != null && ship.getVariant() != null && ship.getVariant().hasHullMod(mod);
     }
 
+    /** A built-in hullmod "enhanced" with a story point (the strongest S-mod tier). */
+    public static boolean enhanced(ShipAPI ship, String mod) {
+        return ship != null && ship.getVariant() != null && ship.getVariant().getSModdedBuiltIns().contains(mod);
+    }
+
+    /** A hullmod installed and then built in with a story point (not a hull built-in). */
+    public static boolean sModded(ShipAPI ship, String mod) {
+        return ship != null && ship.getVariant() != null && ship.getVariant().getSMods().contains(mod);
+    }
+
     public static boolean isLattice(ShipAPI ship) {
         return hasMod(ship, RslIds.HULLMOD_CORE);
     }

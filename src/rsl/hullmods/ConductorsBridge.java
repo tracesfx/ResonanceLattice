@@ -3,8 +3,9 @@ package rsl.hullmods;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import rsl.combat.LatticeData;
 import rsl.combat.RslUtil;
 
@@ -21,7 +22,8 @@ public class ConductorsBridge extends BaseHullMod {
     public void advanceInCombat(ShipAPI ship, float amount) {
         CombatEngineAPI engine = Global.getCombatEngine();
         if (engine == null || engine.isPaused() || !ship.isAlive()) return;
-        float r2 = LatticeData.BRIDGE_RANGE * LatticeData.BRIDGE_RANGE;
+        float range = LatticeData.bridgeRange(ship);
+        float r2 = range * range;
         List<ShipAPI> ships = engine.getShips();
         for (int i = 0; i < ships.size(); i++) {
             ShipAPI s = ships.get(i);
@@ -36,10 +38,18 @@ public class ConductorsBridge extends BaseHullMod {
     }
 
     @Override
-    public String getDescriptionParam(int index, HullSize hullSize) {
-        if (index == 0) return "" + (int) LatticeData.BRIDGE_RANGE;
-        if (index == 1) return (int) (LatticeData.BRIDGE_SHARE * 100f) + "%";
-        if (index == 2) return "" + TRICKLE;
-        return null;
+    public void addPostDescriptionSection(TooltipMakerAPI t, HullSize hullSize, ShipAPI ship, float width,
+                                          boolean isForModSpec) {
+        Tip.section(t, "The chorus follows");
+        Tip.good(t, "Lattice allies within %s units receive %s of the Resonance this ship gains (instead of the "
+                + "usual %s within %s).", "" + (int) LatticeData.BRIDGE_RANGE, Tip.pct(LatticeData.BRIDGE_SHARE),
+                Tip.pct(LatticeData.SYMPATHY_SHARE), "" + (int) LatticeData.SYMPATHY_RANGE);
+        Tip.good(t, "They also gain %s Resonance per second while in range.", "" + TRICKLE);
+        Tip.end(t);
+    }
+
+    @Override
+    public String getSModDescriptionParam(int index, HullSize hullSize) {
+        return index == 0 ? "" + (int) (LatticeData.BRIDGE_RANGE * LatticeData.ENHANCED_BRIDGE_RANGE) : null;
     }
 }

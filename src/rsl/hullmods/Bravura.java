@@ -5,11 +5,13 @@ import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShieldAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipSystemAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import rsl.RslIds;
 import rsl.combat.LatticeData;
+import rsl.combat.RslUtil;
 import rsl.weapons.SforzandoOnHit;
 
 import java.awt.Color;
@@ -25,6 +27,9 @@ import java.awt.Color;
 public class Bravura extends BaseHullMod {
     public static final float ENTER = 0.995f;
     public static final float EXIT = 0.92f;
+    /** Enhanced (story-pointed built-in): Bravura starts and ends lower. */
+    public static final float ENTER_ENHANCED = 0.95f;
+    public static final float EXIT_ENHANCED = 0.87f;
     public static final float SPEED = 20f;
     public static final float FLUX = 75f;
     public static final float ROF = 50f;
@@ -58,8 +63,9 @@ public class Bravura extends BaseHullMod {
         if (engine == null || !ship.isAlive() || !StolenTime.isFull(ship)) return;
         LatticeData d = LatticeData.get(ship);
         float cr = ship.getCurrentCR();
-        if (!d.bravura && cr >= ENTER) d.bravura = true;
-        else if (d.bravura && cr < EXIT) d.bravura = false;
+        boolean enh = RslUtil.enhanced(ship, ID);
+        if (!d.bravura && cr >= (enh ? ENTER_ENHANCED : ENTER)) d.bravura = true;
+        else if (d.bravura && cr < (enh ? EXIT_ENHANCED : EXIT)) d.bravura = false;
         MutableShipStatsAPI s = ship.getMutableStats();
         if (d.bravura) {
             s.getMaxSpeed().modifyPercent(ID, SPEED);
@@ -124,31 +130,36 @@ public class Bravura extends BaseHullMod {
     }
 
     @Override
-    public String getDescriptionParam(int index, HullSize hullSize) {
-        switch (index) {
-            case 0:
-                return "100%";
-            case 1:
-                return (int) (EXIT * 100f) + "%";
-            case 2:
-                return (int) SPEED + "%";
-            case 3:
-                return (int) FLUX + "%";
-            case 4:
-                return (int) ROF + "%";
-            case 5:
-                return (int) SHIELD_DAMAGE + "%";
-            case 6:
-                return (int) SYSTEM_REGEN + "%";
-            case 7:
-                return "" + CHARGES;
-            case 8:
-                return "+" + (int) (SforzandoOnHit.ACCENT_DAMAGE * 100f) + "%";
-            case 9:
-                return (HULL_REGEN * 100f) + "%";
-            default:
-                return null;
-        }
+    public void addPostDescriptionSection(TooltipMakerAPI t, HullSize hullSize, ShipAPI ship, float width,
+                                          boolean isForModSpec) {
+        addEffects(t);
+    }
+
+    /** The Bravura effect list (also shown, greyed, by the Unsung's Bravura (Silent)). */
+    static void addEffects(TooltipMakerAPI t) {
+        Tip.section(t, "Entering Bravura");
+        Tip.good(t, "At %s combat readiness; lasts until CR drops below %s.", "100%", Tip.pct(EXIT));
+        Tip.section(t, "In Bravura");
+        Tip.good(t, "%s top speed and maneuverability.", "+" + (int) SPEED + "%");
+        Tip.good(t, "%s flux dissipation, %s energy weapon rate of fire.", "+" + (int) FLUX + "%",
+                "+" + (int) ROF + "%");
+        Tip.good(t, "%s damage to shields.", "+" + (int) SHIELD_DAMAGE + "%");
+        Tip.good(t, "%s faster system recharge, %s Glissando charges.", (int) SYSTEM_REGEN + "%", "" + CHARGES);
+        Tip.good(t, "The Sforzando lances are always Accented: %s damage.",
+                "+" + (int) (SforzandoOnHit.ACCENT_DAMAGE * 100f) + "%");
+        Tip.good(t, "The hull repairs %s of its maximum per second.", Tip.pct(HULL_REGEN));
+        Tip.good(t, "The seams burn gold-white and the shield turns white-teal.");
+        Tip.section(t, "Always (Virtuoso hull)");
+        Tip.good(t, "Shield turn rate %s, shield raise rate %s.", "x" + (int) SHIELD_RATE_MULT,
+                "x" + (int) SHIELD_UNFOLD_MULT);
+        Tip.end(t);
+    }
+
+    @Override
+    public String getSModDescriptionParam(int index, HullSize hullSize) {
+        if (index == 0) return Tip.pct(ENTER_ENHANCED);
+        if (index == 1) return Tip.pct(EXIT_ENHANCED);
+        return null;
     }
 
 }

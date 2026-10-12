@@ -4,8 +4,9 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.CombatEngineAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import org.magiclib.util.MagicIncompatibleHullmods;
 import org.magiclib.util.MagicUI;
 import rsl.RslIds;
@@ -56,19 +57,28 @@ public class LatticeCore extends BaseHullMod {
     }
 
     @Override
-    public String getDescriptionParam(int index, HullSize hullSize) {
-        switch (index) {
-            case 0:
-                return "" + (int) LatticeData.OVERTONE;
-            case 1:
-                return "" + (int) LatticeData.OVERTONE_COST;
-            case 2:
-                return "" + (int) LatticeData.SYMPATHY_RANGE;
-            case 3:
-                return (int) (LatticeData.SYMPATHY_SHARE * 100f) + "%";
-            default:
-                return null;
-        }
+    public void addPostDescriptionSection(TooltipMakerAPI t, HullSize hullSize, ShipAPI ship, float width,
+                                          boolean isForModSpec) {
+        Tip.section(t, "Resonance");
+        Tip.good(t, "Builds %s Resonance from damage absorbed by this ship's shields and from its hits on enemy hull "
+                + "and armor.", "0-100");
+        Tip.good(t, "Decays by %s per second after %s seconds without any gain.",
+                "" + (int) LatticeData.DECAY_PER_SEC, "" + (int) LatticeData.DECAY_DELAY);
+        Tip.good(t, "The seams glow brighter as Resonance rises.");
+        Tip.section(t, "Overtone");
+        Tip.good(t, "At %s Resonance or more, the next ship-system use is empowered (see the system's description) "
+                + "and spends %s.", "" + (int) LatticeData.OVERTONE, "" + (int) LatticeData.OVERTONE_COST);
+        Tip.section(t, "Sympathy");
+        Tip.good(t, "Lattice allies within %s units receive %s of the Resonance this ship gains.",
+                "" + (int) LatticeData.SYMPATHY_RANGE, Tip.pct(LatticeData.SYMPATHY_SHARE));
+        Tip.badSection(t, "Incompatible");
+        Tip.bad(t, "%s detunes the lattice and is removed.", "Safety Overrides");
+        Tip.end(t);
+    }
+
+    @Override
+    public String getSModDescriptionParam(int index, HullSize hullSize) {
+        return index == 0 ? Tip.pct(LatticeData.ENHANCED_GAIN - 1f) : null;
     }
 
     @Override

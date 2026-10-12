@@ -23,6 +23,9 @@ public class LatticeData {
     public static final float BRIDGE_SHARE = 0.30f;
     public static final float DECAY_DELAY = 5f;
     public static final float DECAY_PER_SEC = 3f;
+    /** Enhanced (story-pointed) built-ins: Lattice Core gain and Conductor's Bridge range multipliers. */
+    public static final float ENHANCED_GAIN = 1.5f;
+    public static final float ENHANCED_BRIDGE_RANGE = 1.5f;
 
     public float resonance;
     public float sinceGain = 99f;
@@ -73,6 +76,7 @@ public class LatticeData {
     /** Adds Resonance to a Lattice ship and, if {@code share}, Sympathy to Lattice allies in range. */
     public static void gain(ShipAPI ship, float amount, boolean share) {
         if (ship == null || amount <= 0f || !RslUtil.isLattice(ship)) return;
+        if (RslUtil.enhanced(ship, RslIds.HULLMOD_CORE)) amount *= ENHANCED_GAIN;
         LatticeData d = get(ship);
         d.resonance = Math.min(MAX, d.resonance + amount);
         d.sinceGain = 0f;
@@ -80,7 +84,7 @@ public class LatticeData {
         CombatEngineAPI e = RslUtil.engine();
         if (e == null) return;
         boolean bridge = RslUtil.hasMod(ship, RslIds.HULLMOD_BRIDGE);
-        float range = bridge ? BRIDGE_RANGE : SYMPATHY_RANGE;
+        float range = bridge ? bridgeRange(ship) : SYMPATHY_RANGE;
         float share2 = bridge ? BRIDGE_SHARE : SYMPATHY_SHARE;
         List<ShipAPI> ships = e.getShips();
         for (int i = 0; i < ships.size(); i++) {
@@ -93,6 +97,10 @@ public class LatticeData {
             LatticeData o = get(s);
             o.resonance = Math.min(MAX, o.resonance + amount * share2);
         }
+    }
+
+    public static float bridgeRange(ShipAPI ship) {
+        return BRIDGE_RANGE * (RslUtil.enhanced(ship, RslIds.HULLMOD_BRIDGE) ? ENHANCED_BRIDGE_RANGE : 1f);
     }
 
     /** True (and spends the charge) when the ship is in Overtone. Call once per system use. */

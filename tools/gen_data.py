@@ -612,6 +612,33 @@ HULL_DESC = {
 }
 
 
+# Second paragraph of each ship description: what it does in battle (system + built-in hullmods), in plain words.
+HULL_ROLE = {
+    "rsl_gracenote": "In battle: a fast interceptor-frigate. Pitch Shift trades its shield for speed and damage; "
+                     "fit it to hunt frigates and finish cripples.",
+    "rsl_refrain": "In battle: a fleet escort. Sympathetic Ward soaks part of an ally's damage on the Refrain's own "
+                   "shield. Built in: Escort Package.",
+    "rsl_staccato": "In battle: a destroyer striker. Grace Dash in, unload, dash out; Fracture turns sustained hits into "
+                    "armor-shattering bursts. Built in: Fracture, Unstable Injector.",
+    "rsl_cadence": "In battle: the line cruiser. Crescendo rewards keeping its energy guns on target. Built in: "
+                   "Dedicated Targeting Core.",
+    "rsl_tremolo": "In battle: a skirmishing cruiser. Standing Wave lets it commit hard and then snap back to safety, "
+                   "repairing part of what it lost. Built in: Auxiliary Thrusters.",
+    "rsl_halo": "In battle: a carrier that protects itself. Stillwater Halo slows incoming fire around it; Tuned Wings "
+                "speeds up fighter replacement near the ship. Built in: Expanded Deck Crew, Hardened Subsystems.",
+    "rsl_conductor": "In battle: the fleet flagship. Its spinal Harmonic Driver outranges almost anything, and "
+                     "Sympathetic Strike marks a target for every Lattice ship. Conductor's Bridge feeds the whole "
+                     "chorus Resonance. Built in: Stabilized Shields, Operations Center.",
+    "rsl_virtuoso": "In battle: a unique duelist capital. Glissando dashes through fire, the Sforzando lances skewer "
+                    "lines of ships, Stolen Time feeds on readiness and kills, and at 100% CR Bravura takes over. "
+                    "Built in: Concert Pitch, Auxiliary Thrusters.",
+    "rsl_virtuoso_unsung": "In battle: still a fast, dangerous capital, but untuned: no Bravura, one-third the "
+                           "skewer, a dimmer dash. Built in: Concert Pitch, Auxiliary Thrusters.",
+    "rsl_cantor": "In battle: a station of six petals. Grand Chorus fires from every petal at once; Phase-Locked "
+                  "Petals makes each loss strengthen the rest.",
+}
+
+
 def hull_rows():
     rows = []
     for hid, (peer, ch) in HULLS.items():
@@ -626,7 +653,7 @@ def hull_rows():
             ch.setdefault("codex variant id", hid + "_Standard")
         r = V.clone_row("ship_data.csv", peer, id=hid, number="", **ch)
         rows.append(r)
-        desc(hid, "SHIP", HULL_DESC[hid])
+        desc(hid, "SHIP", HULL_DESC[hid] + ("\n\n" + HULL_ROLE[hid] if hid in HULL_ROLE else ""))
     write_csv("data/hulls/ship_data.csv", V.header("ship_data.csv"), rows)
 
 
@@ -1060,58 +1087,109 @@ def systems():
         spec = {"id": sid, "type": "STAT_MOD", "statsScript": SYS + cls, "outOfUsesSound": "gun_out_of_ammo"}
         spec.update(sysx)
         write_json("data/shipsystems/%s.system" % sid, spec)
-        desc(sid, "SHIP_SYSTEM", text)
+        cat, short, long_text = SYS_TEXT[sid]
+        desc(sid, "SHIP_SYSTEM", long_text.replace("%%", "%"), cat, short)
     write_csv("data/shipsystems/ship_systems.csv", hdr, rows)
+
+
+SYS_TEXT = {  # id: (vanilla category, one-line summary, description with paragraphs)
+    "rsl_pitchshift": ('Special', 'Toggles the core between a shielded and a shieldless, harder-hitting tuning.',
+           "Toggles the lattice core between two tunings.\n\n"
+           "Harmonic (off): shields available, +25%% flux dissipation, and energy weapons add EMP damage.\n\n"
+           "Discord (on): shields locked off, +30%% top speed and +20%% weapon damage.\n\n"
+           "Overtone: switching tunings releases an EMP pulse."),
+    "rsl_gracedash": ('Movement', 'A short, violent burst of thrust.',
+           "A short, violent burst of thrust (2 charges).\n\n"
+           "Overtone: the dash leaves a resonant wake that arcs EMP into enemies passing through it."),
+    "rsl_ward": ('Defensive', 'Takes a share of the damage an endangered ally suffers.',
+           "Ties the Refrain's core to the most endangered ally within 800 units for 7 seconds. 40%% of the "
+           "damage that ally takes is redirected to the Refrain's shield as flux (or to its hull if the shield "
+           "is down). The armor vanes swing forward over the bow.\n\n"
+           "Overtone: redirected damage builds double Resonance, and the Refrain takes 30%% less beam damage."),
+    "rsl_crescendo": ('Offensive', 'Energy weapons fire faster with every hit.',
+           "For 6 seconds, every energy weapon hit adds a Crescendo stack (up to 20): +5%% energy rate of fire "
+           "and +3%% energy flux cost per stack.\n\n"
+           "Overtone: reaching 20 stacks fires a Fortissimo - every energy weapon releases one extra empowered "
+           "shot - and the ship sheds 30%% of its soft flux."),
+    "rsl_standingwave": ('Defensive', 'Marks a point in space and snaps back to it, undoing damage.',
+           "First use drops a standing-wave node at the ship's position. Using it again within 8 seconds snaps "
+           "the ship back to the node and restores 40%% of the armor and hull lost since.\n\n"
+           "Overtone: the afterimage left behind detonates for 400 energy damage and 600 EMP."),
+    "rsl_stillwater": ('Defensive', 'Slows enemy shots and breaks missile locks around the ship.',
+           "Creates a 700-unit zone of still space around the Halo for 8 seconds. Enemy projectiles inside slow "
+           "by 60%% and enemy missiles lose their lock.\n\n"
+           "Cost: the Halo's own flux dissipation drops by 30%% while it runs.\n\n"
+           "Overtone: damage the zone absorbs becomes Resonance for every Lattice ship inside it."),
+    "rsl_symstrike": ('Offensive', 'A resonant strike that marks its target for the whole chorus.',
+           "After a 1.5 second charge, the prongs discharge a resonant strike into the target (2,000 range, 800 "
+           "energy damage) and mark it for 8 seconds: all Lattice ships deal +20%% damage to it.\n\n"
+           "Overtone: the strike chains to a second enemy, which is marked as well."),
+    "rsl_glissando": ('Movement', 'A steerable blink-dash that leaves a snapping string behind.',
+           "A 720-unit blink-dash in the direction of movement; thrusting mid-dash bends its path. The ship "
+           "cannot be hit while dashing. 2 charges (3 in Bravura).\n\n"
+           "Cost: 1%% combat readiness per dash; unusable below 30%%.\n\n"
+           "The String: the path stays behind as a taut string for 1.2 seconds. It deletes enemy projectiles "
+           "that cross it, then snaps: 400 energy damage to every enemy touching it (fighters and missiles are "
+           "destroyed) and 2%% CR stolen from each ship hit.\n\n"
+           "For 2 seconds after a dash the Sforzando lances are Accented.\n\n"
+           "Overtone: the string snaps twice and the dash refunds half a charge."),
+    "rsl_glissando_unsung": ('Movement', 'An untuned, steerable blink-dash.',
+           "An untuned, steerable 720-unit blink-dash: 2 charges, untargetable for 0.2 seconds.\n\n"
+           "Cost: 1.5%% combat readiness per dash.\n\n"
+           "The string it leaves blocks projectiles for 1.2 seconds but never snaps."),
+    "rsl_grandchorus": ('Offensive', 'Every petal fires at once.',
+           "Every petal discharges a synchronized resonant lance into the nearest enemy in its sector (600 "
+           "energy damage each).\n\n"
+           "Overtone: an expanding harmonic ring flames out fighters and throws missiles off their targets."),
+}
 
 
 # ===================================================================================================== hullmods
 HM = "rsl.hullmods."
-HULLMODS = [  # id, name, script, desc, hidden, costs, tags
+# Descriptions are one or two plain sentences (no %s: they go through String.format, so a literal % must be %%).
+# The numbers live in each hullmod's tooltip sections (rsl.hullmods.Tip); S-mod texts are in SMOD_DESC.
+HULLMODS = [  # id, name, script, desc, hidden, costs
     ("rsl_lattice_core", "Lattice Core", "LatticeCore",
-     "A crystalline resonator grown through the hull. It builds Resonance (0-100) from damage absorbed by shields and "
-     "from this ship's hits on enemy hull and armor, and loses it slowly out of combat contact. At %s Resonance or "
-     "more the core is in Overtone: the next ship-system use is empowered and spends %s Resonance. Lattice ships "
-     "within %s units share %s of the Resonance they gain. The core's seams glow brighter with Resonance. "
-     "Incompatible with Safety Overrides.", True, (0, 0, 0, 0)),
+     "A crystalline resonator grown through the hull. It hums louder the harder the ship fights, and when it peaks, "
+     "the next ship system sings in Overtone.", True, (0, 0, 0, 0)),
     ("rsl_conductors_bridge", "Conductor's Bridge", "ConductorsBridge",
-     "Lattice allies within %s units receive %s Sympathy from this ship instead of the usual share, and gain %s "
-     "Resonance per second while in range.", True, (0, 0, 0, 0)),
+     "The Conductor's core does not just resonate, it leads: every Lattice ship near it tunes to it.",
+     True, (0, 0, 0, 0)),
     ("rsl_fracture", "Fracture", "Fracture",
-     "Hits from this ship's weapons on enemy hull or armor add a Fracture stack to the target (up to %s; stacks fade "
-     "after %s without a new hit). The hit that would add a %s stack shatters the plating instead: %s bonus damage to "
-     "armor at the impact point, and the stacks reset.", True, (0, 0, 0, 0)),
+     "The Staccato's guns leave fracture lines in whatever they hit, and enough of them make plating simply come "
+     "apart.", True, (0, 0, 0, 0)),
     ("rsl_stolen_time", "Stolen Time", "StolenTime",
-     "Hull and armor damage this ship deals to enemy ships steals combat readiness: about %s CR per %s damage "
-     "(scaled by target size), which the target loses and this ship gains. At most %s can be taken from any one "
-     "ship. Destroying an enemy ship restores a large amount of CR at once: %s for a frigate up to %s for a capital. "
-     "On the Virtuoso, CR gained while already at 100%% extends peak performance time instead (%s per 1%%). "
-     "Theft (not kills) is half as effective when not piloted by the player.", True, (0, 0, 0, 0)),
+     "The Virtuoso's core feeds on the readiness of everything it wounds, and drinks deep from everything it kills.",
+     True, (0, 0, 0, 0)),
     ("rsl_bravura", "Bravura", "Bravura",
-     "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
-     "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to shields, %s faster "
-     "system recharge and %s Glissando charges, the Sforzando lances are always Accented (%s damage), and the hull "
-     "repairs %s of its maximum per second. The seams burn gold-white and the shield turns white-teal.", True, (0, 0, 0, 0)),
+     "At full readiness the Virtuoso sings at full voice: faster, hotter and nearly impossible to pin down.",
+     True, (0, 0, 0, 0)),
     ("rsl_unbound", "Unbound Core", "UnboundCore",
-     "The Virtuoso's core can drop its safety tuning, as Safety Overrides does for lesser hulls: +%s top speed, "
-     "flux dissipation multiplied by %s, the zero-flux boost at any flux level and no active venting; peak "
-     "performance time is cut to a third, but weapon range is untouched. Stolen Time pays the readiness back. "
-     "Only the full Virtuoso can install it.", False, (0, 0, 0, 50)),
+     "The Virtuoso's core drops its safety tuning, as Safety Overrides does for lesser hulls - without the "
+     "range penalty. Only the full Virtuoso can install it.", False, (0, 0, 0, 50)),
     ("rsl_bravura_locked", "Bravura (Silent)", "BravuraLocked",
-     "INACTIVE on the Unsung. On the restored Virtuoso: at %s combat readiness it enters Bravura until its CR drops "
-     "below %s: +%s top speed and maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, +%s damage to "
-     "shields, %s faster system recharge and %s Glissando charges, the Sforzando lances are always Accented (%s "
-     "damage), and the hull repairs %s of its maximum per second.", True, (0, 0, 0, 0)),
+     "INACTIVE. The Unsung's core cannot reach full voice until the Virtuoso is restored.", True, (0, 0, 0, 0)),
     ("rsl_concert_pitch", "Concert Pitch", "ConcertPitch",
-     "A rare lattice augment that retunes the core to a perfect reference pitch. +%s range for every Resonance Lattice "
-     "weapon, +%s maximum combat readiness, +%s seconds of peak performance time and %s resistance to EMP damage. "
-     "Lattice hulls only.", False, (6, 10, 15, 25)),
+     "A rare lattice augment that retunes the core to a perfect reference pitch: longer reach, longer endurance "
+     "and a crystal that shrugs off EMP.", False, (6, 10, 15, 25)),
     ("rsl_phase_locked", "Phase-Locked Petals", "PhaseLockedPetals",
-     "When a petal of the array is destroyed, its stored Resonance floods the core and the surviving petals, which "
-     "jump straight into Overtone and gain %s weapon damage for the rest of the battle.", True, (0, 0, 0, 0)),
+     "The Cantor Array's petals share one phase: when one falls, the others take up its voice.", True, (0, 0, 0, 0)),
     ("rsl_tuned_wings", "Tuned Wings", "TunedWings",
-     "Fighters within %s units of the ship are tuned to its ring: fighter replacement rate is %s faster while any "
-     "of its wings fight inside the zone.", True, (0, 0, 0, 0)),
+     "The Halo's fighters are tuned to its ring and come home to it faster.", True, (0, 0, 0, 0)),
 ]
+# S-mod effects (vanilla rule: cheap hullmods get a bonus when built in with a story point, expensive ones a
+# penalty; enhancing a hull's own built-in - nearly free - gets the strongest bonus). %s = getSModDescriptionParam.
+SMOD_DESC = {
+    "rsl_lattice_core": "Resonance gain increased by %s.",
+    "rsl_conductors_bridge": "The bridge's reach grows to %s units.",
+    "rsl_fracture": "Plating shatters after %s stacks instead of 5, for %s armor damage.",
+    "rsl_stolen_time": "Readiness theft and kill refunds increased by %s.",
+    "rsl_bravura": "Bravura starts at %s combat readiness and lasts until it drops below %s.",
+    "rsl_unbound": "Maximum combat readiness reduced by %s.",
+    "rsl_concert_pitch": "A further %s range for Resonance Lattice weapons. When enhanced as a hull's own built-in "
+                         "(the Virtuoso), also %s maximum combat readiness and %s seconds of peak performance time.",
+    "rsl_tuned_wings": "The tuning zone grows to %s units and fighters are replaced %s faster while in it.",
+}
 
 
 # rare: high tier, low drop rarity, not known from the start (must be learned); built into both Virtuosos regardless
@@ -1128,7 +1206,7 @@ def hullmods():
                   "tags": "special" if not hidden else "", "uiTags": "Special", "base value": 10000 if not hidden else 0,
                   "unlocked": "TRUE", "hidden": "TRUE" if hidden else "", "cost_frigate": costs[0],
                   "cost_dest": costs[1], "cost_cruiser": costs[2], "cost_capital": costs[3], "script": HM + cls,
-                  "desc": text, "short": text.split(".")[0] + ".",
+                  "desc": text, "short": text.split(".")[0] + ".", "sModDesc": SMOD_DESC.get(hid, ""),
                   "sprite": "graphics/rsl/icons/hullmods/%s.png" % hid})
         r.update(HULLMOD_OVERRIDES.get(hid, {}))
         rows.append(r)

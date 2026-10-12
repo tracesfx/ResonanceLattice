@@ -29,6 +29,8 @@ public class LatticeDealtModifier implements DamageDealtModifier {
     public static final int FRACTURE_MAX = 5;
     public static final float FRACTURE_TIMEOUT = 6f;
     public static final float FRACTURE_SHATTER = 300f;
+    /** Enhanced Fracture: shatters one stack sooner, for this much more armor damage. */
+    public static final float FRACTURE_ENHANCED_SHATTER = 1.5f;
     public static final float BEAM_STACK_INTERVAL = 0.5f;
     public static final int CRESCENDO_MAX = 20;
 
@@ -77,9 +79,10 @@ public class LatticeDealtModifier implements DamageDealtModifier {
             float[] f = fracture(t);
             if (now - f[1] > FRACTURE_TIMEOUT) f[0] = 0f;
             f[1] = now;
-            if (f[0] >= FRACTURE_MAX) {
+            boolean enh = RslUtil.enhanced(ship, RslIds.HULLMOD_FRACTURE);
+            if (f[0] >= (enh ? FRACTURE_MAX - 1 : FRACTURE_MAX)) {
                 f[0] = 0f;
-                shatter(t, point);
+                shatter(t, point, enh ? FRACTURE_SHATTER * FRACTURE_ENHANCED_SHATTER : FRACTURE_SHATTER);
             } else {
                 f[0] += 1f;
             }
@@ -94,18 +97,18 @@ public class LatticeDealtModifier implements DamageDealtModifier {
         return null;
     }
 
-    private void shatter(ShipAPI t, Vector2f point) {
+    private void shatter(ShipAPI t, Vector2f point, float amount) {
         ArmorGridAPI grid = t.getArmorGrid();
         int[] cell = grid.getCellAtLocation(point);
         if (cell == null) return;
         float[][] g = grid.getGrid();
-        float left = FRACTURE_SHATTER;
+        float left = amount;
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 int x = cell[0] + dx, y = cell[1] + dy;
                 if (x < 0 || y < 0 || x >= g.length || y >= g[0].length) continue;
                 float share = (dx == 0 && dy == 0) ? 0.4f : 0.075f;
-                float cut = Math.min(g[x][y], FRACTURE_SHATTER * share);
+                float cut = Math.min(g[x][y], amount * share);
                 grid.setArmorValue(x, y, g[x][y] - cut);
                 left -= cut;
             }
