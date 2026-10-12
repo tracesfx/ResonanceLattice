@@ -1,0 +1,71 @@
+{
+    "id": "rsl_bloom_msl",
+    "specClass": "missile",
+    "missileType": "MISSILE",
+    "sprite": "graphics/rsl/missiles/rsl_bloom_msl.png",
+    "size": [
+        16,
+        40
+    ],
+    "center": [
+        8.0,
+        20.0
+    ],
+    "collisionRadius": 18,
+    "collisionClass": "MISSILE_FF",
+    "explosionColor": [
+        160,
+        120,
+        240,
+        255
+    ],
+    "explosionRadius": 260,
+    "flameoutTime": 2,
+    "armingTime": 0.5,
+    "noEngineGlowTime": 0.5,
+    "fadeTime": 0.5,
+    "onHitEffect": "rsl.weapons.BloomOnHit",
+    "engineSpec": {
+        "turnAcc": 60,
+        "turnRate": 25,
+        "acc": 300,
+        "dec": 150
+    },
+    "engineSlots": [
+        {
+            "id": "ES1",
+            "loc": [
+                -8.0,
+                0
+            ],
+            "style": "CUSTOM",
+            "styleSpec": {
+                "mode": "QUAD_STRIP",
+                "engineColor": [
+                    160,
+                    120,
+                    240,
+                    255
+                ],
+                "contrailDuration": 0.6,
+                "contrailWidthMult": 1.2,
+                "contrailWidthAddedFractionAtEnd": 1.5,
+                "contrailMinSeg": 5,
+                "contrailMaxSpeedMult": 0.0,
+                "contrailAngularVelocityMult": 0.5,
+                "contrailSpawnDistMult": 0.0,
+                "contrailColor": [
+                    160,
+                    120,
+                    240,
+                    80
+                ],
+                "glowSizeMult": 1.6,
+                "type": "GLOW"
+            },
+            "width": 9,
+            "length": 22.4,
+            "angle": 180.0
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+{
+    "id": "rsl_pizzicato",
+    "specClass": "projectile",
+    "type": "ENERGY",
+    "size": "SMALL",
+    "turretSprite": "graphics/rsl/weapons/rsl_pizzicato_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_pizzicato_hardpoint.png",
+    "turretOffsets": [
+        12.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        13.0,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_pizzicato_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_pizzicato_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "animationType": "GLOW_AND_FLASH",
+    "muzzleFlashSpec": {
+        "length": 26,
+        "spread": 4,
+        "particleSizeMin": 12,
+        "particleSizeRange": 9.600000000000001,
+        "particleDuration": 0.12,
+        "particleCount": 8,
+        "particleColor": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "projectileSpecId": "rsl_pizzicato_shot",
+    "fireSoundTwo": "pulse_laser_fire",
+    "onFireEffect": "rsl.weapons.PizzicatoEffect"
+}

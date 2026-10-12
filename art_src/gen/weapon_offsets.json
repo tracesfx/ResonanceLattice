@@ -1,0 +1,569 @@
+{
+ "rsl_chime": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_chime_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_chime_turret_glow.png",
+   "offsets": [
+    10.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    26,
+    26
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_chime_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_chime_hardpoint_glow.png",
+   "offsets": [
+    11.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    16,
+    28
+   ]
+  }
+ },
+ "rsl_pizzicato": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_pizzicato_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_pizzicato_turret_glow.png",
+   "offsets": [
+    12.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    26,
+    26
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_pizzicato_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_pizzicato_hardpoint_glow.png",
+   "offsets": [
+    13.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    16,
+    28
+   ]
+  }
+ },
+ "rsl_shardcaster": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_shardcaster_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_shardcaster_turret_glow.png",
+   "offsets": [
+    9.5,
+    3.1,
+    11.0,
+    -0.0,
+    9.5,
+    -3.1
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    26,
+    26
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_shardcaster_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_shardcaster_hardpoint_glow.png",
+   "offsets": [
+    10.5,
+    2.7,
+    12.0,
+    -0.0,
+    10.5,
+    -2.7
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    16,
+    28
+   ]
+  }
+ },
+ "rsl_tuningspike": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_tuningspike_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_tuningspike_turret_glow.png",
+   "offsets": [
+    7.4,
+    5.2,
+    7.4,
+    -5.2
+   ],
+   "angles": [
+    0,
+    0
+   ],
+   "size": [
+    26,
+    26
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_tuningspike_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_tuningspike_hardpoint_glow.png",
+   "offsets": [
+    10.3,
+    3.5,
+    10.3,
+    -3.5
+   ],
+   "angles": [
+    0,
+    0
+   ],
+   "size": [
+    16,
+    28
+   ]
+  }
+ },
+ "rsl_tuningspike_pod": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_tuningspike_pod_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_tuningspike_pod_turret_glow.png",
+   "offsets": [
+    12.4,
+    8.0,
+    12.4,
+    -8.0,
+    -2.3,
+    8.0,
+    -2.3,
+    -8.0
+   ],
+   "angles": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "size": [
+    40,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_tuningspike_pod_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_tuningspike_pod_hardpoint_glow.png",
+   "offsets": [
+    16.9,
+    5.3,
+    16.9,
+    -5.3,
+    -1.8,
+    5.3,
+    -1.8,
+    -5.3
+   ],
+   "angles": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "size": [
+    24,
+    43
+   ]
+  }
+ },
+ "rsl_lattice_lance": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_lattice_lance_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_lattice_lance_turret_glow.png",
+   "offsets": [
+    17.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    40,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_lattice_lance_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_lattice_lance_hardpoint_glow.png",
+   "offsets": [
+    18.5,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    24,
+    43
+   ]
+  }
+ },
+ "rsl_flechette": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_flechette_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_flechette_turret_glow.png",
+   "offsets": [
+    15.0,
+    5.8,
+    18.0,
+    -0.0,
+    15.0,
+    -5.8
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    40,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_flechette_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_flechette_hardpoint_glow.png",
+   "offsets": [
+    16.5,
+    4.8,
+    19.5,
+    -0.0,
+    16.5,
+    -4.8
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    24,
+    43
+   ]
+  }
+ },
+ "rsl_arpeggio": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_arpeggio_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_arpeggio_turret_glow.png",
+   "offsets": [
+    11.6,
+    6.0,
+    19.0,
+    -0.0,
+    11.6,
+    -6.0
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    40,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_arpeggio_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_arpeggio_hardpoint_glow.png",
+   "offsets": [
+    11.4,
+    5.0,
+    20.5,
+    -0.0,
+    11.4,
+    -5.0
+   ],
+   "angles": [
+    0,
+    0,
+    0
+   ],
+   "size": [
+    24,
+    43
+   ]
+  }
+ },
+ "rsl_cantus": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_cantus_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_cantus_turret_glow.png",
+   "offsets": [
+    18.0,
+    4.3,
+    18.0,
+    -4.3
+   ],
+   "angles": [
+    0,
+    0
+   ],
+   "size": [
+    40,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_cantus_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_cantus_hardpoint_glow.png",
+   "offsets": [
+    19.5,
+    3.6,
+    19.5,
+    -3.6
+   ],
+   "angles": [
+    0,
+    0
+   ],
+   "size": [
+    24,
+    43
+   ]
+  }
+ },
+ "rsl_harmonic_driver": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_harmonic_driver_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_harmonic_driver_turret_glow.png",
+   "offsets": [
+    31.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    68,
+    68
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_harmonic_driver_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_harmonic_driver_hardpoint_glow.png",
+   "offsets": [
+    31.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    36,
+    68
+   ]
+  }
+ },
+ "rsl_harmonic_spinal": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_harmonic_spinal_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_harmonic_spinal_turret_glow.png",
+   "offsets": [
+    18.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    36,
+    40
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_harmonic_spinal_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_harmonic_spinal_hardpoint_glow.png",
+   "offsets": [
+    18.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    36,
+    40
+   ]
+  }
+ },
+ "rsl_sostenuto": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_sostenuto_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_sostenuto_turret_glow.png",
+   "offsets": [
+    30.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    68,
+    68
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_sostenuto_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_sostenuto_hardpoint_glow.png",
+   "offsets": [
+    30.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    36,
+    68
+   ]
+  }
+ },
+ "rsl_bloom": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_bloom_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_bloom_turret_glow.png",
+   "offsets": [
+    23.8,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    68,
+    68
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_bloom_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_bloom_hardpoint_glow.png",
+   "offsets": [
+    28.6,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    36,
+    68
+   ]
+  }
+ },
+ "rsl_sforzando": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_sforzando_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_sforzando_turret_glow.png",
+   "offsets": [
+    56.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    40,
+    116
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_sforzando_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_sforzando_hardpoint_glow.png",
+   "offsets": [
+    56.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    40,
+    116
+   ]
+  }
+ },
+ "rsl_sforzando_untuned": {
+  "turret": {
+   "sprite": "graphics/rsl/weapons/rsl_sforzando_untuned_turret.png",
+   "glow": "graphics/rsl/weapons/rsl_sforzando_untuned_turret_glow.png",
+   "offsets": [
+    56.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    40,
+    116
+   ]
+  },
+  "hardpoint": {
+   "sprite": "graphics/rsl/weapons/rsl_sforzando_untuned_hardpoint.png",
+   "glow": "graphics/rsl/weapons/rsl_sforzando_untuned_hardpoint_glow.png",
+   "offsets": [
+    56.0,
+    -0.0
+   ],
+   "angles": [
+    0
+   ],
+   "size": [
+    40,
+    116
+   ]
+  }
+ },
+ "rsl_tuningspike_msl": {
+  "sprite": "graphics/rsl/missiles/rsl_tuningspike_msl.png",
+  "size": [
+   8,
+   26
+  ]
+ },
+ "rsl_bloom_msl": {
+  "sprite": "graphics/rsl/missiles/rsl_bloom_msl.png",
+  "size": [
+   16,
+   40
+  ]
+ },
+ "rsl_shard_proj": {
+  "sprite": "graphics/rsl/missiles/rsl_shard_proj.png",
+  "size": [
+   6,
+   14
+  ]
+ }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "rsl_flechette_shot",
+    "specClass": "projectile",
+    "spawnType": "BALLISTIC",
+    "collisionClass": "PROJECTILE_FF",
+    "collisionClassByFighter": "PROJECTILE_FIGHTER",
+    "length": 14,
+    "width": 6,
+    "fadeTime": 0.15,
+    "fringeColor": [
+        60,
+        200,
+        190,
+        255
+    ],
+    "coreColor": [
+        235,
+        255,
+        252,
+        255
+    ],
+    "textureScrollSpeed": 64.0,
+    "pixelsPerTexel": 5.0,
+    "bulletSprite": "graphics/rsl/missiles/rsl_shard_proj.png",
+    "onHitEffect": "rsl.weapons.FlechetteOnHit"
+}

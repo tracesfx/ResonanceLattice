@@ -1,0 +1,56 @@
+{
+    "variantId": "rsl_virtuoso_Standard",
+    "hullId": "rsl_virtuoso",
+    "displayName": "Soloist",
+    "fluxVents": 50,
+    "fluxCapacitors": 8,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "targetingunit",
+        "fluxbreakers",
+        "reinforcedhull",
+        "turretgyros",
+        "advancedoptics"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_arpeggio",
+                "WS0002R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_flechette",
+                "WS0003R": "rsl_flechette"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_pizzicato",
+                "WS0004R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_chime",
+                "WS0005R": "rsl_chime",
+                "WS0006": "rsl_chime",
+                "WS0006R": "rsl_chime"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

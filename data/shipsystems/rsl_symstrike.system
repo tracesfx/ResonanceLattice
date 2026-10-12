@@ -1,0 +1,9 @@
+{
+    "id": "rsl_symstrike",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.SympatheticStrikeStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.SympatheticStrikeAI",
+    "useSound": "tachyon_lance_fire"
+}

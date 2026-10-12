@@ -1,298 +1,307 @@
 {
-  "bounds": [
-    236.0,
-    1.0,
-    139.0,
-    -12.0,
-    124.0,
-    -26.0,
-    129.0,
-    -50.0,
-    95.0,
-    -44.0,
-    75.0,
-    -29.0,
-    21.0,
-    -74.0,
-    -81.0,
-    -114.0,
-    -98.0,
-    -113.0,
-    -104.0,
-    -96.0,
-    -76.0,
-    -74.0,
-    -59.0,
-    -33.0,
-    -96.0,
-    -37.0,
-    -110.0,
-    -9.0,
-    -163.0,
-    -1.0,
-    -110.0,
-    9.0,
-    -96.0,
-    37.0,
-    -59.0,
-    33.0,
-    -76.0,
-    74.0,
-    -103.0,
-    93.0,
-    -104.0,
-    107.0,
-    -93.0,
-    114.0,
-    21.0,
-    74.0,
-    75.0,
-    29.0,
-    95.0,
-    44.0,
-    129.0,
-    50.0,
-    124.0,
-    26.0,
-    139.0,
-    12.0
-  ],
-  "builtInMods": [
-    "auxiliarythrusters"
-  ],
-  "center": [
-    124.0,
-    165.0
-  ],
-  "collisionRadius": 287,
-  "coversColor": "",
-  "engineSlots": [
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -105.1,
-        -18.4
-      ],
-      "style": "MIDLINE",
-      "width": 6.48
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -105.1,
-        18.4
-      ],
-      "style": "MIDLINE",
-      "width": 6.48
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -103.1,
-        -26.3
-      ],
-      "style": "MIDLINE",
-      "width": 6.48
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -103.1,
-        26.3
-      ],
-      "style": "MIDLINE",
-      "width": 6.48
+    "bounds": [
+        236.0,
+        1.0,
+        139.0,
+        -12.0,
+        124.0,
+        -26.0,
+        129.0,
+        -50.0,
+        95.0,
+        -44.0,
+        75.0,
+        -29.0,
+        21.0,
+        -74.0,
+        -81.0,
+        -114.0,
+        -98.0,
+        -113.0,
+        -104.0,
+        -96.0,
+        -76.0,
+        -74.0,
+        -59.0,
+        -33.0,
+        -96.0,
+        -37.0,
+        -110.0,
+        -9.0,
+        -163.0,
+        -1.0,
+        -110.0,
+        9.0,
+        -96.0,
+        37.0,
+        -59.0,
+        33.0,
+        -76.0,
+        74.0,
+        -103.0,
+        93.0,
+        -104.0,
+        107.0,
+        -93.0,
+        114.0,
+        21.0,
+        74.0,
+        75.0,
+        29.0,
+        95.0,
+        44.0,
+        129.0,
+        50.0,
+        124.0,
+        26.0,
+        139.0,
+        12.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "auxiliarythrusters",
+        "rsl_stolen_time",
+        "rsl_bravura"
+    ],
+    "center": [
+        124.0,
+        165.0
+    ],
+    "collisionRadius": 287,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -105.1,
+                -18.4
+            ],
+            "style": "RSL",
+            "width": 6.48
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -105.1,
+                18.4
+            ],
+            "style": "RSL",
+            "width": 6.48
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -103.1,
+                -26.3
+            ],
+            "style": "RSL",
+            "width": 6.48
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -103.1,
+                26.3
+            ],
+            "style": "RSL",
+            "width": 6.48
+        }
+    ],
+    "height": 404,
+    "hullId": "rsl_virtuoso",
+    "hullName": "Virtuoso",
+    "hullSize": "CAPITAL_SHIP",
+    "shieldCenter": [
+        36.5,
+        0
+    ],
+    "shieldRadius": 202,
+    "spriteName": "graphics/rsl/ships/rsl_virtuoso.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 10.0,
+            "arc": 300.0,
+            "id": "WS0001",
+            "locations": [
+                108.3,
+                -32.4
+            ],
+            "mount": "TURRET",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -10.0,
+            "arc": 300.0,
+            "id": "WS0001R",
+            "locations": [
+                108.3,
+                32.4
+            ],
+            "mount": "TURRET",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 45.0,
+            "arc": 240.0,
+            "id": "WS0002",
+            "locations": [
+                7.9,
+                -62.6
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -45.0,
+            "arc": 240.0,
+            "id": "WS0002R",
+            "locations": [
+                7.9,
+                62.6
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 140.0,
+            "arc": 220.0,
+            "id": "WS0003",
+            "locations": [
+                -73.1,
+                -20.5
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": -140.0,
+            "arc": 220.0,
+            "id": "WS0003R",
+            "locations": [
+                -73.1,
+                20.5
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": 5.0,
+            "arc": 200.0,
+            "id": "WS0004",
+            "locations": [
+                150.4,
+                -8.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -5.0,
+            "arc": 200.0,
+            "id": "WS0004R",
+            "locations": [
+                150.4,
+                8.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 70.0,
+            "arc": 220.0,
+            "id": "WS0005",
+            "locations": [
+                -39.6,
+                -85.3
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -70.0,
+            "arc": 220.0,
+            "id": "WS0005R",
+            "locations": [
+                -39.6,
+                85.3
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 90.0,
+            "arc": 200.0,
+            "id": "WS0006",
+            "locations": [
+                10.0,
+                -15.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -90.0,
+            "arc": 200.0,
+            "id": "WS0006R",
+            "locations": [
+                10.0,
+                15.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -160.1,
+            "arc": 360.0,
+            "id": "WS0007",
+            "locations": [
+                -95.8,
+                -99.5
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "DECORATIVE"
+        },
+        {
+            "angle": 160.1,
+            "arc": 360.0,
+            "id": "WS0008",
+            "locations": [
+                -95.8,
+                99.5
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "DECORATIVE"
+        }
+    ],
+    "width": 248,
+    "builtInWeapons": {
+        "WS0001": "rsl_sforzando",
+        "WS0001R": "rsl_sforzando",
+        "WS0007": "rsl_deco_virtuoso_vane_r",
+        "WS0008": "rsl_deco_virtuoso_vane_l"
     }
-  ],
-  "height": 404,
-  "hullId": "rsl_virtuoso",
-  "hullName": "Virtuoso",
-  "hullSize": "CAPITAL_SHIP",
-  "shieldCenter": [
-    36.5,
-    0
-  ],
-  "shieldRadius": 202,
-  "spriteName": "graphics/rsl/ships/rsl_virtuoso.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 10.0,
-      "arc": 300.0,
-      "id": "WS0001",
-      "locations": [
-        108.3,
-        -32.4
-      ],
-      "mount": "TURRET",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -10.0,
-      "arc": 300.0,
-      "id": "WS0001R",
-      "locations": [
-        108.3,
-        32.4
-      ],
-      "mount": "TURRET",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 45.0,
-      "arc": 240.0,
-      "id": "WS0002",
-      "locations": [
-        7.9,
-        -62.6
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -45.0,
-      "arc": 240.0,
-      "id": "WS0002R",
-      "locations": [
-        7.9,
-        62.6
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 140.0,
-      "arc": 220.0,
-      "id": "WS0003",
-      "locations": [
-        -73.1,
-        -20.5
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": -140.0,
-      "arc": 220.0,
-      "id": "WS0003R",
-      "locations": [
-        -73.1,
-        20.5
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": 5.0,
-      "arc": 200.0,
-      "id": "WS0004",
-      "locations": [
-        150.4,
-        -8.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -5.0,
-      "arc": 200.0,
-      "id": "WS0004R",
-      "locations": [
-        150.4,
-        8.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 70.0,
-      "arc": 220.0,
-      "id": "WS0005",
-      "locations": [
-        -39.6,
-        -85.3
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -70.0,
-      "arc": 220.0,
-      "id": "WS0005R",
-      "locations": [
-        -39.6,
-        85.3
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 90.0,
-      "arc": 200.0,
-      "id": "WS0006",
-      "locations": [
-        10.0,
-        -15.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -90.0,
-      "arc": 200.0,
-      "id": "WS0006R",
-      "locations": [
-        10.0,
-        15.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -160.1,
-      "arc": 0.0,
-      "id": "WS0007",
-      "locations": [
-        -95.8,
-        -99.5
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "DECORATIVE"
-    },
-    {
-      "angle": 160.1,
-      "arc": 0.0,
-      "id": "WS0008",
-      "locations": [
-        -95.8,
-        99.5
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "DECORATIVE"
-    }
-  ],
-  "width": 248
 }

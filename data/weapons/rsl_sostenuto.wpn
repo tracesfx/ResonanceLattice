@@ -1,0 +1,56 @@
+{
+    "id": "rsl_sostenuto",
+    "specClass": "beam",
+    "type": "ENERGY",
+    "size": "LARGE",
+    "turretSprite": "graphics/rsl/weapons/rsl_sostenuto_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_sostenuto_hardpoint.png",
+    "turretOffsets": [
+        30.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        30.0,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_sostenuto_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_sostenuto_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "beamEffect": "rsl.weapons.SostenutoEffect",
+    "fringeColor": [
+        50,
+        120,
+        210,
+        255
+    ],
+    "coreColor": [
+        225,
+        245,
+        255,
+        255
+    ],
+    "width": 22.0,
+    "textureType": "ROUGH",
+    "textureScrollSpeed": 220.0,
+    "pixelsPerTexel": 5.0,
+    "fireSoundTwo": "high_intensity_laser_loop",
+    "pierceSet": [
+        "PROJECTILE_FF",
+        "PROJECTILE_NO_FF",
+        "PROJECTILE_FIGHTER",
+        "MISSILE_FF",
+        "MISSILE_NO_FF"
+    ]
+}

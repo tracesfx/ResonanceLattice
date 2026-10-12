@@ -1,0 +1,26 @@
+{
+    "id": "rsl_gracedash",
+    "type": "ENGINE_MOD",
+    "statsScript": "rsl.systems.GraceDashStats",
+    "outOfUsesSound": "engine_disabled",
+    "aiType": "BURN_DRIVE",
+    "engineGlowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "engineGlowLengthMult": 3,
+    "engineGlowWidthMult": 1.5,
+    "engineGlowGlowMult": 3,
+    "clampTurnRateAfter": true,
+    "clampMaxSpeedAfter": true,
+    "alwaysAccelerate": true,
+    "useSound": "system_plasma_burn",
+    "loopSound": "system_plasma_burn_loop",
+    "aiHints": {
+        "activeSpeedIncrease": 0,
+        "burstMovementPotential": 350,
+        "averageSpeedIncrease": 40
+    }
+}

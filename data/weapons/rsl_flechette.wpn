@@ -1,0 +1,60 @@
+{
+    "id": "rsl_flechette",
+    "specClass": "projectile",
+    "type": "BALLISTIC",
+    "size": "MEDIUM",
+    "turretSprite": "graphics/rsl/weapons/rsl_flechette_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_flechette_hardpoint.png",
+    "turretOffsets": [
+        15.0,
+        5.8,
+        18.0,
+        -0.0,
+        15.0,
+        -5.8
+    ],
+    "turretAngleOffsets": [
+        0,
+        0,
+        0
+    ],
+    "hardpointOffsets": [
+        16.5,
+        4.8,
+        19.5,
+        -0.0,
+        16.5,
+        -4.8
+    ],
+    "hardpointAngleOffsets": [
+        0,
+        0,
+        0
+    ],
+    "barrelMode": "LINKED",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_flechette_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_flechette_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "animationType": "MUZZLE_FLASH",
+    "muzzleFlashSpec": {
+        "length": 22,
+        "spread": 24,
+        "particleSizeMin": 10,
+        "particleSizeRange": 8.0,
+        "particleDuration": 0.12,
+        "particleCount": 14,
+        "particleColor": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "projectileSpecId": "rsl_flechette_shot",
+    "fireSoundTwo": "flak_fire"
+}

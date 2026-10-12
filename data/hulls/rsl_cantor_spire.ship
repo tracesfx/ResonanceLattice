@@ -1,153 +1,162 @@
 {
-  "bounds": [
-    156.0,
-    -1.0,
-    78.0,
-    -8.0,
-    73.0,
-    -13.0,
-    41.0,
-    -13.0,
-    42.0,
-    -24.0,
-    38.0,
-    -25.0,
-    29.0,
-    -21.0,
-    1.0,
-    -21.0,
-    -7.0,
-    -30.0,
-    -20.0,
-    -31.0,
-    -33.0,
-    -31.0,
-    -38.0,
-    -24.0,
-    -54.0,
-    -25.0,
-    -68.0,
-    -35.0,
-    -77.0,
-    -33.0,
-    -77.0,
-    33.0,
-    -64.0,
-    35.0,
-    -54.0,
-    25.0,
-    -45.0,
-    24.0,
-    -38.0,
-    24.0,
-    -33.0,
-    31.0,
-    -7.0,
-    30.0,
-    1.0,
-    21.0,
-    29.0,
-    21.0,
-    38.0,
-    25.0,
-    42.0,
-    24.0,
-    41.0,
-    13.0,
-    73.0,
-    13.0,
-    78.0,
-    8.0,
-    116.0,
-    7.0,
-    119.0,
-    3.0,
-    145.0,
-    3.0
-  ],
-  "builtInMods": [
-    "hardened_subsystems"
-  ],
-  "center": [
-    36.0,
-    77.0
-  ],
-  "collisionRadius": 191,
-  "coversColor": "",
-  "engineSlots": [],
-  "height": 236,
-  "hullId": "rsl_cantor_spire",
-  "hullName": "Cantor Spire",
-  "hullSize": "CRUISER",
-  "shieldCenter": [
-    39.5,
-    0
-  ],
-  "shieldRadius": 124,
-  "spriteName": "graphics/rsl/ships/rsl_cantor_spire.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 0.0,
-      "arc": 270.0,
-      "id": "WS0001",
-      "locations": [
+    "bounds": [
+        156.0,
+        -1.0,
+        78.0,
+        -8.0,
+        73.0,
+        -13.0,
+        41.0,
+        -13.0,
+        42.0,
+        -24.0,
+        38.0,
+        -25.0,
+        29.0,
+        -21.0,
+        1.0,
+        -21.0,
+        -7.0,
+        -30.0,
+        -20.0,
+        -31.0,
+        -33.0,
+        -31.0,
+        -38.0,
+        -24.0,
+        -54.0,
+        -25.0,
+        -68.0,
+        -35.0,
+        -77.0,
+        -33.0,
+        -77.0,
+        33.0,
+        -64.0,
+        35.0,
+        -54.0,
         25.0,
+        -45.0,
+        24.0,
+        -38.0,
+        24.0,
+        -33.0,
+        31.0,
+        -7.0,
+        30.0,
+        1.0,
+        21.0,
+        29.0,
+        21.0,
+        38.0,
+        25.0,
+        42.0,
+        24.0,
+        41.0,
+        13.0,
+        73.0,
+        13.0,
+        78.0,
+        8.0,
+        116.0,
+        7.0,
+        119.0,
+        3.0,
+        145.0,
+        3.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "rsl_phase_locked",
+        "hardened_subsystems",
+        "reduced_explosion",
+        "do_not_fire_through"
+    ],
+    "center": [
+        36.0,
+        77.0
+    ],
+    "collisionRadius": 191,
+    "coversColor": "",
+    "engineSlots": [],
+    "height": 236,
+    "hullId": "rsl_cantor_spire",
+    "hullName": "Cantor Spire",
+    "hullSize": "CRUISER",
+    "shieldCenter": [
+        39.5,
+        0
+    ],
+    "shieldRadius": 124,
+    "spriteName": "graphics/rsl/ships/rsl_cantor_spire.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 270.0,
+            "id": "WS0001",
+            "locations": [
+                25.0,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 300.0,
+            "id": "WS0002",
+            "locations": [
+                -55.0,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 60.0,
+            "arc": 240.0,
+            "id": "WS0003",
+            "locations": [
+                -23.0,
+                -17.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -60.0,
+            "arc": 240.0,
+            "id": "WS0003R",
+            "locations": [
+                -23.0,
+                17.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 10.0,
+            "id": "WS0004",
+            "locations": [
+                55.0,
+                0.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        }
+    ],
+    "width": 72,
+    "builtInWeapons": {},
+    "moduleAnchor": [
+        -77.0,
         0.0
-      ],
-      "mount": "TURRET",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 300.0,
-      "id": "WS0002",
-      "locations": [
-        -55.0,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 60.0,
-      "arc": 240.0,
-      "id": "WS0003",
-      "locations": [
-        -23.0,
-        -17.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -60.0,
-      "arc": 240.0,
-      "id": "WS0003R",
-      "locations": [
-        -23.0,
-        17.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 10.0,
-      "id": "WS0004",
-      "locations": [
-        55.0,
-        0.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    }
-  ],
-  "width": 72
+    ]
 }

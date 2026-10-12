@@ -1,0 +1,9 @@
+{
+    "id": "rsl_ward",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.SympatheticWardStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.SympatheticWardAI",
+    "useSound": "system_targeting_feed_loop"
+}

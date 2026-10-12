@@ -1,0 +1,49 @@
+{
+    "id": "rsl_tuningspike",
+    "specClass": "projectile",
+    "type": "MISSILE",
+    "size": "SMALL",
+    "turretSprite": "graphics/rsl/weapons/rsl_tuningspike_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_tuningspike_hardpoint.png",
+    "turretOffsets": [
+        7.4,
+        5.2,
+        7.4,
+        -5.2
+    ],
+    "turretAngleOffsets": [
+        0,
+        0
+    ],
+    "hardpointOffsets": [
+        10.3,
+        3.5,
+        10.3,
+        -3.5
+    ],
+    "hardpointAngleOffsets": [
+        0,
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "animationType": "SMOKE",
+    "projectileSpecId": "rsl_tuningspike_msl",
+    "fireSoundTwo": "swarmer_fire",
+    "smokeSpec": {
+        "particleSizeMin": 8.0,
+        "particleSizeRange": 8.0,
+        "cloudParticleCount": 4,
+        "cloudDuration": 1.0,
+        "cloudRadius": 8.0,
+        "blowbackParticleCount": 3,
+        "blowbackDuration": 1.5,
+        "blowbackLength": 14.0,
+        "blowbackSpread": 10.0,
+        "particleColor": [
+            120,
+            140,
+            160,
+            160
+        ]
+    }
+}

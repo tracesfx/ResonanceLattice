@@ -1,0 +1,25 @@
+{
+    "id": "rsl_bloom_shard_shot",
+    "specClass": "projectile",
+    "spawnType": "BALLISTIC",
+    "collisionClass": "PROJECTILE_FF",
+    "collisionClassByFighter": "PROJECTILE_FIGHTER",
+    "length": 12,
+    "width": 6,
+    "fadeTime": 0.2,
+    "fringeColor": [
+        160,
+        120,
+        240,
+        255
+    ],
+    "coreColor": [
+        235,
+        255,
+        252,
+        255
+    ],
+    "textureScrollSpeed": 64.0,
+    "pixelsPerTexel": 5.0,
+    "bulletSprite": "graphics/rsl/missiles/rsl_shard_proj.png"
+}

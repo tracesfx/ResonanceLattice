@@ -1,0 +1,33 @@
+{
+    "id": "rsl_chime_bell",
+    "specClass": "projectile",
+    "spawnType": "BALLISTIC_AS_BEAM",
+    "collisionClass": "RAY",
+    "collisionClassByFighter": "RAY_FIGHTER",
+    "length": 30,
+    "width": 11,
+    "fadeTime": 0.2,
+    "fringeColor": [
+        160,
+        120,
+        240,
+        255
+    ],
+    "coreColor": [
+        235,
+        255,
+        252,
+        255
+    ],
+    "textureScrollSpeed": 64.0,
+    "pixelsPerTexel": 5.0,
+    "glowColor": [
+        160,
+        120,
+        240,
+        90
+    ],
+    "glowRadius": 18,
+    "hitGlowRadius": 40,
+    "onHitEffect": "rsl.weapons.ChimeBellOnHit"
+}

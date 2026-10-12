@@ -1,273 +1,277 @@
 {
-  "bounds": [
-    186.0,
-    1.0,
-    124.0,
-    -10.0,
-    119.0,
-    -22.0,
-    109.0,
-    -17.0,
-    87.0,
-    -25.0,
-    84.0,
-    -37.0,
-    -56.0,
-    -97.0,
-    -25.0,
-    -59.0,
-    47.0,
-    -31.0,
-    -56.0,
-    -27.0,
-    -74.0,
-    -47.0,
-    -100.0,
-    -48.0,
-    -108.0,
-    -43.0,
-    -102.0,
-    -34.0,
-    -129.0,
-    -12.0,
-    -129.0,
-    12.0,
-    -102.0,
-    34.0,
-    -108.0,
-    43.0,
-    -100.0,
-    48.0,
-    -74.0,
-    47.0,
-    -56.0,
-    27.0,
-    47.0,
-    31.0,
-    -25.0,
-    59.0,
-    -59.0,
-    97.0,
-    80.0,
-    39.0,
-    87.0,
-    25.0,
-    109.0,
-    17.0,
-    119.0,
-    22.0,
-    124.0,
-    10.0
-  ],
-  "builtInMods": [],
-  "center": [
-    100.0,
-    132.0
-  ],
-  "collisionRadius": 227,
-  "coversColor": "",
-  "engineSlots": [
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -126.6,
-        0.0
-      ],
-      "style": "MIDLINE",
-      "width": 11.4
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -115.2,
-        -20.0
-      ],
-      "style": "MIDLINE",
-      "width": 7.98
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -115.2,
-        20.0
-      ],
-      "style": "MIDLINE",
-      "width": 7.98
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 25.08,
-      "location": [
-        -107.3,
-        -39.9
-      ],
-      "style": "MIDLINE",
-      "width": 6.84
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 25.08,
-      "location": [
-        -107.3,
-        39.9
-      ],
-      "style": "MIDLINE",
-      "width": 6.84
-    }
-  ],
-  "height": 320,
-  "hullId": "rsl_cadence",
-  "hullName": "Cadence",
-  "hullSize": "CRUISER",
-  "shieldCenter": [
-    28.5,
-    0
-  ],
-  "shieldRadius": 160,
-  "spriteName": "graphics/rsl/ships/rsl_cadence.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 0.0,
-      "arc": 10.0,
-      "id": "WS0001",
-      "locations": [
-        74.2,
-        -31.3
-      ],
-      "mount": "HARDPOINT",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -0.0,
-      "arc": 10.0,
-      "id": "WS0001R",
-      "locations": [
-        74.2,
-        31.3
-      ],
-      "mount": "HARDPOINT",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 270.0,
-      "id": "WS0003",
-      "locations": [
-        96.8,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": 45.0,
-      "arc": 240.0,
-      "id": "WS0004",
-      "locations": [
-        45.7,
-        -42.5
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -45.0,
-      "arc": 240.0,
-      "id": "WS0004R",
-      "locations": [
-        45.7,
-        42.5
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 90.0,
-      "arc": 220.0,
-      "id": "WS0006",
-      "locations": [
-        5.6,
-        -58.5
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -90.0,
-      "arc": 220.0,
-      "id": "WS0006R",
-      "locations": [
-        5.6,
-        58.5
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 60.0,
-      "arc": 240.0,
-      "id": "WS0008",
-      "locations": [
-        5.6,
-        -18.2
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -60.0,
-      "arc": 240.0,
-      "id": "WS0008R",
-      "locations": [
-        5.6,
-        18.2
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 150.0,
-      "arc": 180.0,
-      "id": "WS0010",
-      "locations": [
-        -85.6,
-        -40.4
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    },
-    {
-      "angle": -150.0,
-      "arc": 180.0,
-      "id": "WS0010R",
-      "locations": [
-        -85.6,
-        40.4
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    }
-  ],
-  "width": 200
+    "bounds": [
+        186.0,
+        1.0,
+        124.0,
+        -10.0,
+        119.0,
+        -22.0,
+        109.0,
+        -17.0,
+        87.0,
+        -25.0,
+        84.0,
+        -37.0,
+        -56.0,
+        -97.0,
+        -25.0,
+        -59.0,
+        47.0,
+        -31.0,
+        -56.0,
+        -27.0,
+        -74.0,
+        -47.0,
+        -100.0,
+        -48.0,
+        -108.0,
+        -43.0,
+        -102.0,
+        -34.0,
+        -129.0,
+        -12.0,
+        -129.0,
+        12.0,
+        -102.0,
+        34.0,
+        -108.0,
+        43.0,
+        -100.0,
+        48.0,
+        -74.0,
+        47.0,
+        -56.0,
+        27.0,
+        47.0,
+        31.0,
+        -25.0,
+        59.0,
+        -59.0,
+        97.0,
+        80.0,
+        39.0,
+        87.0,
+        25.0,
+        109.0,
+        17.0,
+        119.0,
+        22.0,
+        124.0,
+        10.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "dedicated_targeting_core"
+    ],
+    "center": [
+        100.0,
+        132.0
+    ],
+    "collisionRadius": 227,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -126.6,
+                0.0
+            ],
+            "style": "RSL",
+            "width": 11.4
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -115.2,
+                -20.0
+            ],
+            "style": "RSL",
+            "width": 7.98
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -115.2,
+                20.0
+            ],
+            "style": "RSL",
+            "width": 7.98
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 25.08,
+            "location": [
+                -107.3,
+                -39.9
+            ],
+            "style": "RSL",
+            "width": 6.84
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 25.08,
+            "location": [
+                -107.3,
+                39.9
+            ],
+            "style": "RSL",
+            "width": 6.84
+        }
+    ],
+    "height": 320,
+    "hullId": "rsl_cadence",
+    "hullName": "Cadence",
+    "hullSize": "CRUISER",
+    "shieldCenter": [
+        28.5,
+        0
+    ],
+    "shieldRadius": 160,
+    "spriteName": "graphics/rsl/ships/rsl_cadence.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 10.0,
+            "id": "WS0001",
+            "locations": [
+                74.2,
+                -31.3
+            ],
+            "mount": "HARDPOINT",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -0.0,
+            "arc": 10.0,
+            "id": "WS0001R",
+            "locations": [
+                74.2,
+                31.3
+            ],
+            "mount": "HARDPOINT",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 270.0,
+            "id": "WS0003",
+            "locations": [
+                96.8,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": 45.0,
+            "arc": 240.0,
+            "id": "WS0004",
+            "locations": [
+                45.7,
+                -42.5
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -45.0,
+            "arc": 240.0,
+            "id": "WS0004R",
+            "locations": [
+                45.7,
+                42.5
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 90.0,
+            "arc": 220.0,
+            "id": "WS0006",
+            "locations": [
+                5.6,
+                -58.5
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -90.0,
+            "arc": 220.0,
+            "id": "WS0006R",
+            "locations": [
+                5.6,
+                58.5
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 60.0,
+            "arc": 240.0,
+            "id": "WS0008",
+            "locations": [
+                5.6,
+                -18.2
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -60.0,
+            "arc": 240.0,
+            "id": "WS0008R",
+            "locations": [
+                5.6,
+                18.2
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 150.0,
+            "arc": 180.0,
+            "id": "WS0010",
+            "locations": [
+                -85.6,
+                -40.4
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        },
+        {
+            "angle": -150.0,
+            "arc": 180.0,
+            "id": "WS0010R",
+            "locations": [
+                -85.6,
+                40.4
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        }
+    ],
+    "width": 200,
+    "builtInWeapons": {}
 }

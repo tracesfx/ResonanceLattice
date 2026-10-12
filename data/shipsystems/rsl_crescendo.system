@@ -1,0 +1,17 @@
+{
+    "id": "rsl_crescendo",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.CrescendoStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "WEAPON_BOOST",
+    "weaponGlowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "weaponTypes": [
+        "ENERGY"
+    ],
+    "useSound": "system_high_energy_focus_activate"
+}

@@ -1,252 +1,259 @@
 {
-  "bounds": [
-    86.0,
-    1.0,
-    84.0,
-    -2.0,
-    56.0,
-    -10.0,
-    56.0,
-    -13.0,
-    71.0,
-    -14.0,
-    79.0,
-    -21.0,
-    57.0,
-    -23.0,
-    39.0,
-    -49.0,
-    25.0,
-    -49.0,
-    9.0,
-    -31.0,
-    -13.0,
-    -31.0,
-    -29.0,
-    -43.0,
-    -49.0,
-    -42.0,
-    -56.0,
-    -39.0,
-    -61.0,
-    -23.0,
-    -71.0,
-    -17.0,
-    -71.0,
-    16.0,
-    -61.0,
-    23.0,
-    -56.0,
-    39.0,
-    -41.0,
-    44.0,
-    -26.0,
-    42.0,
-    -13.0,
-    31.0,
-    9.0,
-    31.0,
-    25.0,
-    49.0,
-    40.0,
-    49.0,
-    57.0,
-    23.0,
-    79.0,
-    21.0,
-    71.0,
-    14.0,
-    56.0,
-    13.0,
-    56.0,
-    10.0
-  ],
-  "builtInMods": [],
-  "center": [
-    53.0,
-    73.0
-  ],
-  "collisionRadius": 107,
-  "coversColor": "",
-  "engineSlots": [
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -70.5,
-        -8.4
-      ],
-      "style": "MIDLINE",
-      "width": 9.45
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 48.0,
-      "location": [
-        -70.5,
-        8.4
-      ],
-      "style": "MIDLINE",
-      "width": 9.45
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 31.5,
-      "location": [
-        -55.8,
-        -34.7
-      ],
-      "style": "MIDLINE",
-      "width": 7.35
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 31.5,
-      "location": [
-        -55.8,
-        34.6
-      ],
-      "style": "MIDLINE",
-      "width": 7.35
-    }
-  ],
-  "height": 160,
-  "hullId": "rsl_refrain",
-  "hullName": "Refrain",
-  "hullSize": "DESTROYER",
-  "shieldCenter": [
-    7.5,
-    0
-  ],
-  "shieldRadius": 83,
-  "spriteName": "graphics/rsl/ships/rsl_refrain.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 0.0,
-      "arc": 270.0,
-      "id": "WS0001",
-      "locations": [
-        50.0,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 30.0,
-      "arc": 240.0,
-      "id": "WS0002",
-      "locations": [
-        32.4,
-        -23.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -30.0,
-      "arc": 240.0,
-      "id": "WS0002R",
-      "locations": [
-        32.4,
-        23.1
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 300.0,
-      "id": "WS0004",
-      "locations": [
+    "bounds": [
+        86.0,
+        1.0,
+        84.0,
+        -2.0,
+        56.0,
+        -10.0,
+        56.0,
+        -13.0,
+        71.0,
+        -14.0,
+        79.0,
+        -21.0,
+        57.0,
+        -23.0,
+        39.0,
+        -49.0,
+        25.0,
+        -49.0,
+        9.0,
+        -31.0,
+        -13.0,
+        -31.0,
+        -29.0,
+        -43.0,
+        -49.0,
+        -42.0,
+        -56.0,
+        -39.0,
+        -61.0,
+        -23.0,
+        -71.0,
+        -17.0,
+        -71.0,
+        16.0,
+        -61.0,
+        23.0,
+        -56.0,
+        39.0,
+        -41.0,
+        44.0,
+        -26.0,
+        42.0,
+        -13.0,
+        31.0,
+        9.0,
+        31.0,
+        25.0,
+        49.0,
+        40.0,
+        49.0,
+        57.0,
+        23.0,
+        79.0,
+        21.0,
+        71.0,
+        14.0,
+        56.0,
         13.0,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": 90.0,
-      "arc": 240.0,
-      "id": "WS0005",
-      "locations": [
-        -8.5,
-        -24.7
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -90.0,
-      "arc": 240.0,
-      "id": "WS0005R",
-      "locations": [
-        -8.5,
-        24.7
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 120.0,
-      "arc": 180.0,
-      "id": "WS0007",
-      "locations": [
-        -35.8,
-        -34.7
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    },
-    {
-      "angle": -120.0,
-      "arc": 180.0,
-      "id": "WS0007R",
-      "locations": [
-        -35.8,
-        34.6
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    },
-    {
-      "angle": -162.0,
-      "arc": 0.0,
-      "id": "WS0009",
-      "locations": [
-        29.5,
-        -41.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "DECORATIVE"
-    },
-    {
-      "angle": 162.0,
-      "arc": 0.0,
-      "id": "WS0010",
-      "locations": [
-        29.5,
-        41.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "DECORATIVE"
+        56.0,
+        10.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "escort_package"
+    ],
+    "center": [
+        53.0,
+        73.0
+    ],
+    "collisionRadius": 107,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -70.5,
+                -8.4
+            ],
+            "style": "RSL",
+            "width": 9.45
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 48.0,
+            "location": [
+                -70.5,
+                8.4
+            ],
+            "style": "RSL",
+            "width": 9.45
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 31.5,
+            "location": [
+                -55.8,
+                -34.7
+            ],
+            "style": "RSL",
+            "width": 7.35
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 31.5,
+            "location": [
+                -55.8,
+                34.6
+            ],
+            "style": "RSL",
+            "width": 7.35
+        }
+    ],
+    "height": 160,
+    "hullId": "rsl_refrain",
+    "hullName": "Refrain",
+    "hullSize": "DESTROYER",
+    "shieldCenter": [
+        7.5,
+        0
+    ],
+    "shieldRadius": 83,
+    "spriteName": "graphics/rsl/ships/rsl_refrain.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 270.0,
+            "id": "WS0001",
+            "locations": [
+                50.0,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 30.0,
+            "arc": 240.0,
+            "id": "WS0002",
+            "locations": [
+                32.4,
+                -23.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -30.0,
+            "arc": 240.0,
+            "id": "WS0002R",
+            "locations": [
+                32.4,
+                23.1
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 300.0,
+            "id": "WS0004",
+            "locations": [
+                13.0,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": 90.0,
+            "arc": 240.0,
+            "id": "WS0005",
+            "locations": [
+                -8.5,
+                -24.7
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -90.0,
+            "arc": 240.0,
+            "id": "WS0005R",
+            "locations": [
+                -8.5,
+                24.7
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 120.0,
+            "arc": 180.0,
+            "id": "WS0007",
+            "locations": [
+                -35.8,
+                -34.7
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        },
+        {
+            "angle": -120.0,
+            "arc": 180.0,
+            "id": "WS0007R",
+            "locations": [
+                -35.8,
+                34.6
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        },
+        {
+            "angle": -162.0,
+            "arc": 360.0,
+            "id": "WS0009",
+            "locations": [
+                29.5,
+                -41.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "DECORATIVE"
+        },
+        {
+            "angle": 162.0,
+            "arc": 360.0,
+            "id": "WS0010",
+            "locations": [
+                29.5,
+                41.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "DECORATIVE"
+        }
+    ],
+    "width": 106,
+    "builtInWeapons": {
+        "WS0009": "rsl_deco_refrain_vane_r",
+        "WS0010": "rsl_deco_refrain_vane_l"
     }
-  ],
-  "width": 106
 }

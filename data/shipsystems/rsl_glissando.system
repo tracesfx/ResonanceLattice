@@ -1,0 +1,9 @@
+{
+    "id": "rsl_glissando",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.GlissandoStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.GlissandoAI",
+    "useSound": "system_phase_skimmer"
+}

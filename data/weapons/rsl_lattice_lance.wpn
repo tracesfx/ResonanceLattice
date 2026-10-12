@@ -1,0 +1,55 @@
+{
+    "id": "rsl_lattice_lance",
+    "specClass": "beam",
+    "type": "ENERGY",
+    "size": "MEDIUM",
+    "turretSprite": "graphics/rsl/weapons/rsl_lattice_lance_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_lattice_lance_hardpoint.png",
+    "turretOffsets": [
+        17.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        18.5,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_lattice_lance_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_lattice_lance_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "beamEffect": "rsl.weapons.LatticeLanceEffect",
+    "fringeColor": [
+        40,
+        170,
+        170,
+        255
+    ],
+    "coreColor": [
+        220,
+        255,
+        250,
+        255
+    ],
+    "width": 12.0,
+    "textureType": "ROUGH",
+    "textureScrollSpeed": 160.0,
+    "pixelsPerTexel": 5.0,
+    "fireSoundOne": "beam_heavy_intro",
+    "fireSoundTwo": "graviton_beam_loop",
+    "pierceSet": [
+        "PROJECTILE_FF",
+        "PROJECTILE_NO_FF",
+        "PROJECTILE_FIGHTER"
+    ]
+}

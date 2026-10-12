@@ -57,8 +57,21 @@ feedback.
   STATION_MODULE slots, glow-on, vanilla station2_hightech core, the 4 big hulls).
 - Cantor v1 feedback: more detail; Halo/Conductor-style gradients, no flat grey; many more seams. → **v2 (awaiting
   feedback):** `art_src/review/cantor_v2.png`.
-- Next: Cantor feedback → data/code stage.
-- Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
+- Sprites finished (user, 2026-10-11).
+- **Stage 3 (data + code), 2026-10-11: ships-and-weapons build done, statically verified only (never run in game).**
+  User asked for "a working mod with only the ships and their weapons", testable via console commands; weapon art
+  needs no manual review. Pipeline: `python art_src/gen/gen_weapons.py` (weapon/missile sprites + muzzle offsets in
+  `art_src/gen/weapon_offsets.json`) → `python art_src/gen/gen_icons.py` → `python tools/gen_data.py` (ALL csv/json/
+  .wpn/.proj/.system/.variant/faction/settings/missions; also post-processes the .ship files finish.py writes:
+  style RSL, engine style RSL, built-ins, deco arcs, module anchors; the Unsung .ship is derived from the Virtuoso's)
+  → `./build.sh`. Never hand-edit generated data; re-run gen_data.py after any finish.py run.
+- Java: `rsl.combat` (LatticeData = per-ship Resonance/system state, RslCombatPlugin = DoTs + embedded spikes,
+  RslDamageListener = global hook, LatticeDealtModifier = mark/Fracture/Crescendo, LatticeGlowRenderer = seam glow),
+  `rsl.hullmods` (8), `rsl.systems` (10 stats scripts + AIs on RslSystemAI), `rsl.weapons` (on-fire/on-hit/beam
+  effects, DecoRingEffect/DecoVaneEffect for moving parts). Testing: README.md (console ids, 2 missions).
+- Deviations from DESIGN.md: shard/flak "hybrid" weapons are BALLISTIC mount type (validator rejects HYBRID weapon
+  type); the Unsung is a full hull (own .ship) instead of a .skin; SO on the Virtuoso is a copy hullmod
+  `rsl_unbound` (vanilla SO refuses capitals); no custom fighter wing (vanilla wings).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
   ship_data.csv rows, unreferenced glow/map/deco assets.
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.

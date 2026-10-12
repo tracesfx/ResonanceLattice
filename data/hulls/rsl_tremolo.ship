@@ -1,242 +1,244 @@
 {
-  "bounds": [
-    150.0,
-    -45.0,
-    60.0,
-    -66.0,
-    48.0,
-    -91.0,
-    -1.0,
-    -78.0,
-    -61.0,
-    -86.0,
-    -100.0,
-    -99.0,
-    -95.0,
-    -89.0,
-    -105.0,
-    -85.0,
-    -105.0,
-    -59.0,
-    -71.0,
-    -32.0,
-    -56.0,
-    -2.0,
-    -71.0,
-    32.0,
-    -104.0,
-    57.0,
-    -105.0,
-    85.0,
-    -95.0,
-    89.0,
-    -100.0,
-    99.0,
-    -61.0,
-    86.0,
-    -1.0,
-    78.0,
-    48.0,
-    91.0,
-    60.0,
-    66.0,
-    149.0,
-    45.0,
-    118.0,
-    36.0,
-    122.0,
-    30.0,
-    54.0,
-    39.0,
-    67.0,
-    6.0,
-    77.0,
-    1.0,
-    67.0,
-    -6.0,
-    54.0,
-    -39.0,
-    122.0,
-    -30.0,
-    118.0,
-    -36.0
-  ],
-  "builtInMods": [
-    "auxiliarythrusters"
-  ],
-  "center": [
-    102.0,
-    110.0
-  ],
-  "collisionRadius": 192,
-  "coversColor": "",
-  "engineSlots": [
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -104.0,
-        -62.0
-      ],
-      "style": "MIDLINE",
-      "width": 8.0
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -104.0,
-        62.0
-      ],
-      "style": "MIDLINE",
-      "width": 8.0
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -104.0,
-        -77.0
-      ],
-      "style": "MIDLINE",
-      "width": 8.0
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 56.0,
-      "location": [
-        -104.0,
-        77.0
-      ],
-      "style": "MIDLINE",
-      "width": 8.0
-    }
-  ],
-  "height": 262,
-  "hullId": "rsl_tremolo",
-  "hullName": "Tremolo",
-  "hullSize": "CRUISER",
-  "shieldCenter": [
-    22.5,
-    0
-  ],
-  "shieldRadius": 160,
-  "spriteName": "graphics/rsl/ships/rsl_tremolo.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 0.0,
-      "arc": 10.0,
-      "id": "WS0001",
-      "locations": [
-        118.0,
-        -46.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -0.0,
-      "arc": 10.0,
-      "id": "WS0001R",
-      "locations": [
-        118.0,
-        46.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "MEDIUM",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 150.0,
-      "id": "WS0003",
-      "locations": [
+    "bounds": [
+        150.0,
+        -45.0,
+        60.0,
+        -66.0,
         48.0,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "LARGE",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 45.0,
-      "arc": 240.0,
-      "id": "WS0004",
-      "locations": [
+        -91.0,
+        -1.0,
+        -78.0,
+        -61.0,
+        -86.0,
+        -100.0,
+        -99.0,
+        -95.0,
+        -89.0,
+        -105.0,
+        -85.0,
+        -105.0,
+        -59.0,
+        -71.0,
+        -32.0,
+        -56.0,
+        -2.0,
+        -71.0,
+        32.0,
+        -104.0,
+        57.0,
+        -105.0,
+        85.0,
+        -95.0,
+        89.0,
+        -100.0,
+        99.0,
+        -61.0,
+        86.0,
+        -1.0,
+        78.0,
+        48.0,
+        91.0,
+        60.0,
+        66.0,
+        149.0,
+        45.0,
+        118.0,
         36.0,
-        -74.0
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": -45.0,
-      "arc": 240.0,
-      "id": "WS0004R",
-      "locations": [
-        36.0,
-        74.0
-      ],
-      "mount": "TURRET",
-      "size": "MEDIUM",
-      "type": "HYBRID"
-    },
-    {
-      "angle": 100.0,
-      "arc": 220.0,
-      "id": "WS0006",
-      "locations": [
-        -48.0,
-        -70.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -100.0,
-      "arc": 220.0,
-      "id": "WS0006R",
-      "locations": [
-        -48.0,
-        70.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 30.0,
-      "arc": 180.0,
-      "id": "WS0008",
-      "locations": [
-        68.0,
-        -62.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    },
-    {
-      "angle": -30.0,
-      "arc": 180.0,
-      "id": "WS0008R",
-      "locations": [
-        68.0,
-        62.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "MISSILE"
-    }
-  ],
-  "width": 204
+        122.0,
+        30.0,
+        54.0,
+        39.0,
+        67.0,
+        6.0,
+        77.0,
+        1.0,
+        67.0,
+        -6.0,
+        54.0,
+        -39.0,
+        122.0,
+        -30.0,
+        118.0,
+        -36.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "auxiliarythrusters"
+    ],
+    "center": [
+        102.0,
+        110.0
+    ],
+    "collisionRadius": 192,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -104.0,
+                -62.0
+            ],
+            "style": "RSL",
+            "width": 8.0
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -104.0,
+                62.0
+            ],
+            "style": "RSL",
+            "width": 8.0
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -104.0,
+                -77.0
+            ],
+            "style": "RSL",
+            "width": 8.0
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 56.0,
+            "location": [
+                -104.0,
+                77.0
+            ],
+            "style": "RSL",
+            "width": 8.0
+        }
+    ],
+    "height": 262,
+    "hullId": "rsl_tremolo",
+    "hullName": "Tremolo",
+    "hullSize": "CRUISER",
+    "shieldCenter": [
+        22.5,
+        0
+    ],
+    "shieldRadius": 160,
+    "spriteName": "graphics/rsl/ships/rsl_tremolo.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 10.0,
+            "id": "WS0001",
+            "locations": [
+                118.0,
+                -46.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -0.0,
+            "arc": 10.0,
+            "id": "WS0001R",
+            "locations": [
+                118.0,
+                46.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "MEDIUM",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 150.0,
+            "id": "WS0003",
+            "locations": [
+                48.0,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "LARGE",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 45.0,
+            "arc": 240.0,
+            "id": "WS0004",
+            "locations": [
+                36.0,
+                -74.0
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": -45.0,
+            "arc": 240.0,
+            "id": "WS0004R",
+            "locations": [
+                36.0,
+                74.0
+            ],
+            "mount": "TURRET",
+            "size": "MEDIUM",
+            "type": "HYBRID"
+        },
+        {
+            "angle": 100.0,
+            "arc": 220.0,
+            "id": "WS0006",
+            "locations": [
+                -48.0,
+                -70.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -100.0,
+            "arc": 220.0,
+            "id": "WS0006R",
+            "locations": [
+                -48.0,
+                70.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 30.0,
+            "arc": 180.0,
+            "id": "WS0008",
+            "locations": [
+                68.0,
+                -62.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        },
+        {
+            "angle": -30.0,
+            "arc": 180.0,
+            "id": "WS0008R",
+            "locations": [
+                68.0,
+                62.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "MISSILE"
+        }
+    ],
+    "width": 204,
+    "builtInWeapons": {}
 }

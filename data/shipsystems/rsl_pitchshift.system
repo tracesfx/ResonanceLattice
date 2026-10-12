@@ -1,0 +1,10 @@
+{
+    "id": "rsl_pitchshift",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.PitchShiftStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.PitchShiftAI",
+    "useSound": "system_phase_skimmer",
+    "runScriptWhileIdle": true
+}

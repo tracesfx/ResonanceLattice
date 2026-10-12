@@ -1,0 +1,9 @@
+{
+    "id": "rsl_grandchorus",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.GrandChorusStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.GrandChorusAI",
+    "useSound": "tachyon_lance_fire"
+}

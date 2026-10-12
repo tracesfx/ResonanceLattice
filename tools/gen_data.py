@@ -1,0 +1,1087 @@
+#!/usr/bin/env python3
+"""gen_data.py - writes ALL of Resonance Lattice's game data from code. Re-run after every change; never hand-edit
+the files it writes (list at the bottom of this docstring).
+
+    python art_src/gen/gen_weapons.py      # weapon sprites + art_src/gen/weapon_offsets.json (muzzle offsets)
+    python art_src/gen/gen_icons.py        # system / hullmod icons, crest, flag
+    python tools/gen_data.py               # everything below
+
+Order matters only in one place: art_src/finish.py writes data/hulls/<hull>.ship from the hull specs (geometry), and
+this script post-processes those .ship files (hull style, engine style, built-in weapons and hullmods, module
+anchors, deco arcs). Run it again after any finish.py run.
+
+Stats come from vanilla peers (`vanilla_baselines.py peers`) via ssdata.clone_row: only the columns the design needs
+are changed. BALANCE.md lists the deviations.
+
+Writes: data/hulls/{ship_data.csv, *.ship (post-process), rsl_virtuoso_unsung.ship}, data/variants/rsl/*.variant,
+data/weapons/{weapon_data.csv, *.wpn, proj/*.proj}, data/shipsystems/{ship_systems.csv, *.system},
+data/hullmods/hull_mods.csv, data/strings/descriptions.csv, data/world/factions/{factions.csv, rsl_choir.faction,
+default_ship_roles.json}, data/config/{settings.json, hull_styles.json, engine_styles.json},
+data/lights/rsl_texture_data.csv, data/missions/** (test missions).
+"""
+import csv
+import io
+import json
+import os
+import shutil
+import sys
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(os.path.expanduser("~"), ".claude", "skills", "starsector-modding", "scripts"))
+import ssdata  # noqa: E402
+import sslib  # noqa: E402
+
+V = ssdata.Vanilla()
+MFR = "Resonance Lattice"
+BP = "rsl_bp"
+TEAL = [100, 230, 220, 255]
+TEAL_SOFT = [60, 200, 190, 255]
+VIOLET = [160, 120, 240, 255]
+WHITE = [235, 255, 252, 255]
+OFFS = json.load(open(os.path.join(ROOT, "art_src", "gen", "weapon_offsets.json")))
+
+
+def P(*rel):
+    return os.path.join(ROOT, *rel)
+
+
+def write_text(rel, text):
+    p = P(rel)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
+def write_json(rel, obj):
+    write_text(rel, json.dumps(obj, indent=4) + "\n")
+
+
+def write_csv(rel, header, rows):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(header)
+    for r in rows:
+        unknown = [k for k in r if k not in header]
+        if unknown:
+            raise KeyError("%s: unknown columns %s" % (rel, unknown))
+        w.writerow(["" if r.get(c) is None else str(r.get(c)) for c in header])
+    write_text(rel, buf.getvalue())
+
+
+DESC = []   # (id, type, text1, text2, text3)
+
+
+def desc(did, dtype, t1, t2="", t3=""):
+    DESC.append((did, dtype, t1, t2, t3))
+
+
+# ===================================================================================================== weapons
+def blank_row(**kw):
+    hdr = V.header("weapon_data.csv")
+    r = {c: "" for c in hdr}
+    r["OPs"] = "0"
+    r.update({k: str(v) for k, v in kw.items()})
+    return r
+
+
+def muzzle_flash(color, length=24.0, spread=8.0, size=14.0, count=8):
+    return {"length": length, "spread": spread, "particleSizeMin": size, "particleSizeRange": size * 0.8,
+            "particleDuration": 0.12, "particleCount": count, "particleColor": color}
+
+
+def wpn_base(wid, mount_type, size, spec_class="projectile", glow=True, barrel="ALTERNATING"):
+    o = OFFS[wid]
+    w = {"id": wid, "specClass": spec_class, "type": mount_type, "size": size,
+         "turretSprite": o["turret"]["sprite"], "hardpointSprite": o["hardpoint"]["sprite"],
+         "turretOffsets": o["turret"]["offsets"], "turretAngleOffsets": o["turret"]["angles"],
+         "hardpointOffsets": o["hardpoint"]["offsets"], "hardpointAngleOffsets": o["hardpoint"]["angles"],
+         "barrelMode": barrel}
+    if glow:
+        w["turretGlowSprite"] = o["turret"]["glow"]
+        w["hardpointGlowSprite"] = o["hardpoint"]["glow"]
+        w["glowColor"] = TEAL
+    return w
+
+
+def bolt(pid, length, width, fringe, core=WHITE, glow_r=0, hit_glow=0, sprite=None, on_hit=None, spawn="BALLISTIC_AS_BEAM",
+         coll="RAY", coll_f="RAY_FIGHTER", fade=0.25):
+    p = {"id": pid, "specClass": "projectile", "spawnType": spawn, "collisionClass": coll,
+         "collisionClassByFighter": coll_f, "length": length, "width": width, "fadeTime": fade,
+         "fringeColor": fringe, "coreColor": core, "textureScrollSpeed": 64.0, "pixelsPerTexel": 5.0}
+    if glow_r:
+        p["glowColor"] = fringe[:3] + [90]
+        p["glowRadius"] = glow_r
+    if hit_glow:
+        p["hitGlowRadius"] = hit_glow
+    if sprite:
+        p["bulletSprite"] = sprite
+    if on_hit:
+        p["onHitEffect"] = on_hit
+    return p
+
+
+def engine_slot(length, width, color=TEAL, contrail=None):
+    return [{"id": "ES1", "loc": [-length * 0.5, 0], "style": "CUSTOM",
+             "styleSpec": {"mode": "QUAD_STRIP", "engineColor": color, "contrailDuration": 0.6,
+                           "contrailWidthMult": 1.2, "contrailWidthAddedFractionAtEnd": 1.5, "contrailMinSeg": 5,
+                           "contrailMaxSpeedMult": 0.0, "contrailAngularVelocityMult": 0.5,
+                           "contrailSpawnDistMult": 0.0, "contrailColor": contrail or [140, 110, 230, 60],
+                           "glowSizeMult": 1.6, "type": "GLOW"},
+             "width": width, "length": length * 1.4, "angle": 180.0}]
+
+
+WEAPONS, WPN, PROJ = [], {}, {}
+PKG = "rsl.weapons."
+
+
+def add_weapon(row, wpn, projs=(), description=""):
+    WEAPONS.append(row)
+    WPN[row["id"]] = wpn
+    for p in projs:
+        PROJ[p["id"]] = p
+    if description:
+        desc(row["id"], "WEAPON", description)
+
+
+def weapons():
+    # ---- SMALL ---------------------------------------------------------------------------------------------
+    w = wpn_base("rsl_chime", "ENERGY", "SMALL")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 18, 6, 10, 6),
+             projectileSpecId="rsl_chime_shot", fireSoundTwo="ir_pulse_laser_fire",
+             onFireEffect=PKG + "ChimeRepeaterEffect", autocharge=True)
+    add_weapon(blank_row(name="Chime Repeater", id="rsl_chime", tier=1, **{
+        "base value": 1400, "range": 450, "damage/shot": 30, "emp": 0, "impact": 0, "turn rate": 120, "OPs": 5,
+        "type": "ENERGY", "energy/shot": 22, "chargeup": 0, "chargedown": 0.55, "burst size": 2, "burst delay": 0.1,
+        "min spread": 0, "max spread": 4, "spread/shot": 1, "spread decay/sec": 8, "proj speed": 1000,
+        "hints": "PD, ANTI_FTR", "tags": "pd8, energy7, SR, " + BP, "tech/manufacturer": MFR,
+        "primaryRoleStr": "Point Defense", "customPrimary": "Every %s shot is a resonant chime: %s EMP damage and an arc to a nearby missile or fighter.",
+        "customPrimaryHL": "4th | 150"}), w,
+        [bolt("rsl_chime_shot", 22, 7, TEAL_SOFT, hit_glow=22, fade=0.2),
+         bolt("rsl_chime_bell", 30, 11, VIOLET, hit_glow=40, glow_r=18, on_hit=PKG + "ChimeBellOnHit", fade=0.2)],
+        "A compact repeater built around a pair of tuning prongs. Its crystal discharges in short pairs of bolts; every fourth "
+        "discharge is allowed to ring, and the chime spills over as an EMP arc that snaps at nearby missiles and fighters.")
+    # the chime shot is spawned from a hidden weapon so it can carry its own projectile spec
+    hid = wpn_base("rsl_chime", "ENERGY", "SMALL", glow=False)
+    hid.update(id="rsl_chime_bell", projectileSpecId="rsl_chime_bell")
+    add_weapon(blank_row(name="Chime (bell)", id="rsl_chime_bell", **{
+        "range": 450, "damage/shot": 30, "emp": 150, "type": "ENERGY", "energy/shot": 0, "chargedown": 1,
+        "proj speed": 1000, "tags": "SYSTEM", "tech/manufacturer": MFR}), hid, [],
+        "The ringing fourth shot of a Chime Repeater.")
+
+    w = wpn_base("rsl_pizzicato", "ENERGY", "SMALL")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 26, 4, 12, 8),
+             projectileSpecId="rsl_pizzicato_shot", fireSoundTwo="pulse_laser_fire",
+             onFireEffect=PKG + "PizzicatoEffect")
+    add_weapon(blank_row(name="Pizzicato Lancet", id="rsl_pizzicato", tier=1, **{
+        "base value": 1800, "range": 600, "damage/shot": 110, "impact": 4, "turn rate": 30, "OPs": 6,
+        "type": "ENERGY", "energy/shot": 100, "chargeup": 0, "chargedown": 0.9, "proj speed": 1200,
+        "tags": "energy8, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
+        "customPrimary": "A shot fired after at least %s of silence is plucked: it deals %s damage.",
+        "customPrimaryHL": "2.5 seconds | double"}), w,
+        [bolt("rsl_pizzicato_shot", 34, 6, TEAL, glow_r=12, hit_glow=30)],
+        "A single needle-thin lancet with a tensioned crystal at its breech. Left alone, the crystal stores its charge and "
+        "the next shot leaves with a sharp, plucked report - and twice the bite.")
+
+    w = wpn_base("rsl_shardcaster", "BALLISTIC", "SMALL", barrel="LINKED")
+    w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 16, 20, 8, 10),
+             projectileSpecId="rsl_shard_shot", fireSoundTwo="mining_blaster_fire")
+    add_weapon(blank_row(name="Shard Caster", id="rsl_shardcaster", tier=1, **{
+        "base value": 1100, "range": 400, "damage/shot": 30, "impact": 2, "turn rate": 50, "OPs": 5,
+        "type": "KINETIC", "energy/shot": 18, "chargeup": 0, "chargedown": 0.6, "min spread": 4, "max spread": 10,
+        "spread/shot": 2, "spread decay/sec": 12, "proj speed": 850, "hints": "ANTI_FTR",
+        "tags": "kinetic6, energy6, SR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Assault"}), w,
+        [bolt("rsl_shard_shot", 10, 5, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF", coll_f="PROJECTILE_FIGHTER",
+              sprite=OFFS["rsl_shard_proj"]["sprite"], fade=0.15)],
+        "Three crystal throats fire grown shards in a tight fan. Crude by Choir standards, the Shard Caster is what the "
+        "lattice yards fit when a hull needs teeth and has no flux to spare for them.")
+
+    w = wpn_base("rsl_tuningspike", "MISSILE", "SMALL", glow=False)
+    w.update(animationType="SMOKE", projectileSpecId="rsl_tuningspike_msl", fireSoundTwo="swarmer_fire",
+             smokeSpec={"particleSizeMin": 8.0, "particleSizeRange": 8.0, "cloudParticleCount": 4,
+                        "cloudDuration": 1.0, "cloudRadius": 8.0, "blowbackParticleCount": 3, "blowbackDuration": 1.5,
+                        "blowbackLength": 14.0, "blowbackSpread": 10.0, "particleColor": [120, 140, 160, 160]})
+    spike_proj = {
+        "id": "rsl_tuningspike_msl", "specClass": "missile", "missileType": "MISSILE",
+        "sprite": OFFS["rsl_tuningspike_msl"]["sprite"], "size": OFFS["rsl_tuningspike_msl"]["size"],
+        "center": [OFFS["rsl_tuningspike_msl"]["size"][0] / 2, OFFS["rsl_tuningspike_msl"]["size"][1] / 2],
+        "collisionRadius": 10, "collisionClass": "MISSILE_NO_FF", "explosionColor": TEAL, "explosionRadius": 40,
+        "flameoutTime": 1, "armingTime": 0.2, "noEngineGlowTime": 0.3, "fadeTime": 0.5,
+        "onHitEffect": PKG + "TuningSpikeOnHit",
+        "engineSpec": {"turnAcc": 600, "turnRate": 180, "acc": 900, "dec": 400},
+        "engineSlots": engine_slot(10, 5)}
+    add_weapon(blank_row(name="Tuning Spike", id="rsl_tuningspike", tier=1, **{
+        "base value": 900, "range": 1200, "damage/shot": 150, "impact": 5, "turn rate": 40, "OPs": 4, "ammo": 6,
+        "ammo/sec": 0.1, "reload size": 1, "type": "HIGH_EXPLOSIVE", "energy/shot": 0, "chargeup": 0, "chargedown": 1.5,
+        "burst size": 2, "burst delay": 0.2, "proj speed": 600, "launch speed": 150, "flight time": 2.6,
+        "proj hitpoints": 100, "hints": "", "tags": "missile6, strike5, " + BP, "tech/manufacturer": MFR,
+        "primaryRoleStr": "Combo", "speedStr": "Fast", "trackingStr": "Good",
+        "customPrimary": "Spikes that hit hull or armor embed for %s. The next energy weapon hit on that ship detonates every embedded spike for %s energy damage each.",
+        "customPrimaryHL": "10 seconds | 300", "noDPSInTooltip": "TRUE"}), w, [spike_proj],
+        "A lattice shard grown around a tuned core. It buries itself in the target's plating and hums there until an "
+        "energy weapon strikes the same hull; the matching frequency shatters it from the inside. The lattice regrows "
+        "spent spikes slowly.")
+    w = wpn_base("rsl_tuningspike_pod", "MISSILE", "MEDIUM", glow=False)
+    w.update({k: WPN["rsl_tuningspike"][k] for k in ("animationType", "projectileSpecId", "fireSoundTwo", "smokeSpec")})
+    add_weapon(blank_row(name="Tuning Spike Pod", id="rsl_tuningspike_pod", tier=1, **{
+        "base value": 2400, "range": 1200, "damage/shot": 150, "impact": 5, "turn rate": 30, "OPs": 10, "ammo": 16,
+        "ammo/sec": 0.25, "reload size": 2, "type": "HIGH_EXPLOSIVE", "energy/shot": 0, "chargedown": 2.0,
+        "burst size": 4, "burst delay": 0.15, "proj speed": 600, "launch speed": 150, "flight time": 2.6,
+        "proj hitpoints": 100, "tags": "missile8, strike6, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Combo",
+        "speedStr": "Fast", "trackingStr": "Good", "customPrimary": WEAPONS[-1]["customPrimary"],
+        "customPrimaryHL": WEAPONS[-1]["customPrimaryHL"], "noDPSInTooltip": "TRUE"}), w, [],
+        "Four Tuning Spike racks in an armored pod, for hulls that build their whole battle plan around the combo.")
+
+    # ---- MEDIUM --------------------------------------------------------------------------------------------
+    w = wpn_base("rsl_lattice_lance", "ENERGY", "MEDIUM", spec_class="beam")
+    w.update(beamEffect=PKG + "LatticeLanceEffect", fringeColor=[40, 170, 170, 255], coreColor=[220, 255, 250, 255],
+             glowColor=TEAL, width=12.0, textureType="ROUGH", textureScrollSpeed=160.0, pixelsPerTexel=5.0,
+             fireSoundOne="beam_heavy_intro", fireSoundTwo="graviton_beam_loop",
+             pierceSet=["PROJECTILE_FF", "PROJECTILE_NO_FF", "PROJECTILE_FIGHTER"])
+    add_weapon(blank_row(name="Lattice Lance", id="rsl_lattice_lance", tier=2, **{
+        "base value": 3200, "range": 700, "damage/second": 150, "impact": 2, "turn rate": 25, "OPs": 11,
+        "type": "ENERGY", "energy/second": 110, "chargeup": 0.2, "chargedown": 0.2, "beam speed": 2400,
+        "tags": "beam10, energy10, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Sustained",
+        "customPrimary": "Damage rises by up to %s while the beam stays on the same target (full after %s), and resets when it switches.",
+        "customPrimaryHL": "75% | 3 seconds"}), w, [],
+        "A beam that tunes itself to whatever it is touching. The longer it holds one target, the closer its resonance "
+        "comes to the target's own, and the deeper it cuts. Switching targets throws the tuning away.")
+
+    w = wpn_base("rsl_flechette", "BALLISTIC", "MEDIUM", barrel="LINKED")
+    w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 22, 24, 10, 14),
+             projectileSpecId="rsl_flechette_shot", fireSoundTwo="flak_fire")
+    add_weapon(blank_row(name="Crystal Flechette", id="rsl_flechette", tier=2, **{
+        "base value": 2600, "range": 450, "damage/shot": 60, "impact": 3, "turn rate": 35, "OPs": 10,
+        "type": "KINETIC", "energy/shot": 45, "chargeup": 0, "chargedown": 0.75, "min spread": 6, "max spread": 14,
+        "spread/shot": 3, "spread decay/sec": 12, "proj speed": 900, "tags": "kinetic9, SR, " + BP,
+        "tech/manufacturer": MFR, "primaryRoleStr": "Assault",
+        "customPrimary": "Shards that hit armor or hull splinter and keep cutting: %s energy damage over %s.",
+        "customPrimaryHL": "45 | 3 seconds"}), w,
+        [bolt("rsl_flechette_shot", 14, 6, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF",
+              coll_f="PROJECTILE_FIGHTER", sprite=OFFS["rsl_shard_proj"]["sprite"], on_hit=PKG + "FlechetteOnHit",
+              fade=0.15)],
+        "A three-throat shard thrower. The flechettes are grown with fracture planes along their length, so a shard "
+        "that lodges in plating keeps splitting - and cutting - for seconds after impact.")
+
+    w = wpn_base("rsl_arpeggio", "ENERGY", "MEDIUM")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 26, 6, 14, 8),
+             projectileSpecId="rsl_arpeggio_shot", fireSoundTwo="pulse_laser_fire",
+             onFireEffect=PKG + "ArpeggioEffect")
+    add_weapon(blank_row(name="Arpeggio Pulser", id="rsl_arpeggio", tier=2, **{
+        "base value": 2800, "range": 650, "damage/shot": 100, "impact": 3, "turn rate": 25, "OPs": 10,
+        "type": "ENERGY", "energy/shot": 85, "chargeup": 0, "chargedown": 1.2, "burst size": 3, "burst delay": 0.15,
+        "proj speed": 1100, "tags": "energy10, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
+        "customPrimary": "Fires a rising three-note burst: the notes deal %s of the listed damage.",
+        "customPrimaryHL": "80% | 100% | 140%"}), w,
+        [bolt("rsl_arpeggio_shot", 40, 9, TEAL, glow_r=16, hit_glow=40)],
+        "Three coil barrels of different length, fired in sequence. Each note is driven harder than the last, and the "
+        "third one lands like a struck bell.")
+
+    w = wpn_base("rsl_cantus", "BALLISTIC", "MEDIUM", glow=False)
+    w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 34, 26, 14, 30),
+             projectileSpecId="rsl_cantus_shot", fireSoundTwo="flak_fire", displayArcRadius=400)
+    flak = V.spec("proj", "flak_shot")
+    flak.update(id="rsl_cantus_shot", fringeColor=TEAL_SOFT, coreColor=[230, 255, 250, 160])
+    flak["behaviorSpec"]["explosionSpec"]["particleColor"] = [120, 240, 230, 255]
+    add_weapon(blank_row(name="Cantus Flak", id="rsl_cantus", tier=1, **{
+        "base value": 1300, "range": 500, "damage/shot": 160, "impact": 8, "turn rate": 45, "OPs": 9,
+        "type": "FRAGMENTATION", "energy/shot": 40, "chargeup": 0, "chargedown": 0.7, "min spread": 0,
+        "max spread": 10, "spread/shot": 2, "spread decay/sec": 10, "proj speed": 750, "proj hitpoints": 30,
+        "hints": "PD", "tags": "pd12, SR, " + BP, "tech/manufacturer": MFR,
+        "primaryRoleStr": "Point Defense (Area)"}), w, [flak],
+        "Twin flak barrels that fire tuned fragmentation shells. The shells listen for missile drives and burst when "
+        "the pitch is right.")
+
+    # ---- LARGE ---------------------------------------------------------------------------------------------
+    w = wpn_base("rsl_harmonic_driver", "ENERGY", "LARGE")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 50, 10, 30, 14),
+             projectileSpecId="rsl_harmonic_shot", fireSoundOne="tachyon_lance_fire",
+             fireSoundTwo="heavy_blaster_fire", autocharge=True, requiresFullCharge=True)
+    add_weapon(blank_row(name="Harmonic Driver", id="rsl_harmonic_driver", tier=3, **{
+        "base value": 9000, "range": 900, "damage/shot": 900, "impact": 20, "turn rate": 10, "OPs": 24,
+        "type": "ENERGY", "energy/shot": 900, "chargeup": 1.5, "chargedown": 2.0, "proj speed": 1400,
+        "proj hitpoints": 500, "hints": "STRIKE", "tags": "energy20, LR, " + BP, "tech/manufacturer": MFR,
+        "primaryRoleStr": "Anti Armor",
+        "customPrimary": "A fully charged shot that breaks through hull or armor pierces the ship and carries on with %s of its damage.",
+        "customPrimaryHL": "50%"}), w,
+        [bolt("rsl_harmonic_shot", 70, 20, TEAL, glow_r=40, hit_glow=110, on_hit=PKG + "PierceOnHit")],
+        "The Choir's standard heavy gun: a fork of conductive prongs that winds a lattice crystal up to its breaking "
+        "frequency and releases it as a single bolt. A clean hit on plating does not stop it.")
+    w = wpn_base("rsl_harmonic_spinal", "ENERGY", "LARGE")
+    w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 80, 12, 44, 20),
+             projectileSpecId="rsl_harmonic_spinal_shot", fireSoundOne="tachyon_lance_fire",
+             fireSoundTwo="heavy_blaster_fire", autocharge=True, requiresFullCharge=True)
+    add_weapon(blank_row(name="Harmonic Driver (Spinal)", id="rsl_harmonic_spinal", tier=3, **{
+        "base value": 0, "range": 1100, "damage/shot": 1500, "impact": 40, "turn rate": 0, "OPs": 0,
+        "type": "ENERGY", "energy/shot": 1400, "chargeup": 2.0, "chargedown": 3.0, "proj speed": 1500,
+        "proj hitpoints": 1000, "hints": "STRIKE", "tags": "no_drop, no_sell, no_dealer, restricted",
+        "tech/manufacturer": MFR, "primaryRoleStr": "Anti Armor",
+        "customPrimary": "Pierces ships it breaks through, keeping %s of its damage.", "customPrimaryHL": "50%"}), w,
+        [bolt("rsl_harmonic_spinal_shot", 100, 28, TEAL, glow_r=60, hit_glow=160, on_hit=PKG + "PierceOnHit")],
+        "The Conductor's spine is the gun. Its prongs wind the core crystal to a frequency no turret could survive.")
+
+    w = wpn_base("rsl_sostenuto", "ENERGY", "LARGE", spec_class="beam")
+    w.update(beamEffect=PKG + "SostenutoEffect", fringeColor=[50, 120, 210, 255], coreColor=[225, 245, 255, 255],
+             glowColor=TEAL, width=22.0, textureType="ROUGH", textureScrollSpeed=220.0, pixelsPerTexel=5.0,
+             fireSoundTwo="high_intensity_laser_loop",
+             pierceSet=["PROJECTILE_FF", "PROJECTILE_NO_FF", "PROJECTILE_FIGHTER", "MISSILE_FF", "MISSILE_NO_FF"])
+    add_weapon(blank_row(name="Sostenuto Beam", id="rsl_sostenuto", tier=3, **{
+        "base value": 8000, "range": 1000, "damage/second": 380, "impact": 4, "turn rate": 8, "OPs": 22,
+        "type": "ENERGY", "energy/second": 330, "chargeup": 0.3, "chargedown": 0.3, "beam speed": 2400,
+        "tags": "beam18, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Anti Shield",
+        "customPrimary": "%s of the damage this beam deals to shields is converted to hard flux.",
+        "customPrimaryHL": "35%"}), w, [],
+        "A sustained beam held on one note. Shields can bleed off most beams, but the Sostenuto's tone sits under the "
+        "emitter's dissipation band and some of the load simply stays.")
+
+    w = wpn_base("rsl_bloom", "MISSILE", "LARGE", glow=False)
+    w.update(animationType="SMOKE", projectileSpecId="rsl_bloom_msl", fireSoundTwo="reaper_fire",
+             smokeSpec=WPN["rsl_tuningspike"]["smokeSpec"])
+    bloom = {"id": "rsl_bloom_msl", "specClass": "missile", "missileType": "MISSILE",
+             "sprite": OFFS["rsl_bloom_msl"]["sprite"], "size": OFFS["rsl_bloom_msl"]["size"],
+             "center": [OFFS["rsl_bloom_msl"]["size"][0] / 2, OFFS["rsl_bloom_msl"]["size"][1] / 2],
+             "collisionRadius": 18, "collisionClass": "MISSILE_FF", "explosionColor": VIOLET, "explosionRadius": 260,
+             "flameoutTime": 2, "armingTime": 0.5, "noEngineGlowTime": 0.5, "fadeTime": 0.5,
+             "onHitEffect": PKG + "BloomOnHit",
+             "engineSpec": {"turnAcc": 60, "turnRate": 25, "acc": 300, "dec": 150},
+             "engineSlots": engine_slot(16, 9, VIOLET, [160, 120, 240, 80])}
+    add_weapon(blank_row(name="Resonance Bloom", id="rsl_bloom", tier=3, **{
+        "base value": 5000, "range": 1500, "damage/shot": 1500, "emp": 1000, "impact": 50, "turn rate": 10,
+        "OPs": 22, "ammo": 4, "type": "HIGH_EXPLOSIVE", "energy/shot": 0, "chargeup": 0, "chargedown": 6,
+        "burst size": 1, "proj speed": 300, "launch speed": 100, "flight time": 6, "proj hitpoints": 600,
+        "hints": "STRIKE", "tags": "missile12, strike10, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Torpedo",
+        "speedStr": "Slow", "trackingStr": "Poor",
+        "customPrimary": "Bursts into a ring of %s crystal fragments and arcs EMP into up to %s nearby targets.",
+        "customPrimaryHL": "16 | 4", "noDPSInTooltip": "TRUE"}), w, [bloom],
+        "A slow torpedo carrying an unstable lattice bloom. On impact the bloom flowers outward as a ring of crystal "
+        "fragments, and the shock arcs through anything nearby.")
+    hid = wpn_base("rsl_bloom", "MISSILE", "LARGE", glow=False)
+    hid.update(id="rsl_bloom_shard", type="ENERGY", projectileSpecId="rsl_bloom_shard_shot")
+    add_weapon(blank_row(name="Bloom Shard", id="rsl_bloom_shard", **{
+        "range": 400, "damage/shot": 120, "type": "FRAGMENTATION", "chargedown": 1, "proj speed": 700,
+        "tags": "SYSTEM", "tech/manufacturer": MFR}), hid,
+        [bolt("rsl_bloom_shard_shot", 12, 6, VIOLET, spawn="BALLISTIC", coll="PROJECTILE_FF",
+              coll_f="PROJECTILE_FIGHTER", sprite=OFFS["rsl_shard_proj"]["sprite"], fade=0.2)],
+        "A crystal fragment of a Resonance Bloom.")
+
+    # ---- Virtuoso built-ins ---------------------------------------------------------------------------------
+    for wid, name, cd, spd, turn, dmg, tags_extra, text in (
+            ("rsl_sforzando", "Sforzando Lance", 0.4, 2000, 45, 200, "",
+             "The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing small has "
+             "time to move. Slugs that kill a fighter or a frigate carry on to the next target in line."),
+            ("rsl_sforzando_untuned", "Sforzando Lance (Untuned)", 0.6, 1600, 30, 180, "",
+             "The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.")):
+        w = wpn_base(wid, "ENERGY", "LARGE")
+        w.update(animationType="GLOW_AND_FLASH", muzzleFlashSpec=muzzle_flash(WHITE, 40, 4, 20, 10),
+                 projectileSpecId=wid + "_shot", fireSoundTwo="railgun_fire", fireSoundOne="pulse_laser_fire")
+        add_weapon(blank_row(name=name, id=wid, tier=3, **{
+            "base value": 0, "range": 800, "damage/shot": dmg, "impact": 10, "turn rate": turn, "OPs": 0,
+            "type": "ENERGY", "energy/shot": int(dmg * 1.1), "chargeup": 0, "chargedown": cd, "min spread": 0,
+            "max spread": 0, "spread/shot": 0, "spread decay/sec": 0, "proj speed": spd,
+            "hints": "ANTI_FTR, USE_VS_FRIGATES", "tags": "no_drop, no_sell, no_dealer, restricted",
+            "tech/manufacturer": MFR, "primaryRoleStr": "Swarm Breaker",
+            "customPrimary": ("+%s damage to fighters and frigates. Cascade: a slug that destroys a fighter or frigate "
+                              "pierces on with %s of its damage. Accented after a Glissando dash or at high speed: "
+                              "every slug pierces and arcs EMP." if wid == "rsl_sforzando" else
+                              "+%s damage to fighters and frigates. %s"),
+            "customPrimaryHL": "50% | 60%" if wid == "rsl_sforzando" else "50% | No Cascade"}), w,
+            [bolt(wid + "_shot", 150 if wid == "rsl_sforzando" else 110, 8, [120, 240, 230, 255],
+                  glow_r=20, hit_glow=60, on_hit=PKG + "SforzandoOnHit", fade=0.15)], text)
+
+    # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
+    for wid, size, mount, sprite, glow, effect in (
+            ("rsl_deco_halo_ring", "LARGE", "TURRET", "rsl_halo_ring", True, "DecoRingEffect"),
+            ("rsl_deco_cantor_ring", "LARGE", "TURRET", "rsl_cantor_ring", True, "DecoRingEffect"),
+            ("rsl_deco_refrain_vane_r", "MEDIUM", "HARDPOINT", "rsl_refrain_vane_r", True, "DecoVaneEffect"),
+            ("rsl_deco_refrain_vane_l", "MEDIUM", "HARDPOINT", "rsl_refrain_vane_l", True, "DecoVaneEffect"),
+            ("rsl_deco_conductor_blade_r", "MEDIUM", "HARDPOINT", "rsl_conductor_blade_r", True, "DecoVaneEffect"),
+            ("rsl_deco_conductor_blade_l", "MEDIUM", "HARDPOINT", "rsl_conductor_blade_l", True, "DecoVaneEffect"),
+            ("rsl_deco_virtuoso_vane_r", "MEDIUM", "HARDPOINT", "rsl_virtuoso_vane_r", True, "DecoVaneEffect"),
+            ("rsl_deco_virtuoso_vane_l", "MEDIUM", "HARDPOINT", "rsl_virtuoso_vane_l", True, "DecoVaneEffect")):
+        spr = "graphics/rsl/weapons/deco/%s.png" % sprite
+        w = {"specClass": "beam", "id": wid, "type": "DECORATIVE", "size": size, "showDamageWhenDecorative": True,
+             "renderBelowAllWeapons": True, "everyFrameEffect": PKG + effect, "turretSprite": spr,
+             "hardpointSprite": spr, "turretOffsets": [0, 0], "turretAngleOffsets": [0], "hardpointOffsets": [0, 0],
+             "hardpointAngleOffsets": [0], "fringeColor": [255, 255, 255, 255], "coreColor": [255, 255, 255, 255],
+             "glowColor": [255, 255, 255, 255], "width": 1.0, "textureType": "ROUGH", "textureScrollSpeed": 1.0,
+             "pixelsPerTexel": 1.0}
+        add_weapon(blank_row(name="Lattice part", id=wid, tags="SYSTEM", **{"tech/manufacturer": MFR}), w, [],
+                   "A moving part of a Lattice hull.")
+
+    hdr = V.header("weapon_data.csv")
+    for r in WEAPONS:
+        r["number"] = ""
+    write_csv("data/weapons/weapon_data.csv", hdr, WEAPONS)
+    for wid, w in WPN.items():
+        write_json("data/weapons/%s.wpn" % wid, w)
+    for pid, p in PROJ.items():
+        write_json("data/weapons/proj/%s.proj" % pid, p)
+
+
+# ===================================================================================================== hulls
+SHIP_IDS = ["rsl_gracenote", "rsl_refrain", "rsl_staccato", "rsl_cadence", "rsl_tremolo", "rsl_halo",
+            "rsl_conductor", "rsl_virtuoso", "rsl_virtuoso_unsung", "rsl_cantor", "rsl_cantor_spire",
+            "rsl_cantor_bell", "rsl_cantor_loft"]
+CORE = "rsl_lattice_core"
+BUILTIN_MODS = {
+    "rsl_gracenote": [CORE, "hiressensors"],
+    "rsl_refrain": [CORE, "escort_package"],
+    "rsl_staccato": [CORE, "rsl_fracture", "unstable_injector"],
+    "rsl_cadence": [CORE, "dedicated_targeting_core"],
+    "rsl_tremolo": [CORE, "auxiliarythrusters"],
+    "rsl_halo": [CORE, "expanded_deck_crew", "hardened_subsystems", "rsl_tuned_wings"],
+    "rsl_conductor": [CORE, "stabilizedshieldemitter", "operations_center", "rsl_conductors_bridge"],
+    "rsl_virtuoso": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura"],
+    "rsl_virtuoso_unsung": [CORE, "auxiliarythrusters", "rsl_stolen_time", "rsl_bravura"],
+    "rsl_cantor": [CORE, "rsl_phase_locked", "vastbulk", "axialrotation", "supercomputer"],
+    "rsl_cantor_spire": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
+    "rsl_cantor_bell": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
+    "rsl_cantor_loft": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
+}
+BUILTIN_WEAPONS = {
+    "rsl_halo": {"WS0009": "rsl_deco_halo_ring"},
+    "rsl_cantor": {"WS0007": "rsl_deco_cantor_ring"},
+    "rsl_refrain": {"WS0009": "rsl_deco_refrain_vane_r", "WS0010": "rsl_deco_refrain_vane_l"},
+    "rsl_conductor": {"WS0001": "rsl_harmonic_spinal", "WS0010": "rsl_deco_conductor_blade_r",
+                      "WS0011": "rsl_deco_conductor_blade_l"},
+    "rsl_virtuoso": {"WS0001": "rsl_sforzando", "WS0001R": "rsl_sforzando", "WS0007": "rsl_deco_virtuoso_vane_r",
+                     "WS0008": "rsl_deco_virtuoso_vane_l"},
+    "rsl_virtuoso_unsung": {"WS0001": "rsl_sforzando_untuned", "WS0001R": "rsl_sforzando_untuned"},
+}
+
+# peer to clone, then the columns the design changes
+HULLS = {
+    "rsl_gracenote": ("wolf", dict(name="Grace Note", designation="Interceptor", **{
+        "system id": "rsl_pitchshift", "fleet pts": 6, "hitpoints": 1700, "armor rating": 200, "max flux": 2500,
+        "flux dissipation": 190, "ordnance points": 50, "max speed": 150, "acceleration": 140, "deceleration": 110,
+        "max turn rate": 80, "turn acceleration": 160, "mass": 220, "shield type": "FRONT", "shield arc": 180,
+        "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 6, "supplies/mo": 6, "peak CR sec": 240,
+        "base value": 16000})),
+    "rsl_refrain": ("hammerhead", dict(name="Refrain", designation="Escort", **{
+        "system id": "rsl_ward", "fleet pts": 10, "hitpoints": 4800, "armor rating": 550, "max flux": 4500,
+        "flux dissipation": 260, "ordnance points": 90, "max speed": 85, "acceleration": 65, "deceleration": 50,
+        "max turn rate": 32, "turn acceleration": 64, "mass": 420, "shield type": "OMNI", "shield arc": 270,
+        "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 10, "supplies/mo": 10, "base value": 45000})),
+    "rsl_staccato": ("medusa", dict(name="Staccato", designation="Striker", **{
+        "system id": "rsl_gracedash", "fleet pts": 12, "hitpoints": 3800, "armor rating": 350, "max flux": 5600,
+        "flux dissipation": 360, "ordnance points": 100, "max speed": 100, "acceleration": 90, "deceleration": 70,
+        "max turn rate": 45, "turn acceleration": 110, "mass": 330, "shield type": "OMNI", "shield arc": 180,
+        "shield upkeep": 0.35, "shield efficiency": 0.7, "supplies/rec": 12, "supplies/mo": 12, "base value": 62000,
+        "tags": BP})),
+    "rsl_cadence": ("eagle", dict(name="Cadence", designation="Line Cruiser", **{
+        "system id": "rsl_crescendo", "fleet pts": 14, "hitpoints": 8000, "armor rating": 950, "max flux": 11000,
+        "flux dissipation": 680, "ordnance points": 155, "max speed": 60, "mass": 1250, "shield type": "FRONT",
+        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 20, "supplies/mo": 20,
+        "base value": 110000})),
+    "rsl_tremolo": ("fury", dict(name="Tremolo", designation="Skirmisher", **{
+        "system id": "rsl_standingwave", "fleet pts": 15, "hitpoints": 7000, "armor rating": 800, "max flux": 10000,
+        "flux dissipation": 620, "ordnance points": 145, "max speed": 80, "acceleration": 70, "deceleration": 55,
+        "max turn rate": 25, "turn acceleration": 45, "mass": 1500, "shield type": "OMNI", "shield arc": 200,
+        "shield upkeep": 0.3, "shield efficiency": 0.75, "supplies/rec": 22, "supplies/mo": 22,
+        "base value": 120000})),
+    "rsl_halo": ("astral", dict(name="Halo", designation="Carrier", **{
+        "system id": "rsl_stillwater", "fleet pts": 26, "hitpoints": 12000, "armor rating": 1100, "max flux": 14000,
+        "flux dissipation": 700, "ordnance points": 270, "fighter bays": 4, "max speed": 35, "acceleration": 20,
+        "deceleration": 15, "max turn rate": 8, "turn acceleration": 6, "mass": 3200, "shield type": "FRONT",
+        "shield arc": 300, "shield upkeep": 0.5, "shield efficiency": 0.8, "supplies/rec": 40, "supplies/mo": 40,
+        "base value": 380000})),
+    "rsl_conductor": ("odyssey", dict(name="Conductor", designation="Battleship", **{
+        "system id": "rsl_symstrike", "fleet pts": 28, "hitpoints": 16000, "armor rating": 1500, "max flux": 18000,
+        "flux dissipation": 1050, "ordnance points": 320, "fighter bays": "", "max speed": 40, "acceleration": 25,
+        "deceleration": 20, "max turn rate": 8, "turn acceleration": 10, "mass": 3400, "shield type": "FRONT",
+        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 45, "supplies/mo": 45,
+        "base value": 420000})),
+    "rsl_virtuoso": ("odyssey", dict(name="Virtuoso", designation="Duelist", **{
+        "system id": "rsl_glissando", "fleet pts": 40, "hitpoints": 12000, "armor rating": 1200, "max flux": 15000,
+        "flux dissipation": 1200, "ordnance points": 260, "fighter bays": "", "max speed": 65, "acceleration": 45,
+        "deceleration": 40, "max turn rate": 14, "turn acceleration": 20, "mass": 2600, "shield type": "OMNI",
+        "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 80, "supplies/mo": 80,
+        "peak CR sec": 420, "CR loss/sec": 0.3, "base value": 1200000, "hints": "UNBOARDABLE",
+        "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
+    "rsl_virtuoso_unsung": ("odyssey", dict(name="Virtuoso (Unsung)", designation="Duelist Prototype", **{
+        "system id": "rsl_glissando_unsung", "fleet pts": 30, "hitpoints": 10000, "armor rating": 1000,
+        "max flux": 12500, "flux dissipation": 950, "ordnance points": 220, "fighter bays": "", "max speed": 55,
+        "acceleration": 38, "deceleration": 34, "max turn rate": 12, "turn acceleration": 17, "mass": 2600,
+        "shield type": "OMNI", "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.85,
+        "supplies/rec": 55, "supplies/mo": 55, "peak CR sec": 360, "CR loss/sec": 0.3, "base value": 700000,
+        "hints": "UNBOARDABLE", "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
+    "rsl_cantor": ("station2_hightech", dict(name="Cantor Array", designation="Lattice Station", **{
+        "system id": "rsl_grandchorus", "hitpoints": 40000, "armor rating": 1800, "max flux": 20000,
+        "flux dissipation": 1200, "ordnance points": 300, "tags": "", "tech/manufacturer": MFR})),
+    "rsl_cantor_spire": ("module_hightech_attack", dict(name="Spire", designation="Lance Petal", **{
+        "hitpoints": 12000, "armor rating": 1500, "max flux": 12000, "flux dissipation": 800,
+        "ordnance points": 200, "supplies/rec": 1, "supplies/mo": 1})),
+    "rsl_cantor_bell": ("module_hightech_attack", dict(name="Bell", designation="Defense Petal", **{
+        "hitpoints": 9000, "armor rating": 1250, "max flux": 9000, "flux dissipation": 700, "ordnance points": 160,
+        "shield type": "FRONT", "shield arc": 150, "shield upkeep": 0.4, "shield efficiency": 1, "supplies/rec": 1, "supplies/mo": 1})),
+    "rsl_cantor_loft": ("module_hightech_hangar", dict(name="Choir Loft", designation="Hangar Petal", **{
+        "system id": "", "hitpoints": 8000, "armor rating": 1100, "max flux": 8000, "flux dissipation": 600,
+        "ordnance points": 150, "fighter bays": 2, "supplies/rec": 1, "supplies/mo": 1})),
+}
+HULL_DESC = {
+    "rsl_gracenote": "A lattice dart barely larger than its own crystal. The Grace Note flips its core between two "
+                     "tunings in an instant: Harmonic, with the shield up and the seams running teal, or Discord, with "
+                     "the shield folded away, the seams burning violet and every weapon pushed past its rating.",
+    "rsl_refrain": "A stocky escort built around two hinged armor vanes. When the Refrain ties its core to an ally's, "
+                   "the vanes swing forward over its bow and a share of everything that hits the ally arrives on the "
+                   "Refrain's shield instead.",
+    "rsl_staccato": "A needle hull with forward-swept wings and a drive tuned for short, violent bursts. Its weapons "
+                    "leave fracture lines in whatever they hit, and enough of them make plating simply come apart.",
+    "rsl_cadence": "The Choir's line cruiser: an arrowhead with two accelerator rails swept back as barbs. Its "
+                   "Crescendo lets the energy batteries feed on their own rhythm, every hit quickening the next.",
+    "rsl_tremolo": "Two narrow hulls joined by lattice girders, with real empty space between them. The Tremolo marks "
+                   "a point in space with a standing wave and can snap back to it, shedding the damage it took since.",
+    "rsl_halo": "A carrier threaded through a great ring that turns in a well at its heart. When the ring spins up, "
+                "the space around the Halo goes still: shots slow to a crawl and missile seekers lose their song.",
+    "rsl_conductor": "A long steel blade split into two prongs with the Harmonic Driver set between them. The "
+                     "Conductor's core does not just resonate, it leads: every Lattice ship near it tunes to it, and "
+                     "what it marks, the whole chorus strikes.",
+    "rsl_virtuoso": "The Choir's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its "
+                    "shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds "
+                    "on the readiness of everything it wounds. At full voice, its seams burn gold.",
+    "rsl_virtuoso_unsung": "A prototype that sang alone after its chorus died. The sash is bare metal, the lances are "
+                           "out of true and half the cells are dark, but it is still the fastest capital you have ever "
+                           "seen move, and it still takes what it needs from its enemies.",
+    "rsl_cantor": "A lattice station: a crystal heart in a six-petal rosette, with a ring turning slowly around it. "
+                  "When a petal dies, its stored resonance floods the others.",
+    "rsl_cantor_spire": "A lance petal of the Cantor Array.",
+    "rsl_cantor_bell": "A defensive petal of the Cantor Array, full of flak and point defense.",
+    "rsl_cantor_loft": "A hangar petal of the Cantor Array.",
+}
+
+
+def hull_rows():
+    rows = []
+    for hid, (peer, ch) in HULLS.items():
+        ch = dict(ch)
+        ch.setdefault("tech/manufacturer", MFR)
+        is_station_part = hid.startswith("rsl_cantor")
+        if not is_station_part:
+            ch.setdefault("tags", BP)
+            ch.setdefault("codex variant id", hid + "_Standard")
+        r = V.clone_row("ship_data.csv", peer, id=hid, number="", **ch)
+        rows.append(r)
+        desc(hid, "SHIP", HULL_DESC[hid])
+    write_csv("data/hulls/ship_data.csv", V.header("ship_data.csv"), rows)
+
+
+def ship_files():
+    """Post-process the .ship files finish.py wrote; derive the Unsung's .ship from the Virtuoso's."""
+    vir = sslib.load_loose_json(P("data/hulls/rsl_virtuoso.ship"))
+    uns = json.loads(json.dumps(vir))
+    uns.update(hullId="rsl_virtuoso_unsung", hullName="Virtuoso (Unsung)",
+               spriteName="graphics/rsl/ships/rsl_virtuoso_unsung.png")
+    uns["weaponSlots"] = [s for s in uns["weaponSlots"] if s["type"] != "DECORATIVE"]
+    write_json("data/hulls/rsl_virtuoso_unsung.ship", uns)
+    for hid in SHIP_IDS:
+        p = "data/hulls/%s.ship" % hid
+        s = sslib.load_loose_json(P(p))
+        s["style"] = "RSL"
+        for e in s.get("engineSlots", []):
+            e["style"] = "RSL"
+        s["builtInMods"] = BUILTIN_MODS[hid]
+        s["builtInWeapons"] = BUILTIN_WEAPONS.get(hid, {})
+        for slot in s["weaponSlots"]:
+            if slot["type"] == "DECORATIVE":
+                slot["arc"] = 360.0   # the deco effects set the angle every frame; 360 never clamps it
+            if slot["type"] == "STATION_MODULE":
+                slot["mount"] = "HARDPOINT"   # as every vanilla station
+                slot["arc"] = 4.0
+        if hid in ("rsl_cantor_spire", "rsl_cantor_bell", "rsl_cantor_loft"):
+            s["moduleAnchor"] = [-float(s["center"][1]), 0.0]   # the module root = the sprite's bottom edge
+        write_json(p, s)
+    return {hid: sslib.load_loose_json(P("data/hulls/%s.ship" % hid)) for hid in SHIP_IDS}
+
+
+# ===================================================================================================== variants
+OP = {}          # weapon id -> OP
+
+
+def mod_cost(mod, size):
+    col = {"FRIGATE": "cost_frigate", "DESTROYER": "cost_dest", "CRUISER": "cost_cruiser",
+           "CAPITAL_SHIP": "cost_capital"}[size]
+    return int(float(V.row("hull_mods.csv", mod)[col]))
+
+
+FITS = {"ENERGY": {"ENERGY", "HYBRID", "SYNERGY", "UNIVERSAL"}, "BALLISTIC": {"BALLISTIC", "HYBRID", "COMPOSITE", "UNIVERSAL"},
+        "MISSILE": {"MISSILE", "SYNERGY", "COMPOSITE", "UNIVERSAL"}, "HYBRID": {"HYBRID", "UNIVERSAL"}}
+SIZES = ["SMALL", "MEDIUM", "LARGE"]
+MAXVC = {"FRIGATE": 10, "DESTROYER": 20, "CRUISER": 30, "CAPITAL_SHIP": 50}
+WING_OP = {r["id"]: int(float(r["op cost"])) for r in V.rows("wing_data.csv") if r.get("op cost")}
+
+LOADOUTS = {  # variant id: (hull, display name, {slot: weapon}, wings, hullmods)
+    "rsl_gracenote_Standard": ("rsl_gracenote", "Standard", {
+        "WS0001": "rsl_pizzicato", "WS0001R": "rsl_pizzicato", "WS0003": "rsl_shardcaster"}, [], []),
+    "rsl_refrain_Standard": ("rsl_refrain", "Standard", {
+        "WS0001": "rsl_lattice_lance", "WS0002": "rsl_chime", "WS0002R": "rsl_chime", "WS0004": "rsl_flechette",
+        "WS0005": "rsl_chime", "WS0005R": "rsl_chime", "WS0007": "rsl_tuningspike", "WS0007R": "rsl_tuningspike"},
+        [], ["hardenedshieldemitter"]),
+    "rsl_staccato_Standard": ("rsl_staccato", "Standard", {
+        "WS0001": "rsl_arpeggio", "WS0001R": "rsl_arpeggio", "WS0003": "rsl_flechette", "WS0004": "rsl_pizzicato",
+        "WS0004R": "rsl_pizzicato", "WS0006": "rsl_chime", "WS0006R": "rsl_chime", "WS0008": "rsl_tuningspike",
+        "WS0008R": "rsl_tuningspike"}, [], []),
+    "rsl_cadence_Standard": ("rsl_cadence", "Standard", {
+        "WS0001": "rsl_harmonic_driver", "WS0001R": "rsl_harmonic_driver", "WS0003": "rsl_cantus",
+        "WS0004": "rsl_arpeggio", "WS0004R": "rsl_arpeggio", "WS0006": "rsl_pizzicato", "WS0006R": "rsl_pizzicato",
+        "WS0008": "rsl_chime", "WS0008R": "rsl_chime", "WS0010": "rsl_tuningspike", "WS0010R": "rsl_tuningspike"},
+        [], []),
+    "rsl_tremolo_Standard": ("rsl_tremolo", "Standard", {
+        "WS0001": "rsl_lattice_lance", "WS0001R": "rsl_lattice_lance", "WS0003": "rsl_sostenuto",
+        "WS0004": "rsl_flechette", "WS0004R": "rsl_flechette", "WS0006": "rsl_chime", "WS0006R": "rsl_chime",
+        "WS0008": "rsl_tuningspike", "WS0008R": "rsl_tuningspike"}, [], ["hardenedshieldemitter"]),
+    "rsl_halo_Standard": ("rsl_halo", "Standard", {
+        "WS0001": "rsl_sostenuto", "WS0002": "rsl_cantus", "WS0002R": "rsl_cantus", "WS0003": "rsl_chime",
+        "WS0003R": "rsl_chime", "WS0004": "rsl_chime", "WS0004R": "rsl_chime", "WS0005": "rsl_lattice_lance",
+        "WS0005R": "rsl_lattice_lance", "WS0006": "rsl_tuningspike", "WS0006R": "rsl_tuningspike"},
+        ["xyphos_wing", "longbow_wing", "wasp_wing", "wasp_wing"], []),
+    "rsl_conductor_Standard": ("rsl_conductor", "Standard", {
+        "WS0002": "rsl_harmonic_driver", "WS0002R": "rsl_harmonic_driver", "WS0003": "rsl_arpeggio",
+        "WS0003R": "rsl_arpeggio", "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_cantus",
+        "WS0005R": "rsl_cantus", "WS0006": "rsl_lattice_lance", "WS0006R": "rsl_lattice_lance",
+        "WS0007": "rsl_sostenuto", "WS0008": "rsl_chime", "WS0008R": "rsl_chime", "WS0009": "rsl_tuningspike",
+        "WS0009R": "rsl_tuningspike"}, [], ["hardenedshieldemitter"]),
+    "rsl_virtuoso_Standard": ("rsl_virtuoso", "Soloist", {
+        "WS0002": "rsl_arpeggio", "WS0002R": "rsl_arpeggio", "WS0003": "rsl_flechette", "WS0003R": "rsl_flechette",
+        "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime", "WS0005R": "rsl_chime",
+        "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [], ["hardenedshieldemitter"]),
+    "rsl_virtuoso_unsung_Standard": ("rsl_virtuoso_unsung", "Unsung", {
+        "WS0002": "rsl_arpeggio", "WS0002R": "rsl_arpeggio", "WS0003": "rsl_flechette", "WS0003R": "rsl_flechette",
+        "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime", "WS0005R": "rsl_chime",
+        "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [], []),
+    "rsl_cantor_spire_Standard": ("rsl_cantor_spire", "Standard", {
+        "WS0001": "rsl_harmonic_driver", "WS0002": "rsl_harmonic_driver", "WS0003": "rsl_chime", "WS0003R": "rsl_chime",
+        "WS0004": "rsl_lattice_lance"}, [], []),
+    "rsl_cantor_bell_Standard": ("rsl_cantor_bell", "Standard", {
+        "WS0001": "rsl_cantus", "WS0001R": "rsl_cantus", "WS0002": "rsl_chime", "WS0002R": "rsl_chime",
+        "WS0003": "rsl_chime", "WS0003R": "rsl_chime", "WS0004": "rsl_arpeggio"}, [], []),
+    "rsl_cantor_loft_Standard": ("rsl_cantor_loft", "Standard", {
+        "WS0002": "rsl_chime", "WS0002R": "rsl_chime", "WS0003": "rsl_lattice_lance", "WS0004": "rsl_cantus"},
+        ["xyphos_wing", "wasp_wing"], []),
+}
+
+
+def variants(ships):
+    for r in WEAPONS:
+        OP[r["id"]] = int(float(r["OPs"] or 0))
+    wtype = {wid: (w["type"], w["size"]) for wid, w in WPN.items()}
+    ops = {r["id"]: int(float(r["ordnance points"] or 0)) for r in
+           sslib.read_csv(P("data/hulls/ship_data.csv"), key="id")}
+    shutil.rmtree(P("data/variants/rsl"), ignore_errors=True)
+    report = []
+    for vid, (hid, name, fit, wings, mods) in LOADOUTS.items():
+        ship = ships[hid]
+        slots = {s["id"]: s for s in ship["weaponSlots"]}
+        size = ship["hullSize"]
+        used = 0
+        for sid, wid in fit.items():
+            s = slots[sid]
+            t, sz = wtype[wid]
+            if s["type"] not in FITS[t] or not (0 <= SIZES.index(s["size"]) - SIZES.index(sz) <= 1):
+                raise ValueError("%s: %s (%s %s) does not fit slot %s (%s %s)" % (vid, wid, t, sz, sid, s["type"],
+                                                                                 s["size"]))
+            used += OP[wid]
+        used += sum(WING_OP[w] for w in wings)
+        used += sum(mod_cost(m, size) for m in mods)
+        budget = ops[hid]
+        if used > budget:
+            raise ValueError("%s over budget: %d > %d" % (vid, used, budget))
+        free = budget - used
+        if not hid.startswith("rsl_cantor"):
+            mods = list(mods)
+            pref = ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull", "turretgyros", "advancedoptics"]
+            if "dedicated_targeting_core" not in BUILTIN_MODS[hid]:
+                pref.insert(1, "targetingunit")
+            for m in pref:
+                c = mod_cost(m, size)
+                if m not in mods and free - c >= MAXVC[size] + 4:
+                    mods.append(m)
+                    free -= c
+        vents = min(MAXVC[size], free)
+        caps = min(MAXVC[size], free - vents)
+        groups, by = [], {}
+        for sid, wid in fit.items():
+            by.setdefault(wid, {})[sid] = wid
+        order = sorted(by, key=lambda w: (WPN[w]["type"] == "MISSILE", "PD" in WEAPONS_BY_ID[w]["hints"], -OP[w]))
+        for i, wid in enumerate(order[:7]):
+            pd = "PD" in WEAPONS_BY_ID[wid]["hints"]
+            groups.append({"autofire": pd or i >= 2, "mode": "LINKED", "weapons": by[wid]})
+        for wid in order[7:]:
+            groups[-1]["weapons"].update(by[wid])
+        v = {"variantId": vid, "hullId": hid, "displayName": name, "fluxVents": vents, "fluxCapacitors": caps,
+             "hullMods": mods, "permaMods": [], "sMods": [], "wings": wings, "weaponGroups": groups,
+             "goalVariant": True, "quality": 0}
+        if hid == "rsl_cantor":
+            pass
+        write_json("data/variants/rsl/%s.variant" % vid, v)
+        report.append("%-30s OP %3d/%3d  vents %2d caps %2d  mods %s" % (vid, budget - free + vents + caps, budget, vents, caps, ",".join(mods)))
+    # the station core: modules on their STATION_MODULE slots
+    core = ships["rsl_cantor"]
+    mods = []
+    for s in core["weaponSlots"]:
+        if s["type"] == "STATION_MODULE":
+            pass
+    spec_slots = {s["id"]: s for s in json.load(open(P("art_src/specs/rsl_cantor.json")))["slots"]}
+    for sid, s in spec_slots.items():
+        if s.get("type") == "STATION_MODULE":
+            mods.append({sid: s["module"] + "_Standard"})
+    write_json("data/variants/rsl/rsl_cantor_Standard.variant", {
+        "variantId": "rsl_cantor_Standard", "hullId": "rsl_cantor", "displayName": "Standard", "fluxVents": 0,
+        "fluxCapacitors": 0, "hullMods": [], "permaMods": [], "sMods": [], "wings": [], "weaponGroups": [],
+        "quality": 0.5, "modules": mods})
+    print("\n".join(report))
+
+
+WEAPONS_BY_ID = {}
+
+
+# ===================================================================================================== systems
+SYS = "rsl.systems."
+SYSTEMS = [  # id, name, csv overrides, .system extras, description
+    ("rsl_pitchshift", "Pitch Shift", {"charge up": 0.2, "down": 0.2, "cooldown": 1, "toggle": "TRUE"},
+     {"aiType": "CUSTOM", "aiScript": SYS + "PitchShiftAI", "useSound": "system_phase_skimmer",
+      "runScriptWhileIdle": True},
+     "Toggles the lattice core between two tunings. Harmonic (off): shields available, +25% flux dissipation and "
+     "energy weapons add EMP. Discord (on): shields locked, +30% top speed and +20% weapon damage. Overtone: "
+     "switching tunings releases an EMP pulse."),
+    ("rsl_gracedash", "Grace Dash", {"flux/second": 1, "max uses": 2, "regen": 0.1, "charge up": 0.25, "active": 0.4,
+                                     "down": 0.4, "noShield": "TRUE", "noVent": "TRUE"},
+     {"type": "ENGINE_MOD", "aiType": "BURN_DRIVE", "engineGlowColor": [100, 230, 220, 255],
+      "engineGlowLengthMult": 3, "engineGlowWidthMult": 1.5, "engineGlowGlowMult": 3, "clampTurnRateAfter": True,
+      "clampMaxSpeedAfter": True, "alwaysAccelerate": True, "useSound": "system_plasma_burn",
+      "loopSound": "system_plasma_burn_loop", "outOfUsesSound": "engine_disabled",
+      "aiHints": {"activeSpeedIncrease": 0, "burstMovementPotential": 350, "averageSpeedIncrease": 40}},
+     "A short, violent burst of thrust. Overtone: the dash leaves a resonant wake that arcs EMP into enemies that pass "
+     "through it."),
+    ("rsl_ward", "Sympathetic Ward", {"charge up": 0.3, "active": 7, "down": 0.5, "cooldown": 12},
+     {"aiType": "CUSTOM", "aiScript": SYS + "SympatheticWardAI", "useSound": "system_targeting_feed_loop"},
+     "Ties the Refrain's core to the most endangered ally within 800 units. 40% of the damage that ally takes is "
+     "redirected to the Refrain's shield as flux (or hull if the shield is down), and the armor vanes swing forward "
+     "over the bow. Overtone: redirected damage builds double Resonance and the Refrain takes 30% less beam damage."),
+    ("rsl_crescendo", "Crescendo", {"charge up": 0.5, "active": 6, "down": 0.5, "cooldown": 14},
+     {"aiType": "WEAPON_BOOST", "weaponGlowColor": [100, 230, 220, 255], "weaponTypes": ["ENERGY"],
+      "useSound": "system_high_energy_focus_activate", "outOfUsesSound": "gun_out_of_ammo"},
+     "Every energy weapon hit adds a Crescendo stack (up to 20): +5% energy rate of fire and +3% energy flux cost per "
+     "stack. Overtone: reaching 20 stacks fires a Fortissimo - every energy weapon releases one extra empowered shot "
+     "- and the ship sheds 30% of its soft flux."),
+    ("rsl_standingwave", "Standing Wave", {"charge up": 0.1, "down": 0.2, "cooldown": 12, "toggle": "TRUE"},
+     {"aiType": "CUSTOM", "aiScript": SYS + "StandingWaveAI", "useSound": "system_phase_skimmer"},
+     "First use drops a standing-wave node at the ship's position. Using it again within 8 seconds snaps the ship "
+     "back to the node and restores 40% of the armor and hull lost since. Overtone: the afterimage left behind "
+     "detonates for 400 energy damage and 600 EMP around it."),
+    ("rsl_stillwater", "Stillwater Halo", {"charge up": 1, "active": 8, "down": 1, "cooldown": 20},
+     {"aiType": "CUSTOM", "aiScript": SYS + "StillwaterHaloAI", "useSound": "system_temporalshell",
+      "loopSound": "system_temporalshell_loop"},
+     "Creates a 700-unit zone of still space around the Halo. Enemy projectiles inside slow by 60% and enemy missiles "
+     "lose their lock. The Halo's own flux dissipation drops by 30% while it runs. Overtone: damage the zone absorbs "
+     "is turned into Resonance for every Lattice ship inside it."),
+    ("rsl_symstrike", "Sympathetic Strike", {"charge up": 1.5, "active": 0.3, "down": 0.5, "cooldown": 18,
+                                             "flux/use": 1500},
+     {"aiType": "CUSTOM", "aiScript": SYS + "SympatheticStrikeAI", "useSound": "tachyon_lance_fire"},
+     "After a 1.5 second charge, the prongs discharge a resonant beam into the target (2,000 range, 800 energy "
+     "damage) and mark it for 8 seconds: all Lattice ships deal +20% damage to it. Overtone: the beam chains to a "
+     "second enemy, which is marked as well."),
+    ("rsl_glissando", "Glissando", {"max uses": 2, "regen": 0.1667, "charge up": 0.05, "active": 0.35, "down": 0.1,
+                                    "cooldown": 0.5, "noFiring": "TRUE"},
+     {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
+     "A 600-unit blink-dash in the direction of movement. The ship cannot be hit mid-dash. Costs 2% combat readiness "
+     "per dash and cannot be used below 30%. The path stays behind as a taut string for 1.2 seconds - it deletes "
+     "enemy projectiles that cross it - then snaps: 400 energy damage to every enemy touching it (fighters and "
+     "missiles are destroyed) and 2% CR stolen from each ship hit. For 2 seconds after a dash the Sforzando lances "
+     "are Accented. Overtone: the string snaps twice and the dash refunds half a charge."),
+    ("rsl_glissando_unsung", "Glissando (Unsung)", {"max uses": 1, "regen": 0.125, "charge up": 0.05, "active": 0.3,
+                                                    "down": 0.1, "cooldown": 0.5, "noFiring": "TRUE"},
+     {"aiType": "CUSTOM", "aiScript": SYS + "GlissandoAI", "useSound": "system_phase_skimmer"},
+     "An untuned blink-dash: 1 charge, 3% combat readiness per dash, untargetable for 0.2 seconds. The string it "
+     "leaves blocks projectiles for 1.2 seconds but never snaps."),
+    ("rsl_grandchorus", "Grand Chorus", {"charge up": 1, "active": 0.5, "down": 0.5, "cooldown": 25},
+     {"aiType": "CUSTOM", "aiScript": SYS + "GrandChorusAI", "useSound": "tachyon_lance_fire"},
+     "Every petal discharges a synchronized resonant lance into the nearest enemy in its sector (600 energy damage "
+     "each). Overtone: an expanding harmonic ring flames out fighters and throws missiles off their targets."),
+]
+
+
+def systems():
+    hdr = V.header("ship_systems.csv")
+    rows = []
+    for sid, name, csvo, sysx, text in SYSTEMS:
+        r = {c: "" for c in hdr}
+        r.update(name=name, id=sid, icon="graphics/rsl/icons/hullsys/%s.png" % sid, tags="")
+        r.update({k: str(v) for k, v in csvo.items()})
+        rows.append(r)
+        cls = {"rsl_glissando_unsung": "GlissandoStats"}.get(sid) or (
+            "".join(p.capitalize() for p in sid[4:].split("_")) + "Stats")
+        cls = {"PitchshiftStats": "PitchShiftStats", "GracedashStats": "GraceDashStats",
+               "WardStats": "SympatheticWardStats", "StandingwaveStats": "StandingWaveStats",
+               "StillwaterStats": "StillwaterHaloStats", "SymstrikeStats": "SympatheticStrikeStats",
+               "GrandchorusStats": "GrandChorusStats"}.get(cls, cls)
+        spec = {"id": sid, "type": "STAT_MOD", "statsScript": SYS + cls, "outOfUsesSound": "gun_out_of_ammo"}
+        spec.update(sysx)
+        write_json("data/shipsystems/%s.system" % sid, spec)
+        desc(sid, "SHIP_SYSTEM", text)
+    write_csv("data/shipsystems/ship_systems.csv", hdr, rows)
+
+
+# ===================================================================================================== hullmods
+HM = "rsl.hullmods."
+HULLMODS = [  # id, name, script, desc, hidden, costs, tags
+    ("rsl_lattice_core", "Lattice Core", "LatticeCore",
+     "A crystalline resonator grown through the hull. It builds Resonance (0-100) from damage absorbed by shields and "
+     "from this ship's hits on enemy hull and armor, and loses it slowly out of combat contact. At %s Resonance or "
+     "more the core is in Overtone: the next ship-system use is empowered and spends %s Resonance. Lattice ships "
+     "within %s units share %s of the Resonance they gain. The core's seams glow brighter with Resonance. "
+     "Incompatible with Safety Overrides.", True, (0, 0, 0, 0)),
+    ("rsl_conductors_bridge", "Conductor's Bridge", "ConductorsBridge",
+     "Lattice allies within %s units receive %s Sympathy from this ship instead of the usual share, and gain %s "
+     "Resonance per second while in range.", True, (0, 0, 0, 0)),
+    ("rsl_fracture", "Fracture", "Fracture",
+     "Hits from this ship's weapons on enemy hull or armor add a Fracture stack to the target (up to %s; stacks fade "
+     "after %s without a new hit). The hit that would add a %s stack shatters the plating instead: %s bonus damage to "
+     "armor at the impact point, and the stacks reset.", True, (0, 0, 0, 0)),
+    ("rsl_stolen_time", "Stolen Time", "StolenTime",
+     "Hull and armor damage this ship deals to enemy ships steals combat readiness: about %s CR per %s damage "
+     "(scaled by target size), which the target loses and this ship gains. At most %s can be taken from any one "
+     "ship. On the Virtuoso, CR stolen while already at 100% extends peak performance time instead (%s per 1%%). "
+     "Half as effective when not piloted by the player.", True, (0, 0, 0, 0)),
+    ("rsl_bravura", "Bravura", "Bravura",
+     "At %s combat readiness the Virtuoso enters Bravura until its CR drops below %s: +%s top speed and "
+     "maneuverability, +%s flux dissipation, +%s energy weapon rate of fire, %s faster system recharge, and the "
+     "Sforzando lances are always Accented. The seams burn gold-white. Locked on the Unsung.", True, (0, 0, 0, 0)),
+    ("rsl_unbound", "Unbound Core", "UnboundCore",
+     "The Virtuoso's core can drop its safety tuning, as Safety Overrides does for lesser hulls: +%s top speed, "
+     "flux dissipation multiplied by %s, the zero-flux boost at any flux level and no active venting; peak "
+     "performance time is cut to a third and weapons lose range beyond %s. Stolen Time pays the readiness back. "
+     "Only the full Virtuoso can install it.", False, (0, 0, 0, 50)),
+    ("rsl_phase_locked", "Phase-Locked Petals", "PhaseLockedPetals",
+     "When a petal of the array is destroyed, its stored Resonance floods the core and the surviving petals, which "
+     "jump straight into Overtone and gain %s weapon damage for the rest of the battle.", True, (0, 0, 0, 0)),
+    ("rsl_tuned_wings", "Tuned Wings", "TunedWings",
+     "Fighters within %s units of the ship are tuned to its ring: fighter replacement rate is %s faster while any "
+     "of its wings fight inside the zone.", True, (0, 0, 0, 0)),
+]
+
+
+def hullmods():
+    hdr = V.header("hull_mods.csv")
+    rows = []
+    for hid, name, cls, text, hidden, costs in HULLMODS:
+        r = {c: "" for c in hdr}
+        r.update({"name": name, "id": hid, "tier": 0, "tech/manufacturer": MFR,
+                  "tags": "special" if not hidden else "", "uiTags": "Special", "base value": 10000 if not hidden else 0,
+                  "unlocked": "TRUE", "hidden": "TRUE" if hidden else "", "cost_frigate": costs[0],
+                  "cost_dest": costs[1], "cost_cruiser": costs[2], "cost_capital": costs[3], "script": HM + cls,
+                  "desc": text, "short": text.split(".")[0] + ".",
+                  "sprite": "graphics/rsl/icons/hullmods/%s.png" % hid})
+        rows.append(r)
+    write_csv("data/hullmods/hull_mods.csv", hdr, rows)
+
+
+# ===================================================================================================== faction etc.
+FACTION = "rsl_choir"
+
+
+def faction():
+    f = V.spec("faction", "tritachyon")
+    f.update({"id": FACTION, "color": [100, 230, 220, 255], "displayName": "Choir", "displayNameWithArticle": "the Choir",
+              "displayNameLong": "the Resonance Choir", "displayNameLongWithArticle": "the Resonance Choir",
+              "logo": "graphics/rsl/factions/rsl_flag.png", "crest": "graphics/rsl/factions/rsl_crest.png",
+              "shipNamePrefix": "RCS", "variantOverrides": {}, "hullFrequency": {"tags": {}, "hulls": {}},
+              "shipsWhenImporting": {"tags": [], "hulls": []},
+              "knownShips": {"tags": [BP], "hulls": ["rsl_gracenote", "rsl_refrain", "rsl_staccato", "rsl_cadence",
+                                                      "rsl_tremolo", "rsl_halo", "rsl_conductor"]},
+              "priorityShips": {"tags": [BP], "hulls": []},
+              "knownFighters": {"tags": [], "fighters": ["xyphos_wing", "wasp_wing", "longbow_wing", "dagger_wing"]},
+              "priorityFighters": {"tags": [], "fighters": []},
+              "knownWeapons": {"tags": [BP], "weapons": []}, "priorityWeapons": {"tags": [BP], "weapons": []},
+              "knownHullMods": {"tags": ["standard"], "hullMods": []},
+              "weaponSellFrequency": {}, "hullmodSellFrequency": {}, "illegalCommodities": []})
+    f["factionDoctrine"].update({"warships": 5, "carriers": 1, "phaseShips": 1})
+    f["custom"]["offersCommissions"] = False
+    f["custom"]["engagesInHostilities"] = False
+    f["custom"]["buysAICores"] = False
+    f["custom"].pop("punitiveExpeditionData", None)
+    f["showInIntelTab"] = False
+    write_json("data/world/factions/%s.faction" % FACTION, f)
+    write_csv("data/world/factions/factions.csv", ["faction"], [{"faction": "data/world/factions/%s.faction" % FACTION}])
+    write_json("data/world/factions/default_ship_roles.json", {
+        "combatSmall": {"rsl_gracenote_Standard": 10},
+        "combatSmallForSmallFleet": {"rsl_gracenote_Standard": 10},
+        "fastAttack": {"rsl_gracenote_Standard": 5, "rsl_staccato_Standard": 5},
+        "escortSmall": {"rsl_gracenote_Standard": 10},
+        "combatMedium": {"rsl_refrain_Standard": 6, "rsl_staccato_Standard": 6},
+        "escortMedium": {"rsl_refrain_Standard": 10},
+        "combatLarge": {"rsl_cadence_Standard": 6, "rsl_tremolo_Standard": 6},
+        "carrierLarge": {"rsl_halo_Standard": 10},
+        "combatCapital": {"rsl_conductor_Standard": 6, "rsl_halo_Standard": 3},
+    })
+
+
+def config():
+    glow = {}
+    for hid in SHIP_IDS:
+        glow[hid] = "graphics/rsl/ships/%s_glow.png" % hid
+    glow["rsl_virtuoso_bravura"] = "graphics/rsl/ships/rsl_virtuoso_glow_bravura.png"
+    for d in ("halo_ring", "cantor_ring", "refrain_vane_r", "refrain_vane_l", "conductor_blade_r", "conductor_blade_l",
+              "virtuoso_vane_r", "virtuoso_vane_l"):
+        glow["rsl_deco_" + d] = "graphics/rsl/weapons/deco/rsl_%s_glow.png" % d
+    glow["rsl_deco_virtuoso_vane_r_bravura"] = "graphics/rsl/weapons/deco/rsl_virtuoso_vane_r_glow_bravura.png"
+    glow["rsl_deco_virtuoso_vane_l_bravura"] = "graphics/rsl/weapons/deco/rsl_virtuoso_vane_l_glow_bravura.png"
+    for k, v in glow.items():
+        if not os.path.isfile(P(v)):
+            raise FileNotFoundError(v)
+    write_json("data/config/settings.json", {
+        "plugins": {"rsl_combatPlugin": "rsl.combat.RslCombatPlugin"},
+        "designTypeColors": {MFR: [100, 230, 220, 255]},
+        "graphics": {"rsl_glow": glow, "rsl_fx": {"spike": OFFS["rsl_tuningspike_msl"]["sprite"]}},
+    })
+    hs = sslib.load_loose_json(os.path.join(V.core, "data/config/hull_styles.json"))["HIGH_TECH"]
+    hs.update({"hyperspaceJitterColor": [100, 230, 220, 200], "baseCampaignExplosionColor": [100, 230, 220, 255],
+               "baseCombatExplosionColor": [100, 230, 220, 255],
+               "combatExplosionNonFlashColorOverride": [100, 230, 220, 255],
+               "fighterRepairFlickerColor": [100, 230, 220, 255], "fighterChipIconColor": [100, 230, 220, 255],
+               "weaponDisabledExplosionColor": [100, 230, 220, 255], "shieldRingColor": [235, 255, 252, 255],
+               "shieldInnerColor": [70, 200, 190, 70], "fluxVentCoreColor": [235, 255, 252, 255],
+               "fluxVentFringeColor": [120, 90, 210, 255]})
+    write_json("data/config/hull_styles.json", {"RSL": hs})
+    es = sslib.load_loose_json(os.path.join(V.core, "data/config/engine_styles.json"))["HIGH_TECH"]
+    es.update({"engineColor": [100, 230, 220, 255], "contrailColor": [140, 110, 230, 30],
+               "contrailCampaignColor": [100, 230, 220, 75]})
+    write_json("data/config/engine_styles.json", {"RSL": es})
+    # GraphicsLib maps (loaded only when GraphicsLib is enabled, see rsl.RslGraphicsLib)
+    rows = []
+    for f in sorted(os.listdir(P("graphics/rsl/maps"))):
+        base, kind = f[:-4].rsplit("_", 1)
+        if kind not in ("normal", "material", "surface"):
+            continue
+        if base in SHIP_IDS:
+            rows.append({"id": base, "type": "ship", "frame": 0, "magnitude": 1, "map": kind,
+                         "path": "graphics/rsl/maps/" + f})
+        else:
+            for wid in ("rsl_deco_" + base[4:],):
+                if wid in WPN:
+                    for t in ("turret", "hardpoint"):
+                        rows.append({"id": wid, "type": t, "frame": 0, "magnitude": 1, "map": kind,
+                                     "path": "graphics/rsl/maps/" + f})
+    write_csv("data/lights/rsl_texture_data.csv", ["id", "type", "frame", "magnitude", "map", "path"], rows)
+
+
+def descriptions():
+    hdr = V.header("descriptions.csv")
+    rows = [{"id": d, "type": t, "text1": a, "text2": b, "text3": c} for d, t, a, b, c in DESC]
+    rows.append({"id": FACTION, "type": "FACTION",
+                 "text1": "A refugee research polity grown out of a Domain-era harmonic-flux laboratory. The Choir "
+                          "builds its ships around crystalline lattice cores and fights the way it sings: together."})
+    write_csv("data/strings/descriptions.csv", hdr, rows)
+
+
+# ===================================================================================================== missions
+MISSIONS = {
+    "rsl_proving": dict(
+        title="Lattice: Proving Chorus", difficulty="EASY", bg="graphics/backgrounds/background4.jpg",
+        text="Test mission (Resonance Lattice). Every Lattice hull against a mixed Hegemony-style line.\n\n"
+             "Watch the Resonance bar (bottom left) fill as your shields absorb fire and your guns land; at 60 the next "
+             "ship system use is an Overtone. The Virtuoso starts at 100% CR, i.e. in Bravura.",
+        player_tag="The Choir's full chorus, every hull in the book.", enemy_tag="A Hegemony-pattern battle line.",
+        briefing=["Fly the Virtuoso: Glissando (system key) dashes and leaves a string that snaps",
+                  "Switch ships to try every Lattice system",
+                  "Point defense and fighters test the Chime Repeater and Cantus Flak"],
+        player=[("rsl_virtuoso_Standard", "Virtuoso", True), ("rsl_conductor_Standard", None, False),
+                ("rsl_halo_Standard", None, False), ("rsl_cadence_Standard", None, False),
+                ("rsl_tremolo_Standard", None, False), ("rsl_refrain_Standard", None, False),
+                ("rsl_staccato_Standard", None, False), ("rsl_gracenote_Standard", None, False),
+                ("rsl_gracenote_Standard", None, False)],
+        enemy=[("onslaught_Elite", None, False), ("dominator_Assault", None, False), ("eagle_Assault", None, False),
+               ("falcon_CS", None, False), ("heron_Strike", None, False), ("hammerhead_Balanced", None, False),
+               ("enforcer_Assault", None, False), ("condor_Support", None, False), ("lasher_CS", None, False),
+               ("lasher_CS", None, False), ("wolf_CS", None, False), ("wolf_CS", None, False)],
+        cr100="Virtuoso"),
+    "rsl_siege": dict(
+        title="Lattice: Cantor Siege", difficulty="HARD", bg="graphics/backgrounds/background2.jpg",
+        text="Test mission (Resonance Lattice). A vanilla strike force against the Cantor Array and an AI-flown "
+             "Lattice squadron.\n\nKill a petal and the others go into Overtone (Phase-Locked Petals); the Grand "
+             "Chorus fires lances from every petal at once.",
+        player_tag="Strike force with orders to silence the array.",
+        enemy_tag="The Cantor Array and its squadron.",
+        briefing=["Destroy the Cantor Array", "Choose your kill order: every dead petal empowers the rest",
+                  "The Unsung is yours - try the untuned Glissando"],
+        player=[("rsl_virtuoso_unsung_Standard", "Unsung", True), ("onslaught_Elite", None, False),
+                ("conquest_Elite", None, False), ("eagle_Assault", None, False), ("eagle_Assault", None, False),
+                ("aurora_Balanced", None, False), ("medusa_Attack", None, False), ("sunder_CS", None, False),
+                ("hammerhead_Balanced", None, False), ("wolf_CS", None, False), ("wolf_CS", None, False)],
+        enemy=[("rsl_cantor_Standard", "Cantor Array", False), ("rsl_conductor_Standard", None, False),
+               ("rsl_halo_Standard", None, False), ("rsl_tremolo_Standard", None, False),
+               ("rsl_cadence_Standard", None, False), ("rsl_refrain_Standard", None, False),
+               ("rsl_staccato_Standard", None, False), ("rsl_gracenote_Standard", None, False)],
+        cr100=None),
+}
+
+MISSION_JAVA = """package data.missions.%(id)s;
+
+import com.fs.starfarer.api.fleet.FleetGoal;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.mission.FleetSide;
+import com.fs.starfarer.api.mission.MissionDefinitionAPI;
+import com.fs.starfarer.api.mission.MissionDefinitionPlugin;
+
+/** Generated by tools/gen_data.py - test mission for Resonance Lattice. */
+public class MissionDefinition implements MissionDefinitionPlugin {
+
+    public void defineMission(MissionDefinitionAPI api) {
+        api.initFleet(FleetSide.PLAYER, "%(ptag)s", FleetGoal.ATTACK, false);
+        api.initFleet(FleetSide.ENEMY, "%(etag)s", FleetGoal.ATTACK, true);
+        api.setFleetTagline(FleetSide.PLAYER, "%(player_tag)s");
+        api.setFleetTagline(FleetSide.ENEMY, "%(enemy_tag)s");
+%(briefing)s
+        FleetMemberAPI m;
+%(adds)s
+        float width = 16000f;
+        float height = 16000f;
+        api.initMap(-width / 2f, width / 2f, -height / 2f, height / 2f);
+        api.addNebula(-3000f, 2000f, 1200f);
+        api.addNebula(4000f, -2500f, 900f);
+    }
+}
+"""
+
+
+def missions():
+    rows = [{"mission": mid} for mid in MISSIONS]
+    write_csv("data/missions/mission_list.csv", ["mission"], rows)
+    from PIL import Image
+    icon = Image.open(P("graphics/rsl/factions/rsl_flag.png")).convert("RGB").resize((256, 160))
+    for mid, m in MISSIONS.items():
+        write_json("data/missions/%s/descriptor.json" % mid,
+                   {"title": m["title"], "difficulty": m["difficulty"], "icon": "icon.jpg", "background": m["bg"]})
+        write_text("data/missions/%s/mission_text.txt" % mid, m["text"] + "\n")
+        icon.save(P("data/missions/%s/icon.jpg" % mid), quality=92)
+        adds = []
+        for side, lst in (("PLAYER", m["player"]), ("ENEMY", m["enemy"])):
+            for vid, name, flag in lst:
+                nm = '"%s"' % name if name else "null"
+                adds.append('        m = api.addToFleet(FleetSide.%s, "%s", FleetMemberType.SHIP, %s, %s);'
+                            % (side, vid, nm, "true" if flag else "false"))
+                if name and name == m.get("cr100"):
+                    adds.append("        m.getRepairTracker().setCR(1f);")
+        brief = "\n".join('        api.addBriefingItem("%s");' % b for b in m["briefing"])
+        write_text("data/missions/%s/MissionDefinition.java" % mid, MISSION_JAVA % {
+            "id": mid, "ptag": "RCS" if mid == "rsl_proving" else "ISS", "etag": "ISS" if mid == "rsl_proving" else "RCS",
+            "player_tag": m["player_tag"], "enemy_tag": m["enemy_tag"], "briefing": brief, "adds": "\n".join(adds)})
+
+
+def main():
+    weapons()
+    WEAPONS_BY_ID.update({r["id"]: r for r in WEAPONS})
+    hull_rows()
+    ships = ship_files()
+    variants(ships)
+    systems()
+    hullmods()
+    faction()
+    config()
+    descriptions()
+    missions()
+    print("ok: %d weapons, %d hulls, %d systems, %d hullmods, %d descriptions" % (
+        len(WEAPONS), len(HULLS), len(SYSTEMS), len(HULLMODS), len(DESC) + 1))
+
+
+if __name__ == "__main__":
+    main()

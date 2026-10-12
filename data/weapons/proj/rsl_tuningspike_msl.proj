@@ -1,0 +1,71 @@
+{
+    "id": "rsl_tuningspike_msl",
+    "specClass": "missile",
+    "missileType": "MISSILE",
+    "sprite": "graphics/rsl/missiles/rsl_tuningspike_msl.png",
+    "size": [
+        8,
+        26
+    ],
+    "center": [
+        4.0,
+        13.0
+    ],
+    "collisionRadius": 10,
+    "collisionClass": "MISSILE_NO_FF",
+    "explosionColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "explosionRadius": 40,
+    "flameoutTime": 1,
+    "armingTime": 0.2,
+    "noEngineGlowTime": 0.3,
+    "fadeTime": 0.5,
+    "onHitEffect": "rsl.weapons.TuningSpikeOnHit",
+    "engineSpec": {
+        "turnAcc": 600,
+        "turnRate": 180,
+        "acc": 900,
+        "dec": 400
+    },
+    "engineSlots": [
+        {
+            "id": "ES1",
+            "loc": [
+                -5.0,
+                0
+            ],
+            "style": "CUSTOM",
+            "styleSpec": {
+                "mode": "QUAD_STRIP",
+                "engineColor": [
+                    100,
+                    230,
+                    220,
+                    255
+                ],
+                "contrailDuration": 0.6,
+                "contrailWidthMult": 1.2,
+                "contrailWidthAddedFractionAtEnd": 1.5,
+                "contrailMinSeg": 5,
+                "contrailMaxSpeedMult": 0.0,
+                "contrailAngularVelocityMult": 0.5,
+                "contrailSpawnDistMult": 0.0,
+                "contrailColor": [
+                    140,
+                    110,
+                    230,
+                    60
+                ],
+                "glowSizeMult": 1.6,
+                "type": "GLOW"
+            },
+            "width": 5,
+            "length": 14.0,
+            "angle": 180.0
+        }
+    ]
+}

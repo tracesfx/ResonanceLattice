@@ -1,0 +1,3 @@
+Test mission (Resonance Lattice). A vanilla strike force against the Cantor Array and an AI-flown Lattice squadron.
+
+Kill a petal and the others go into Overtone (Phase-Locked Petals); the Grand Chorus fires lances from every petal at once.

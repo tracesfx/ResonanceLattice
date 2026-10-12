@@ -1,0 +1,60 @@
+{
+    "id": "rsl_shardcaster",
+    "specClass": "projectile",
+    "type": "BALLISTIC",
+    "size": "SMALL",
+    "turretSprite": "graphics/rsl/weapons/rsl_shardcaster_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_shardcaster_hardpoint.png",
+    "turretOffsets": [
+        9.5,
+        3.1,
+        11.0,
+        -0.0,
+        9.5,
+        -3.1
+    ],
+    "turretAngleOffsets": [
+        0,
+        0,
+        0
+    ],
+    "hardpointOffsets": [
+        10.5,
+        2.7,
+        12.0,
+        -0.0,
+        10.5,
+        -2.7
+    ],
+    "hardpointAngleOffsets": [
+        0,
+        0,
+        0
+    ],
+    "barrelMode": "LINKED",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_shardcaster_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_shardcaster_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "animationType": "MUZZLE_FLASH",
+    "muzzleFlashSpec": {
+        "length": 16,
+        "spread": 20,
+        "particleSizeMin": 8,
+        "particleSizeRange": 6.4,
+        "particleDuration": 0.12,
+        "particleCount": 10,
+        "particleColor": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "projectileSpecId": "rsl_shard_shot",
+    "fireSoundTwo": "mining_blaster_fire"
+}

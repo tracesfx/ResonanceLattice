@@ -1,0 +1,33 @@
+{
+    "combatSmall": {
+        "rsl_gracenote_Standard": 10
+    },
+    "combatSmallForSmallFleet": {
+        "rsl_gracenote_Standard": 10
+    },
+    "fastAttack": {
+        "rsl_gracenote_Standard": 5,
+        "rsl_staccato_Standard": 5
+    },
+    "escortSmall": {
+        "rsl_gracenote_Standard": 10
+    },
+    "combatMedium": {
+        "rsl_refrain_Standard": 6,
+        "rsl_staccato_Standard": 6
+    },
+    "escortMedium": {
+        "rsl_refrain_Standard": 10
+    },
+    "combatLarge": {
+        "rsl_cadence_Standard": 6,
+        "rsl_tremolo_Standard": 6
+    },
+    "carrierLarge": {
+        "rsl_halo_Standard": 10
+    },
+    "combatCapital": {
+        "rsl_conductor_Standard": 6,
+        "rsl_halo_Standard": 3
+    }
+}

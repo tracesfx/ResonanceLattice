@@ -1,153 +1,157 @@
 {
-  "bounds": [
-    71.0,
-    1.0,
-    71.0,
-    -1.0,
-    43.0,
-    -6.0,
-    34.0,
-    -12.0,
-    21.0,
-    -14.0,
-    21.0,
-    -18.0,
-    -7.0,
-    -19.0,
-    -9.0,
-    -22.0,
-    -11.0,
-    -22.0,
-    -18.0,
-    -28.0,
-    -26.0,
-    -29.0,
-    -29.0,
-    -27.0,
-    -31.0,
-    -16.0,
-    -40.0,
-    -13.0,
-    -41.0,
-    -4.0,
-    -40.0,
-    13.0,
-    -31.0,
-    16.0,
-    -29.0,
-    27.0,
-    -27.0,
-    29.0,
-    -18.0,
-    28.0,
-    -17.0,
-    26.0,
-    -9.0,
-    22.0,
-    -7.0,
-    19.0,
-    21.0,
-    18.0,
-    21.0,
-    14.0,
-    34.0,
-    12.0,
-    38.0,
-    10.0,
-    40.0,
-    7.0
-  ],
-  "builtInMods": [],
-  "center": [
-    34.0,
-    43.0
-  ],
-  "collisionRadius": 89,
-  "coversColor": "",
-  "engineSlots": [
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 24.0,
-      "location": [
-        -40.1,
-        0.0
-      ],
-      "style": "MIDLINE",
-      "width": 8.96
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 13.44,
-      "location": [
-        -28.9,
-        -24.2
-      ],
-      "style": "MIDLINE",
-      "width": 3.36
-    },
-    {
-      "angle": 180.0,
-      "contrailSize": 64.0,
-      "length": 13.44,
-      "location": [
-        -28.9,
-        24.2
-      ],
-      "style": "MIDLINE",
-      "width": 3.36
-    }
-  ],
-  "height": 116,
-  "hullId": "rsl_gracenote",
-  "hullName": "Grace Note",
-  "hullSize": "FRIGATE",
-  "shieldCenter": [
-    15.0,
-    0
-  ],
-  "shieldRadius": 59,
-  "spriteName": "graphics/rsl/ships/rsl_gracenote.png",
-  "style": "MIDLINE",
-  "viewOffset": 0,
-  "weaponSlots": [
-    {
-      "angle": 0.0,
-      "arc": 10.0,
-      "id": "WS0001",
-      "locations": [
-        17.2,
-        -16.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": -0.0,
-      "arc": 10.0,
-      "id": "WS0001R",
-      "locations": [
-        17.2,
-        16.0
-      ],
-      "mount": "HARDPOINT",
-      "size": "SMALL",
-      "type": "ENERGY"
-    },
-    {
-      "angle": 0.0,
-      "arc": 300.0,
-      "id": "WS0003",
-      "locations": [
-        23.2,
-        0.0
-      ],
-      "mount": "TURRET",
-      "size": "SMALL",
-      "type": "HYBRID"
-    }
-  ],
-  "width": 68
+    "bounds": [
+        71.0,
+        1.0,
+        71.0,
+        -1.0,
+        43.0,
+        -6.0,
+        34.0,
+        -12.0,
+        21.0,
+        -14.0,
+        21.0,
+        -18.0,
+        -7.0,
+        -19.0,
+        -9.0,
+        -22.0,
+        -11.0,
+        -22.0,
+        -18.0,
+        -28.0,
+        -26.0,
+        -29.0,
+        -29.0,
+        -27.0,
+        -31.0,
+        -16.0,
+        -40.0,
+        -13.0,
+        -41.0,
+        -4.0,
+        -40.0,
+        13.0,
+        -31.0,
+        16.0,
+        -29.0,
+        27.0,
+        -27.0,
+        29.0,
+        -18.0,
+        28.0,
+        -17.0,
+        26.0,
+        -9.0,
+        22.0,
+        -7.0,
+        19.0,
+        21.0,
+        18.0,
+        21.0,
+        14.0,
+        34.0,
+        12.0,
+        38.0,
+        10.0,
+        40.0,
+        7.0
+    ],
+    "builtInMods": [
+        "rsl_lattice_core",
+        "hiressensors"
+    ],
+    "center": [
+        34.0,
+        43.0
+    ],
+    "collisionRadius": 89,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 24.0,
+            "location": [
+                -40.1,
+                0.0
+            ],
+            "style": "RSL",
+            "width": 8.96
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 13.44,
+            "location": [
+                -28.9,
+                -24.2
+            ],
+            "style": "RSL",
+            "width": 3.36
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 13.44,
+            "location": [
+                -28.9,
+                24.2
+            ],
+            "style": "RSL",
+            "width": 3.36
+        }
+    ],
+    "height": 116,
+    "hullId": "rsl_gracenote",
+    "hullName": "Grace Note",
+    "hullSize": "FRIGATE",
+    "shieldCenter": [
+        15.0,
+        0
+    ],
+    "shieldRadius": 59,
+    "spriteName": "graphics/rsl/ships/rsl_gracenote.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 10.0,
+            "id": "WS0001",
+            "locations": [
+                17.2,
+                -16.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -0.0,
+            "arc": 10.0,
+            "id": "WS0001R",
+            "locations": [
+                17.2,
+                16.0
+            ],
+            "mount": "HARDPOINT",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": 0.0,
+            "arc": 300.0,
+            "id": "WS0003",
+            "locations": [
+                23.2,
+                0.0
+            ],
+            "mount": "TURRET",
+            "size": "SMALL",
+            "type": "HYBRID"
+        }
+    ],
+    "width": 68,
+    "builtInWeapons": {}
 }

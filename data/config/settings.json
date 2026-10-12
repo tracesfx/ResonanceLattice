@@ -1,0 +1,44 @@
+{
+    "plugins": {
+        "rsl_combatPlugin": "rsl.combat.RslCombatPlugin"
+    },
+    "designTypeColors": {
+        "Resonance Lattice": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "graphics": {
+        "rsl_glow": {
+            "rsl_gracenote": "graphics/rsl/ships/rsl_gracenote_glow.png",
+            "rsl_refrain": "graphics/rsl/ships/rsl_refrain_glow.png",
+            "rsl_staccato": "graphics/rsl/ships/rsl_staccato_glow.png",
+            "rsl_cadence": "graphics/rsl/ships/rsl_cadence_glow.png",
+            "rsl_tremolo": "graphics/rsl/ships/rsl_tremolo_glow.png",
+            "rsl_halo": "graphics/rsl/ships/rsl_halo_glow.png",
+            "rsl_conductor": "graphics/rsl/ships/rsl_conductor_glow.png",
+            "rsl_virtuoso": "graphics/rsl/ships/rsl_virtuoso_glow.png",
+            "rsl_virtuoso_unsung": "graphics/rsl/ships/rsl_virtuoso_unsung_glow.png",
+            "rsl_cantor": "graphics/rsl/ships/rsl_cantor_glow.png",
+            "rsl_cantor_spire": "graphics/rsl/ships/rsl_cantor_spire_glow.png",
+            "rsl_cantor_bell": "graphics/rsl/ships/rsl_cantor_bell_glow.png",
+            "rsl_cantor_loft": "graphics/rsl/ships/rsl_cantor_loft_glow.png",
+            "rsl_virtuoso_bravura": "graphics/rsl/ships/rsl_virtuoso_glow_bravura.png",
+            "rsl_deco_halo_ring": "graphics/rsl/weapons/deco/rsl_halo_ring_glow.png",
+            "rsl_deco_cantor_ring": "graphics/rsl/weapons/deco/rsl_cantor_ring_glow.png",
+            "rsl_deco_refrain_vane_r": "graphics/rsl/weapons/deco/rsl_refrain_vane_r_glow.png",
+            "rsl_deco_refrain_vane_l": "graphics/rsl/weapons/deco/rsl_refrain_vane_l_glow.png",
+            "rsl_deco_conductor_blade_r": "graphics/rsl/weapons/deco/rsl_conductor_blade_r_glow.png",
+            "rsl_deco_conductor_blade_l": "graphics/rsl/weapons/deco/rsl_conductor_blade_l_glow.png",
+            "rsl_deco_virtuoso_vane_r": "graphics/rsl/weapons/deco/rsl_virtuoso_vane_r_glow.png",
+            "rsl_deco_virtuoso_vane_l": "graphics/rsl/weapons/deco/rsl_virtuoso_vane_l_glow.png",
+            "rsl_deco_virtuoso_vane_r_bravura": "graphics/rsl/weapons/deco/rsl_virtuoso_vane_r_glow_bravura.png",
+            "rsl_deco_virtuoso_vane_l_bravura": "graphics/rsl/weapons/deco/rsl_virtuoso_vane_l_glow_bravura.png"
+        },
+        "rsl_fx": {
+            "spike": "graphics/rsl/missiles/rsl_tuningspike_msl.png"
+        }
+    }
+}

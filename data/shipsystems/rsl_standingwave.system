@@ -1,0 +1,9 @@
+{
+    "id": "rsl_standingwave",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.StandingWaveStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.StandingWaveAI",
+    "useSound": "system_phase_skimmer"
+}

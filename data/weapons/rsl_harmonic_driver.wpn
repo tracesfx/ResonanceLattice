@@ -1,0 +1,51 @@
+{
+    "id": "rsl_harmonic_driver",
+    "specClass": "projectile",
+    "type": "ENERGY",
+    "size": "LARGE",
+    "turretSprite": "graphics/rsl/weapons/rsl_harmonic_driver_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_harmonic_driver_hardpoint.png",
+    "turretOffsets": [
+        31.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        31.0,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "turretGlowSprite": "graphics/rsl/weapons/rsl_harmonic_driver_turret_glow.png",
+    "hardpointGlowSprite": "graphics/rsl/weapons/rsl_harmonic_driver_hardpoint_glow.png",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "animationType": "GLOW_AND_FLASH",
+    "muzzleFlashSpec": {
+        "length": 50,
+        "spread": 10,
+        "particleSizeMin": 30,
+        "particleSizeRange": 24.0,
+        "particleDuration": 0.12,
+        "particleCount": 14,
+        "particleColor": [
+            100,
+            230,
+            220,
+            255
+        ]
+    },
+    "projectileSpecId": "rsl_harmonic_shot",
+    "fireSoundOne": "tachyon_lance_fire",
+    "fireSoundTwo": "heavy_blaster_fire",
+    "autocharge": true,
+    "requiresFullCharge": true
+}

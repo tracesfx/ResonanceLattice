@@ -1,0 +1,24 @@
+{
+    "id": "rsl_bloom_shard",
+    "specClass": "projectile",
+    "type": "ENERGY",
+    "size": "LARGE",
+    "turretSprite": "graphics/rsl/weapons/rsl_bloom_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_bloom_hardpoint.png",
+    "turretOffsets": [
+        23.8,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        28.6,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "projectileSpecId": "rsl_bloom_shard_shot"
+}

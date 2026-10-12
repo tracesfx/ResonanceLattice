@@ -1,0 +1,24 @@
+{
+    "id": "rsl_chime_bell",
+    "specClass": "projectile",
+    "type": "ENERGY",
+    "size": "SMALL",
+    "turretSprite": "graphics/rsl/weapons/rsl_chime_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_chime_hardpoint.png",
+    "turretOffsets": [
+        10.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        11.0,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "projectileSpecId": "rsl_chime_bell"
+}

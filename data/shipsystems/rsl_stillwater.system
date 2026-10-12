@@ -1,0 +1,10 @@
+{
+    "id": "rsl_stillwater",
+    "type": "STAT_MOD",
+    "statsScript": "rsl.systems.StillwaterHaloStats",
+    "outOfUsesSound": "gun_out_of_ammo",
+    "aiType": "CUSTOM",
+    "aiScript": "rsl.systems.StillwaterHaloAI",
+    "useSound": "system_temporalshell",
+    "loopSound": "system_temporalshell_loop"
+}

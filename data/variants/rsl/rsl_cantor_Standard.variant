@@ -1,0 +1,33 @@
+{
+    "variantId": "rsl_cantor_Standard",
+    "hullId": "rsl_cantor",
+    "displayName": "Standard",
+    "fluxVents": 0,
+    "fluxCapacitors": 0,
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [],
+    "quality": 0.5,
+    "modules": [
+        {
+            "WS0001": "rsl_cantor_bell_Standard"
+        },
+        {
+            "WS0002": "rsl_cantor_spire_Standard"
+        },
+        {
+            "WS0003": "rsl_cantor_bell_Standard"
+        },
+        {
+            "WS0004": "rsl_cantor_loft_Standard"
+        },
+        {
+            "WS0005": "rsl_cantor_spire_Standard"
+        },
+        {
+            "WS0006": "rsl_cantor_loft_Standard"
+        }
+    ]
+}

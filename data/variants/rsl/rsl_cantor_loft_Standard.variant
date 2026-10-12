@@ -1,0 +1,40 @@
+{
+    "variantId": "rsl_cantor_loft_Standard",
+    "hullId": "rsl_cantor_loft",
+    "displayName": "Standard",
+    "fluxVents": 30,
+    "fluxCapacitors": 30,
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [
+        "xyphos_wing",
+        "wasp_wing"
+    ],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_chime",
+                "WS0002R": "rsl_chime"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}
