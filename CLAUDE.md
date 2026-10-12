@@ -41,7 +41,9 @@ feedback.
   Generator `art_src/gen/gen_virtuoso.py` (hull + `rsl_virtuoso_vane_r` + `_l` mirror).
 - Virtuoso v1 feedback: silhouette "decent"; repeated grey chevron tone pattern not good (variety + intricacy);
   add gold accents on parts of the edge; the dual Sforzando mounts are its identity — work them into the seams;
-  wings slightly wider. → **v2 (awaiting feedback):** `virtuoso_v2.png`, all hulls `sheet_v6.png`.
+  wings slightly wider. → v2 (`virtuoso_v2.png`). User: remove the yellow/gold, livery looks worse; light-blue
+  (not teal) soft angular stripes instead of grey straight ones; no box-like sectioning; likes the white Bravura.
+  → **v3 (awaiting feedback):** `virtuoso_v3.png`, all hulls `sheet_v7.png`.
 - Next, in order: Virtuoso feedback → Unsung skin → Cantor Array (station last).
 - Data (ship_data/weapon_data rows), hullmods, systems and Java code are NOT started (next stage after sprites).
 - Build: `./build.sh` → 0 errors. Expected warnings only: scaffold TODO placeholders, `.ship` files without
@@ -60,8 +62,8 @@ shreds frigate/fighter swarms. Quest not designed yet.
 
 ## STANDING ART DIRECTION (all user feedback so far — follow on every hull)
 1. **Colours: clean stainless steel + dark blue + teal seams. NO YELLOW anywhere** (paint, markings; it read as
-   caution tape). Exception (user, 2026-10-11): **gold edge accents on the Virtuoso only** (paint `gold`, always
-   `protect: True`, set ~1.5 px inside the edge or the ink/rim eats it). Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
+   caution tape). (Gold edge accents were tried on the Virtuoso v2 and REMOVED by the user: no gold/yellow paint at all.
+   Gold-white exists only as the Bravura seam glow, which the user likes.) Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
    legacy: bright steel / brushed mid steel / gunmetal).
 2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
    splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
@@ -101,6 +103,13 @@ shreds frigate/fighter swarms. Quest not designed yet.
 7e. **Integral, purposeful structure (Tremolo/Halo feedback):** connecting parts must look like load-bearing parts of
    the hull, not auxiliary add-ons; no flat single-colour filler platforms (Halo's grey inner platform was rejected:
    hollow it out, keep only what is needed, e.g. the fighter bays).
+7f. **Stripes (Virtuoso v2 feedback):** no grey tone stripes and no straight, repeated stripe patterns. Stripes are
+   **very light blue paint (`ice`, not teal)**, **bending/angular polylines that follow the part they sit on**
+   (jog at a tooth, turn in at a clamp, kink at a notch), with **soft feathered edges** (`"soft"` px on a livery
+   entry blurs its mask). Every region gets its own stripe path, not one copied pattern.
+7g. **No large rectangle sectioning / box-like parts:** plate joints are chevrons or diagonals that follow the
+   hull's lines (e.g. parallel to the sash), housings are irregular angular shapes (no hexagons/circles), stern
+   and engine blocks are stepped. "Ships are not geometric, they are intricate parts of machinery."
 8. When a silhouette doesn't converge after ~2 tries, sketch 2–3 flat options (`art_src/gen/cadence_options.py`
    pattern) and ask the user to pick, instead of guessing further.
 
@@ -179,9 +188,12 @@ shreds frigate/fighter swarms. Quest not designed yet.
   `slant`: emit explicit L/R cells). v2: wings stretched outboard of x=30 by 1.1 (`SX`), W 248, mass 33,249; the
   OUTER seam wraps each Sforzando mount in a glowing ring (spine → 45° → ring over the front/outside → 45° → spine
   → wing; still one run) and the sash reaches each gun as a lobe; hexagonal mount housings. Livery per region:
-  wing roots tone bands across the sweep, mid wings 2 navy pinstripes along the leading edge + gold edge trim,
-  guard navy band + gold quillon edge, waist horizontal tone ladder, sponsons steep tone bands, gold on needle
-  chamfers / wing + notch teeth / spike tip / vane outer edges. Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
+  v3: gold and all tone splinters removed; soft (`soft` 0.6-0.9) angular `ice` stripes: wing leading-edge stripe
+  jogging at the tooth and turning in at the clamp (+ thin companion breaking away at 45°), trailing-edge stripe
+  kinking at the notch, waist stripe parallel to the sash then down then 45° in, sponson stripe following the
+  stepped outline, vane stripe; guard keeps its navy band. Waist = 2 plates with chevron joints parallel to the
+  sash, chamfered guard collar, irregular angular mount housings, stepped sponsons/engine block with chevron joints.
+  Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
   `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (gold 255,200,110); preview shows a "bravura" column.
 - Known weaknesses: at 1x glow-on, cell pairs merge into one block; Cadence centre splinter may still be heavy.
 

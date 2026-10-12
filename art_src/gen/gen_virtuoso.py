@@ -134,7 +134,7 @@ CORE = (0, 163)
 BODY = [(0, 0), (2.2, 14), (3.2, 40), (6, 44), (7, 68), (10, 72), (11, 92),                 # stepped needle
         (15, 96), (18, 104), (30, 108), (46, 102),                                          # guard -> forward tooth
         (44, 118), (40, 134), (30, 141), (25, 147),                                         # guard trailing edge
-        (25, 254), (22, 264), (31, 280), (36, 298), (34, 312), (12, 319),                   # waist, sponson, engines
+        (25, 254), (21, 262), (30, 274), (38, 294), (33, 300), (34, 310), (26, 316), (12, 320),  # sponson, engines
         (8, 324), (7, 338), (5, 341), (4, 356), (0, 374)]                                   # stepped tail spike
 # swallowtail wing (user: "back-swept wings extend wider"): long root along the waist, leading edge sweeping back
 # and out to the vane mount; the deco vane carries the line on to the tip
@@ -175,22 +175,28 @@ hs.plate("n_root", "ivory2", RL, half=half_region(BODY, 73.5, 95, 1.1),
 # --- guard: armoured quillon plates + raised Sforzando mount housing
 hs.plate("g_guard", "ivory", RL, sym_poly=region(BODY, 97, 145, 1.3, x0=12.5),
          tier={"inset": 1.2, "dz": 0.5, "mat": "ivory", "cuts": [groove([P(14, 128), P(30, 128)])]})
-hs.plate("g_mount", "slate", [7.0, 9.2], bevel=0.45, sym_poly=[P(*pol(T, 15, 30 + 60 * i)) for i in range(6)],
+hs.plate("g_mount", "slate", [7.0, 9.2], bevel=0.45,
+         sym_poly=[P(21, 107), P(36, 106), P(45, 115), P(41, 130), P(34, 136), P(20, 134), P(15, 123)],
          tier={"inset": 1.0, "dz": 0.4, "mat": "ivory2"})
-hs.plate("g_collar", "ivory2", RL, half=[P(0, 97.5), P(11.6, 97.5), P(12.4, 145), P(0, 145)],
+hs.plate("g_collar", "ivory2", RL, half=[P(0, 97.5), P(8.6, 97.5), P(12.4, 104), P(12.4, 137), P(8.4, 145),
+                                        P(0, 145)],
          tier={"inset": 0.9, "dz": 0.4, "mat": "ivory"})
 # --- waist / stern / engines / spike
-hs.plate("b_waist", "ivory", PL, half=[P(0, 148), P(23.6, 148), P(23.6, 252), P(0, 252)],
+hs.plate("b_waist1", "ivory", PL, half=[P(0, 149), P(10.5, 149), P(23.6, 156), P(23.6, 197), P(0, 212)],
          tier={"inset": 1.2, "dz": 0.5, "mat": "ivory"})
-hs.plate("b_stern", "ivory2", PL, half=half_region(BODY, 253.5, 299, 1.3),
+hs.plate("b_waist2", "ivory2", PL, half=[P(0, 216), P(23.6, 201), P(23.6, 238), P(18, 252), P(0, 252)],
+         tier={"inset": 1.2, "dz": 0.5, "mat": "ivory"})
+hs.plate("b_stern", "ivory", PL, half=[P(0, 259.4), P(9, 255), P(16, 255), P(20.4, 263.4), P(28.8, 275), P(35.4, 292.6),
+                                       P(31.6, 298), P(12, 300), P(0, 306)],
          tier={"inset": 1.2, "dz": 0.5, "mat": "ivory", "cuts": [groove([P(6, 276), P(24, 282)])]})
-hs.plate("b_eng", "slate", PL, half=half_region(BODY, 301.5, 317, 1.1),
+hs.plate("b_eng", "slate", PL, half=[P(0, 309.4), P(12.4, 303.4), P(31.4, 301.2), P(32.8, 309.4), P(25.4, 314.8),
+                                     P(12, 318.4), P(0, 318.4)],
          tier={"inset": 0.9, "dz": 0.4, "mat": "slate"})
 hs.plate("b_spike", "ivory", RL, bevel=0.45, half=half_region(BODY, 320, 373.5, 1.0),
          tier={"inset": 0.7, "dz": 0.4, "mat": "ivory"})
 # sponson armour strakes beside the engines
-hs.plate("strake", "slate", [6.2, 8.2], bevel=0.35, sym_poly=[P(25.6, 266), P(30.4, 281), P(34.4, 296), P(31, 298),
-                                                            P(24, 284)])
+hs.plate("strake", "slate", [6.2, 8.2], bevel=0.35, sym_poly=[P(22.4, 264.4), P(29.6, 275.4), P(36, 292.6),
+                                                            P(33, 296), P(27, 281)])
 # --- wings: three segments perpendicular to the sweep (clamps between), raised gunmetal leading-edge armour,
 #     vane mount at the tip
 for k, (v0, v1, mat) in enumerate(((144, 200, "ivory"), (204, 256, "ivory"), (260, 302, "ivory2"))):
@@ -241,7 +247,7 @@ slots = [
      "mount": "HARDPOINT", "angle": -VANE_ANG, "arc": 0, "deco": "rsl_virtuoso_vane_l",
      "deco_alt_angle": -(VANE_ANG + 22)},
 ]
-engines = [{"pos": [17, 317.6], "width": 6, "sym": True}, {"pos": [27, 315], "width": 7, "sym": True}]
+engines = [{"pos": [17, 318.6], "width": 6, "sym": True}, {"pos": [24.4, 316.8], "width": 6, "sym": True}]
 # leading edge of the mid wing (for the pinstripes) and its inward normal
 LE0, LE1 = (SX(63), 199), (SX(99), 298)
 _d = (LE1[0] - LE0[0], LE1[1] - LE0[1])
@@ -250,42 +256,30 @@ _d = (_d[0] / _n, _d[1] / _n)
 LEN = (-_d[1], _d[0])
 pin = lambda off, t0, t1: [P(LE0[0] + _d[0] * _n * t + LEN[0] * off, LE0[1] + _d[1] * _n * t + LEN[1] * off)
                           for t in (t0, t1)]
-gold = lambda pts, w=1.6: {"type": "band", "pts": [P(*q) for q in pts], "w": w, "color": "gold", "sym": True,
-                           "on": [2, 7], "protect": True}
+# v3 stripes (user: no gold; light blue instead of grey; bending, angular stripes; soft edges via gradients).
+# Each stripe is an angular polyline that follows the part it sits on, feathered ("soft") so it fades at its edges.
+ice = lambda pts, w, soft=0.9, wing=False: {"type": "band", "pts": [P(SX(x) if wing else x, y) for x, y in pts],
+                                            "w": w * 1.4, "color": "ice", "sym": True, "soft": soft, "alpha": 1.0}
 livery = [
     # the sash (crisp, one cohesive shape; its edges are the conduits above)
     {"type": "poly", "color": "navy", "poly": [P(*q) for q in SASH], "sym": True},
-    # v2 (user: the repeated grey chevrons were not good -> variety and intricacy): every region its own treatment
-    # wing roots: irregular tone bands ACROSS the sweep
-    {"type": "splinter", "tones": [1.0, 0.8, 1.0, 0.9, 1.0, 0.84], "widths": [6, 3, 9, 2, 4, 5], "angle": 58.2,
-     "mirror": True, "poly": clip_dir(WING, U, 144, 200)},
-    # mid wings: two fine dark-blue pinstripes running with the leading edge (staff lines)
-    {"type": "band", "pts": pin(5.0, 0.06, 0.52), "w": 1.3, "color": "navy", "sym": True},
-    {"type": "band", "pts": pin(7.6, 0.10, 0.44), "w": 0.8, "color": "navy", "sym": True},
-    # wing tips: deepen towards the vane mounts
+    # wings: a stripe along the leading edge that jogs out with the stepped tooth and turns in at the clamp, with a
+    # thinner companion that breaks away at 45 deg; a trailing-edge stripe that kinks up at the notch tooth
+    ice([(28.6, 160.4), (32.9, 167.2), (48.9, 199.2), (57.4, 201.1), (74.4, 246.1), (68.6, 254.6)], 2.4, wing=True),
+    ice([(30.4, 172), (43.6, 198.6), (40.2, 206.4), (44.6, 218)], 1.1, 0.6, wing=True),
+    ice([(27.4, 263.2), (38.5, 275.7), (52.5, 283.7), (61.6, 286.6), (59.0, 280.8)], 2.0, wing=True),
+    # waist: parallel to the sash's inner edge, then straight down the waist, then 45 deg in
+    ice([(7.6, 193), (21.4, 215.4), (21.4, 236), (14.6, 248.6)], 1.9),
+    # sponsons: follow the stepped outline round to the engines
+    ice([(18.6, 262.4), (26.4, 274.2), (32.2, 291.4), (27.4, 297.6)], 1.7),
+    # guard: a dark-blue band along each quillon's leading edge (crisp paint, part of the hilt)
+    {"type": "band", "pts": [P(19.8, 109.6), P(29.8, 113.4), P(36.4, 111.2)], "w": 2.2, "color": "navy", "sym": True},
+    # gradients only at the extremities: wing tips deepen towards the vane mounts, tail spike to its tip
     {"type": "gradient", "color": "navy", "poly": [P(*q) for q in WING], "a": [SX(62), 250], "b": [SX(94), 306],
      "a0": 0.0, "a1": 0.55},
-    # guard: a dark-blue band along each quillon's leading edge
-    {"type": "band", "pts": [P(19.8, 109.6), P(29.8, 113.4), P(36.4, 111.2)], "w": 2.2, "color": "navy", "sym": True},
-    # waist: fine horizontal tone ladder; stern sponsons: steep tone bands
-    {"type": "splinter", "tones": [1.0, 0.82, 1.0, 0.9, 1.0, 0.86, 1.0], "widths": [5, 2, 8, 3, 4, 6, 2],
-     "angle": 90, "mirror": True, "poly": [P(3, 180), P(25, 180), P(25, 252), P(3, 252)]},
-    {"type": "splinter", "tones": [1.0, 0.84, 1.0, 0.78], "widths": [7, 3, 5, 2], "angle": 20, "mirror": True,
-     "poly": [P(3, 254), P(37, 254), P(37, 300), P(3, 300)]},
-    # tail spike darkens to its tip
     {"type": "gradient", "color": "navy", "poly": [P(0, 320), P(10, 320), P(10, 374), P(0, 374)], "a": [0, 326],
      "b": [0, 372], "a0": 0.0, "a1": 0.6},
     {"type": "poly", "color": "gunmetal", "poly": [P(-2.2, 0), P(2.2, 0), P(2.8, 10), P(-2.8, 10)]},
-    # gold accents on chosen edges (user, v2): trims set ~1.5 px inside the edge so the ink/rim does not eat them:
-    # needle step chamfers, guard teeth, wing teeth, notch teeth, the tail spike's last segment (gold tip)
-    gold([(2.4, 42.2), (5.0, 45.8)], 1.4),
-    gold([(6.2, 70.2), (8.8, 73.8)], 1.4),
-    gold([(19.4, 106.2), (30.4, 110.0), (43.0, 105.2), (41.6, 114.4)], 2.0),     # whole quillon leading edge
-    gold([(SX(54) + 1.4, 198.4), (SX(63) - 0.6, 201.2)], 2.2),
-    {"type": "band", "pts": pin(1.7, 0.02, 0.36), "w": 1.8, "color": "gold", "sym": True, "on": [2, 7],
-     "protect": True},                                                          # mid-wing leading edge trim
-    gold([(SX(64) - 0.6, 298.6), (SX(66) - 1.6, 293.8)], 2.0),
-    gold([(3.6, 343.4), (2.8, 356), (0.4, 368)], 1.8),
 ]
 for part in (hs.layers, details, slots, engines, livery):
     walk(part, SCALE)
@@ -293,7 +287,7 @@ W = 2 * int(max(p[0] for p in WING) * SCALE + 10)                    # + room fo
 hull = {"id": "rsl_virtuoso", "name": "Virtuoso", "hullSize": "CAPITAL_SHIP",
         "size": [W, int(math.ceil(H * SCALE))], "layers": hs.layers,
         "greebles": {"layers": FRAMES, "z0": 3.0, "zmax": 3.9, "density": 1.0, "seed": 91},
-        "surface_detail": {"layers": ["b_waist", "b_stern"], "density": 0.02, "seed": 37},
+        "surface_detail": {"layers": ["b_waist1", "b_waist2", "b_stern"], "density": 0.02, "seed": 37},
         "details": details, "slots": slots, "engines": engines, "livery": livery, "bravura_glow": True,
         "ship": {"builtInMods": ["auxiliarythrusters"]}}
 
@@ -325,8 +319,8 @@ vane_details = [
 vane_livery = [{"type": "poly", "color": "navy", "poly": [P(-3.4, PY - VL + 8), P(-1.2, PY - 34), P(1.6, PY - 16),
                                                           P(1.6, PY - 4), P(-3.4, PY - 4)]},
                {"type": "gradient", "color": "navy", "a": [0, PY - 10], "b": [0, PY - VL], "a0": 0.0, "a1": 0.5},
-               {"type": "band", "pts": [P(-4.4, PY - 24), P(-3.8, PY - VL + 6)], "w": 1.5, "color": "gold",
-                "on": [2, 7], "protect": True}]
+               {"type": "band", "pts": [P(-4.2, PY - 6), P(-4.2, PY - 22), P(-2.6, PY - 30), P(-3.4, PY - VL + 8)],
+                "w": 1.3, "color": "ice", "soft": 0.6, "alpha": 0.95}]
 vane = {"id": "rsl_virtuoso_vane_r", "kind": "deco", "size": [VW, int(VH)], "layers": vs.layers,
         "greebles": {"layers": ["vf_vane"], "z0": 2.4, "zmax": 3.1, "density": 1.0, "seed": 13},
         "details": vane_details, "livery": [dict(L, sym=False, mirror=False) for L in vane_livery],

@@ -56,7 +56,7 @@ PAINT = {
     "navy": (0.13, 0.19, 0.33), "blue": (0.22, 0.32, 0.52), "white": (0.95, 0.96, 0.97),
     "steel_light": (0.80, 0.82, 0.85), "steel_dark": (0.44, 0.47, 0.51), "gunmetal": (0.25, 0.27, 0.30),
     "black": (0.10, 0.11, 0.12),
-    "gold": (0.86, 0.68, 0.34),          # Virtuoso edge accents only (user, 2026-10-11); always pass protect=True
+    "ice": (0.58, 0.73, 0.96),           # very light blue (not teal) stripes, Virtuoso v3
 }
 MAT_PLATE, MAT_SLATE = 2, 7
 
@@ -134,6 +134,8 @@ def apply_livery(rgb4, mat, spec, W, H):
         ref[m_id] = float(np.median(lum[sel])) if sel.sum() > 50 else 0.5
     for L in entries:
         mask, tone = _shape_mask(L, W, H)
+        if L.get("soft"):                 # feathered edges: the stripe fades in/out instead of a hard line (px at 1x)
+            mask = np.clip(hullgen.blur(mask, L["soft"] * SS), 0, 1)
         on = np.isin(mat, L.get("on", [MAT_PLATE]))
         k = mask * on * L.get("alpha", 1.0)
         if tone is not None:              # tonal pattern: multiply
