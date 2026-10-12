@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (Glissando/Sforzando visual pass)
+
+- Glissando: the String's arcs and snap are white (Virtuoso); afterimages stay where they were left; activation
+  glow a further 40% dimmer.
+- Sforzando: the wake runs right up to the slug, so it continues through a skewered hull instead of breaking at
+  the impact point; hull-impact glow 40% smaller and 50% dimmer (the slug is seen boring through); slug head glow
+  20% smaller and dimmer.
+- All rail haze trails: noisier smoke texture whose segments drift and curl at random as they fade, hiding the
+  angular segment joints.
+
 ## Unreleased - 2026-10-12 (Glissando steering, kinetic Sforzando)
 
 - Glissando: 720-unit dash (+20%), lasting 0.4 s; its heading swings towards the direction the ship is being flown

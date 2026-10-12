@@ -37,6 +37,8 @@ public class GlissandoStats extends BaseShipSystemScript {
     /** Maneuverability multiplier while dashing, so thrust input actually bends the dash. */
     public static final float DASH_AGILITY = 3f;
     private static final Color GLOW_VIRTUOSO = new Color(235, 255, 252, 255);
+    /** The String's arcs and snap: white with a faint teal fringe (the Unsung's never snaps and stays dim teal). */
+    static final Color STRING_WHITE = new Color(225, 250, 248, 255);
     private static final Color IMAGE_VIRTUOSO = new Color(210, 250, 245, 90);
     private static final Color IMAGE_UNSUNG = new Color(90, 200, 190, 70);
     public static final float CR_COST = 0.01f;
@@ -124,16 +126,15 @@ public class GlissandoStats extends BaseShipSystemScript {
         if (dash.unsung && now - dash.t0 > IFRAMES_UNSUNG) setInvulnerable(stats, id, false);
         if (amount > 0f) {
             engine.addSmoothParticle(new Vector2f(ship.getLocation()), new Vector2f(), ship.getCollisionRadius() * 0.6f,
-                    0.24f, 0.35f, dash.unsung ? RslUtil.TEAL_DIM : GLOW_VIRTUOSO);
+                    0.145f, 0.35f, dash.unsung ? RslUtil.TEAL_DIM : GLOW_VIRTUOSO);
             // a fading trail of afterimages along the dash
             dash.imageTimer -= amount;
             if (dash.imageTimer <= 0f) {
                 dash.imageTimer = 0.03f;
-                // afterimage position and velocity are relative to the ship: cancel both the ship's own velocity
-                // and the dash's displacement so each image stays where it was left
-                float dv = step / amount;
-                ship.addAfterimage(dash.unsung ? IMAGE_UNSUNG : IMAGE_VIRTUOSO, 0f, 0f, -(v.x + dash.dir.x * dv),
-                        -(v.y + dash.dir.y * dv), 0f, 0f, 0.08f, 0.5f, true, false, false);
+                // an afterimage is left where the ship was when it is spawned and moves only with the velocity
+                // given here: zero, so each image stays in place while the ship dashes on
+                ship.addAfterimage(dash.unsung ? IMAGE_UNSUNG : IMAGE_VIRTUOSO, 0f, 0f, 0f, 0f, 0f, 0f, 0.08f, 0.5f,
+                        true, false, false);
             }
         }
     }
@@ -228,7 +229,7 @@ public class GlissandoStats extends BaseShipSystemScript {
             }
             if (fx > 0.12f) {
                 fx = 0f;
-                engine.spawnEmpArcVisual(a, null, b, null, 5f, unsung ? RslUtil.TEAL_DIM : RslUtil.VIOLET, RslUtil.WHITE);
+                engine.spawnEmpArcVisual(a, null, b, null, 5f, unsung ? RslUtil.TEAL_DIM : STRING_WHITE, RslUtil.WHITE);
             }
             if (barrier > 0f) {
                 kill.clear();
@@ -241,7 +242,7 @@ public class GlissandoStats extends BaseShipSystemScript {
                 for (int i = 0; i < kill.size() && barrier > 0f; i++) {
                     DamagingProjectileAPI p = kill.get(i);
                     barrier -= p.getDamageAmount();
-                    engine.addHitParticle(p.getLocation(), new Vector2f(), 30f, 1f, 0.15f, RslUtil.VIOLET);
+                    engine.addHitParticle(p.getLocation(), new Vector2f(), 30f, 1f, 0.15f, STRING_WHITE);
                     engine.removeEntity(p);
                 }
             }
@@ -254,9 +255,9 @@ public class GlissandoStats extends BaseShipSystemScript {
         private void snap(CombatEngineAPI engine) {
             for (int k = 0; k <= 8; k++) {
                 Vector2f p = new Vector2f(a.x + (b.x - a.x) * k / 8f, a.y + (b.y - a.y) * k / 8f);
-                engine.addHitParticle(p, new Vector2f(), 90f, 1f, 0.3f, RslUtil.VIOLET);
+                engine.addHitParticle(p, new Vector2f(), 90f, 1f, 0.3f, STRING_WHITE);
             }
-            engine.spawnEmpArcVisual(a, null, b, null, 22f, RslUtil.VIOLET, RslUtil.WHITE);
+            engine.spawnEmpArcVisual(a, null, b, null, 22f, STRING_WHITE, RslUtil.WHITE);
             List<ShipAPI> ships = engine.getShips();
             for (int i = 0; i < ships.size(); i++) {
                 ShipAPI s = ships.get(i);

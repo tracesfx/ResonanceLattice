@@ -394,8 +394,8 @@ def weapons():
                               "through at full damage into the next target, up to %s ships in a row."),
             "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | 3"}), w,
             # the full lance stands apart from every other Lattice gun: a wide, bright, white-teal slug
-            [bolt(wid + "_shot", 190, 10, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=38, hit_glow=60,
-                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=140) if full else
+            [bolt(wid + "_shot", 190, 10, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=30, hit_glow=36,
+                  on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=112) if full else
              # the Unsung's lance: white as well, a little narrower and dimmer than the full Virtuoso's
              bolt(wid + "_shot", 130, 9, [200, 240, 236, 255], core=[255, 255, 255, 255], glow_r=23, hit_glow=55,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=104)], text)
@@ -1152,7 +1152,8 @@ def sounds_and_trails():
         sj[sid] = [{"file": "sounds/rsl/%s.ogg" % f, "pitch": p, "volume": vol} for f in files for p in pitches]
     write_json("data/config/sounds.json", sj)
 
-    def trail(tid, pid, sprite, w, dur, fade, s_in, s_out, c_in, c_out, opacity, dist, disp, additive=True):
+    def trail(tid, pid, sprite, w, dur, fade, s_in, s_out, c_in, c_out, opacity, dist, disp, additive=True,
+              noise=False):
         return {"trail": tid, "projectile": pid, "sprite": sprite, "minLength": 15, "fadeIn": 0, "duration": dur,
                 "fadeOut": round(fade, 2), "sizeIn": round(s_in * w, 1), "sizeOut": round(s_out * w, 1),
                 # MagicLib parses colours with Integer.parseInt on each item: no spaces ("[210,255,250]")
@@ -1161,16 +1162,22 @@ def sounds_and_trails():
                 "frameOffsetMult": 1, "fadeOnFadeOut": "TRUE", "angleAdjustment": "FALSE",
                 "additive": "TRUE" if additive else "FALSE", "velocityIn": 0, "velocityOut": 0, "randomVelocity": 0,
                 "angle": 0, "rotationIn": 0, "rotationOut": 0, "randomRotation": "FALSE",
-                "renderBelowExplosions": "FALSE"}
+                "renderBelowExplosions": "FALSE",
+                # noise: segments drift out and curl at random as the haze fades, breaking up the straight,
+                # angular segment joints (user: "the trail smoke deforms angularly")
+                **({"velocityOut": round(18 * w, 1), "randomVelocity": 0.9, "rotationIn": 10, "rotationOut": 70,
+                    "randomRotation": "TRUE", "textScroll": -48} if noise else {})}
     rows = []
     for pid, w in TRAILS.items():
         length = PROJ[pid]["length"]
         # a thin white-teal wake right behind the streak, then a wide teal->violet ion haze that lingers
         rows.append(trail(pid + "_core", pid, "base_trail_smooth", w, 0.04, 0.3, 4, 1.5, [210, 255, 250],
                           [90, 210, 220], 0.75, round(length * 0.5), 0))
-        rows.append(trail(pid + "_haze", pid, "base_trail_fuzzy", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
-                          [150, 110, 230], 0.3, round(length * 0.5), 12 * w))
+        rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
+                          [150, 110, 230], 0.3, round(length * 0.5), 22 * w, noise=True))
     for r in rows:   # the Sforzando's slugs pierce whole lines of ships: a white-teal wake that hangs much longer
+        if r["projectile"] in ("rsl_sforzando_shot", "rsl_sforzando_untuned_shot"):
+            r["distance"] = 0
         if r["projectile"] == "rsl_sforzando_shot":
             r["duration"], r["fadeOut"] = r["duration"] * 4, round(r["fadeOut"] * 3, 2)
             core = r["trail"].endswith("_core")
@@ -1184,7 +1191,7 @@ def sounds_and_trails():
             r["sizeIn"], r["sizeOut"] = round(r["sizeIn"] * 1.6, 1), round(r["sizeOut"] * 1.4, 1)
     for pid, w in MISSILE_TRAILS.items():
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.1, 1.2, 8, 22, [120, 220, 215],
-                          [140, 110, 220], 0.4, 6, 10 * w, additive=False))
+                          [140, 110, 220], 0.4, 6, 18 * w, additive=False, noise=True))
     write_csv("data/config/modFiles/magicTrail_data.csv", TRAIL_HDR, rows)
 
 

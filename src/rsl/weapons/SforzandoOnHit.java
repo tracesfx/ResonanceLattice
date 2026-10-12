@@ -38,6 +38,8 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
     static final Color TEAL_EDGE = new Color(150, 235, 225, 255);
     /** Ships one slug can pass through (each at full damage) before it stops. */
     public static final int MAX_PIERCE = 12;
+    static final float HULL_GLOW_SIZE = 0.6f;
+    static final float HULL_GLOW_BRIGHT = 0.5f;
     /** The Unsung's untuned lance skewers too, but stops after this many ships. */
     public static final int MAX_PIERCE_UNTUNED = 3;
     private static final String KEY_PIERCES = "rsl_sforzando_pierces";
@@ -72,7 +74,8 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
     @Override
     public void onHit(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                       ApplyDamageResultAPI result, CombatEngineAPI engine) {
-        RailFx.impact(proj, target, point, shieldHit, engine);
+        // hull hits: a much smaller, dimmer flash than other rails, so the slug is seen boring through the ship
+        RailFx.impact(proj, target, point, shieldHit, engine, HULL_GLOW_SIZE, HULL_GLOW_BRIGHT);
         // a slug stopped by a shield is removed at once, so no part of its head or glow is drawn inside the bubble
         if (shieldHit) engine.removeEntity(proj);
         if (!(target instanceof ShipAPI)) return;

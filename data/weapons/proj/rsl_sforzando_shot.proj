@@ -25,9 +25,9 @@
         190,
         245,
         238,
-        140
+        112
     ],
-    "glowRadius": 38,
-    "hitGlowRadius": 60,
+    "glowRadius": 30,
+    "hitGlowRadius": 36,
     "onHitEffect": "rsl.weapons.SforzandoOnHit"
 }

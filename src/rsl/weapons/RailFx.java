@@ -51,6 +51,12 @@ public final class RailFx {
 
     public static void impact(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
                               CombatEngineAPI engine) {
+        impact(proj, target, point, shieldHit, engine, 1f, 1f);
+    }
+
+    /** As {@link #impact}, with the hull-hit glow scaled (radius x hullSize, brightness x hullBright). */
+    public static void impact(DamagingProjectileAPI proj, CombatEntityAPI target, Vector2f point, boolean shieldHit,
+                              CombatEngineAPI engine, float hullSize, float hullBright) {
         if (engine == null || point == null || target instanceof MissileAPI) return;
         float w = weight(proj);
         if (!visible(engine, point, 200f * w)) return;
@@ -59,7 +65,7 @@ public final class RailFx {
         if (shieldHit && target instanceof ShipAPI && ((ShipAPI) target).getShield() != null) {
             shieldRing(((ShipAPI) target).getShield(), point, tv, back, w, engine);
         } else {
-            hullCrack(point, tv, back, w, engine);
+            hullCrack(point, tv, back, w, hullSize, hullBright, engine);
         }
     }
 
@@ -92,9 +98,10 @@ public final class RailFx {
         }
     }
 
-    private static void hullCrack(Vector2f point, Vector2f tv, double back, float w, CombatEngineAPI engine) {
-        engine.addHitParticle(point, tv, 16f * w, 0.6f, 0.08f, SPARK);
-        engine.addSmoothParticle(point, tv, 28f * w, 0.3f, 0.2f, RslUtil.TEAL);
+    private static void hullCrack(Vector2f point, Vector2f tv, double back, float w, float gs, float gb,
+                                  CombatEngineAPI engine) {
+        engine.addHitParticle(point, tv, 16f * w * gs, 0.6f * gb, 0.08f, SPARK);
+        engine.addSmoothParticle(point, tv, 28f * w * gs, 0.3f * gb, 0.2f, RslUtil.TEAL);
         int n = 3 + Math.round(2.5f * w);
         for (int i = 0; i < n; i++) {
             double a = back + (Math.random() - 0.5) * 2.2;
