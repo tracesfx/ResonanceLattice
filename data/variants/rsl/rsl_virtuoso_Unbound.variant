@@ -1,0 +1,60 @@
+{
+    "variantId": "rsl_virtuoso_Unbound",
+    "hullId": "rsl_virtuoso",
+    "displayName": "Unbound",
+    "fluxVents": 50,
+    "fluxCapacitors": 50,
+    "hullMods": [
+        "rsl_unbound",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_sforzando",
+                "WS0001R": "rsl_sforzando"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_lattice_lance",
+                "WS0002R": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_flechette",
+                "WS0003R": "rsl_flechette"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_pizzicato",
+                "WS0004R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_chime",
+                "WS0005R": "rsl_chime",
+                "WS0006": "rsl_chime",
+                "WS0006R": "rsl_chime"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

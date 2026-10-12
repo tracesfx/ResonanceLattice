@@ -1,0 +1,57 @@
+{
+    "variantId": "rsl_tremolo_Riptide",
+    "hullId": "rsl_tremolo",
+    "displayName": "Riptide",
+    "fluxVents": 29,
+    "fluxCapacitors": 0,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "reinforcedhull"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_harmonic_driver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_arpeggio",
+                "WS0001R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_pizzicato",
+                "WS0006R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_cantus",
+                "WS0004R": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "rsl_tuningspike",
+                "WS0008R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

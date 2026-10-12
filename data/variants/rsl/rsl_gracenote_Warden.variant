@@ -1,0 +1,33 @@
+{
+    "variantId": "rsl_gracenote_Warden",
+    "hullId": "rsl_gracenote",
+    "displayName": "Warden",
+    "fluxVents": 10,
+    "fluxCapacitors": 10,
+    "hullMods": [
+        "extendedshieldemitter",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_shardcaster"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_chime",
+                "WS0001R": "rsl_chime"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

@@ -41,6 +41,14 @@ addship rsl_virtuoso_Standard
 addship rsl_virtuoso_unsung_Standard
 ```
 
+Preset loadouts (two per hull, besides `_Standard`): `rsl_gracenote_Pluck` / `_Warden`, `rsl_refrain_Bulwark` /
+`_Chorister`, `rsl_staccato_Burst` / `_Lancer`, `rsl_cadence_Battery` / `_Drumline`, `rsl_tremolo_Waveform` /
+`_Riptide`, `rsl_halo_Nocturne` / `_Sanctuary`, `rsl_conductor_Maestro` / `_Fortissimo`, `rsl_virtuoso_Soloist` /
+`_Unbound`, `rsl_virtuoso_unsung_Wanderer` / `_LastStand`.
+
+```
+```
+
 The Cantor Array (`rsl_cantor_Standard`) is a station: use the Cantor Siege mission to fight it.
 
 Weapons:

@@ -31,7 +31,7 @@
         0,
         0
     ],
-    "barrelMode": "LINKED",
+    "barrelMode": "ALTERNATING",
     "turretGlowSprite": "graphics/rsl/weapons/rsl_shardcaster_turret_glow.png",
     "hardpointGlowSprite": "graphics/rsl/weapons/rsl_shardcaster_hardpoint_glow.png",
     "glowColor": [

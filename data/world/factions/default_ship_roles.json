@@ -1,33 +1,46 @@
 {
     "combatSmall": {
-        "rsl_gracenote_Standard": 10
+        "rsl_gracenote_Standard": 6,
+        "rsl_gracenote_Pluck": 6
     },
     "combatSmallForSmallFleet": {
-        "rsl_gracenote_Standard": 10
+        "rsl_gracenote_Standard": 6,
+        "rsl_gracenote_Pluck": 6
     },
     "fastAttack": {
-        "rsl_gracenote_Standard": 5,
-        "rsl_staccato_Standard": 5
+        "rsl_gracenote_Pluck": 5,
+        "rsl_staccato_Burst": 5
     },
     "escortSmall": {
-        "rsl_gracenote_Standard": 10
+        "rsl_gracenote_Warden": 10
     },
     "combatMedium": {
-        "rsl_refrain_Standard": 6,
-        "rsl_staccato_Standard": 6
+        "rsl_refrain_Chorister": 4,
+        "rsl_staccato_Standard": 4,
+        "rsl_staccato_Burst": 4,
+        "rsl_staccato_Lancer": 4
     },
     "escortMedium": {
-        "rsl_refrain_Standard": 10
+        "rsl_refrain_Standard": 4,
+        "rsl_refrain_Bulwark": 6
     },
     "combatLarge": {
-        "rsl_cadence_Standard": 6,
-        "rsl_tremolo_Standard": 6
+        "rsl_cadence_Standard": 3,
+        "rsl_cadence_Battery": 4,
+        "rsl_cadence_Drumline": 3,
+        "rsl_tremolo_Standard": 3,
+        "rsl_tremolo_Waveform": 4,
+        "rsl_tremolo_Riptide": 3
     },
     "carrierLarge": {
-        "rsl_halo_Standard": 10
+        "rsl_halo_Standard": 4,
+        "rsl_halo_Nocturne": 5,
+        "rsl_halo_Sanctuary": 5
     },
     "combatCapital": {
-        "rsl_conductor_Standard": 6,
-        "rsl_halo_Standard": 3
+        "rsl_conductor_Standard": 3,
+        "rsl_conductor_Maestro": 4,
+        "rsl_conductor_Fortissimo": 3,
+        "rsl_halo_Nocturne": 2
     }
 }

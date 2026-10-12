@@ -29,3 +29,23 @@ Weapons:
 Levers to tune in play (all constants in the Java classes): Resonance gain (`RslDamageListener.GAIN_*`), Overtone
 cost (`LatticeData`), Stolen Time rate/cap (`StolenTime`), Glissando CR cost and string damage (`GlissandoStats`),
 Sforzando bonuses (`SforzandoOnHit`).
+
+## Final balance pass (2026-10-12)
+
+Target (user): **slightly above vanilla** per DP. The rail doctrine's extra range (30-50% over vanilla peers) is paid
+for with ~15% less sustained DPS and slightly worse flux efficiency on the main guns:
+
+| Weapon | Before | After |
+|---|---|---|
+| Pizzicato Lancet | 122 DPS, 0.91 flux/dmg | 105 DPS, 0.95 |
+| Lattice Lance | 200 DPS (350 tuned), 0.86 | 175 DPS (306 tuned), 0.89 |
+| Arpeggio Pulser | ~213 DPS, 0.80 | ~190 DPS, 0.84 |
+| Harmonic Driver | 257 DPS, 1.00 | 225 DPS, 1.06 |
+| Sostenuto Rail | 300 DPS, 0.95 | 250 DPS, 1.00 (+35% hard flux on shields unchanged) |
+| Shard Caster | ambiguous LINKED volley | explicit 3 x 32 burst, ~130 DPS |
+| Crystal Flechette | ambiguous LINKED volley | explicit 3 x 60 burst, ~190 DPS + splinter DoT |
+
+PD (Chime, Cantus), missiles and built-ins (Sforzando, spinal driver) unchanged.
+
+Virtuoso: 120 DP (user), 15,000 hull / 1,200 armor (user: keep armor light), 0.5%/s hull repair in Bravura.
+Unsung: 45 DP, 250 OP. Cantor Array: high-tech Star Fortress level (see CHANGELOG).

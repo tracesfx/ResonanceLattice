@@ -1,0 +1,64 @@
+{
+    "variantId": "rsl_halo_Sanctuary",
+    "hullId": "rsl_halo",
+    "displayName": "Sanctuary",
+    "fluxVents": 50,
+    "fluxCapacitors": 43,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "extendedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [
+        "rsl_trill_wing",
+        "rsl_trill_wing",
+        "rsl_cadenza_wing",
+        "rsl_cadenza_wing"
+    ],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_harmonic_driver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_arpeggio",
+                "WS0005R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_cantus",
+                "WS0002R": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_chime",
+                "WS0003R": "rsl_chime",
+                "WS0004": "rsl_chime",
+                "WS0004R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_tuningspike",
+                "WS0006R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

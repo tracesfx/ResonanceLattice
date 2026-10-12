@@ -1,0 +1,56 @@
+{
+    "variantId": "rsl_staccato_Burst",
+    "hullId": "rsl_staccato",
+    "displayName": "Burst",
+    "fluxVents": 20,
+    "fluxCapacitors": 8,
+    "hullMods": [
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_arpeggio",
+                "WS0001R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_flechette"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_pizzicato",
+                "WS0004R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_chime",
+                "WS0006R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "rsl_tuningspike",
+                "WS0008R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

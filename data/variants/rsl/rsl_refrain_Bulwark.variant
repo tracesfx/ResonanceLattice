@@ -1,0 +1,50 @@
+{
+    "variantId": "rsl_refrain_Bulwark",
+    "hullId": "rsl_refrain",
+    "displayName": "Bulwark",
+    "fluxVents": 20,
+    "fluxCapacitors": 3,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "extendedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_chime",
+                "WS0002R": "rsl_chime",
+                "WS0005": "rsl_chime",
+                "WS0005R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "rsl_tuningspike",
+                "WS0007R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

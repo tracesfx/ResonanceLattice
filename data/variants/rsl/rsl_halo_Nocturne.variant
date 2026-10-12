@@ -1,0 +1,63 @@
+{
+    "variantId": "rsl_halo_Nocturne",
+    "hullId": "rsl_halo",
+    "displayName": "Nocturne",
+    "fluxVents": 50,
+    "fluxCapacitors": 50,
+    "hullMods": [
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [
+        "rsl_requiem_wing",
+        "rsl_requiem_wing",
+        "rsl_cadenza_wing",
+        "rsl_trill_wing"
+    ],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_sostenuto"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_lattice_lance",
+                "WS0005R": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_cantus",
+                "WS0002R": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_chime",
+                "WS0003R": "rsl_chime",
+                "WS0004": "rsl_chime",
+                "WS0004R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_tuningspike",
+                "WS0006R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

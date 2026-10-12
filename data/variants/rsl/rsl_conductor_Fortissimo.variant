@@ -1,0 +1,76 @@
+{
+    "variantId": "rsl_conductor_Fortissimo",
+    "hullId": "rsl_conductor",
+    "displayName": "Fortissimo",
+    "fluxVents": 50,
+    "fluxCapacitors": 50,
+    "hullMods": [
+        "targetingunit",
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_harmonic_spinal"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "rsl_harmonic_driver"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_sostenuto",
+                "WS0002R": "rsl_sostenuto"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_lattice_lance",
+                "WS0003R": "rsl_lattice_lance",
+                "WS0006": "rsl_lattice_lance",
+                "WS0006R": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_flechette",
+                "WS0005R": "rsl_flechette"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_chime",
+                "WS0004R": "rsl_chime",
+                "WS0008": "rsl_chime",
+                "WS0008R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0009": "rsl_tuningspike",
+                "WS0009R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

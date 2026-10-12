@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (final balance pass, presets)
+
+- Fix: pierce continuations (Sforzando, Harmonic Driver) no longer extend the shot's range; they are removed once
+  the original shot's range from its firing point is used up.
+- Fix: Glissando afterimages drawn by the mod itself (hull sprite snapshots left in place, fading), tinted white on
+  the Virtuoso and teal on the Unsung.
+- Balance: main rail guns ~15% less sustained DPS and slightly worse flux efficiency (range is the edge); shard guns
+  fire explicit 3-shot bursts; Virtuoso 15,000 hull; Unsung 250 OP (BALANCE.md).
+- Two preset loadouts per hull (18 variants), used by Choir fleets; see README.
+
 ## Unreleased - 2026-10-12 (DP, Bravura regen, station rebalance)
 
 - Glissando activation glow a further 40% dimmer.

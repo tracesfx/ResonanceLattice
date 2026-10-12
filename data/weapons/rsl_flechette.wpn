@@ -31,7 +31,7 @@
         0,
         0
     ],
-    "barrelMode": "LINKED",
+    "barrelMode": "ALTERNATING",
     "turretGlowSprite": "graphics/rsl/weapons/rsl_flechette_turret_glow.png",
     "hardpointGlowSprite": "graphics/rsl/weapons/rsl_flechette_hardpoint_glow.png",
     "glowColor": [

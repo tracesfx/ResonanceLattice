@@ -1,0 +1,76 @@
+{
+    "variantId": "rsl_conductor_Maestro",
+    "hullId": "rsl_conductor",
+    "displayName": "Maestro",
+    "fluxVents": 50,
+    "fluxCapacitors": 50,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_harmonic_spinal"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_harmonic_driver",
+                "WS0002R": "rsl_harmonic_driver"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "rsl_sostenuto"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_lattice_lance",
+                "WS0006R": "rsl_lattice_lance"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_arpeggio",
+                "WS0003R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_pizzicato",
+                "WS0004R": "rsl_pizzicato",
+                "WS0008": "rsl_pizzicato",
+                "WS0008R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_cantus",
+                "WS0005R": "rsl_cantus",
+                "WS0009": "rsl_tuningspike",
+                "WS0009R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

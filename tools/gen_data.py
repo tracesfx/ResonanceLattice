@@ -175,7 +175,7 @@ def weapons():
              onFireEffect=PKG + "PizzicatoEffect")
     add_weapon(blank_row(name="Pizzicato Lancet", id="rsl_pizzicato", tier=1, **{
         "base value": 1800, "range": 800, "damage/shot": 110, "impact": 4, "turn rate": 30, "OPs": 7,
-        "type": "ENERGY", "energy/shot": 100, "chargeup": 0, "chargedown": 0.9, "proj speed": 2200,
+        "type": "ENERGY", "energy/shot": 105, "chargeup": 0, "chargedown": 1.05, "proj speed": 2200,
         "tags": "energy8, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
         "customPrimary": "A shot fired after at least %s of silence is plucked: it deals %s damage.",
         "customPrimaryHL": "2.5 seconds | double"}), w,
@@ -183,12 +183,13 @@ def weapons():
         "A needle-thin rail with a tensioned crystal at its breech. Left alone, the crystal stores its charge and "
         "the next slug leaves with a sharp, plucked report - and twice the bite.")
 
-    w = wpn_base("rsl_shardcaster", "BALLISTIC", "SMALL", barrel="LINKED")
+    w = wpn_base("rsl_shardcaster", "BALLISTIC", "SMALL")
     w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 16, 20, 8, 10),
              projectileSpecId="rsl_shard_shot", fireSoundTwo="rsl_shard_fire")
     add_weapon(blank_row(name="Shard Caster", id="rsl_shardcaster", tier=1, **{
-        "base value": 1100, "range": 700, "damage/shot": 30, "impact": 2, "turn rate": 50, "OPs": 6,
-        "type": "KINETIC", "energy/shot": 18, "chargeup": 0, "chargedown": 0.6, "min spread": 1, "max spread": 4,
+        "base value": 1100, "range": 700, "damage/shot": 32, "impact": 2, "turn rate": 50, "OPs": 6,
+        "type": "KINETIC", "energy/shot": 18, "chargeup": 0, "chargedown": 0.66, "burst size": 3, "burst delay": 0.02,
+        "min spread": 1, "max spread": 4,
         "spread/shot": 1, "spread decay/sec": 12, "proj speed": 1800, "hints": "ANTI_FTR",
         "tags": "kinetic6, energy6, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Assault"}), w,
         [bolt("rsl_shard_shot", 10, 5, TEAL_SOFT, spawn="BALLISTIC", coll="PROJECTILE_FF", coll_f="PROJECTILE_FIGHTER",
@@ -238,7 +239,7 @@ def weapons():
              projectileSpecId="rsl_lance_shot", fireSoundTwo="rsl_lance_fire")
     add_weapon(blank_row(name="Lattice Lance", id="rsl_lattice_lance", tier=2, **{
         "base value": 3200, "range": 1000, "damage/shot": 140, "impact": 6, "turn rate": 25, "OPs": 12,
-        "type": "ENERGY", "energy/shot": 120, "chargeup": 0, "chargedown": 0.7, "min spread": 0, "max spread": 0,
+        "type": "ENERGY", "energy/shot": 125, "chargeup": 0, "chargedown": 0.8, "min spread": 0, "max spread": 0,
         "proj speed": 2400, "tags": "energy10, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Sustained",
         "customPrimary": "Each consecutive hit on the same ship adds %s damage, up to %s; switching targets or %s "
                          "without a hit resets it.",
@@ -247,12 +248,13 @@ def weapons():
         "A long rail that tunes itself to whatever it keeps hitting. Every slug that lands on the same hull brings its "
         "resonance closer to the target's own, and the next one cuts deeper. Switching targets throws the tuning away.")
 
-    w = wpn_base("rsl_flechette", "BALLISTIC", "MEDIUM", barrel="LINKED")
+    w = wpn_base("rsl_flechette", "BALLISTIC", "MEDIUM")
     w.update(animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 22, 24, 10, 14),
              projectileSpecId="rsl_flechette_shot", fireSoundTwo="rsl_flechette_fire")
     add_weapon(blank_row(name="Crystal Flechette", id="rsl_flechette", tier=2, **{
         "base value": 2600, "range": 850, "damage/shot": 60, "impact": 3, "turn rate": 35, "OPs": 10,
-        "type": "KINETIC", "energy/shot": 45, "chargeup": 0, "chargedown": 0.75, "min spread": 1, "max spread": 5,
+        "type": "KINETIC", "energy/shot": 45, "chargeup": 0, "chargedown": 0.9, "burst size": 3, "burst delay": 0.02,
+        "min spread": 1, "max spread": 5,
         "spread/shot": 1, "spread decay/sec": 12, "proj speed": 1900, "tags": "kinetic9, LR, " + BP,
         "tech/manufacturer": MFR, "primaryRoleStr": "Assault",
         "customPrimary": "Shards that hit armor or hull splinter and keep cutting: %s energy damage over %s.",
@@ -269,7 +271,7 @@ def weapons():
              onFireEffect=PKG + "ArpeggioEffect")
     add_weapon(blank_row(name="Arpeggio Pulser", id="rsl_arpeggio", tier=2, **{
         "base value": 2800, "range": 900, "damage/shot": 100, "impact": 3, "turn rate": 25, "OPs": 10,
-        "type": "ENERGY", "energy/shot": 85, "chargeup": 0, "chargedown": 1.2, "burst size": 3, "burst delay": 0.15,
+        "type": "ENERGY", "energy/shot": 90, "chargeup": 0, "chargedown": 1.4, "burst size": 3, "burst delay": 0.15,
         "proj speed": 2000, "tags": "energy10, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "General",
         "customPrimary": "Fires a rising three-note burst: the notes deal %s of the listed damage.",
         "customPrimaryHL": "80% | 100% | 140%"}), w,
@@ -299,7 +301,7 @@ def weapons():
              fireSoundTwo="rsl_driver_fire", autocharge=True, requiresFullCharge=True)
     add_weapon(blank_row(name="Harmonic Driver", id="rsl_harmonic_driver", tier=3, **{
         "base value": 9000, "range": 1200, "damage/shot": 900, "impact": 20, "turn rate": 10, "OPs": 26,
-        "type": "ENERGY", "energy/shot": 900, "chargeup": 1.5, "chargedown": 2.0, "proj speed": 2600,
+        "type": "ENERGY", "energy/shot": 950, "chargeup": 1.5, "chargedown": 2.5, "proj speed": 2600,
         "proj hitpoints": 500, "hints": "STRIKE", "tags": "energy20, LR, " + BP, "tech/manufacturer": MFR,
         "primaryRoleStr": "Anti Armor",
         "customPrimary": "A fully charged shot that breaks through hull or armor pierces the ship and carries on with %s of its damage.",
@@ -325,7 +327,7 @@ def weapons():
              projectileSpecId="rsl_sostenuto_shot", fireSoundTwo="rsl_sostenuto_fire")
     add_weapon(blank_row(name="Sostenuto Rail", id="rsl_sostenuto", tier=3, **{
         "base value": 8000, "range": 1100, "damage/shot": 100, "impact": 4, "turn rate": 8, "OPs": 22,
-        "type": "ENERGY", "energy/shot": 95, "chargeup": 0, "chargedown": 0.33, "min spread": 0, "max spread": 1,
+        "type": "ENERGY", "energy/shot": 100, "chargeup": 0, "chargedown": 0.4, "min spread": 0, "max spread": 1,
         "spread/shot": 0.2, "spread decay/sec": 4, "proj speed": 2400,
         "tags": "energy18, LR, " + BP, "tech/manufacturer": MFR, "primaryRoleStr": "Anti Shield",
         "customPrimary": "Slugs that hit a shield add another %s of the flux they caused, as hard flux.",
@@ -533,7 +535,7 @@ HULLS = {
         "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.8, "supplies/rec": 45, "supplies/mo": 45,
         "base value": 420000})),
     "rsl_virtuoso": ("odyssey", dict(name="Virtuoso", designation="Duelist", **{
-        "system id": "rsl_glissando", "fleet pts": 40, "hitpoints": 12000, "armor rating": 1200, "max flux": 15000,
+        "system id": "rsl_glissando", "fleet pts": 40, "hitpoints": 15000, "armor rating": 1200, "max flux": 15000,
         "flux dissipation": 1200, "ordnance points": 260, "fighter bays": "", "max speed": 70, "acceleration": 85,
         "deceleration": 75, "max turn rate": 24, "turn acceleration": 45, "mass": 2600, "shield type": "OMNI",
         "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.5, "supplies/rec": 120, "supplies/mo": 120,
@@ -541,7 +543,7 @@ HULLS = {
         "tags": "restricted, no_dealer, no_drop, no_bp_drop, no_sell"})),
     "rsl_virtuoso_unsung": ("odyssey", dict(name="Virtuoso (Unsung)", designation="Duelist Prototype", **{
         "system id": "rsl_glissando_unsung", "fleet pts": 30, "hitpoints": 10000, "armor rating": 1000,
-        "max flux": 12500, "flux dissipation": 950, "ordnance points": 220, "fighter bays": "", "max speed": 55,
+        "max flux": 12500, "flux dissipation": 950, "ordnance points": 250, "fighter bays": "", "max speed": 55,
         "acceleration": 38, "deceleration": 34, "max turn rate": 12, "turn acceleration": 17, "mass": 2600,
         "shield type": "OMNI", "shield arc": 240, "shield upkeep": 0.4, "shield efficiency": 0.85,
         "supplies/rec": 45, "supplies/mo": 45, "peak CR sec": 360, "CR loss/sec": 0.3, "base value": 700000,
@@ -703,6 +705,9 @@ OP = {}          # weapon id -> OP
 
 
 def mod_cost(mod, size):
+    own = {h[0]: h[5] for h in HULLMODS}   # this mod's hullmods: (frigate, destroyer, cruiser, capital)
+    if mod in own:
+        return own[mod][["FRIGATE", "DESTROYER", "CRUISER", "CAPITAL_SHIP"].index(size)]
     col = {"FRIGATE": "cost_frigate", "DESTROYER": "cost_dest", "CRUISER": "cost_cruiser",
            "CAPITAL_SHIP": "cost_capital"}[size]
     return int(float(V.row("hull_mods.csv", mod)[col]))
@@ -765,6 +770,105 @@ LOADOUTS = {  # variant id: (hull, display name, {slot: weapon}, wings, hullmods
 }
 
 
+# Intentional preset loadouts (user, 2026-10-12: "1-2 intentional, preset outfits for each ship"). Hand-picked weapons
+# and hullmods; only the leftover OP is filled (vents first, then capacitors). Same tuple as LOADOUTS.
+PRESETS = {
+    # Grace Note - "Pluck": twin Pizzicato hardpoints for alpha strikes in Discord; "Warden": PD picket
+    "rsl_gracenote_Pluck": ("rsl_gracenote", "Pluck", {
+        "WS0001": "rsl_pizzicato", "WS0001R": "rsl_pizzicato", "WS0003": "rsl_shardcaster"},
+        [], ["hardenedshieldemitter", "fluxbreakers"]),
+    "rsl_gracenote_Warden": ("rsl_gracenote", "Warden", {
+        "WS0001": "rsl_chime", "WS0001R": "rsl_chime", "WS0003": "rsl_shardcaster"},
+        [], ["extendedshieldemitter", "hardenedshieldemitter"]),
+    # Refrain - "Bulwark": the Ward tank, wide shield + PD; "Chorister": a firing escort
+    "rsl_refrain_Bulwark": ("rsl_refrain", "Bulwark", {
+        "WS0001": "rsl_lattice_lance", "WS0002": "rsl_chime", "WS0002R": "rsl_chime", "WS0004": "rsl_cantus",
+        "WS0005": "rsl_chime", "WS0005R": "rsl_chime", "WS0007": "rsl_tuningspike", "WS0007R": "rsl_tuningspike"},
+        [], ["hardenedshieldemitter", "extendedshieldemitter"]),
+    "rsl_refrain_Chorister": ("rsl_refrain", "Chorister", {
+        "WS0001": "rsl_arpeggio", "WS0002": "rsl_pizzicato", "WS0002R": "rsl_pizzicato", "WS0004": "rsl_flechette",
+        "WS0005": "rsl_chime", "WS0005R": "rsl_chime", "WS0007": "rsl_tuningspike", "WS0007R": "rsl_tuningspike"},
+        [], ["hardenedshieldemitter", "fluxbreakers"]),
+    # Staccato - "Burst": Grace Dash in, Arpeggio + spikes, Fracture out; "Lancer": stand-off Lattice Lances
+    "rsl_staccato_Burst": ("rsl_staccato", "Burst", {
+        "WS0001": "rsl_arpeggio", "WS0001R": "rsl_arpeggio", "WS0003": "rsl_flechette", "WS0004": "rsl_pizzicato",
+        "WS0004R": "rsl_pizzicato", "WS0006": "rsl_chime", "WS0006R": "rsl_chime", "WS0008": "rsl_tuningspike",
+        "WS0008R": "rsl_tuningspike"}, [], ["hardenedshieldemitter"]),
+    "rsl_staccato_Lancer": ("rsl_staccato", "Lancer", {
+        "WS0001": "rsl_lattice_lance", "WS0001R": "rsl_lattice_lance", "WS0003": "rsl_flechette",
+        "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0006": "rsl_chime", "WS0006R": "rsl_chime",
+        "WS0008": "rsl_tuningspike", "WS0008R": "rsl_tuningspike"}, [], ["fluxbreakers"]),
+    # Cadence - "Battery": twin Harmonic Drivers, the line breaker; "Drumline": sustained Sostenuto + Crescendo
+    "rsl_cadence_Battery": ("rsl_cadence", "Battery", {
+        "WS0001": "rsl_harmonic_driver", "WS0001R": "rsl_harmonic_driver", "WS0003": "rsl_cantus",
+        "WS0004": "rsl_arpeggio", "WS0004R": "rsl_arpeggio", "WS0006": "rsl_pizzicato", "WS0006R": "rsl_pizzicato",
+        "WS0008": "rsl_chime", "WS0008R": "rsl_chime", "WS0010": "rsl_tuningspike", "WS0010R": "rsl_tuningspike"},
+        [], ["hardenedshieldemitter"]),
+    "rsl_cadence_Drumline": ("rsl_cadence", "Drumline", {
+        "WS0001": "rsl_sostenuto", "WS0001R": "rsl_sostenuto", "WS0003": "rsl_flechette",
+        "WS0004": "rsl_lattice_lance", "WS0004R": "rsl_lattice_lance", "WS0006": "rsl_pizzicato",
+        "WS0006R": "rsl_pizzicato", "WS0008": "rsl_chime", "WS0008R": "rsl_chime", "WS0010": "rsl_tuningspike",
+        "WS0010R": "rsl_tuningspike"}, [], ["fluxbreakers"]),
+    # Tremolo - "Waveform": ranged skirmisher that snaps back to its node; "Riptide": close-in brawler
+    "rsl_tremolo_Waveform": ("rsl_tremolo", "Waveform", {
+        "WS0001": "rsl_lattice_lance", "WS0001R": "rsl_lattice_lance", "WS0003": "rsl_sostenuto",
+        "WS0004": "rsl_flechette", "WS0004R": "rsl_flechette", "WS0006": "rsl_chime", "WS0006R": "rsl_chime",
+        "WS0008": "rsl_tuningspike", "WS0008R": "rsl_tuningspike"}, [], ["hardenedshieldemitter", "fluxbreakers"]),
+    "rsl_tremolo_Riptide": ("rsl_tremolo", "Riptide", {
+        "WS0001": "rsl_arpeggio", "WS0001R": "rsl_arpeggio", "WS0003": "rsl_harmonic_driver",
+        "WS0004": "rsl_cantus", "WS0004R": "rsl_cantus", "WS0006": "rsl_pizzicato", "WS0006R": "rsl_pizzicato",
+        "WS0008": "rsl_tuningspike", "WS0008R": "rsl_tuningspike"}, [], ["hardenedshieldemitter", "reinforcedhull"]),
+    # Halo - "Nocturne": strike carrier (Requiem bombers); "Sanctuary": fleet-defence carrier
+    "rsl_halo_Nocturne": ("rsl_halo", "Nocturne", {
+        "WS0001": "rsl_sostenuto", "WS0002": "rsl_cantus", "WS0002R": "rsl_cantus", "WS0003": "rsl_chime",
+        "WS0003R": "rsl_chime", "WS0004": "rsl_chime", "WS0004R": "rsl_chime", "WS0005": "rsl_lattice_lance",
+        "WS0005R": "rsl_lattice_lance", "WS0006": "rsl_tuningspike", "WS0006R": "rsl_tuningspike"},
+        ["rsl_requiem_wing", "rsl_requiem_wing", "rsl_cadenza_wing", "rsl_trill_wing"], ["hardenedshieldemitter"]),
+    "rsl_halo_Sanctuary": ("rsl_halo", "Sanctuary", {
+        "WS0001": "rsl_harmonic_driver", "WS0002": "rsl_cantus", "WS0002R": "rsl_cantus", "WS0003": "rsl_chime",
+        "WS0003R": "rsl_chime", "WS0004": "rsl_chime", "WS0004R": "rsl_chime", "WS0005": "rsl_arpeggio",
+        "WS0005R": "rsl_arpeggio", "WS0006": "rsl_tuningspike", "WS0006R": "rsl_tuningspike"},
+        ["rsl_trill_wing", "rsl_trill_wing", "rsl_cadenza_wing", "rsl_cadenza_wing"],
+        ["hardenedshieldemitter", "extendedshieldemitter"]),
+    # Conductor - "Maestro": balanced flagship; "Fortissimo": long-range artillery around the spinal gun
+    "rsl_conductor_Maestro": ("rsl_conductor", "Maestro", {
+        "WS0002": "rsl_harmonic_driver", "WS0002R": "rsl_harmonic_driver", "WS0003": "rsl_arpeggio",
+        "WS0003R": "rsl_arpeggio", "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_cantus",
+        "WS0005R": "rsl_cantus", "WS0006": "rsl_lattice_lance", "WS0006R": "rsl_lattice_lance",
+        "WS0007": "rsl_sostenuto", "WS0008": "rsl_pizzicato", "WS0008R": "rsl_pizzicato", "WS0009": "rsl_tuningspike",
+        "WS0009R": "rsl_tuningspike"}, [], ["hardenedshieldemitter", "fluxbreakers"]),
+    "rsl_conductor_Fortissimo": ("rsl_conductor", "Fortissimo", {
+        "WS0002": "rsl_sostenuto", "WS0002R": "rsl_sostenuto", "WS0003": "rsl_lattice_lance",
+        "WS0003R": "rsl_lattice_lance", "WS0004": "rsl_chime", "WS0004R": "rsl_chime", "WS0005": "rsl_flechette",
+        "WS0005R": "rsl_flechette", "WS0006": "rsl_lattice_lance", "WS0006R": "rsl_lattice_lance",
+        "WS0007": "rsl_harmonic_driver", "WS0008": "rsl_chime", "WS0008R": "rsl_chime", "WS0009": "rsl_tuningspike",
+        "WS0009R": "rsl_tuningspike"}, [], ["targetingunit", "hardenedshieldemitter"]),
+    # Virtuoso - "Soloist": the duelist, sturdy and fast-cycling; "Unbound": Unbound Core, all-in aggression
+    "rsl_virtuoso_Soloist": ("rsl_virtuoso", "Soloist", {
+        "WS0002": "rsl_arpeggio", "WS0002R": "rsl_arpeggio", "WS0003": "rsl_flechette", "WS0003R": "rsl_flechette",
+        "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime", "WS0005R": "rsl_chime",
+        "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [],
+        ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull", "turretgyros"]),
+    "rsl_virtuoso_Unbound": ("rsl_virtuoso", "Unbound", {
+        "WS0002": "rsl_lattice_lance", "WS0002R": "rsl_lattice_lance", "WS0003": "rsl_flechette",
+        "WS0003R": "rsl_flechette", "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime",
+        "WS0005R": "rsl_chime", "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [],
+        ["rsl_unbound", "hardenedshieldemitter"]),
+    # Unsung - "Wanderer": long-range survivor; "Last Stand": armored brawler
+    "rsl_virtuoso_unsung_Wanderer": ("rsl_virtuoso_unsung", "Wanderer", {
+        "WS0002": "rsl_lattice_lance", "WS0002R": "rsl_lattice_lance", "WS0003": "rsl_flechette",
+        "WS0003R": "rsl_flechette", "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime",
+        "WS0005R": "rsl_chime", "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [],
+        ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull"]),
+    "rsl_virtuoso_unsung_LastStand": ("rsl_virtuoso_unsung", "Last Stand", {
+        "WS0002": "rsl_arpeggio", "WS0002R": "rsl_arpeggio", "WS0003": "rsl_cantus", "WS0003R": "rsl_cantus",
+        "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_chime", "WS0005R": "rsl_chime",
+        "WS0006": "rsl_chime", "WS0006R": "rsl_chime"}, [],
+        ["heavyarmor", "hardenedshieldemitter", "fluxbreakers"]),
+}
+LOADOUTS.update(PRESETS)
+
+
 def variants(ships):
     for r in WEAPONS:
         OP[r["id"]] = int(float(r["OPs"] or 0))
@@ -791,7 +895,7 @@ def variants(ships):
         if used > budget:
             raise ValueError("%s over budget: %d > %d" % (vid, used, budget))
         free = budget - used
-        if not hid.startswith("rsl_cantor"):
+        if not hid.startswith("rsl_cantor") and vid not in PRESETS:
             mods = list(mods)
             pref = ["hardenedshieldemitter", "fluxbreakers", "reinforcedhull", "turretgyros"]  # no beams left: no Advanced Optics
             if "dedicated_targeting_core" not in BUILTIN_MODS[hid]:
@@ -1059,15 +1163,18 @@ def faction():
     write_json("data/world/factions/%s.faction" % FACTION, f)
     write_csv("data/world/factions/factions.csv", ["faction"], [{"faction": "data/world/factions/%s.faction" % FACTION}])
     write_json("data/world/factions/default_ship_roles.json", {
-        "combatSmall": {"rsl_gracenote_Standard": 10},
-        "combatSmallForSmallFleet": {"rsl_gracenote_Standard": 10},
-        "fastAttack": {"rsl_gracenote_Standard": 5, "rsl_staccato_Standard": 5},
-        "escortSmall": {"rsl_gracenote_Standard": 10},
-        "combatMedium": {"rsl_refrain_Standard": 6, "rsl_staccato_Standard": 6},
-        "escortMedium": {"rsl_refrain_Standard": 10},
-        "combatLarge": {"rsl_cadence_Standard": 6, "rsl_tremolo_Standard": 6},
-        "carrierLarge": {"rsl_halo_Standard": 10},
-        "combatCapital": {"rsl_conductor_Standard": 6, "rsl_halo_Standard": 3},
+        "combatSmall": {"rsl_gracenote_Standard": 6, "rsl_gracenote_Pluck": 6},
+        "combatSmallForSmallFleet": {"rsl_gracenote_Standard": 6, "rsl_gracenote_Pluck": 6},
+        "fastAttack": {"rsl_gracenote_Pluck": 5, "rsl_staccato_Burst": 5},
+        "escortSmall": {"rsl_gracenote_Warden": 10},
+        "combatMedium": {"rsl_refrain_Chorister": 4, "rsl_staccato_Standard": 4, "rsl_staccato_Burst": 4,
+                         "rsl_staccato_Lancer": 4},
+        "escortMedium": {"rsl_refrain_Standard": 4, "rsl_refrain_Bulwark": 6},
+        "combatLarge": {"rsl_cadence_Standard": 3, "rsl_cadence_Battery": 4, "rsl_cadence_Drumline": 3,
+                        "rsl_tremolo_Standard": 3, "rsl_tremolo_Waveform": 4, "rsl_tremolo_Riptide": 3},
+        "carrierLarge": {"rsl_halo_Standard": 4, "rsl_halo_Nocturne": 5, "rsl_halo_Sanctuary": 5},
+        "combatCapital": {"rsl_conductor_Standard": 3, "rsl_conductor_Maestro": 4, "rsl_conductor_Fortissimo": 3,
+                          "rsl_halo_Nocturne": 2},
     })
 
 

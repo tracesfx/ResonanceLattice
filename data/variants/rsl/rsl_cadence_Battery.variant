@@ -1,0 +1,64 @@
+{
+    "variantId": "rsl_cadence_Battery",
+    "hullId": "rsl_cadence",
+    "displayName": "Battery",
+    "fluxVents": 27,
+    "fluxCapacitors": 0,
+    "hullMods": [
+        "hardenedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_harmonic_driver",
+                "WS0001R": "rsl_harmonic_driver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_arpeggio",
+                "WS0004R": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0006": "rsl_pizzicato",
+                "WS0006R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0003": "rsl_cantus"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0008": "rsl_chime",
+                "WS0008R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0010": "rsl_tuningspike",
+                "WS0010R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}

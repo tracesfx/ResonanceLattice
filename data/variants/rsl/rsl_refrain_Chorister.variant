@@ -1,0 +1,56 @@
+{
+    "variantId": "rsl_refrain_Chorister",
+    "hullId": "rsl_refrain",
+    "displayName": "Chorister",
+    "fluxVents": 20,
+    "fluxCapacitors": 2,
+    "hullMods": [
+        "hardenedshieldemitter",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_arpeggio"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0004": "rsl_flechette"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_pizzicato",
+                "WS0002R": "rsl_pizzicato"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0005": "rsl_chime",
+                "WS0005R": "rsl_chime"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0007": "rsl_tuningspike",
+                "WS0007R": "rsl_tuningspike"
+            }
+        }
+    ],
+    "goalVariant": true,
+    "quality": 0
+}
