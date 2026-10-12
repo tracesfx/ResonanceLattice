@@ -3,20 +3,19 @@
     "hullId": "rsl_halo",
     "displayName": "Standard",
     "fluxVents": 50,
-    "fluxCapacitors": 13,
+    "fluxCapacitors": 11,
     "hullMods": [
         "hardenedshieldemitter",
         "targetingunit",
-        "fluxbreakers",
-        "turretgyros"
+        "fluxbreakers"
     ],
     "permaMods": [],
     "sMods": [],
     "wings": [
-        "xyphos_wing",
-        "longbow_wing",
-        "wasp_wing",
-        "wasp_wing"
+        "rsl_trill_wing",
+        "rsl_cadenza_wing",
+        "rsl_requiem_wing",
+        "rsl_requiem_wing"
     ],
     "weaponGroups": [
         {

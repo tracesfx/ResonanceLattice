@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (rail doctrine + fighters)
+
+- Weapon doctrine: every gun is now a long-range, high-velocity rail (ranges 700-1500, slug speeds 1800-2800),
+  keeping its gimmick. The Lattice Lance and Sostenuto are no longer beams: the Lance tunes in over consecutive hits
+  on one ship (+15% per hit, up to +75%), the Sostenuto Rail adds 35% extra hard flux on shield hits. PD (Chime,
+  Cantus) stays short-ranged.
+- New sounds for every weapon and for shield/hull impacts, synthesised from scratch (no vanilla samples).
+- Effects: MagicLib trails (white-teal wake + teal-to-violet ion haze) on every slug and missile; muzzle vent jets;
+  glinting motes in flight; shield hits ripple along the shield's curve, hull hits throw sparks and crystal dust.
+- Fighter wings: Trill (interceptor), Cadenza (heavy fighter), Requiem (rail bomber), with fighter-only rail guns.
+  The Halo and the Cantor Lofts carry them; the Choir faction knows them.
+
 ## Unreleased - 2026-10-12 (Virtuoso power pass)
 
 - Virtuoso: max speed 70, acceleration 85, deceleration 75, turn rate 24, turn acceleration 45; shield flux/damage

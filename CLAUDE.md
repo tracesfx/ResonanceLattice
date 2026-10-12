@@ -82,6 +82,13 @@ feedback.
 - **Virtuoso power pass (2026-10-12, user: "far weaker than the player Ziggurat")**: see CHANGELOG. Glissando
   .system has 3 uses; `Bravura.holdCharges` holds the 3rd back outside Bravura. Virtuoso base shield/EMP tuning lives
   in `Bravura.applyEffectsBeforeShipCreation` (hull-id gated). Unbound Core has no range penalty.
+- **Rail doctrine + fighters (2026-10-12):** every gun is a BALLISTIC_AS_BEAM rail slug; shared FX in
+  `rsl.weapons.RailFx` (every rail on-hit calls `RailFx.impact`; `RslCombatPlugin` calls `advanceProjectiles`);
+  trails = `data/config/modFiles/magicTrail_data.csv` (gen_data `TRAILS`); sounds synthesised by
+  `art_src/gen/gen_sounds.py` -> `sounds/rsl/*.ogg` (ffmpeg libvorbis), registered in `data/config/sounds.json`
+  (gen_data `SOUNDS`). Never use vanilla sound ids for Lattice weapons. Fighters: `art_src/gen/gen_fighters.py`
+  (rsl_trill / rsl_cadenza / rsl_requiem, sheet `art_src/review/fighters_v1.png`, awaiting feedback), wings in
+  gen_data `WINGS` (variants `<hull>_Wing`, written after variants() because that clears data/variants/rsl).
 - git: commits on `master`. End commit messages with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ### Virtuoso (unique player capital, DESIGN.md §3.9) — design agreed, art not started

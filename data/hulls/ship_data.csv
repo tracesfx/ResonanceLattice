@@ -12,3 +12,6 @@ Cantor Array,rsl_cantor,Lattice Station,Resonance Lattice,rsl_grandchorus,200,40
 Spire,rsl_cantor_spire,Lance Petal,Resonance Lattice,,1,12000,1500,12000,25000,800,200,,0,0,0,10,10,1000,NONE,,0,0.4,1,,,0,0,0,0,1,0,,500000,,1,,,1,1,,,,,,,"UNBOARDABLE, HIDE_IN_CODEX, MODULE",,,,,0.5,2,4,,
 Bell,rsl_cantor_bell,Defense Petal,Resonance Lattice,,1,9000,1250,9000,25000,700,160,,0,0,0,10,10,1000,FRONT,,150,0.4,1,,,0,0,0,0,1,0,,500000,,1,,,1,1,,,,,,,"UNBOARDABLE, HIDE_IN_CODEX, MODULE",,,,,0.5,2,4,,
 Choir Loft,rsl_cantor_loft,Hangar Petal,Resonance Lattice,,1,8000,1100,8000,12500,600,150,2,0,0,0,10,10,2500,NONE,,0,0.4,1,,,0,0,0,0,1,0,,500000,,1,,,1,1,,,,,,,"UNBOARDABLE, HIDE_IN_CODEX, MODULE",,,,,0.5,2,4,,
+Trill,rsl_trill,Interceptor,Resonance Lattice,,,350,50,750,,100,0,,470,1000,800,240,520,30,NONE,,0,0,0,,,1,1,,,,,,0,,,,,,,,,,,,,,,,,,0,,,,
+Cadenza,rsl_cadenza,Heavy Fighter,Resonance Lattice,flarelauncher_fighter,,550,100,80,,10,0,,260,400,350,90,180,30,NONE,,0,0,0,,,1,1,,,,,,0,,,,,,,,,,,,,,,,,,0,,,,
+Requiem,rsl_requiem,Bomber,Resonance Lattice,,,650,100,200,,50,0,,230,350,250,90,180,10,OMNI,,160,0,1,,,1,1,,,,,,0,,,,,,,,,,,,,,,,,,0,,,,

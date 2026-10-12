@@ -1,0 +1,30 @@
+{
+    "variantId": "rsl_requiem_Wing",
+    "hullId": "rsl_requiem",
+    "displayName": "Bomber",
+    "fluxVents": 0,
+    "fluxCapacitors": 0,
+    "hullMods": [
+        "no_weapon_flux"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_requiem_slug_ftr"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0002": "rsl_tuningspike_ftr"
+            }
+        }
+    ],
+    "quality": 0.5
+}

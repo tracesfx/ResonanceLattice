@@ -410,6 +410,33 @@ def weapons():
         add_weapon(blank_row(name="Lattice part", id=wid, tags="SYSTEM", **{"tech/manufacturer": MFR}), w, [],
                    "A moving part of a Lattice hull.")
 
+    # ---- fighter guns (HIDDEN mounts on the Choir wings; sprites borrowed, never drawn) ---------------------
+    for wid, src, size, rng, dmg, cd, burst, spd, snd, onhit, hints, role, length in (
+            ("rsl_microrail_ftr", "rsl_chime", "SMALL", 600, 30, 0.35, 2, 2000, "rsl_chime_fire", "RailImpactOnHit",
+             "ANTI_FTR", "Point Defense", 45),
+            ("rsl_cadenza_rail_ftr", "rsl_pizzicato", "SMALL", 800, 70, 0.9, 1, 2200, "rsl_pizzicato_fire",
+             "RailImpactOnHit", "", "General", 70),
+            ("rsl_requiem_slug_ftr", "rsl_pizzicato", "SMALL", 900, 300, 4.0, 1, 2400, "rsl_lance_fire",
+             "PierceOnHit", "STRIKE", "Anti Armor", 110)):
+        w = wpn_base(src, "ENERGY", size, glow=False)
+        w.update(id=wid, animationType="MUZZLE_FLASH", muzzleFlashSpec=muzzle_flash(TEAL, 16, 4, 8, 5),
+                 projectileSpecId=wid + "_shot", fireSoundTwo=snd)
+        add_weapon(blank_row(name={"rsl_microrail_ftr": "Trill Micro-rail", "rsl_cadenza_rail_ftr": "Cadenza Rail",
+                                   "rsl_requiem_slug_ftr": "Requiem Slug"}[wid], id=wid, **{
+            "range": rng, "damage/shot": dmg, "impact": 2, "turn rate": 0, "type": "ENERGY", "energy/shot": 0,
+            "chargedown": cd, "burst size": burst, "burst delay": 0.08, "min spread": 0, "max spread": 1,
+            "proj speed": spd, "hints": hints, "tags": "SYSTEM", "tech/manufacturer": MFR, "primaryRoleStr": role}),
+            w, [bolt(wid + "_shot", length, 4 if dmg < 100 else 7, TEAL, glow_r=10, hit_glow=25 + dmg / 6,
+                     on_hit=PKG + onhit)], "A fighter's rail gun.")
+    w = wpn_base("rsl_tuningspike", "MISSILE", "SMALL", glow=False)
+    w.update({k: WPN["rsl_tuningspike"][k] for k in ("animationType", "projectileSpecId", "fireSoundTwo", "smokeSpec")})
+    w["id"] = "rsl_tuningspike_ftr"
+    add_weapon(blank_row(name="Tuning Spike (Requiem)", id="rsl_tuningspike_ftr", **{
+        "range": 1200, "damage/shot": 150, "impact": 5, "turn rate": 0, "ammo": 2, "type": "HIGH_EXPLOSIVE",
+        "energy/shot": 0, "chargedown": 1.0, "burst size": 2, "burst delay": 0.2, "proj speed": 600,
+        "launch speed": 150, "flight time": 2.6, "proj hitpoints": 100, "tags": "SYSTEM", "tech/manufacturer": MFR,
+        "primaryRoleStr": "Combo", "noDPSInTooltip": "TRUE"}), w, [], "The Requiem's pair of Tuning Spikes.")
+
     hdr = V.header("weapon_data.csv")
     for r in WEAPONS:
         r["number"] = ""
@@ -421,9 +448,10 @@ def weapons():
 
 
 # ===================================================================================================== hulls
+FIGHTER_IDS = ["rsl_trill", "rsl_cadenza", "rsl_requiem"]
 SHIP_IDS = ["rsl_gracenote", "rsl_refrain", "rsl_staccato", "rsl_cadence", "rsl_tremolo", "rsl_halo",
             "rsl_conductor", "rsl_virtuoso", "rsl_virtuoso_unsung", "rsl_cantor", "rsl_cantor_spire",
-            "rsl_cantor_bell", "rsl_cantor_loft"]
+            "rsl_cantor_bell", "rsl_cantor_loft"] + FIGHTER_IDS
 CORE = "rsl_lattice_core"
 BUILTIN_MODS = {
     "rsl_gracenote": [CORE, "hiressensors"],
@@ -439,6 +467,7 @@ BUILTIN_MODS = {
     "rsl_cantor_spire": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
     "rsl_cantor_bell": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
     "rsl_cantor_loft": [CORE, "rsl_phase_locked", "hardened_subsystems", "reduced_explosion", "do_not_fire_through"],
+    "rsl_trill": [], "rsl_cadenza": [], "rsl_requiem": [],
 }
 BUILTIN_WEAPONS = {
     "rsl_halo": {"WS0009": "rsl_deco_halo_ring"},
@@ -519,6 +548,14 @@ HULLS = {
     "rsl_cantor_loft": ("module_hightech_hangar", dict(name="Choir Loft", designation="Hangar Petal", **{
         "system id": "", "hitpoints": 8000, "armor rating": 1100, "max flux": 8000, "flux dissipation": 600,
         "ordnance points": 150, "fighter bays": 2, "supplies/rec": 1, "supplies/mo": 1})),
+    # fighters: Thunder / Broadsword / Dagger peers
+    "rsl_trill": ("thunder", dict(name="Trill", designation="Interceptor", **{
+        "hitpoints": 350, "armor rating": 50, "max speed": 470, "acceleration": 1000, "deceleration": 800,
+        "max turn rate": 240, "turn acceleration": 520, "base value": 0})),
+    "rsl_cadenza": ("broadsword", dict(name="Cadenza", designation="Heavy Fighter", **{
+        "hitpoints": 550, "armor rating": 100, "max speed": 260, "base value": 0})),
+    "rsl_requiem": ("dagger", dict(name="Requiem", designation="Bomber", **{
+        "hitpoints": 650, "armor rating": 100, "max speed": 230, "base value": 0})),
 }
 HULL_DESC = {
     "rsl_gracenote": "A lattice dart barely larger than its own crystal. The Grace Note flips its core between two "
@@ -549,6 +586,12 @@ HULL_DESC = {
     "rsl_cantor_spire": "A lance petal of the Cantor Array.",
     "rsl_cantor_bell": "A defensive petal of the Cantor Array, full of flak and point defense.",
     "rsl_cantor_loft": "A hangar petal of the Cantor Array.",
+    "rsl_trill": "A needle interceptor with a micro-rail in its nose and canards for its tightest turns. Trills hunt "
+                 "fighters and missiles in pairs of notes, never far from the carrier that tuned them.",
+    "rsl_cadenza": "A heavy fighter built around twin rails. Cadenzas engage from well outside the range most fighters "
+                   "fight at, and keep plucking at a target until it breaks.",
+    "rsl_requiem": "A rail bomber: one heavy slug that punches through armor and out the far side, and a pair of Tuning "
+                   "Spikes that the slug's own hits - or any Lattice energy weapon - will detonate.",
 }
 
 
@@ -558,7 +601,10 @@ def hull_rows():
         ch = dict(ch)
         ch.setdefault("tech/manufacturer", MFR)
         is_station_part = hid.startswith("rsl_cantor")
-        if not is_station_part:
+        if hid in FIGHTER_IDS:
+            ch.setdefault("tags", "")
+            ch.setdefault("codex variant id", "")
+        elif not is_station_part:
             ch.setdefault("tags", BP)
             ch.setdefault("codex variant id", hid + "_Standard")
         r = V.clone_row("ship_data.csv", peer, id=hid, number="", **ch)
@@ -677,7 +723,7 @@ LOADOUTS = {  # variant id: (hull, display name, {slot: weapon}, wings, hullmods
         "WS0001": "rsl_sostenuto", "WS0002": "rsl_cantus", "WS0002R": "rsl_cantus", "WS0003": "rsl_chime",
         "WS0003R": "rsl_chime", "WS0004": "rsl_chime", "WS0004R": "rsl_chime", "WS0005": "rsl_lattice_lance",
         "WS0005R": "rsl_lattice_lance", "WS0006": "rsl_tuningspike", "WS0006R": "rsl_tuningspike"},
-        ["xyphos_wing", "longbow_wing", "wasp_wing", "wasp_wing"], []),
+        ["rsl_trill_wing", "rsl_cadenza_wing", "rsl_requiem_wing", "rsl_requiem_wing"], []),
     "rsl_conductor_Standard": ("rsl_conductor", "Standard", {
         "WS0002": "rsl_harmonic_driver", "WS0002R": "rsl_harmonic_driver", "WS0003": "rsl_arpeggio",
         "WS0003R": "rsl_arpeggio", "WS0004": "rsl_pizzicato", "WS0004R": "rsl_pizzicato", "WS0005": "rsl_cantus",
@@ -700,7 +746,7 @@ LOADOUTS = {  # variant id: (hull, display name, {slot: weapon}, wings, hullmods
         "WS0003": "rsl_chime", "WS0003R": "rsl_chime", "WS0004": "rsl_arpeggio"}, [], []),
     "rsl_cantor_loft_Standard": ("rsl_cantor_loft", "Standard", {
         "WS0002": "rsl_chime", "WS0002R": "rsl_chime", "WS0003": "rsl_lattice_lance", "WS0004": "rsl_cantus"},
-        ["xyphos_wing", "wasp_wing"], []),
+        ["rsl_trill_wing", "rsl_cadenza_wing"], []),
 }
 
 
@@ -777,6 +823,38 @@ def variants(ships):
 
 
 WEAPONS_BY_ID = {}
+
+# wing id: (peer wing, hull, {slot: weapon}, wing_data changes)
+WINGS = {
+    "rsl_trill_wing": ("thunder_wing", "rsl_trill", {"WS0001": "rsl_microrail_ftr"}, {
+        "tags": "fighter3, interceptor, " + BP, "fleet pts": 4, "op cost": 8, "num": 3, "refit": 10,
+        "role desc": "Interceptor", "base value": 6000}),
+    "rsl_cadenza_wing": ("broadsword_wing", "rsl_cadenza", {"WS0001": "rsl_cadenza_rail_ftr",
+                                                            "WS0001R": "rsl_cadenza_rail_ftr"}, {
+        "tags": "fighter4, fighter, " + BP, "fleet pts": 6, "op cost": 12, "num": 3, "refit": 12,
+        "role desc": "Heavy Fighter", "base value": 8000}),
+    "rsl_requiem_wing": ("dagger_wing", "rsl_requiem", {"WS0001": "rsl_requiem_slug_ftr",
+                                                        "WS0002": "rsl_tuningspike_ftr"}, {
+        "tags": "bomber4, bomber, " + BP, "fleet pts": 6, "op cost": 16, "num": 3, "refit": 18,
+        "role desc": "Rail Bomber", "base value": 10000}),
+}
+
+
+def wings():
+    rows = []
+    for wing, (peer, hull, fit, ch) in WINGS.items():
+        vid = hull + "_Wing"
+        groups = [{"autofire": False, "mode": "LINKED", "weapons": {sid: wid}} for sid, wid in fit.items()]
+        write_json("data/variants/rsl/%s.variant" % vid, {
+            "variantId": vid, "hullId": hull, "displayName": WINGS_NAME[wing], "fluxVents": 0, "fluxCapacitors": 0,
+            "hullMods": ["no_weapon_flux"], "permaMods": [], "sMods": [], "wings": [], "weaponGroups": groups,
+            "quality": 0.5})
+        rows.append(V.clone_row("wing_data.csv", peer, id=wing, variant=vid, **ch))
+    write_csv("data/hulls/wing_data.csv", V.header("wing_data.csv"), rows)
+
+
+WINGS_NAME = {"rsl_trill_wing": "Interceptor", "rsl_cadenza_wing": "Heavy Fighter", "rsl_requiem_wing": "Bomber"}
+WING_OP.update({w: int(v[3]["op cost"]) for w, v in WINGS.items()})   # carrier variants are budgeted before wings()
 
 
 # ===================================================================================================== systems
@@ -937,8 +1015,8 @@ def faction():
               "knownShips": {"tags": [BP], "hulls": ["rsl_gracenote", "rsl_refrain", "rsl_staccato", "rsl_cadence",
                                                       "rsl_tremolo", "rsl_halo", "rsl_conductor"]},
               "priorityShips": {"tags": [BP], "hulls": []},
-              "knownFighters": {"tags": [], "fighters": ["xyphos_wing", "wasp_wing", "longbow_wing", "dagger_wing"]},
-              "priorityFighters": {"tags": [], "fighters": []},
+              "knownFighters": {"tags": [BP], "fighters": ["rsl_trill_wing", "rsl_cadenza_wing", "rsl_requiem_wing"]},
+              "priorityFighters": {"tags": [BP], "fighters": []},
               "knownWeapons": {"tags": [BP], "weapons": []}, "priorityWeapons": {"tags": [BP], "weapons": []},
               "knownHullMods": {"tags": ["standard"], "hullMods": []},
               "weaponSellFrequency": {}, "hullmodSellFrequency": {}, "illegalCommodities": []})
@@ -1178,6 +1256,7 @@ def main():
     hull_rows()
     ships = ship_files()
     variants(ships)
+    wings()   # after variants(): that one clears data/variants/rsl
     systems()
     hullmods()
     faction()

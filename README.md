@@ -58,7 +58,13 @@ addweapon rsl_cantus 4
 addweapon rsl_harmonic_driver 2
 addweapon rsl_sostenuto 2
 addweapon rsl_bloom 2
+addwing rsl_trill_wing 2
+addwing rsl_cadenza_wing 2
+addwing rsl_requiem_wing 2
 ```
+
+Fighter wings: Trill (interceptor, micro-rail), Cadenza (heavy fighter, twin rails), Requiem (rail bomber: a
+piercing heavy slug + two Tuning Spikes). The Halo and the Cantor Array's Lofts carry them.
 
 The Sforzando lances and the Conductor's spinal Harmonic Driver are built in (no cargo item). The Tuning Spike Pod
 (medium missile) and Resonance Bloom (large missile) have no matching slot on Lattice hulls; mount them on vanilla
@@ -82,13 +88,15 @@ Handy: `god`, `nocooldown`, `infiniteammo`, `addcredits 1000000`, `allhullmods`.
 | Cadence | cruiser | Crescendo (energy hits stack rate of fire) | Overtone: Fortissimo volley |
 | Tremolo | cruiser | Standing Wave (node, snap back, restore 40% damage) | Overtone: afterimage detonates |
 | Halo | capital carrier | Stillwater Halo (slows shots, breaks missile locks) | ring spins up; Tuned Wings |
-| Conductor | capital | Sympathetic Strike (beam + mark +20% damage) | Conductor's Bridge: double Sympathy |
+| Conductor | capital | Sympathetic Strike (resonant strike + mark +20% damage) | Conductor's Bridge: double Sympathy |
 | Virtuoso | unique capital | Glissando (blink-dash, the String snaps) | Stolen Time (CR theft), Bravura at 100% CR |
 | Virtuoso (Unsung) | prototype | Glissando (Unsung) | Stolen Time, no Bravura |
 | Cantor Array | station | Grand Chorus (every petal fires a lance) | Phase-Locked Petals |
 
-Weapons: Chime Repeater, Pizzicato Lancet, Shard Caster, Tuning Spike (+ Pod), Lattice Lance, Crystal Flechette,
-Arpeggio Pulser, Cantus Flak, Harmonic Driver, Sostenuto Beam, Resonance Bloom, Sforzando Lance (+ Untuned).
+Weapons (doctrine: long-range, high-velocity rails; PD and missiles excepted): Chime Repeater, Pizzicato Lancet,
+Shard Caster, Tuning Spike (+ Pod), Lattice Lance, Crystal Flechette, Arpeggio Pulser, Cantus Flak, Harmonic Driver,
+Sostenuto Rail, Resonance Bloom, Sforzando Lance (+ Untuned). Every sound is synthesised for the mod
+(`art_src/gen/gen_sounds.py`); slug trails need MagicLib (a hard dependency already).
 Descriptions are in the Codex / refit tooltips.
 
 ## Status

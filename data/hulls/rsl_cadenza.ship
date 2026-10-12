@@ -1,0 +1,115 @@
+{
+    "bounds": [
+        22.0,
+        7.0,
+        20.0,
+        5.0,
+        13.0,
+        4.0,
+        13.0,
+        -4.0,
+        20.0,
+        -5.0,
+        22.0,
+        -7.0,
+        4.0,
+        -9.0,
+        -1.0,
+        -16.0,
+        -6.0,
+        -17.0,
+        -5.0,
+        -10.0,
+        -9.0,
+        -10.0,
+        -12.0,
+        -6.0,
+        -17.0,
+        -5.0,
+        -17.0,
+        5.0,
+        -12.0,
+        6.0,
+        -9.0,
+        10.0,
+        -5.0,
+        10.0,
+        -6.0,
+        17.0,
+        -1.0,
+        16.0,
+        4.0,
+        9.0
+    ],
+    "builtInMods": [],
+    "center": [
+        17.0,
+        18.0
+    ],
+    "collisionRadius": 31,
+    "coversColor": "",
+    "engineSlots": [
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 10.0,
+            "location": [
+                -16.4,
+                -3.2
+            ],
+            "style": "RSL",
+            "width": 3.0
+        },
+        {
+            "angle": 180.0,
+            "contrailSize": 64.0,
+            "length": 10.0,
+            "location": [
+                -16.4,
+                3.2
+            ],
+            "style": "RSL",
+            "width": 3.0
+        }
+    ],
+    "height": 40,
+    "hullId": "rsl_cadenza",
+    "hullName": "Cadenza",
+    "hullSize": "FIGHTER",
+    "shieldCenter": [
+        2.5,
+        0
+    ],
+    "shieldRadius": 23,
+    "spriteName": "graphics/rsl/ships/rsl_cadenza.png",
+    "style": "RSL",
+    "viewOffset": 0,
+    "weaponSlots": [
+        {
+            "angle": 0.0,
+            "arc": 5.0,
+            "id": "WS0001",
+            "locations": [
+                21.0,
+                -6.6
+            ],
+            "mount": "HIDDEN",
+            "size": "SMALL",
+            "type": "ENERGY"
+        },
+        {
+            "angle": -0.0,
+            "arc": 5.0,
+            "id": "WS0001R",
+            "locations": [
+                21.0,
+                6.6
+            ],
+            "mount": "HIDDEN",
+            "size": "SMALL",
+            "type": "ENERGY"
+        }
+    ],
+    "width": 34,
+    "builtInWeapons": {}
+}

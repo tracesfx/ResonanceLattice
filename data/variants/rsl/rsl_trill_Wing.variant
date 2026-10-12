@@ -1,0 +1,23 @@
+{
+    "variantId": "rsl_trill_Wing",
+    "hullId": "rsl_trill",
+    "displayName": "Interceptor",
+    "fluxVents": 0,
+    "fluxCapacitors": 0,
+    "hullMods": [
+        "no_weapon_flux"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_microrail_ftr"
+            }
+        }
+    ],
+    "quality": 0.5
+}

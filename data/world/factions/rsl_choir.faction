@@ -57,16 +57,19 @@
         "hulls": []
     },
     "knownFighters": {
-        "tags": [],
+        "tags": [
+            "rsl_bp"
+        ],
         "fighters": [
-            "xyphos_wing",
-            "wasp_wing",
-            "longbow_wing",
-            "dagger_wing"
+            "rsl_trill_wing",
+            "rsl_cadenza_wing",
+            "rsl_requiem_wing"
         ]
     },
     "priorityFighters": {
-        "tags": [],
+        "tags": [
+            "rsl_bp"
+        ],
         "fighters": []
     },
     "knownWeapons": {

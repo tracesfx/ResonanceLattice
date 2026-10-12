@@ -1,0 +1,30 @@
+{
+    "variantId": "rsl_cadenza_Wing",
+    "hullId": "rsl_cadenza",
+    "displayName": "Heavy Fighter",
+    "fluxVents": 0,
+    "fluxCapacitors": 0,
+    "hullMods": [
+        "no_weapon_flux"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "wings": [],
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001": "rsl_cadenza_rail_ftr"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS0001R": "rsl_cadenza_rail_ftr"
+            }
+        }
+    ],
+    "quality": 0.5
+}

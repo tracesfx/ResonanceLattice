@@ -708,7 +708,9 @@ class Validator:
                 v = (row.get(c) or "").strip()
                 if v and _num(v) is None:
                     r.error("column '%s' is not a number: %r (NumberFormatException at load)" % (c, v), where)
-            for c in ("supplies/rec", "ordnance points", "hitpoints"):
+            sf = self.reg["ship_file"].get(hid)
+            fighter = bool(sf) and sf[0][0].get("hullSize") == "FIGHTER"   # vanilla fighters: 0 OP, 0 supplies
+            for c in (("hitpoints",) if fighter else ("supplies/rec", "ordnance points", "hitpoints")):
                 if _num(row.get(c)) is not None and _num(row.get(c)) <= 0:
                     r.error("'%s' must be positive" % c, where)
             st = (row.get("shield type") or "").strip()
