@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased - 2026-10-13 (campaign Stage 5: the Lacrimosa questline)
+
+- **Lacrimosa**, the Virtuoso's questline (CAMPAIGN.md section 6), one story intel entry:
+  1. *Static in the Score*: at level 8 with an 80+ DP fleet, Archivist Tanh's sealed message waits at any Cantorate
+     market (a one-time campaign message points to it). Scan three Antiphon Institute listening buoys in fringe
+     hyperspace; the farthest is stripped by pirate scavengers. Each buoy plays one of Director Venn's logs.
+  2. *The Antiphon*: the Institute in a deep-fringe system, guarded by Domain derelicts (~180 DP: Guardian, Ramparts,
+     Bastillons..., 1 S-mod each). Waking the Lacrimosa drains the fleet to 30% CR and grants the **Unsung**, named
+     Lacrimosa (always recoverable).
+  3. *A Rival Bid*: Director Hale Sung (Tri-Tachyon Special Projects) offers 2,000,000 credits for the core (two
+     warnings; selling ends the quest, Cantorate -15). Refuse and a **Special Projects** fleet (~280 DP: Paragon,
+     2 Doom, 2 Harbinger, Aurora, 2 Medusa, phase escorts; 3 S-mods each, level-7 all-elite officers) hunts you for up
+     to 60 days. Opens the *Special Projects Remnant* bounty.
+  4. *The Council* at Coda: **Chorus** (Cantorate +20, Workshop -10%, two S-modded Cantorate escorts with level-5
+     officers for beat 5, Chorus Movement) or **Solo** (Cantorate -10, Abelard trades at any standing short of hostile,
+     Solo Movement). Then Tanh's pulsar recording at Tacet Station.
+  5. *The Hush*: three sensor sweeps in the Orion-Perseus Abyss lead to the graveyard of the First Chorus. The Hush:
+     2 Conductor, Fermata, 3 Cadence, 3 Tremolo, 3 Staccato, 2 Refrain, 2 Grace Note (~320 DP, 3 S-mods each,
+     level-7 all-elite officers on the big hulls, violet seams) with the **Dead Chorus** fleet hullmod (a dead sister
+     ship floods the others to full Resonance and +10% weapon damage each, up to +50%). Rewards: the Lacrimosa's
+     sash and vanes, 150 Pitch Glass, a Concert Pitch modspec; Hush wrecks give triple Pitch Glass salvage.
+  6. *Lacrimosa*: at the Institute, 600 Pitch Glass + 3,000,000 credits turn the Unsung into the **Virtuoso** in place
+     (name, captain and fit kept; D-mods cleared; CR to max). If the Unsung was lost: the Institute's spare frame, once
+     (+1,000,000 credits and a story point).
+- **Workshop** after completion: **Unbound Core** (400 Pitch Glass + 1,000,000 credits), **Chorus Movement** or
+  **Solo Movement** (300, by path), **Hush seams** (50, cosmetic violet glow; toggles).
+- New hullmods: Chorus Movement (Stolen Time -25%, half of every steal shared among allies within 1,500), Solo Movement
+  (alone within 1,500: +25% theft and +10% damage; in company: -25% theft), Dead Chorus (Hush only).
+- Unbound Core is no longer known from the start: the Workshop teaches it.
+- Console testing: `runcode rsl.campaign.Lacrimosa.debug("<stage>")` (README).
+
 ## Unreleased - 2026-10-12 (campaign Stage 4: ambient life, Pitch Glass economy, Luthier's Workshop)
 
 - **Luthier's Workshop** at Coda (Luthier Abelard), priced in Pitch Glass: Lattice Tuning (15), Cantorate weapon /

@@ -58,6 +58,40 @@ public final class RslIds {
     public static final String PERSON_TANH = "rsl_tanh";
     public static final String PERSON_ABELARD = "rsl_abelard";
 
+    // The Lacrimosa questline (Stage 5; rsl.campaign.LacrimosaIntel holds the state)
+    /** Global memory: the player was given the Unsung (exactly once). */
+    public static final String MEM_VIRTUOSO_GRANTED = "$rsl_virtuosoGranted";
+    /** Global memory: the Lacrimosa was completed (the Unsung became the Virtuoso). */
+    public static final String MEM_VIRTUOSO_UPGRADED = "$rsl_virtuosoUpgraded";
+    /** Global memory: the player refused Director Sung (opens the Special Projects bounty). */
+    public static final String MEM_REFUSED_SUNG = "$rsl_qRefusedSung";
+    /** Global memory: "chorus" or "solo", the council's verdict (beat 4). */
+    public static final String MEM_PATH = "$rsl_qPath";
+    /** Global memory: the Hush was silenced (beat 5). */
+    public static final String MEM_HUSH_DONE = "$rsl_qHushDone";
+    /** Global memory: the quest ended because the player sold the core to Tri-Tachyon. */
+    public static final String MEM_SOLD = "$rsl_qSold";
+    /** Global memory: the player was told that Archivist Tanh is waiting (one campaign message). */
+    public static final String MEM_HINTED = "$rsl_qHinted";
+    /** Global memory: the Institute's spare frame was used (fallback for a lost Unsung). */
+    public static final String MEM_SPARE_USED = "$rsl_qSpareUsed";
+    /** Player fleet memory: the Virtuoso's seams glow Hush violet (cosmetic, Workshop). */
+    public static final String MEM_HUSH_SEAMS = "$rsl_hushSeams";
+    /** Variant tag on the Council's escorts (removed from the fleet after beat 5). */
+    public static final String TAG_ESCORT = "rsl_council_escort";
+    public static final String ENTITY_BUOY = "rsl_listening_buoy";
+    public static final String ENTITY_INSTITUTE = "rsl_antiphon_institute";
+    public static final String ENTITY_ECHO = "rsl_hush_echo";
+    public static final String ENTITY_GRAVEYARD = "rsl_hush_graveyard";
+    public static final String ITEM_SASH = "rsl_lacrimosa_sash";
+    public static final String HULLMOD_DEAD_CHORUS = "rsl_dead_chorus";
+    public static final String HULLMOD_CHORUS_MOVEMENT = "rsl_chorus_movement";
+    public static final String HULLMOD_SOLO_MOVEMENT = "rsl_solo_movement";
+    public static final String VARIANT_VIRTUOSO = "rsl_virtuoso_Standard";
+    public static final String VARIANT_UNSUNG = "rsl_virtuoso_unsung_Standard";
+    public static final String PERSON_SUNG = "rsl_sung";
+    public static final String GFX_INTEL_LACRIMOSA = "rsl_lacrimosa";
+
     public static final String HULL_GRACENOTE = "rsl_gracenote";
     public static final String HULL_CONDUCTOR = "rsl_conductor";
     public static final String HULL_VIRTUOSO = "rsl_virtuoso";
@@ -70,6 +104,7 @@ public final class RslIds {
     public static final String HULLMOD_STOLEN_TIME = "rsl_stolen_time";
     public static final String HULLMOD_BRAVURA = "rsl_bravura";
     public static final String HULLMOD_UNBOUND = "rsl_unbound";
+    public static final String HULLMOD_BRAVURA_LOCKED = "rsl_bravura_locked";
     public static final String HULLMOD_SAFETY = "safetyoverrides";
 
     public static final String SYSTEM_PITCHSHIFT = "rsl_pitchshift";

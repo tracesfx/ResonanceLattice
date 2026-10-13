@@ -37,6 +37,8 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
     /** Seam brightness at zero Resonance; full Resonance (or CR on the Virtuoso) adds the rest. */
     private static final float BASE_ALPHA = 0.4f;
     private static final Color DISCORD = new Color(255, 120, 255, 255);
+    /** The Hush: teal seams multiplied towards violet (Dead Chorus ships, or the Virtuoso's bought Hush seams). */
+    private static final Color HUSH = new Color(255, 70, 255, 255);
 
     private final RslCombatPlugin plugin;
     private final Map<String, SpriteAPI> sprites = new HashMap<>();
@@ -96,6 +98,29 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
         return RslIds.HULL_VIRTUOSO.equals(id) || RslIds.HULL_UNSUNG.equals(id);
     }
 
+    /** Checked once per ship per battle. */
+    private static boolean isHush(ShipAPI s, LatticeData d) {
+        if (d.hushChecked) return d.hush;
+        d.hushChecked = true;
+        try {
+            if (s.getVariant() != null && s.getVariant().hasHullMod(RslIds.HULLMOD_DEAD_CHORUS)) {
+                d.hush = true;
+            } else if (isVirtuoso(s) && s.getFleetMember() != null && engineInCampaign()) {
+                com.fs.starfarer.api.campaign.CampaignFleetAPI pf = Global.getSector().getPlayerFleet();
+                d.hush = pf != null && pf.getMemoryWithoutUpdate().getBoolean(RslIds.MEM_HUSH_SEAMS)
+                        && pf.getFleetData().getMembersListCopy().contains(s.getFleetMember());
+            }
+        } catch (Throwable t) {
+            d.hush = false;
+        }
+        return d.hush;
+    }
+
+    private static boolean engineInCampaign() {
+        CombatEngineAPI e = Global.getCombatEngine();
+        return e != null && e.isInCampaign();
+    }
+
     private static float clamp(float v) {
         return Math.max(0f, Math.min(1f, v));
     }
@@ -127,7 +152,7 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
         LatticeData d = LatticeData.get(s);
         float alpha = (BASE_ALPHA + (1f - BASE_ALPHA) * d.glow) * s.getCombinedAlphaMult() * viewport.getAlphaMult();
         String hullId = s.getHullSpec().getHullId();
-        Color tint = d.discord ? DISCORD : Color.WHITE;
+        Color tint = d.discord ? DISCORD : isHush(s, d) ? HUSH : Color.WHITE;
         float bl = d.bravuraLevel;
         float pulse = 0.85f + 0.15f * (float) Math.sin(RslUtil.now() * 3f);
         SpriteAPI glow = sprite(hullId);

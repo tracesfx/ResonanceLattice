@@ -5,7 +5,9 @@ and from landing its own guns, shares it with nearby Lattice ships, and at 60+ R
 an **Overtone** (an empowered version).
 
 This build has the ships, weapons, the faction and its home system **Vell** (a pulsar on the south-east fringe:
-Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, but no questline yet (ROADMAP.md). Spawn everything with Console Commands or play the two included missions.
+Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, and the Virtuoso's
+questline **Lacrimosa** (secrets and exploration come next, ROADMAP.md). Spawn everything with Console Commands or
+play the two included missions.
 
 ## Requirements
 
@@ -98,6 +100,28 @@ addspecial rsl_pulsar_metronome
 
 Handy: `god`, `nocooldown`, `infiniteammo`, `addcredits 1000000`, `allhullmods`.
 
+### The Lacrimosa questline (spoilers)
+
+Starts at player level 8 with an 80+ DP fleet: a message waits at any Cantorate market ("Open the sealed message from
+Tacet Station"). Beats: three listening buoys in fringe hyperspace (one watched by scavengers) -> the Antiphon
+Institute (derelict defences, waking the Lacrimosa drops the fleet to 30% CR, you get the Unsung) -> Director Sung's
+offer (sell = bad ending; refuse = a Special Projects fleet hunts you) -> the council at Coda (Chorus or Solo) ->
+Tacet's pulsar recording -> three echoes in the abyss (lower-left corner of the map) -> the Hush (boss) -> back to the
+Institute: 600 Pitch Glass + 3,000,000 credits turn the Unsung into the Virtuoso. Then the Workshop sells the Unbound
+Core, your path's Movement and the Hush seams.
+
+Skip ahead with Console Commands (fights are skipped; the Unsung is granted on the way):
+
+```
+runcode rsl.campaign.Lacrimosa.debug("institute")   # buoys | institute | sung | hunted | council | recording |
+                                                    # search | hush | return
+additem rsl_pitchglass 700
+addcredits 3000000
+```
+`debug("council")` passes through the refusal (Special Projects is skipped). `debug("hush")` places the Hush in the
+abyss so you can fight it (the intel shows where); `debug("hunted")` and then waiting 4-14 days brings Special
+Projects.
+
 ## Contents
 
 | Hull | Class | System | Built-in mechanic |
@@ -129,7 +153,8 @@ visuals in motion and the station deployment need an in-game session. See BALANC
 On first load the mod creates Vell and sets the Cantorate's starting relations, once per save (sector memory
 flags), so it can be added to an existing save. In a Nexerelin random sector Vell is not created; Nex places the
 Cantorate's markets. Saved classes: `rsl.world.CantorArrayIndustry`, `rsl.world.LatticeNurseries`,
-`rsl.campaign.TunerContractIntel` (aliased). Ships bought or spawned are ordinary fleet members;
+`rsl.campaign.TunerContractIntel`, `rsl.campaign.LacrimosaIntel` (+ its `Stage`), `rsl.campaign.LacrimosaFleets$BossConfigGen`
+(aliased). The questline's sites and fleets are created when it reaches them, never at worldgen. Ships bought or spawned are ordinary fleet members;
 removing the mod from a save that contains them will break that save, as with any ship mod.
 
 ## Credits

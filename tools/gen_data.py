@@ -1188,6 +1188,14 @@ HULLMODS = [  # id, name, script, desc, hidden, costs
      "The Cantor Array's petals share one phase: when one falls, the others take up its voice.", True, (0, 0, 0, 0)),
     ("rsl_tuned_wings", "Tuned Wings", "TunedWings",
      "The Fermata's fighters are tuned to its ring and come home to it faster.", True, (0, 0, 0, 0)),
+    # the Lacrimosa questline (Stage 5): the Hush's fleet hullmod and the Virtuoso's two Movements (Workshop, by path)
+    ("rsl_dead_chorus", "Dead Chorus", "DeadChorus",
+     "The First Chorus died at its collars two centuries ago. Its cores never stopped ringing, and when one falls "
+     "silent, the others sing louder.", True, (0, 0, 0, 0)),
+    ("rsl_chorus_movement", "Chorus Movement", "ChorusMovement",
+     "The Precentor's retuning: the Virtuoso's core learns to give as well as take.", False, (0, 0, 0, 10)),
+    ("rsl_solo_movement", "Solo Movement", "SoloMovement",
+     "Saskia Venn's own tuning: a voice meant to sing alone, and hungrier for it.", False, (0, 0, 0, 10)),
 ]
 # S-mod effects (vanilla rule: cheap hullmods get a bonus when built in with a story point, expensive ones a
 # penalty; enhancing a hull's own built-in - nearly free - gets the strongest bonus). %s = getSModDescriptionParam.
@@ -1209,6 +1217,10 @@ SMOD_DESC = {
 # neural_interface (no_drop, no_drop_salvage).
 HULLMOD_OVERRIDES = {"rsl_concert_pitch": {"tier": 3, "rarity": "", "base value": 150000, "unlocked": "",
                                            "tags": BP + ", no_drop, no_drop_salvage"}}
+# Virtuoso work is learned only at the Workshop once the Lacrimosa is completed (CAMPAIGN.md section 8): not known
+# from the start, never dropped.
+for _hm in ("rsl_unbound", "rsl_chorus_movement", "rsl_solo_movement"):
+    HULLMOD_OVERRIDES[_hm] = {"unlocked": "", "tags": "special, no_drop, no_drop_salvage"}
 
 
 def hullmods():

@@ -44,7 +44,8 @@
             "spike": "graphics/rsl/missiles/rsl_tuningspike_msl.png"
         },
         "intel": {
-            "rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png"
+            "rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png",
+            "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png"
         }
     },
     "ruleCommandPackages": [

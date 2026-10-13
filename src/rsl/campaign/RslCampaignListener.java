@@ -18,7 +18,8 @@ import rsl.RslIds;
 /**
  * Transient campaign listener (re-added on every load by RslModPlugin):
  * - after a battle the player wins, Pitch Glass from every Lattice ship the enemy lost goes into the loot;
- * - at the end of each month, the Cantorate pays a Cooperative player a stipend.
+ * - at the end of each month, the Cantorate pays a Cooperative player a stipend, and a player ready for the
+ *   Lacrimosa questline is told once that Archivist Tanh is waiting.
  */
 public class RslCampaignListener extends BaseCampaignEventListener {
     private static final Logger log = Global.getLogger(RslCampaignListener.class);
@@ -55,10 +56,24 @@ public class RslCampaignListener extends BaseCampaignEventListener {
     @Override
     public void reportEconomyMonthEnd() {
         if (Global.getSector().getFaction(RslIds.FACTION_CHOIR) == null) return;
+        hintLacrimosa();
         if (!PitchGlass.rep().isAtWorst(RepLevel.COOPERATIVE)) return;
         PitchGlass.add(PitchGlass.STIPEND);
         Global.getSector().getCampaignUI().addMessage(
                 "The Cantorate's Luthiers send you " + PitchGlass.STIPEND + " Pitch Glass in thanks.",
                 Misc.getTextColor(), "" + PitchGlass.STIPEND, null, Misc.getHighlightColor(), null);
+    }
+
+    /** Once the player is ready for the questline: a single message pointing at any Cantorate market. */
+    private static void hintLacrimosa() {
+        try {
+            if (Global.getSector().getMemoryWithoutUpdate().getBoolean(RslIds.MEM_HINTED)) return;
+            if (!Lacrimosa.canStart() || !LacrimosaIntel.hasCantorateMarket()) return;
+            Global.getSector().getMemoryWithoutUpdate().set(RslIds.MEM_HINTED, true);
+            Global.getSector().getCampaignUI().addMessage("A sealed message for you has been waiting at Tacet Station "
+                    + "for weeks. Any Cantorate market will pass it on.", Misc.getHighlightColor());
+        } catch (Throwable t) {
+            log.warn("Resonance Lattice: questline hint skipped", t);
+        }
     }
 }

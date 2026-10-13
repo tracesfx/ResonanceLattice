@@ -1,0 +1,130 @@
+{
+    "rsl_listening_buoy": {
+        "defaultName": "Listening Buoy",
+        "nameInText": "listening buoy",
+        "shortName": "buoy",
+        "aOrAn": "a",
+        "isOrAre": "is",
+        "defaultRadius": 30,
+        "customDescriptionId": "rsl_desc_buoy",
+        "interactionImage": "graphics/illustrations/comm_relay.jpg",
+        "icon": "graphics/icons/generic_probe_icon.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/stations/survey_probe.png",
+        "spriteWidth": 40,
+        "spriteHeight": 40,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ]
+    },
+    "rsl_antiphon_institute": {
+        "defaultName": "Antiphon Institute",
+        "nameInText": "Antiphon Institute",
+        "shortName": "Institute",
+        "aOrAn": "the",
+        "isOrAre": "is",
+        "defaultRadius": 60,
+        "customDescriptionId": "rsl_desc_institute",
+        "interactionImage": "graphics/illustrations/orbital_construction.jpg",
+        "icon": "graphics/icons/station_research_broken.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/stations/station_side00.png",
+        "spriteWidth": 72,
+        "spriteHeight": 72,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ]
+    },
+    "rsl_hush_echo": {
+        "defaultName": "Silent Echo",
+        "nameInText": "silent echo",
+        "shortName": "echo",
+        "aOrAn": "a",
+        "isOrAre": "is",
+        "defaultRadius": 25,
+        "customDescriptionId": "rsl_desc_echo",
+        "interactionImage": "graphics/illustrations/space_wreckage.jpg",
+        "icon": "graphics/icons/derelict.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/rsl/ships/rsl_gracenote.png",
+        "spriteWidth": 34,
+        "spriteHeight": 58,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ]
+    },
+    "rsl_hush_graveyard": {
+        "defaultName": "The Hush",
+        "nameInText": "graveyard of the First Chorus",
+        "shortName": "Chorus",
+        "aOrAn": "the",
+        "isOrAre": "is",
+        "defaultRadius": 80,
+        "customDescriptionId": "rsl_desc_graveyard",
+        "interactionImage": "graphics/illustrations/space_wreckage.jpg",
+        "icon": "graphics/icons/derelict.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/rsl/ships/rsl_conductor.png",
+        "spriteWidth": 66,
+        "spriteHeight": 119,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ]
+    }
+}

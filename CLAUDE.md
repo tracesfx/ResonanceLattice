@@ -36,6 +36,15 @@ registered in onApplicationLoad); Lattice Tuning in `LatticeData.isTuned` ($rsl_
 rules.csv + magicBounty_data.json generated from `campaign_data.py` (RULES, BOUNTIES; Special Projects bounty waits
 for `$rsl_qRefusedSung`, set by the Stage 5 questline; Hush fleets get `$rsl_hush` for triple salvage).
 
+Stage 5 DONE (2026-10-13, statically verified only): the Lacrimosa questline. State + timers + fleet listeners in
+`rsl.campaign.LacrimosaIntel` (one saved intel, Stage enum; facts mirrored to global memory `$rsl_virtuosoGranted`,
+`$rsl_virtuosoUpgraded`, `$rsl_qPath`, `$rsl_qHushDone`, `$rsl_qRefusedSung`, `$rsl_qSold`); numbers + grant / sale /
+hull swap (`Lacrimosa.upgrade`: new variant from the Virtuoso spec on the same member) + console `Lacrimosa.debug(stage)`
+in `rsl.campaign.Lacrimosa`; fleets (scavengers, derelict guard, Special Projects, the Hush, Chorus escorts) in
+`LacrimosaFleets`; every dialog in `rsl.rulecmd.RslLacrimosa` (Workshop-style takeover; rules.csv `RslLacrimosa can X`
+conditions + entity OpenInteractionDialog rules); hullmods DeadChorus / ChorusMovement / SoloMovement; custom entities
+in campaign_data `CUSTOM_ENTITIES`; sash item `rsl_lacrimosa_sash`.
+
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
 **Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user

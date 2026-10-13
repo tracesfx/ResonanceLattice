@@ -42,6 +42,8 @@ public class StolenTime extends BaseHullMod {
         float amount = damage * CR_PER_DAMAGE * RslUtil.sizeMult(target);
         if (engine.getPlayerShip() != ship) amount *= AI_MULT;
         if (RslUtil.enhanced(ship, MOD_ID)) amount *= ENHANCED;
+        if (ChorusMovement.has(ship)) amount *= ChorusMovement.STEAL_MULT;
+        amount *= SoloMovement.stealMult(ship);
         stealAmount(ship, target, amount);
     }
 
@@ -53,6 +55,7 @@ public class StolenTime extends BaseHullMod {
         target.setCustomData(RslIds.KEY_STOLEN, taken + amount);
         target.setCurrentCR(target.getCurrentCR() - amount);
         give(ship, amount);
+        if (ChorusMovement.has(ship)) share(ship, amount * ChorusMovement.SHARE);
         // a violet wisp from the victim to the thief
         if (Math.random() < 0.35) wisp(ship, target, 22f);
     }
@@ -91,6 +94,33 @@ public class StolenTime extends BaseHullMod {
             LatticeData d = LatticeData.get(ship);
             d.peakBonus += overflow * 100f * PEAK_SECONDS_PER_PERCENT;
             ship.getMutableStats().getPeakCRDuration().modifyFlat(MOD_ID, d.peakBonus);
+        }
+    }
+
+    /** Chorus Movement: {@code amount} CR split evenly among allied ships in range (each up to its deployment CR). */
+    private static void share(ShipAPI ship, float amount) {
+        CombatEngineAPI engine = Global.getCombatEngine();
+        if (engine == null || amount <= 0f) return;
+        java.util.List<ShipAPI> ships = engine.getShips();
+        float r2 = ChorusMovement.RANGE * ChorusMovement.RANGE;
+        int n = 0;
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = 0; i < ships.size(); i++) {
+                ShipAPI s = ships.get(i);
+                if (s == ship || s.getOwner() != ship.getOwner() || s.isHulk() || s.isFighter()
+                        || s.isStationModule()) {
+                    continue;
+                }
+                float dx = s.getLocation().x - ship.getLocation().x, dy = s.getLocation().y - ship.getLocation().y;
+                if (dx * dx + dy * dy > r2) continue;
+                if (pass == 0) {
+                    n++;
+                    continue;
+                }
+                float cap = Math.max(s.getCRAtDeployment(), 0.7f);
+                if (s.getCurrentCR() < cap) s.setCurrentCR(Math.min(cap, s.getCurrentCR() + amount / n));
+            }
+            if (n == 0) return;
         }
     }
 

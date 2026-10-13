@@ -4,6 +4,8 @@
 
 - graphics/rsl/icons/cargo/rsl_pitchglass.png: a cluster of faceted lattice-crystal shards (teal -> violet, glowing
   cores) held in a gunmetal tuning clamp.
+- graphics/rsl/icons/cargo/rsl_lacrimosa_sash.png: the Lacrimosa's sash and vanes (quest item).
+- graphics/rsl/icons/intel/rsl_lacrimosa.png: the questline's intel icon (the Virtuoso, glow on).
 - graphics/rsl/icons/cargo/rsl_bp_{hulls,weapons,wings}.png: vanilla's high-tech blueprint chip recoloured to steel +
   dark blue, with a teal lattice glyph on the screen (one glyph per package).
 """
@@ -256,6 +258,54 @@ def metronome():
     return finish(rgb, a)
 
 
+def sash():
+    """The Lacrimosa's sash and vanes (quest item): two swept steel vane blades crossed by a navy ribbon with a glowing
+    teal seam down its middle."""
+    rgb = np.zeros((N, N, 3))
+    a = np.zeros((N, N))
+    halo = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(halo).ellipse([10 * S, 10 * S, 70 * S, 70 * S], fill=140)
+    hal = np.asarray(halo.filter(ImageFilter.GaussianBlur(S * 7))).astype(float) / 255.0 * 0.4
+    comp(rgb, a, VIOLET * 0.6 + TEAL * 0.4, hal)
+    a[:] = hal
+    steel = np.array([206, 214, 224.0])
+    for sx in (1, -1):   # vanes: long swept blades with a stepped root, mirrored
+        vane = [(40 + sx * 3, 68), (40 + sx * 6, 58), (40 + sx * 27, 12), (40 + sx * 35, 9), (40 + sx * 31, 24),
+                (40 + sx * 16, 62), (40 + sx * 10, 70)]
+        t = ramp((40, 66), (40 + sx * 32, 12))
+        comp(rgb, a, steel * (1 - t * 0.35) + NAVY * t * 0.35, mask(vane))
+        tip = [(40 + sx * 26, 26), (40 + sx * 30, 14), (40 + sx * 33, 12), (40 + sx * 29, 22)]
+        comp(rgb, a, NAVY + 10, mask(tip))
+    ribbon = [(14, 32), (66, 32), (71, 40), (66, 48), (14, 48), (9, 40)]
+    tr = ramp((18, 34), (62, 46))
+    comp(rgb, a, np.array([150, 160, 176.0]), mask([(x + (1 if x > 40 else -1), y + (1 if y > 40 else -1))
+                                                     for x, y in ribbon]))   # steel edge
+    comp(rgb, a, (NAVY + 30) * (1 - tr * 0.3) + np.array([20, 30, 60.0]) * tr * 0.3, mask(ribbon))
+    seam = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(seam).line([(13 * S, 40 * S), (67 * S, 40 * S)], fill=255, width=int(2.2 * S))
+    comp(rgb, a, TEAL, np.asarray(seam.filter(ImageFilter.GaussianBlur(S * 2))).astype(float) / 255.0 * 0.8)
+    comp(rgb, a, np.array([210, 255, 250.0]), np.asarray(seam).astype(float) / 255.0)
+    ol = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(ol).polygon([(x * S, y * S) for x, y in ribbon], outline=255, width=S)
+    comp(rgb, a, np.array([12, 16, 22.0]), np.asarray(ol).astype(float) / 255.0)
+    return finish(rgb, a)
+
+
+def lacrimosa_intel():
+    """Intel icon (40x40) for the Lacrimosa questline: the Virtuoso itself, glow on."""
+    ship = Image.open(os.path.join(ROOT, "graphics", "rsl", "ships", "rsl_virtuoso.png")).convert("RGBA")
+    glow = Image.open(os.path.join(ROOT, "graphics", "rsl", "ships", "rsl_virtuoso_glow.png")).convert("RGBA")
+    arr = np.asarray(ship).astype(float)
+    g = np.asarray(glow).astype(float)
+    arr[..., :3] = np.clip(arr[..., :3] + g[..., :3] * (g[..., 3:4] / 255.0) * 0.9, 0, 255)
+    im = Image.fromarray(arr.astype(np.uint8), "RGBA")
+    k = 38.0 / max(im.width, im.height)
+    im = im.resize((max(1, round(im.width * k)), max(1, round(im.height * k))), Image.LANCZOS)
+    out = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+    out.alpha_composite(im, ((40 - im.width) // 2, (40 - im.height) // 2))
+    return out
+
+
 def contract_intel():
     """Intel icon (40x40) for the tuners' contract: the faction crest, as vanilla faction intel does."""
     crest = Image.open(os.path.join(ROOT, "graphics", "rsl", "factions", "rsl_crest.png")).convert("RGBA")
@@ -264,7 +314,7 @@ def contract_intel():
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    icons = {"rsl_pitchglass": pitchglass(), "rsl_pulsar_metronome": metronome()}
+    icons = {"rsl_pitchglass": pitchglass(), "rsl_pulsar_metronome": metronome(), "rsl_lacrimosa_sash": sash()}
     for k in GLYPHS:
         icons["rsl_bp_" + k] = blueprint(k)
     for name, im in icons.items():
@@ -272,7 +322,8 @@ def main():
         print("wrote", name)
     extra = {os.path.join(ROOT, "graphics", "rsl", "icons", "markets", "rsl_lattice_nurseries.png"): nurseries(),
              os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry(),
-             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_contract.png"): contract_intel()}
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_contract.png"): contract_intel(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_lacrimosa.png"): lacrimosa_intel()}
     for path, im in extra.items():
         os.makedirs(os.path.dirname(path), exist_ok=True)
         im.save(path)

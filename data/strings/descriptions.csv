@@ -122,3 +122,7 @@ rsl_desc_coda,CUSTOM,"A frozen moon of Basso and the capital of the Cantorate of
 Above it turns the Cantor Array, the largest lattice instrument the Cantorate has ever grown.",,,,,
 rsl_desc_glasshouse,CUSTOM,"An airless moon of Basso where lattice crystal is grown in pressurised vaults timed to the pulsar. The nurseries are tended in shifts by workers who can hear a flawed crystal before any instrument can find it, and who lose that hearing young.",,,,,
 rsl_desc_cantor_array,CUSTOM,"A lattice station of six petals around a crystal heart, turning slowly above Coda. When one petal is lost, its stored resonance floods the others.",,,,,
+rsl_desc_buoy,CUSTOM,"A Domain-era listening buoy of the Antiphon Institute, left on the fringe to record the harmonic flux of hyperspace storms. Two centuries later some of them still listen.",,,,,
+rsl_desc_institute,CUSTOM,"The Antiphon Institute: a Domain hyperspace-physics laboratory, a spindle of dark habitat rings around a dock built for one capital ship. The Cantorate's ancestors fled it two centuries ago, and chose to forget where it was.",,,,,
+rsl_desc_echo,CUSTOM,"A Lattice hull of a pattern two centuries old, drifting in the abyss. Its crew are long dead. Its core still keeps time.",,,,,
+rsl_desc_graveyard,CUSTOM,"Where the First Chorus died. Lattice wrecks hang in a ring in the dark, and the abyss hums with them.",,,,,

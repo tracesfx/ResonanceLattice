@@ -105,7 +105,8 @@ PACKAGES = [
 ]
 
 
-INTEL_ICONS = {"rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png"}
+INTEL_ICONS = {"rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png",
+               "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png"}
 
 METRONOME_DESC = (
     "A navigation clock grown around a sliver of lattice crystal and keyed to the beat of a pulsar. Installed in a "
@@ -155,7 +156,64 @@ RULES = [
     ("rsl_contractAccept", "DialogOptionSelected", ["$option == rsl_contractAccept"],
      ["RslContracts accept", "FireAll PopulateOptions"], "", []),
     ("rsl_contractBack", "DialogOptionSelected", ["$option == rsl_contractBack"], ["FireAll PopulateOptions"], "", []),
+    # ---- the Lacrimosa questline (Stage 5). Every scene runs in rsl.rulecmd.RslLacrimosa, which takes over the dialog;
+    # the conditions are the same command in "can" mode (market owned by the Cantorate + quest stage).
+    ("rsl_qTanhOpt", "PopulateOptions", ["$hasMarket", "$menuState == main", "RslLacrimosa can tanh"],
+     [], "", ["4:rsl_qTanh:Open the sealed message from Tacet Station"]),
+    ("rsl_qTanh", "DialogOptionSelected", ["$option == rsl_qTanh"], ["RslLacrimosa tanh"], "", []),
+    ("rsl_qCouncilOpt", "PopulateOptions", ["$hasMarket", "$menuState == main", "RslLacrimosa can council"],
+     [], "", ["4:rsl_qCouncil:Answer the Precentor's summons"]),
+    ("rsl_qCouncil", "DialogOptionSelected", ["$option == rsl_qCouncil"], ["RslLacrimosa council"], "", []),
+    ("rsl_qRecordingOpt", "PopulateOptions", ["$hasMarket", "$menuState == main", "RslLacrimosa can recording"],
+     [], "", ["4:rsl_qRecording:Meet Archivist Tanh about the pulsar recording"]),
+    ("rsl_qRecording", "DialogOptionSelected", ["$option == rsl_qRecording"], ["RslLacrimosa recording"], "", []),
+    # quest sites (custom entities); score as vanilla's abyssal_light so no generic rule wins
+    ("rsl_qBuoyOpen", "OpenInteractionDialog", ["$customType == rsl_listening_buoy score:1000"],
+     ["ShowDefaultVisual", "RslLacrimosa buoy"], "", []),
+    ("rsl_qInstituteOpen", "OpenInteractionDialog", ["$customType == rsl_antiphon_institute score:1000"],
+     ["ShowDefaultVisual", "RslLacrimosa institute"], "", []),
+    ("rsl_qEchoOpen", "OpenInteractionDialog", ["$customType == rsl_hush_echo score:1000"],
+     ["ShowDefaultVisual", "RslLacrimosa echo"], "", []),
+    ("rsl_qGraveyardOpen", "OpenInteractionDialog", ["$customType == rsl_hush_graveyard score:1000"],
+     ["ShowDefaultVisual", "RslLacrimosa graveyard"], "", []),
 ]
+
+
+def entity(name, in_text, radius, desc, icon, sprite, sw, sh, image, aoran="a"):
+    return {"defaultName": name, "nameInText": in_text, "shortName": in_text.split()[-1], "aOrAn": aoran,
+            "isOrAre": "is", "defaultRadius": radius, "customDescriptionId": desc, "interactionImage": image,
+            "icon": icon, "iconWidth": 22, "iconHeight": 22, "sprite": sprite, "spriteWidth": sw, "spriteHeight": sh,
+            "renderShadow": True, "useLightColor": True, "showInCampaign": True, "showIconOnMap": True,
+            "showNameOnMap": False, "scaleNameWithZoom": False, "scaleIconWithZoom": True,
+            "renderCircleIndicator": True, "renderCircleIndicatorSelectionFlash": True,
+            "tags": ["has_interaction_dialog", "neutrino"], "layers": ["STATIONS"]}
+
+
+# Quest sites (vanilla sprites and pictures; the echo and the graveyard are our own dead Lattice hulls)
+CUSTOM_ENTITIES = {
+    "rsl_listening_buoy": entity("Listening Buoy", "listening buoy", 30, "rsl_desc_buoy",
+                                 "graphics/icons/generic_probe_icon.png", "graphics/stations/survey_probe.png", 40, 40,
+                                 "graphics/illustrations/comm_relay.jpg"),
+    "rsl_antiphon_institute": entity("Antiphon Institute", "Antiphon Institute", 60, "rsl_desc_institute",
+                                     "graphics/icons/station_research_broken.png",
+                                     "graphics/stations/station_side00.png", 72, 72,
+                                     "graphics/illustrations/orbital_construction.jpg", aoran="the"),
+    "rsl_hush_echo": entity("Silent Echo", "silent echo", 25, "rsl_desc_echo", "graphics/icons/derelict.png",
+                            "graphics/rsl/ships/rsl_gracenote.png", 34, 58, "graphics/illustrations/space_wreckage.jpg"),
+    "rsl_hush_graveyard": entity("The Hush", "graveyard of the First Chorus", 80, "rsl_desc_graveyard",
+                                 "graphics/icons/derelict.png", "graphics/rsl/ships/rsl_conductor.png", 66, 119,
+                                 "graphics/illustrations/space_wreckage.jpg", aoran="the"),
+}
+
+
+def custom_entities(g):
+    g.write_json("data/config/custom_entities.json", CUSTOM_ENTITIES)
+
+
+SASH_DESC = (
+    "The Lacrimosa's sash and vanes, taken from the flagship of the Hush: a ribbon of lattice crystal grown to run "
+    "down a Virtuoso's spine, and the two great vanes that steer its voice. Still humming. Only the dock of the "
+    "Antiphon Institute can mount them.")
 
 
 def rules(g):
@@ -432,6 +490,11 @@ def special_items(g):
         "name": "Pulsar Metronome", "id": "rsl_pulsar_metronome", "tags": "colony_item, no_drop, codex_unlockable",
         "base price": 150000, "icon": "graphics/rsl/icons/cargo/rsl_pulsar_metronome.png",
         "plugin params": "waystation", "desc": METRONOME_DESC, "order": 295}))
+    # the Lacrimosa's sash and vanes (quest item from the Hush, consumed at the Institute)
+    rows.append(g.V.clone_row("special_items.csv", "planetkiller", **{
+        "name": "Lacrimosa's Sash and Vanes", "id": "rsl_lacrimosa_sash", "tags": "mission_item, no_drop",
+        "base price": 1, "icon": "graphics/rsl/icons/cargo/rsl_lacrimosa_sash.png", "plugin params": "",
+        "desc": SASH_DESC, "order": 296}))
     g.write_csv("data/campaign/special_items.csv", hdr, rows)
 
 
@@ -457,6 +520,16 @@ PLACES = {
                            "before any instrument can find it, and who lose that hearing young.",
     "rsl_desc_cantor_array": "A lattice station of six petals around a crystal heart, turning slowly above Coda. "
                              "When one petal is lost, its stored resonance floods the others.",
+    # the Lacrimosa questline's sites
+    "rsl_desc_buoy": "A Domain-era listening buoy of the Antiphon Institute, left on the fringe to record the "
+                     "harmonic flux of hyperspace storms. Two centuries later some of them still listen.",
+    "rsl_desc_institute": "The Antiphon Institute: a Domain hyperspace-physics laboratory, a spindle of dark habitat "
+                          "rings around a dock built for one capital ship. The Cantorate's ancestors fled it two "
+                          "centuries ago, and chose to forget where it was.",
+    "rsl_desc_echo": "A Lattice hull of a pattern two centuries old, drifting in the abyss. Its crew are long dead. Its "
+                     "core still keeps time.",
+    "rsl_desc_graveyard": "Where the First Chorus died. Lattice wrecks hang in a ring in the dark, and the abyss hums "
+                          "with them.",
 }
 
 INDUSTRY_DESC = (
@@ -539,5 +612,6 @@ def build(g):
     industries(g)
     conditions(g)
     rules(g)
+    custom_entities(g)
     bounties(g)
     nexerelin(g)

@@ -42,3 +42,23 @@ rsl_contractBoard,DialogOptionSelected,$option == rsl_contractBoard,RslContracts
 rsl_contractAccept,DialogOptionSelected,$option == rsl_contractAccept,"RslContracts accept
 FireAll PopulateOptions",,,
 rsl_contractBack,DialogOptionSelected,$option == rsl_contractBack,FireAll PopulateOptions,,,
+rsl_qTanhOpt,PopulateOptions,"$hasMarket
+$menuState == main
+RslLacrimosa can tanh",,,4:rsl_qTanh:Open the sealed message from Tacet Station,
+rsl_qTanh,DialogOptionSelected,$option == rsl_qTanh,RslLacrimosa tanh,,,
+rsl_qCouncilOpt,PopulateOptions,"$hasMarket
+$menuState == main
+RslLacrimosa can council",,,4:rsl_qCouncil:Answer the Precentor's summons,
+rsl_qCouncil,DialogOptionSelected,$option == rsl_qCouncil,RslLacrimosa council,,,
+rsl_qRecordingOpt,PopulateOptions,"$hasMarket
+$menuState == main
+RslLacrimosa can recording",,,4:rsl_qRecording:Meet Archivist Tanh about the pulsar recording,
+rsl_qRecording,DialogOptionSelected,$option == rsl_qRecording,RslLacrimosa recording,,,
+rsl_qBuoyOpen,OpenInteractionDialog,$customType == rsl_listening_buoy score:1000,"ShowDefaultVisual
+RslLacrimosa buoy",,,
+rsl_qInstituteOpen,OpenInteractionDialog,$customType == rsl_antiphon_institute score:1000,"ShowDefaultVisual
+RslLacrimosa institute",,,
+rsl_qEchoOpen,OpenInteractionDialog,$customType == rsl_hush_echo score:1000,"ShowDefaultVisual
+RslLacrimosa echo",,,
+rsl_qGraveyardOpen,OpenInteractionDialog,$customType == rsl_hush_graveyard score:1000,"ShowDefaultVisual
+RslLacrimosa graveyard",,,

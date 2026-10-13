@@ -85,7 +85,14 @@ Exit: user approves CAMPAIGN.md; DESIGN.md and CLAUDE.md point to it.
 - **The Luthier's Workshop:** a dialog shop at Coda priced in Pitch Glass (blueprints, Concert Pitch, Pulsar
   Metronome colony item, Lattice Tuning; Virtuoso items unlock in Stage 5).
 
-## Stage 5 — The Virtuoso questline
+## Stage 5 — The Virtuoso questline — DONE (2026-10-13; `rsl.campaign.LacrimosaIntel` + `rsl.rulecmd.RslLacrimosa`)
+
+Built as planned with these choices: the quest state lives in one saved intel item (not memory strings; facts other
+content needs are mirrored to global memory); every dialog is a Java dialog takeover (rules.csv only has the entry
+points); the hull swap rebuilds the variant from the Virtuoso's hull spec on the same fleet member (no
+`setHullSpecAPI`); the Chorus escorts join the player's fleet (an allied following fleet has no reliable vanilla
+pattern) and go home after the Hush; the graveyard sits at abyssal depth 0.3-0.45 (AI fleets flee deeper than 0.5).
+Not done: the "first Lost Score" trigger for beat 1 (Lost Scores are Stage 6).
 
 - Quest state machine in sector memory (`rsl.campaign.VirtuosoQuest`, stages as strings), intel plugin, rule
   commands, rules.csv dialogs (generated from Python like the rest of the data), custom entities for quest sites.

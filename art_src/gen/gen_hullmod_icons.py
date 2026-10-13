@@ -207,6 +207,40 @@ def concert_pitch():
     return finish(vignette(screen(base, glow_layer(d, 3, 0.85))), "rsl_concert_pitch")
 
 
+def chorus_movement():
+    base = light(crop("rsl_virtuoso", 496, 820, 380))
+    def d(dr):
+        for k in range(3):                                   # the stolen readiness flowing OUT to three allies
+            a = math.radians(-90 + (k - 1) * 55)
+            ex, ey = 64 + 54 * math.cos(a), 64 + 54 * math.sin(a)
+            dr.line([(64, 64), (ex, ey)], fill=col(TEAL, 0.85), width=3)
+            dr.ellipse([ex - 6, ey - 6, ex + 6, ey + 6], fill=col(WHITE))
+        dr.ellipse([54, 54, 74, 74], fill=col(VIOLET))
+    return finish(vignette(screen(base, glow_layer(d, 3, 0.9))), "rsl_chorus_movement")
+
+
+def solo_movement():
+    base = light(crop("rsl_virtuoso", 496, 600, 440), strength=0.65) * 0.8
+    def d(dr):
+        dr.ellipse([22, 22, 106, 106], outline=col(VIOLET, 0.7), width=3)   # nothing inside the ring but itself
+        dr.polygon([(64, 30), (76, 64), (64, 98), (52, 64)], fill=col(WHITE))
+    return finish(vignette(screen(base, glow_layer(d, 4, 1.0)), 0.85), "rsl_solo_movement")
+
+
+def dead_chorus():
+    base = light(crop("rsl_conductor", 528, 900, 420), strength=0.5)
+    gray = base.mean(axis=2, keepdims=True)
+    img = np.repeat(gray, 3, axis=2) * 0.7
+    def d(dr):
+        for k in range(6):                                   # a ring of dead voices, all on one violet note
+            a = math.radians(k * 60 - 90)
+            x, y = 64 + 42 * math.cos(a), 64 + 42 * math.sin(a)
+            dr.ellipse([x - 7, y - 7, x + 7, y + 7], outline=col(VIOLET), width=3)
+            dr.line([(x, y), (64, 64)], fill=col(VIOLET, 0.5), width=2)
+        dr.ellipse([56, 56, 72, 72], fill=col(VIOLET))
+    return finish(vignette(screen(img, glow_layer(d, 3, 1.0))), "rsl_dead_chorus", sat=1.1)
+
+
 def main():
     lattice_core()
     conductors_bridge()
@@ -218,6 +252,9 @@ def main():
     phase_locked()
     tuned_wings()
     concert_pitch()
+    chorus_movement()
+    solo_movement()
+    dead_chorus()
     # review sheet: ours at 4x next to a few vanilla icons
     names = sorted(f for f in os.listdir(OUT) if f.endswith(".png"))
     van = os.path.join(ROOT, "..", "..", "starsector-core", "graphics", "hullmods")

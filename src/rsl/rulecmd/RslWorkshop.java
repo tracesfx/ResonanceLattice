@@ -21,6 +21,8 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.FireAll;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Misc.Token;
 import rsl.RslIds;
+import rsl.campaign.Lacrimosa;
+import rsl.campaign.LacrimosaIntel;
 import rsl.campaign.PitchGlass;
 
 import java.util.ArrayList;
@@ -37,21 +39,27 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
 
     private enum Nav { BUY, SILENCE, TURN_IN, MAIN, LEAVE }
 
-    private enum Kind { TUNING, ITEM, HULLMOD }
+    private enum Kind { TUNING, ITEM, HULLMOD, HUSH_SEAMS }
 
     /** One thing for sale. */
     private static final class Offer {
         final Kind kind;
         final String id, name, desc;
-        final int price;
+        final int price, credits;
         final RepLevel minRep;
 
         Offer(Kind kind, String id, String name, int price, RepLevel minRep, String desc) {
+            this(kind, id, name, price, 0, minRep, desc);
+        }
+
+        Offer(Kind kind, String id, String name, int price, int credits, RepLevel minRep, String desc) {
             this.kind = kind;
             this.id = id;
             this.name = name;
-            this.price = price;
-            this.minRep = minRep;
+            this.price = discounted(price);
+            this.credits = credits;
+            // Solo path: Abelard keeps trading with the player at any standing short of hostile
+            this.minRep = LacrimosaIntel.isSolo() ? RepLevel.INHOSPITABLE : minRep;
             this.desc = desc;
         }
     }
@@ -125,8 +133,9 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
         o.clearOptions();
         int held = PitchGlass.held();
         RepLevel rep = PitchGlass.rep();
+        float credits = Global.getSector().getPlayerFleet().getCargo().getCredits().get();
         for (Offer of : offers()) {
-            o.addOption(of.name + " (" + of.price + " Pitch Glass)", of);
+            o.addOption(of.name + " (" + priceText(of) + ")", of);
             String why = null;
             if (!rep.isAtWorst(of.minRep)) {
                 why = "Requires " + of.minRep.getDisplayName().toLowerCase() + " standing with the Cantorate.";
@@ -134,6 +143,8 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
                 why = of.kind == Kind.TUNING ? "Your fleet is already tuned." : "You already have this.";
             } else if (held < of.price) {
                 why = "You need " + of.price + " Pitch Glass.";
+            } else if (credits < of.credits) {
+                why = "You need " + Misc.getDGSCredits(of.credits) + ".";
             }
             if (why != null) o.setEnabled(of, false);
             o.setTooltip(of, of.desc + (why != null ? "\n\n" + why : ""));
@@ -145,10 +156,10 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
     private void showConfirm(Offer of) {
         TextPanelAPI t = dialog.getTextPanel();
         t.addPara(of.desc);
-        t.addPara("Abelard names the price: %s Pitch Glass.", Misc.getHighlightColor(), "" + of.price);
+        t.addPara("Abelard names the price: %s.", Misc.getHighlightColor(), priceText(of));
         OptionPanelAPI o = dialog.getOptionPanel();
         o.clearOptions();
-        o.addOption("Pay " + of.price + " Pitch Glass", new Confirm(of));
+        o.addOption("Pay " + priceText(of), new Confirm(of));
         o.addOption("Never mind", Nav.BUY);
         dialog.setOptionOnEscape("Never mind", Nav.BUY);
     }
@@ -186,7 +197,37 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
         list.add(new Offer(Kind.ITEM, RslIds.ITEM_METRONOME, "Pulsar Metronome", PitchGlass.PRICE_METRONOME,
                 RepLevel.COOPERATIVE, "A colony item for a Waystation: a navigation clock keyed to a pulsar. "
                 + "Better accessibility and stability, more of both in a neutron star system."));
+        // the Lacrimosa questline (CAMPAIGN.md section 8): Virtuoso work once it is completed, by the council's path
+        MemoryAPI g = Global.getSector().getMemoryWithoutUpdate();
+        if (g.getBoolean(RslIds.MEM_VIRTUOSO_UPGRADED)) {
+            list.add(new Offer(Kind.HULLMOD, RslIds.HULLMOD_UNBOUND, "Unbound Core", PitchGlass.PRICE_UNBOUND,
+                    PitchGlass.PRICE_UNBOUND_CREDITS, RepLevel.SUSPICIOUS, "Abelard strips the safety tuning from the "
+                    + "Virtuoso's core: more speed and twice the dissipation, no venting, a third of the peak time. "
+                    + "Your engineers learn to fit it."));
+            boolean chorus = LacrimosaIntel.isChorus();
+            list.add(new Offer(Kind.HULLMOD, chorus ? RslIds.HULLMOD_CHORUS_MOVEMENT : RslIds.HULLMOD_SOLO_MOVEMENT,
+                    chorus ? "Chorus Movement" : "Solo Movement", PitchGlass.PRICE_MOVEMENT, RepLevel.SUSPICIOUS,
+                    chorus ? "The Precentor's retuning: the Virtuoso steals less readiness, but shares half of what it "
+                            + "steals with allied ships nearby."
+                            : "Venn's own tuning: alone, the Virtuoso steals more readiness and hits harder; in "
+                            + "company it steals less."));
+        }
+        if (g.getBoolean(RslIds.MEM_HUSH_DONE)) {
+            list.add(new Offer(Kind.HUSH_SEAMS, null, "Hush seams", PitchGlass.PRICE_HUSH_SEAMS, RepLevel.SUSPICIOUS,
+                    "A cosmetic retuning: the Virtuoso's seams glow the violet of the Hush. Buy it again to restore "
+                    + "the teal."));
+        }
         return list;
+    }
+
+    private static int discounted(int price) {
+        if (!LacrimosaIntel.isChorus()) return price;
+        return Math.round(price * (1f - Lacrimosa.CHORUS_DISCOUNT));
+    }
+
+    private static String priceText(Offer of) {
+        String s = of.price + " Pitch Glass";
+        return of.credits > 0 ? s + " + " + Misc.getDGSCredits(of.credits) : s;
     }
 
     private static boolean owned(Offer of) {
@@ -195,7 +236,7 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
             return f != null && f.getMemoryWithoutUpdate().getBoolean(RslIds.MEM_TUNED);
         }
         if (of.kind == Kind.HULLMOD) return Global.getSector().getPlayerFaction().knowsHullMod(of.id);
-        return false;
+        return false;   // items stack; Hush seams toggle
     }
 
     private static List<TurnIn> coreTurnIns() {
@@ -232,11 +273,12 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
     // ------------------------------------------------------------------------------------------------- actions
 
     private void buy(Offer of) {
-        if (!PitchGlass.spend(of.price)) {
+        CargoAPI cargo = Global.getSector().getPlayerFleet().getCargo();
+        if (cargo.getCredits().get() < of.credits || !PitchGlass.spend(of.price)) {
             showBuy();
             return;
         }
-        CargoAPI cargo = Global.getSector().getPlayerFleet().getCargo();
+        if (of.credits > 0) cargo.getCredits().subtract(of.credits);
         TextPanelAPI t = dialog.getTextPanel();
         switch (of.kind) {
             case TUNING:
@@ -245,14 +287,21 @@ public class RslWorkshop extends BaseCommandPlugin implements InteractionDialogP
                 break;
             case HULLMOD:
                 Global.getSector().getPlayerFaction().addKnownHullMod(of.id);
-                t.addPara("Your engineers can now fit %s to Lattice ships.", Misc.getHighlightColor(), of.name);
+                t.addPara("Your engineers can now fit %s.", Misc.getHighlightColor(), of.name);
+                break;
+            case HUSH_SEAMS:
+                MemoryAPI fm = Global.getSector().getPlayerFleet().getMemoryWithoutUpdate();
+                boolean on = !fm.getBoolean(RslIds.MEM_HUSH_SEAMS);
+                fm.set(RslIds.MEM_HUSH_SEAMS, on);
+                t.addPara(on ? "The Virtuoso's seams now glow the violet of the Hush."
+                        : "The Virtuoso's seams glow teal again.");
                 break;
             default:
                 cargo.addSpecial(new SpecialItemData(of.id, null), 1);
                 t.addPara("Gained %s.", Misc.getHighlightColor(), of.name);
                 break;
         }
-        t.addPara("Paid %s Pitch Glass.", Misc.getNegativeHighlightColor(), "" + of.price);
+        t.addPara("Paid %s.", Misc.getNegativeHighlightColor(), priceText(of));
         showMain();
     }
 

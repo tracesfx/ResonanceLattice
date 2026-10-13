@@ -30,11 +30,15 @@ public final class PitchGlass {
     public static final int ITEM_PRISTINE_NANOFORGE = 150, ITEM_CORRUPTED_NANOFORGE = 40, ITEM_SYNCHROTRON = 80,
             ITEM_OTHER = 40;
 
-    // ---- prices (the Virtuoso's are in the questline, Stage 5)
+    // ---- prices
     public static final int PRICE_TUNING = 15;
     public static final int PRICE_BP_WEAPONS = 150, PRICE_BP_WINGS = 120, PRICE_BP_HULLS = 250;
     public static final int PRICE_CONCERT_PITCH = 200;
     public static final int PRICE_METRONOME = 250;
+    // the Virtuoso (after the Lacrimosa questline; its completion price is in Lacrimosa)
+    public static final int PRICE_UNBOUND = 400, PRICE_UNBOUND_CREDITS = 1000000;
+    public static final int PRICE_MOVEMENT = 300;
+    public static final int PRICE_HUSH_SEAMS = 50;
 
     public static int salvageFor(HullSize size) {
         if (size == null) return 0;

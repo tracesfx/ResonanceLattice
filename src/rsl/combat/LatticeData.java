@@ -51,6 +51,11 @@ public class LatticeData {
     public float peakBonus;
     /** The shield's own colours, captured before Bravura tints them white-teal. */
     public java.awt.Color shieldInner, shieldRing;
+    /** Solo Movement: no allied ship within range (refreshed twice a second). */
+    public boolean soloAlone;
+    public float soloTimer;
+    // The Hush (Dead Chorus ships, or the player's Virtuoso with the Hush seams): violet seam glow
+    public boolean hush, hushChecked;
     // Tremolo
     public Vector2f waveNode;
     public float waveHull;
