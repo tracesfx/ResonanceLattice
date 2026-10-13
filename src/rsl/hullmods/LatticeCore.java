@@ -47,7 +47,8 @@ public class LatticeCore extends BaseHullMod {
         LatticeData d = LatticeData.get(ship);
         d.sinceGain += amount;
         if (d.sinceGain > LatticeData.DECAY_DELAY && d.resonance > 0f) {
-            d.resonance = Math.max(0f, d.resonance - LatticeData.DECAY_PER_SEC * amount);
+            float decay = LatticeData.isTuned(ship, d) ? LatticeData.TUNED_DECAY : 1f;
+            d.resonance = Math.max(0f, d.resonance - LatticeData.DECAY_PER_SEC * decay * amount);
         }
         if (ship == engine.getPlayerShip()) {
             boolean over = d.resonance >= LatticeData.OVERTONE;

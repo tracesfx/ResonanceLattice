@@ -4,8 +4,11 @@ import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
+import rsl.campaign.RslCampaignListener;
+import rsl.campaign.TunerContractIntel;
 import rsl.world.CantorArrayIndustry;
 import rsl.world.LatticeNurseries;
+import rsl.world.PulsarMetronome;
 import rsl.world.RslRelations;
 import rsl.world.VellGen;
 
@@ -28,6 +31,7 @@ public class RslModPlugin extends BaseModPlugin {
                 log.warn("Resonance Lattice: GraphicsLib maps not loaded", t);
             }
         }
+        PulsarMetronome.register();
         log.info("Resonance Lattice loaded");
     }
 
@@ -40,6 +44,7 @@ public class RslModPlugin extends BaseModPlugin {
     public void onGameLoad(boolean newGame) {
         VellGen.generate(Global.getSector());   // no-op unless this save predates Vell
         RslRelations.applyOnce(newGame);
+        Global.getSector().addTransientListener(new RslCampaignListener());   // transient: re-added on every load
     }
 
     /** Classes stored in saves (market industries and conditions). Never rename or move them after release. */
@@ -47,5 +52,6 @@ public class RslModPlugin extends BaseModPlugin {
     public void configureXStream(XStream x) {
         x.alias("RslCantorArrayIndustry", CantorArrayIndustry.class);
         x.alias("RslLatticeNurseries", LatticeNurseries.class);
+        x.alias("RslTunerContractIntel", TunerContractIntel.class);
     }
 }

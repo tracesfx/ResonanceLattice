@@ -1337,6 +1337,59 @@ class Validator:
             cd = e.get("customDescriptionId")
             if cd and not self.has("desc", (cd, "CUSTOM")):
                 r.error("customDescriptionId '%s' has no (id, CUSTOM) description" % cd, "custom_entities.json:%s" % eid)
+        self._check_magic_bounties()
+
+    def _check_magic_bounties(self):
+        """MagicLib bounties ignore unknown keys and fail at runtime on unknown ids: check both statically."""
+        r = self.r
+        rel = "data/config/modFiles/magicBounty_data.json"
+        data = self.modsrc.json.get(rel)
+        if not isinstance(data, dict):
+            return
+        known_keys = set()
+        for s in self.sources:
+            p = os.path.join(s.root, "data", "config", "modFiles", "magicBounty_data_example.json")
+            if os.path.isfile(p):
+                try:
+                    ex = sslib.load_loose_json(p)
+                    for b in ex.values():
+                        if isinstance(b, dict):
+                            known_keys |= set(b)
+                except Exception:
+                    pass
+        factions = set(self.reg["faction"]) | {"ML_bounty"}
+        for bid, b in data.items():
+            if not isinstance(b, dict):
+                continue
+            where = "%s:%s" % (rel, bid)
+            if known_keys:
+                for k in b:
+                    if k not in known_keys:
+                        close = difflib.get_close_matches(k, sorted(known_keys), n=1, cutoff=0.75)
+                        r.error("unknown bounty key '%s'%s (MagicLib ignores it silently)"
+                                % (k, "; did you mean '%s'?" % close[0] if close else ""), where)
+            flag = b.get("fleet_flagship_variant")
+            variants = (flag if isinstance(flag, list) else [flag] if flag else []) + list(
+                (b.get("fleet_preset_ships") or {}).keys())
+            if not flag and not b.get("existing_target_memkey"):
+                r.error("no fleet_flagship_variant (required)", where)
+            for v in variants:
+                if not self.has("variant", v):
+                    r.error("unknown variant '%s' (the bounty fails to spawn)" % v, where)
+            for key in ("fleet_faction", "fleet_composition_faction", "job_forFaction"):
+                f = b.get(key)
+                if f and f not in factions:
+                    r.error("%s: unknown faction '%s'" % (key, f), where)
+            for f in (b.get("trigger_marketFaction_any") or []) + (b.get("trigger_marketFaction_none") or []):
+                if f not in factions:
+                    r.warn("trigger faction '%s' is not a known faction" % f, where)
+            for item in (b.get("job_item_reward") or {}):
+                if " " in item:   # Console Commands syntax: "ship_bp <id>", "weapon_bp <id>", ...
+                    continue
+                if not (self.has("commodity", item) or self.has("item", item)):
+                    r.error("job_item_reward '%s' is neither a commodity nor a special item" % item, where)
+            if isinstance(b.get("target_portrait"), str) and "/" in b["target_portrait"]:
+                self.path_ok(b["target_portrait"], where, "target_portrait")
 
     # .............................................................................. settings.json, styles, LunaLib
     def check_settings(self):

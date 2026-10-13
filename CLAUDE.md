@@ -29,6 +29,12 @@ Stage 3 DONE: `rsl.world.VellGen` (pulsar system at (14500,-13000) + free-spot s
 from build menus, spawns on the pre-made `use_station_visual` entity), `LatticeNurseries` condition, `RslNex`
 (direct Nex calls in a nested class; nexerelin is in validate_config optional_mods so the build compiles against it).
 Generated in onNewGame + once from onGameLoad (`$rsl_vellGenerated`); skipped in Nex random sectors.
+Stage 4 DONE: all Pitch Glass numbers/prices in `rsl.campaign.PitchGlass`; `RslCampaignListener` (transient: salvage
+loot + monthly stipend); `rsl.rulecmd.RslWorkshop` (dialog takeover shop at Coda, object option data) and
+`RslContracts` + `rsl.campaign.TunerContractIntel` (Tacet board); `rsl.world.PulsarMetronome` (Waystation item,
+registered in onApplicationLoad); Lattice Tuning in `LatticeData.isTuned` ($rsl_tuned in player-fleet memory);
+rules.csv + magicBounty_data.json generated from `campaign_data.py` (RULES, BOUNTIES; Special Projects bounty waits
+for `$rsl_qRefusedSung`, set by the Stage 5 questline; Hush fleets get `$rsl_hush` for triple salvage).
 
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.

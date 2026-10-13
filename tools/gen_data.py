@@ -1205,8 +1205,10 @@ SMOD_DESC = {
 
 
 # rare: high tier, low drop rarity, not known from the start (must be learned); built into both Virtuosos regardless
-HULLMOD_OVERRIDES = {"rsl_concert_pitch": {"tier": 3, "rarity": 0.1, "base value": 150000, "unlocked": "",
-                                           "tags": BP}}
+# Concert Pitch is learned only at the Luthier's Workshop (CAMPAIGN.md section 8): no modspec drops, as vanilla's
+# neural_interface (no_drop, no_drop_salvage).
+HULLMOD_OVERRIDES = {"rsl_concert_pitch": {"tier": 3, "rarity": "", "base value": 150000, "unlocked": "",
+                                           "tags": BP + ", no_drop, no_drop_salvage"}}
 
 
 def hullmods():
@@ -1249,7 +1251,9 @@ def config():
     write_json("data/config/settings.json", {
         "plugins": {"rsl_combatPlugin": "rsl.combat.RslCombatPlugin"},
         "designTypeColors": {MFR: [100, 230, 220, 255]},
-        "graphics": {"rsl_glow": glow, "rsl_fx": {"spike": OFFS["rsl_tuningspike_msl"]["sprite"]}},
+        "graphics": {"rsl_glow": glow, "rsl_fx": {"spike": OFFS["rsl_tuningspike_msl"]["sprite"]},
+                     "intel": campaign_data.INTEL_ICONS},
+        "ruleCommandPackages": ["rsl.rulecmd"],
     })
     hs = sslib.load_loose_json(os.path.join(V.core, "data/config/hull_styles.json"))["HIGH_TECH"]
     hs.update({"hyperspaceJitterColor": [100, 230, 220, 200], "baseCampaignExplosionColor": [100, 230, 220, 255],

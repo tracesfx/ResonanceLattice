@@ -1,0 +1,44 @@
+id,trigger,conditions,script,text,options,notes
+rsl_greetingTuned,OpenCommLink,"$faction.id == rsl_choir
+!$entity.isHostile
+$player.rsl_tuned","$menuState = fleetConvMain 0
+FireAll PopulateOptions","""Your cores are ringing at our reference pitch, captain. Someone in Coda thinks well of you."" The $personRank sounds almost warm.
+OR
+""We can hear you before we see you. You are in tune. Welcome.""",,
+rsl_greetingFriendly,OpenCommLink,"$faction.id == rsl_choir
+$faction.friendlyToPlayer","$menuState = fleetConvMain 0
+FireAll PopulateOptions","""Comm open. Voice and pitch confirmed. Good to hear you, captain.""
+OR
+""Ah, a friend of the chorus. Forgive the hum; we are mid-shift."" Behind the $personRank a row of tuners sit with their eyes closed, holding one long note.",,
+rsl_greetingNeutral,OpenCommLink,"$faction.id == rsl_choir
+$faction.neutralToPlayer","$menuState = fleetConvMain 0
+FireAll PopulateOptions","""Cantorate vessel. State your business and keep clear of our formation; your drive noise is fouling our tuning.""
+OR
+""We are on a working patrol, captain. Please do not cross our line."" The $personRank does not quite look at the camera; $heOrShe is listening to something you cannot hear.",,
+rsl_greetingHostileWeaker,OpenCommLink,"$faction.id == rsl_choir
+$entity.isHostile
+$entity.relativeStrength < 0",$entity.ignorePlayerCommRequests = true 1,"""You are out of tune, captain, and the whole choir can hear it."" The $personRank's voice is steady, but the hum behind $himOrHer has gone ragged.
+OR
+""No voice sings alone. If you take us, all of Vell will know your name.""",cutCommLink:Cut the comm link,
+rsl_greetingHostileStronger,OpenCommLink,"$faction.id == rsl_choir
+$entity.isHostile
+$entity.relativeStrength >= 0",$entity.ignorePlayerCommRequests = true 1,"""You are out of tune, captain."" The $personRank closes the channel before you can answer.
+OR
+""All voices, on my pitch."" The order is not meant for you, and the hum on the channel rises into a single note.",cutCommLink:Cut the comm link,
+rsl_workshopOpt,PopulateOptions,"$hasMarket
+$menuState == main
+$market.id == rsl_coda
+$faction.id == rsl_choir
+$tradeMode != NONE
+!$faction.isHostile",,,6:rsl_workshopOpen:Visit the Luthier's Workshop,
+rsl_workshopOpen,DialogOptionSelected,$option == rsl_workshopOpen,RslWorkshop,,,
+rsl_contractOpt,PopulateOptions,"$hasMarket
+$menuState == main
+$market.id == rsl_tacet
+$faction.id == rsl_choir
+$tradeMode != NONE
+!$faction.isHostile",,,7:rsl_contractBoard:Check the tuners' contract board,
+rsl_contractBoard,DialogOptionSelected,$option == rsl_contractBoard,RslContracts board,,,
+rsl_contractAccept,DialogOptionSelected,$option == rsl_contractAccept,"RslContracts accept
+FireAll PopulateOptions",,,
+rsl_contractBack,DialogOptionSelected,$option == rsl_contractBack,FireAll PopulateOptions,,,

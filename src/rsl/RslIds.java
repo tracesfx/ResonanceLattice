@@ -19,6 +19,17 @@ public final class RslIds {
     public static final String ITEM_BP_HULLS = "rsl_bp_hulls_package";
     public static final String ITEM_BP_WEAPONS = "rsl_bp_weapons_package";
     public static final String ITEM_BP_WINGS = "rsl_bp_wings_package";
+    public static final String ITEM_METRONOME = "rsl_pulsar_metronome";
+    public static final String HULLMOD_CONCERT_PITCH = "rsl_concert_pitch";
+
+    /** Player fleet memory: Lattice Tuning bought at the Workshop (expires after 30 days). */
+    public static final String MEM_TUNED = "$rsl_tuned";
+    /** Sector memory: the tuners' contract board is empty until this expires. */
+    public static final String MEM_CONTRACT_COOLDOWN = "$rsl_contractCooldown";
+    /** Fleet memory: a fleet of the Hush (Stage 5 boss); its Lattice wrecks yield triple Pitch Glass. */
+    public static final String MEM_HUSH_FLEET = "$rsl_hush";
+    /** settings.json graphics "intel" key of the contract intel icon. */
+    public static final String GFX_INTEL_CONTRACT = "rsl_contract";
 
     public static final String MOD_NEXERELIN = "nexerelin";
 

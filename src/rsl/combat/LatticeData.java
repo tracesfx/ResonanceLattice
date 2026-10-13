@@ -27,8 +27,14 @@ public class LatticeData {
     public static final float ENHANCED_GAIN = 1.5f;
     public static final float ENHANCED_BRIDGE_RANGE = 1.5f;
 
+    /** Lattice Tuning (Luthier's Workshop): gain x TUNED_GAIN, decay x TUNED_DECAY. */
+    public static final float TUNED_GAIN = 1.25f;
+    public static final float TUNED_DECAY = 0.5f;
+
     public float resonance;
     public float sinceGain = 99f;
+    /** Whether this ship belongs to a player fleet the Luthiers tuned (checked once per battle). */
+    public boolean tuned, tuneChecked;
     /** Smoothed glow brightness 0..1 (renderer). */
     public float glow = 0.3f;
 
@@ -69,6 +75,23 @@ public class LatticeData {
         return d;
     }
 
+    /** True for ships of the player's own fleet while it is tuned ($rsl_tuned in the player fleet's memory). */
+    public static boolean isTuned(ShipAPI ship, LatticeData d) {
+        if (d.tuneChecked) return d.tuned;
+        d.tuneChecked = true;
+        try {
+            CombatEngineAPI e = RslUtil.engine();
+            if (e == null || !e.isInCampaign() || ship.getFleetMember() == null) return false;
+            com.fs.starfarer.api.campaign.CampaignFleetAPI player = com.fs.starfarer.api.Global.getSector()
+                    .getPlayerFleet();
+            if (player == null || !player.getMemoryWithoutUpdate().getBoolean(RslIds.MEM_TUNED)) return false;
+            d.tuned = player.getFleetData().getMembersListCopy().contains(ship.getFleetMember());
+        } catch (Throwable ignored) {
+            d.tuned = false;
+        }
+        return d.tuned;
+    }
+
     public static float resonance(ShipAPI ship) {
         return ship == null ? 0f : get(ship).resonance;
     }
@@ -78,6 +101,7 @@ public class LatticeData {
         if (ship == null || amount <= 0f || !RslUtil.isLattice(ship)) return;
         if (RslUtil.enhanced(ship, RslIds.HULLMOD_CORE)) amount *= ENHANCED_GAIN;
         LatticeData d = get(ship);
+        if (isTuned(ship, d)) amount *= TUNED_GAIN;
         d.resonance = Math.min(MAX, d.resonance + amount);
         d.sinceGain = 0f;
         if (!share) return;

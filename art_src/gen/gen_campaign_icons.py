@@ -208,16 +208,71 @@ def cantor_industry():
     return bg
 
 
+def metronome():
+    """Pulsar Metronome colony item: a chamfered steel clock housing, navy face, tick ring, a glowing crystal hand."""
+    rgb = np.zeros((N, N, 3))
+    a = np.zeros((N, N))
+    halo = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(halo).ellipse([8 * S, 8 * S, 72 * S, 72 * S], fill=160)
+    comp(rgb, a, TEAL, np.asarray(halo.filter(ImageFilter.GaussianBlur(S * 6))).astype(float) / 255.0 * 0.45)
+    a[:] = np.asarray(halo.filter(ImageFilter.GaussianBlur(S * 6))).astype(float) / 255.0 * 0.45
+    c = 40.0
+
+    def octo(r, k=0.38):
+        return [(c + r * x, c + r * y) for x, y in [(-k, -1), (k, -1), (1, -k), (1, k), (k, 1), (-k, 1), (-1, k),
+                                                     (-1, -k)]]
+    outer, face = octo(33), octo(26)
+    t = ramp((14, 10), (66, 70))
+    comp(rgb, a, np.array([214, 222, 232.0]) * (1 - t * 0.55) + np.array([70, 78, 90.0]) * t * 0.55, mask(outer))
+    tf = ramp((40, 14), (40, 66))
+    comp(rgb, a, (NAVY + 8) * (1 - tf * 0.4) + np.array([10, 16, 30.0]) * tf * 0.4, mask(face))
+    ticks = Image.new("L", (N, N), 0)
+    d = ImageDraw.Draw(ticks)
+    for i in range(16):
+        ang = i * math.pi / 8
+        r0, r1 = (17, 23) if i % 4 == 0 else (19.5, 23)
+        d.line([((c + r0 * math.sin(ang)) * S, (c - r0 * math.cos(ang)) * S),
+                ((c + r1 * math.sin(ang)) * S, (c - r1 * math.cos(ang)) * S)], fill=255, width=int(1.4 * S))
+    tm = np.asarray(ticks).astype(float) / 255.0
+    comp(rgb, a, TEAL, np.asarray(ticks.filter(ImageFilter.GaussianBlur(S * 1.2))).astype(float) / 255.0 * 0.7)
+    comp(rgb, a, np.array([200, 255, 250.0]), tm)
+    # the hand: a slim crystal shard swept to "two o'clock", pivoting on a gunmetal hub
+    ang = math.radians(35)
+    tip = (c + 21 * math.sin(ang), c - 21 * math.cos(ang))
+    side = (math.cos(ang) * 3.2, math.sin(ang) * 3.2)
+    hand = [(c - side[0], c - side[1]), tip, (c + side[0], c + side[1]),
+            (c - 6 * math.sin(ang), c + 6 * math.cos(ang))]
+    comp(rgb, a, np.clip(TEAL * 0.6 + 120, 0, 255), mask(hand))
+    glow = Image.new("L", (N, N), 0)
+    ImageDraw.Draw(glow).polygon([(x * S, y * S) for x, y in hand], fill=255)
+    comp(rgb, a, TEAL, np.asarray(glow.filter(ImageFilter.GaussianBlur(S * 2.5))).astype(float) / 255.0 * 0.6)
+    hub = octo(4.5)
+    comp(rgb, a, np.array([90, 98, 110.0]), mask(hub))
+    ol = Image.new("L", (N, N), 0)
+    d = ImageDraw.Draw(ol)
+    d.polygon([(x * S, y * S) for x, y in outer], outline=255, width=S)
+    d.polygon([(x * S, y * S) for x, y in face], outline=255, width=S)
+    comp(rgb, a, np.array([12, 16, 22.0]), np.asarray(ol).astype(float) / 255.0)
+    return finish(rgb, a)
+
+
+def contract_intel():
+    """Intel icon (40x40) for the tuners' contract: the faction crest, as vanilla faction intel does."""
+    crest = Image.open(os.path.join(ROOT, "graphics", "rsl", "factions", "rsl_crest.png")).convert("RGBA")
+    return crest.resize((40, 40), Image.LANCZOS)
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    icons = {"rsl_pitchglass": pitchglass()}
+    icons = {"rsl_pitchglass": pitchglass(), "rsl_pulsar_metronome": metronome()}
     for k in GLYPHS:
         icons["rsl_bp_" + k] = blueprint(k)
     for name, im in icons.items():
         im.save(os.path.join(OUT, name + ".png"))
         print("wrote", name)
     extra = {os.path.join(ROOT, "graphics", "rsl", "icons", "markets", "rsl_lattice_nurseries.png"): nurseries(),
-             os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry()}
+             os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_contract.png"): contract_intel()}
     for path, im in extra.items():
         os.makedirs(os.path.dirname(path), exist_ok=True)
         im.save(path)

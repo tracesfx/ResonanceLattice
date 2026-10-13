@@ -5,7 +5,7 @@ and from landing its own guns, shares it with nearby Lattice ships, and at 60+ R
 an **Overtone** (an empowered version).
 
 This build has the ships, weapons, the faction and its home system **Vell** (a pulsar on the south-east fringe:
-Coda with the Cantor Array, Glasshouse, Tacet Station), but no quests yet (ROADMAP.md). Spawn everything with Console Commands or play the two included missions.
+Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, but no questline yet (ROADMAP.md). Spawn everything with Console Commands or play the two included missions.
 
 ## Requirements
 
@@ -83,13 +83,17 @@ faction is created with the sector).
 
 Vell: `jump Vell`, then `goto Coda`. The Cantor Array guards Coda as its station; fight it by attacking Coda.
 
-Campaign items (Stage 2 of ROADMAP.md; the Workshop that spends them comes later):
+At Coda: **Visit the Luthier's Workshop** (spend Pitch Glass). At Tacet Station: **Check the tuners' contract
+board**. Pitch Glass also comes from Lattice wrecks, bounties and a monthly stipend at Cooperative.
+
+Campaign items:
 
 ```
 additem rsl_pitchglass 100          # Pitch Glass, the Cantorate's currency
 addspecial rsl_bp_hulls_package
 addspecial rsl_bp_weapons_package
 addspecial rsl_bp_wings_package
+addspecial rsl_pulsar_metronome
 ```
 
 Handy: `god`, `nocooldown`, `infiniteammo`, `addcredits 1000000`, `allhullmods`.
@@ -124,7 +128,8 @@ visuals in motion and the station deployment need an in-game session. See BALANC
 
 On first load the mod creates Vell and sets the Cantorate's starting relations, once per save (sector memory
 flags), so it can be added to an existing save. In a Nexerelin random sector Vell is not created; Nex places the
-Cantorate's markets. Saved classes: `rsl.world.CantorArrayIndustry`, `rsl.world.LatticeNurseries` (aliased). Ships bought or spawned are ordinary fleet members;
+Cantorate's markets. Saved classes: `rsl.world.CantorArrayIndustry`, `rsl.world.LatticeNurseries`,
+`rsl.campaign.TunerContractIntel` (aliased). Ships bought or spawned are ordinary fleet members;
 removing the mod from a save that contains them will break that save, as with any ship mod.
 
 ## Credits

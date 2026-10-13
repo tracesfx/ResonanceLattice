@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased - 2026-10-12 (campaign Stage 4: ambient life, Pitch Glass economy, Luthier's Workshop)
+
+- **Luthier's Workshop** at Coda (Luthier Abelard), priced in Pitch Glass: Lattice Tuning (15), Cantorate weapon /
+  wing / hull blueprints (150 / 120 / 250, Favorable), Concert Pitch hullmod (200, Cooperative), Pulsar Metronome
+  colony item (250, Cooperative). Hand over AI cores to be silenced (alpha 40 / beta 15 / gamma 5 Pitch Glass, small
+  Hegemony reputation gain) and Domain-era colony items (pristine nanoforge 150, synchrotron 80, corrupted nanoforge
+  40, others 40).
+- **Pitch Glass sources**: salvage from every Lattice ship the enemy loses in a battle you win (1 / 2 / 4 / 8 by
+  size), a 10/month stipend at Cooperative, Tuners' Contracts, bounties.
+- **Tuners' Contracts** at Tacet Station: hunt a pirate or Luddic Path raider fleet near Vell within 60 days (20-40
+  Pitch Glass + credits + reputation), one at a time, 30-day cooldown; intel entry.
+- **Lattice Tuning**: for 30 days your Lattice ships gain Resonance 25% faster and lose it half as fast.
+- **Pulsar Metronome** (new colony item, Waystation): +15% accessibility, +1 stability; +25% / +2 with a neutron star.
+- Concert Pitch no longer drops as a modspec; it is learned at the Workshop.
+- Comm greetings for Cantorate fleets (friendly, neutral, hostile, and one for tuned fleets).
+- MagicLib bounties: **The Discordant** (pirates in mistuned Lattice ships), **Inspection Overreach** (a rogue
+  Hegemony inspector in Vell), **Special Projects Remnant** (unlocked by the questline later).
+
 ## Unreleased - 2026-10-12 (campaign Stage 3: Vell)
 
 - New star system **Vell** (south-east fringe): a pulsar with its beam, Tacet Station (size 3, high-tech orbital

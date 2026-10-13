@@ -76,7 +76,7 @@ Exit: user approves CAMPAIGN.md; DESIGN.md and CLAUDE.md point to it.
 - Nexerelin random-sector: home market spawn data in the Nex config; worldgen skips itself when Nex says so.
 - Save compatibility: `configureXStream` aliases for every saved class from here on.
 
-## Stage 4 — Ambient campaign life
+## Stage 4 — Ambient campaign life — DONE (2026-10-12)
 
 - Encounter dialog flavour for Choir fleets (rules.csv greetings per relation, "tuning" lines).
 - MagicLib bounties (`data/config/modFiles/magicBounty_data.json`): 2-4 bounties fighting or featuring the Choir.

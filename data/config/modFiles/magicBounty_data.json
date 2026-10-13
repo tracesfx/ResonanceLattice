@@ -1,0 +1,207 @@
+{
+    "rsl_discordant": {
+        "trigger_marketFaction_any": [
+            "rsl_choir",
+            "independent"
+        ],
+        "trigger_player_minLevel": 8,
+        "trigger_weight_mult": 1.0,
+        "job_name": "The Discordant",
+        "job_description": "A pirate lord calling $himselfHerselfThemselves ==the Discordant== has been flying Lattice ships stripped from Cantorate wrecks, their cores ==never retuned==. They shriek on every band, and the Cantorate wants them silenced before someone learns to copy them.\n\nThe Luthiers add ==60 Pitch Glass== to the credit reward: the cores in those hulls are still theirs.",
+        "job_comm_reply": "The channel fills with a grinding, mistuned howl. Somewhere under it, someone is laughing.",
+        "job_intel_success": "The Discordant's flagship has been silenced.",
+        "job_intel_expired": "The Discordant has gone quiet, for now.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 180,
+        "job_credit_reward": 160000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 5,
+        "job_item_reward": {
+            "rsl_pitchglass": 60
+        },
+        "job_type": "assassination",
+        "job_show_type": true,
+        "job_show_captain": true,
+        "job_show_fleet": "flagshipText",
+        "job_show_distance": "vanillaDistance",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Dariel",
+        "target_last_name": "Vasko",
+        "target_portrait": "graphics/portraits/portrait_pirate14.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCaptain",
+        "target_post": "fleetCommander",
+        "target_personality": "reckless",
+        "target_level": 6,
+        "target_elite_skills": 3,
+        "fleet_name": "The Discordant Choir",
+        "fleet_faction": "pirates",
+        "fleet_flagship_variant": "rsl_cadence_Battery",
+        "fleet_flagship_name": "Wolf Note",
+        "fleet_flagship_autofit": false,
+        "fleet_preset_ships": {
+            "rsl_staccato_Burst": 2,
+            "rsl_gracenote_Pluck": 2,
+            "rsl_refrain_Standard": 1
+        },
+        "fleet_preset_autofit": false,
+        "fleet_scaling_multiplier": 0.6,
+        "fleet_min_FP": 110,
+        "fleet_composition_faction": "pirates",
+        "fleet_composition_quality": 0.6,
+        "fleet_transponder": false,
+        "fleet_behavior": "GUARDED",
+        "location_distance": "CLOSE",
+        "location_themes": [
+            "procgen_no_theme",
+            "procgen_no_theme_pulsar_blackhole",
+            "theme_ruins_secondary",
+            "theme_interesting_minor"
+        ],
+        "location_themes_blacklist": [
+            "theme_already_occupied",
+            "theme_already_colonized",
+            "theme_hidden"
+        ],
+        "location_entities": [
+            "planet",
+            "jump_point",
+            "stable_location"
+        ],
+        "location_prioritizeUnexplored": false,
+        "location_defaultToAnyEntity": true
+    },
+    "rsl_inspection_overreach": {
+        "trigger_market_id": [
+            "rsl_coda",
+            "rsl_glasshouse",
+            "rsl_tacet"
+        ],
+        "trigger_marketFaction_any": [
+            "rsl_choir"
+        ],
+        "trigger_player_minLevel": 10,
+        "job_name": "Inspection Overreach",
+        "job_description": "Inspector ==Arno Vettrick== came to Vell with a Hegemony warrant to search Cantorate cores for artificial minds. The warrant expired a year ago. He stayed, with a privately crewed squadron, boarding crystal convoys and confiscating whatever he cannot understand.\n\nThe Cantorate cannot fire on a Hegemony officer. You are not the Cantorate. The Luthiers add ==40 Pitch Glass==.",
+        "job_comm_reply": "\"By the authority of the Hegemony's AI inspection mandate, stand down for search.\"",
+        "job_intel_success": "Vettrick's squadron will board no more convoys.",
+        "job_intel_expired": "Vettrick has left Vell, his holds full.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 120,
+        "job_credit_reward": 200000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 8,
+        "job_item_reward": {
+            "rsl_pitchglass": 40
+        },
+        "job_type": "assassination",
+        "job_show_fleet": "presetText",
+        "job_show_distance": "system",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Arno",
+        "target_last_name": "Vettrick",
+        "target_portrait": "graphics/portraits/portrait_hegemony05.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCommander",
+        "target_post": "fleetCommander",
+        "target_personality": "steady",
+        "target_level": 7,
+        "target_elite_skills": 3,
+        "fleet_name": "Inspection Squadron",
+        "fleet_faction": "ML_bounty",
+        "fleet_flagship_variant": "dominator_Assault",
+        "fleet_flagship_name": "Writ of Search",
+        "fleet_flagship_autofit": false,
+        "fleet_preset_ships": {
+            "enforcer_Elite": 2,
+            "hammerhead_Elite": 2,
+            "lasher_CS": 2
+        },
+        "fleet_preset_autofit": false,
+        "fleet_scaling_multiplier": 0.6,
+        "fleet_min_FP": 130,
+        "fleet_composition_faction": "hegemony",
+        "fleet_composition_quality": 1,
+        "fleet_attitude": "HOSTILE",
+        "fleet_behavior": "AGGRESSIVE",
+        "location_entitiesID": [
+            "rsl_basso",
+            "rsl_glasshouse_planet"
+        ],
+        "location_distance": "CLOSE",
+        "location_defaultToAnyEntity": true
+    },
+    "rsl_special_projects": {
+        "trigger_memKeys_all": {
+            "$rsl_qRefusedSung": true
+        },
+        "trigger_marketFaction_any": [
+            "rsl_choir",
+            "independent"
+        ],
+        "trigger_player_minLevel": 12,
+        "job_name": "Special Projects Remnant",
+        "job_description": "What is left of Director Sung's Special Projects group has not given up on lattice cores. A phase-heavy Tri-Tachyon squadron, flying without transponders, is hunting Cantorate couriers for their crystal.\n\nThe Luthiers add ==80 Pitch Glass==.",
+        "job_comm_reply": "\"This conversation is not happening.\"",
+        "job_intel_success": "Special Projects has lost another squadron it never had.",
+        "job_intel_expired": "The squadron has vanished back into the Company's books.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 150,
+        "job_credit_reward": 250000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 8,
+        "job_item_reward": {
+            "rsl_pitchglass": 80
+        },
+        "job_type": "assassination",
+        "job_show_fleet": "flagshipText",
+        "job_show_distance": "vanillaDistance",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Imre",
+        "target_last_name": "Calloway",
+        "target_portrait": "graphics/portraits/portrait_corporate05.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCommander",
+        "target_post": "fleetCommander",
+        "target_personality": "aggressive",
+        "target_level": 7,
+        "target_elite_skills": 4,
+        "fleet_name": "Special Projects Squadron",
+        "fleet_faction": "ML_bounty",
+        "fleet_flagship_variant": "doom_Strike",
+        "fleet_flagship_autofit": false,
+        "fleet_preset_ships": {
+            "harbinger_Strike": 1,
+            "afflictor_Strike": 2,
+            "shade_Assault": 2,
+            "medusa_Attack": 1
+        },
+        "fleet_preset_autofit": false,
+        "fleet_scaling_multiplier": 0.7,
+        "fleet_min_FP": 160,
+        "fleet_composition_faction": "tritachyon",
+        "fleet_composition_quality": 2,
+        "fleet_transponder": false,
+        "fleet_attitude": "HOSTILE",
+        "fleet_behavior": "ROAMING",
+        "location_distance": "CLOSE",
+        "location_themes": [
+            "procgen_no_theme",
+            "procgen_no_theme_pulsar_blackhole",
+            "theme_ruins_secondary",
+            "theme_interesting_minor"
+        ],
+        "location_themes_blacklist": [
+            "theme_already_occupied",
+            "theme_already_colonized",
+            "theme_hidden"
+        ],
+        "location_entities": [
+            "planet",
+            "jump_point",
+            "stable_location"
+        ],
+        "location_prioritizeUnexplored": false,
+        "location_defaultToAnyEntity": true
+    }
+}

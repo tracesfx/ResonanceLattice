@@ -298,7 +298,7 @@ retune a core. A cargo commodity (`rsl_pitchglass`), tagged non-economy so no ma
 | Source | Amount |
 |---|---|
 | Salvaging after a battle with Lattice ships (hostile Cantorate, Discordant pirates, the Hush) | frigate 1 / destroyer 2 / cruiser 4 / capital 8 per ship destroyed; Hush ×3 |
-| Cantorate work at Tacet Station / Coda (bar missions: escort, patrol, kill Path cells near Vell) | 20-40 per mission |
+| Tuners' Contracts at Tacet Station (hunt a pirate or Path raider fleet within 10 LY of Vell; one at a time, 30-day cooldown) | 20-40 per contract + credits |
 | MagicLib bounties (§10) | 40-80 each |
 | **Silencing AI cores** — the Cantorate quietly buys AI cores to destroy them (it keeps the Hegemony away) | gamma 5 / beta 15 / alpha 40; +Hegemony rep 1 per core |
 | Domain-era special items turned in (the Cantorate needs their physics) | corrupted nanoforge 40, pristine nanoforge 150, synchrotron 80, other colony items 30-60 |
@@ -314,9 +314,9 @@ retune a core. A cargo commodity (`rsl_pitchglass`), tagged non-economy so no ma
 | **Unbound Core** (installable on the Virtuoso) | 400 PG + 1,000,000 cr | the Virtuoso completed (either path) |
 | **Chorus Movement** / **Solo Movement** (Virtuoso-only sidegrade hullmod, by path) | 300 PG | the Virtuoso completed |
 | Cantorate blueprint packages: hulls / weapons / wings | 250 / 150 / 120 PG | Cantorate rep ≥ Favorable (any rep for Abelard on "Solo") |
-| Concert Pitch augment (for any Lattice ship) | 200 PG | Cooperative |
-| **Pulsar Metronome** colony item (Orbital Works: +ship quality, -production cost for energy weapons) | 250 PG | Cooperative |
-| Lattice Tuning (battle-start Resonance +30 for 30 days, whole fleet) | 15 PG | any |
+| Concert Pitch augment (the hullmod is learned; any Lattice ship can mount it; it never drops) | 200 PG | Cooperative |
+| **Pulsar Metronome** colony item (Waystation: +15% accessibility, +1 stability; +25% / +2 in a neutron-star system) | 250 PG | Cooperative |
+| Lattice Tuning (30 days: the player fleet's Lattice ships gain Resonance 25% faster and lose it half as fast) | 15 PG | not hostile |
 | Hush recolour of the Virtuoso's seams (cosmetic) | 50 PG | beat 5 done |
 
 Total for a fully upgraded Virtuoso: **~1,300 Pitch Glass + 4,000,000 credits**, on top of the questline.

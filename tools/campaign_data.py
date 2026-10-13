@@ -105,6 +105,228 @@ PACKAGES = [
 ]
 
 
+INTEL_ICONS = {"rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png"}
+
+METRONOME_DESC = (
+    "A navigation clock grown around a sliver of lattice crystal and keyed to the beat of a pulsar. Installed in a "
+    "Waystation it times every approach, docking and departure to a pitch no jammer can touch; traffic flows, and "
+    "nobody waits in the dark.")
+
+# ------------------------------------------------------------------------------------------------- rules.csv
+# Each rule: (id, trigger, [conditions], [script lines], text, [options "order:id:text"]). Texts may use OR lines.
+FACTION_COND = "$faction.id == rsl_choir"
+RULES = [
+    # ---- comm greetings from Cantorate fleets (copied structure of vanilla greetingTT*)
+    ("rsl_greetingTuned", "OpenCommLink", [FACTION_COND, "!$entity.isHostile", "$player.rsl_tuned"],
+     ["$menuState = fleetConvMain 0", "FireAll PopulateOptions"],
+     "\"Your cores are ringing at our reference pitch, captain. Someone in Coda thinks well of you.\" The "
+     "$personRank sounds almost warm.\nOR\n\"We can hear you before we see you. You are in tune. Welcome.\"", []),
+    ("rsl_greetingFriendly", "OpenCommLink", [FACTION_COND, "$faction.friendlyToPlayer"],
+     ["$menuState = fleetConvMain 0", "FireAll PopulateOptions"],
+     "\"Comm open. Voice and pitch confirmed. Good to hear you, captain.\"\nOR\n\"Ah, a friend of the chorus. "
+     "Forgive the hum; we are mid-shift.\" Behind the $personRank a row of tuners sit with their eyes closed, "
+     "holding one long note.", []),
+    ("rsl_greetingNeutral", "OpenCommLink", [FACTION_COND, "$faction.neutralToPlayer"],
+     ["$menuState = fleetConvMain 0", "FireAll PopulateOptions"],
+     "\"Cantorate vessel. State your business and keep clear of our formation; your drive noise is fouling our "
+     "tuning.\"\nOR\n\"We are on a working patrol, captain. Please do not cross our line.\" The $personRank does "
+     "not quite look at the camera; $heOrShe is listening to something you cannot hear.", []),
+    ("rsl_greetingHostileWeaker", "OpenCommLink", [FACTION_COND, "$entity.isHostile", "$entity.relativeStrength < 0"],
+     ["$entity.ignorePlayerCommRequests = true 1"],
+     "\"You are out of tune, captain, and the whole choir can hear it.\" The $personRank's voice is steady, but "
+     "the hum behind $himOrHer has gone ragged.\nOR\n\"No voice sings alone. If you take us, all of Vell will "
+     "know your name.\"", ["cutCommLink:Cut the comm link"]),
+    ("rsl_greetingHostileStronger", "OpenCommLink", [FACTION_COND, "$entity.isHostile",
+                                                     "$entity.relativeStrength >= 0"],
+     ["$entity.ignorePlayerCommRequests = true 1"],
+     "\"You are out of tune, captain.\" The $personRank closes the channel before you can answer.\nOR\n\"All "
+     "voices, on my pitch.\" The order is not meant for you, and the hum on the channel rises into a single note.",
+     ["cutCommLink:Cut the comm link"]),
+    # ---- Luthier's Workshop at Coda (rsl.rulecmd.RslWorkshop takes over the dialog until the player leaves)
+    ("rsl_workshopOpt", "PopulateOptions", ["$hasMarket", "$menuState == main", "$market.id == rsl_coda",
+                                            "$faction.id == rsl_choir", "$tradeMode != NONE", "!$faction.isHostile"],
+     [], "", ["6:rsl_workshopOpen:Visit the Luthier's Workshop"]),
+    ("rsl_workshopOpen", "DialogOptionSelected", ["$option == rsl_workshopOpen"], ["RslWorkshop"], "", []),
+    # ---- tuners' contract board at Tacet Station (rsl.rulecmd.RslContracts)
+    ("rsl_contractOpt", "PopulateOptions", ["$hasMarket", "$menuState == main", "$market.id == rsl_tacet",
+                                            "$faction.id == rsl_choir", "$tradeMode != NONE", "!$faction.isHostile"],
+     [], "", ["7:rsl_contractBoard:Check the tuners' contract board"]),
+    ("rsl_contractBoard", "DialogOptionSelected", ["$option == rsl_contractBoard"], ["RslContracts board"], "", []),
+    ("rsl_contractAccept", "DialogOptionSelected", ["$option == rsl_contractAccept"],
+     ["RslContracts accept", "FireAll PopulateOptions"], "", []),
+    ("rsl_contractBack", "DialogOptionSelected", ["$option == rsl_contractBack"], ["FireAll PopulateOptions"], "", []),
+]
+
+
+def rules(g):
+    hdr = ["id", "trigger", "conditions", "script", "text", "options", "notes"]
+    rows = [{"id": i, "trigger": t, "conditions": "\n".join(c), "script": "\n".join(s), "text": x,
+             "options": "\n".join(o), "notes": ""} for i, t, c, s, x, o in RULES]
+    g.write_csv("data/campaign/rules.csv", hdr, rows)
+
+
+# ------------------------------------------------------------------------------------------------- MagicLib bounties
+BOUNTY_LOCATION = {
+    "location_distance": "CLOSE",
+    "location_themes": ["procgen_no_theme", "procgen_no_theme_pulsar_blackhole", "theme_ruins_secondary",
+                        "theme_interesting_minor"],
+    "location_themes_blacklist": ["theme_already_occupied", "theme_already_colonized", "theme_hidden"],
+    "location_entities": ["planet", "jump_point", "stable_location"],
+    "location_prioritizeUnexplored": False,
+    "location_defaultToAnyEntity": True,
+}
+
+BOUNTIES = {
+    "rsl_discordant": dict({
+        "trigger_marketFaction_any": ["rsl_choir", "independent"],
+        "trigger_player_minLevel": 8,
+        "trigger_weight_mult": 1.0,
+        "job_name": "The Discordant",
+        "job_description": "A pirate lord calling $himselfHerselfThemselves ==the Discordant== has been flying "
+                           "Lattice ships stripped from Cantorate wrecks, their cores ==never retuned==. They shriek "
+                           "on every band, and the Cantorate wants them silenced before someone learns to copy them."
+                           "\n\nThe Luthiers add ==60 Pitch Glass== to the credit reward: the cores in those hulls "
+                           "are still theirs.",
+        "job_comm_reply": "The channel fills with a grinding, mistuned howl. Somewhere under it, someone is laughing.",
+        "job_intel_success": "The Discordant's flagship has been silenced.",
+        "job_intel_expired": "The Discordant has gone quiet, for now.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 180,
+        "job_credit_reward": 160000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 5,
+        "job_item_reward": {"rsl_pitchglass": 60},
+        "job_type": "assassination",
+        "job_show_type": True,
+        "job_show_captain": True,
+        "job_show_fleet": "flagshipText",
+        "job_show_distance": "vanillaDistance",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Dariel",
+        "target_last_name": "Vasko",
+        "target_portrait": "graphics/portraits/portrait_pirate14.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCaptain",
+        "target_post": "fleetCommander",
+        "target_personality": "reckless",
+        "target_level": 6,
+        "target_elite_skills": 3,
+        "fleet_name": "The Discordant Choir",
+        "fleet_faction": "pirates",
+        "fleet_flagship_variant": "rsl_cadence_Battery",
+        "fleet_flagship_name": "Wolf Note",
+        "fleet_flagship_autofit": False,
+        "fleet_preset_ships": {"rsl_staccato_Burst": 2, "rsl_gracenote_Pluck": 2, "rsl_refrain_Standard": 1},
+        "fleet_preset_autofit": False,
+        "fleet_scaling_multiplier": 0.6,
+        "fleet_min_FP": 110,
+        "fleet_composition_faction": "pirates",
+        "fleet_composition_quality": 0.6,
+        "fleet_transponder": False,
+        "fleet_behavior": "GUARDED",
+    }, **BOUNTY_LOCATION),
+    "rsl_inspection_overreach": {
+        "trigger_market_id": ["rsl_coda", "rsl_glasshouse", "rsl_tacet"],
+        "trigger_marketFaction_any": ["rsl_choir"],
+        "trigger_player_minLevel": 10,
+        "job_name": "Inspection Overreach",
+        "job_description": "Inspector ==Arno Vettrick== came to Vell with a Hegemony warrant to search Cantorate "
+                           "cores for artificial minds. The warrant expired a year ago. He stayed, with a privately "
+                           "crewed squadron, boarding crystal convoys and confiscating whatever he cannot understand."
+                           "\n\nThe Cantorate cannot fire on a Hegemony officer. You are not the Cantorate. The "
+                           "Luthiers add ==40 Pitch Glass==.",
+        "job_comm_reply": "\"By the authority of the Hegemony's AI inspection mandate, stand down for search.\"",
+        "job_intel_success": "Vettrick's squadron will board no more convoys.",
+        "job_intel_expired": "Vettrick has left Vell, his holds full.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 120,
+        "job_credit_reward": 200000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 8,
+        "job_item_reward": {"rsl_pitchglass": 40},
+        "job_type": "assassination",
+        "job_show_fleet": "presetText",
+        "job_show_distance": "system",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Arno",
+        "target_last_name": "Vettrick",
+        "target_portrait": "graphics/portraits/portrait_hegemony05.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCommander",
+        "target_post": "fleetCommander",
+        "target_personality": "steady",
+        "target_level": 7,
+        "target_elite_skills": 3,
+        "fleet_name": "Inspection Squadron",
+        "fleet_faction": "ML_bounty",
+        "fleet_flagship_variant": "dominator_Assault",
+        "fleet_flagship_name": "Writ of Search",
+        "fleet_flagship_autofit": False,
+        "fleet_preset_ships": {"enforcer_Elite": 2, "hammerhead_Elite": 2, "lasher_CS": 2},
+        "fleet_preset_autofit": False,
+        "fleet_scaling_multiplier": 0.6,
+        "fleet_min_FP": 130,
+        "fleet_composition_faction": "hegemony",
+        "fleet_composition_quality": 1,
+        "fleet_attitude": "HOSTILE",
+        "fleet_behavior": "AGGRESSIVE",
+        "location_entitiesID": ["rsl_basso", "rsl_glasshouse_planet"],
+        "location_distance": "CLOSE",
+        "location_defaultToAnyEntity": True,
+    },
+    # Opens in Stage 5 (the questline sets $rsl_qRefusedSung when the player refuses Director Sung's offer).
+    "rsl_special_projects": dict({
+        "trigger_memKeys_all": {"$rsl_qRefusedSung": True},
+        "trigger_marketFaction_any": ["rsl_choir", "independent"],
+        "trigger_player_minLevel": 12,
+        "job_name": "Special Projects Remnant",
+        "job_description": "What is left of Director Sung's Special Projects group has not given up on lattice "
+                           "cores. A phase-heavy Tri-Tachyon squadron, flying without transponders, is hunting "
+                           "Cantorate couriers for their crystal.\n\nThe Luthiers add ==80 Pitch Glass==.",
+        "job_comm_reply": "\"This conversation is not happening.\"",
+        "job_intel_success": "Special Projects has lost another squadron it never had.",
+        "job_intel_expired": "The squadron has vanished back into the Company's books.",
+        "job_forFaction": "rsl_choir",
+        "job_deadline": 150,
+        "job_credit_reward": 250000,
+        "job_reward_scaling": 0.5,
+        "job_reputation_reward": 8,
+        "job_item_reward": {"rsl_pitchglass": 80},
+        "job_type": "assassination",
+        "job_show_fleet": "flagshipText",
+        "job_show_distance": "vanillaDistance",
+        "job_difficultyDescription": "auto",
+        "target_first_name": "Imre",
+        "target_last_name": "Calloway",
+        "target_portrait": "graphics/portraits/portrait_corporate05.png",
+        "target_gender": "MALE",
+        "target_rank": "spaceCommander",
+        "target_post": "fleetCommander",
+        "target_personality": "aggressive",
+        "target_level": 7,
+        "target_elite_skills": 4,
+        "fleet_name": "Special Projects Squadron",
+        "fleet_faction": "ML_bounty",
+        "fleet_flagship_variant": "doom_Strike",
+        "fleet_flagship_autofit": False,
+        "fleet_preset_ships": {"harbinger_Strike": 1, "afflictor_Strike": 2, "shade_Assault": 2,
+                               "medusa_Attack": 1},
+        "fleet_preset_autofit": False,
+        "fleet_scaling_multiplier": 0.7,
+        "fleet_min_FP": 160,
+        "fleet_composition_faction": "tritachyon",
+        "fleet_composition_quality": 2,
+        "fleet_transponder": False,
+        "fleet_attitude": "HOSTILE",
+        "fleet_behavior": "ROAMING",
+    }, **BOUNTY_LOCATION),
+}
+
+
+def bounties(g):
+    g.write_json("data/config/modFiles/magicBounty_data.json", BOUNTIES)
+
+
 def faction(g):
     f = g.V.spec("faction", "tritachyon")
     f.pop("internalComms", None)   # Tri-Tachyon's comm channel (logo and reports); the Cantorate has none yet
@@ -205,6 +427,11 @@ def special_items(g):
             "name": name, "id": iid, "tags": "package_bp, no_drop, codex_unlockable", "base price": price,
             "icon": "graphics/rsl/icons/cargo/%s.png" % icon, "plugin params": tag, "desc": text,
             "order": 290 + i}))
+    # Pulsar Metronome: a Waystation colony item (effect: rsl.world.PulsarMetronome, registered on app load)
+    rows.append(g.V.clone_row("special_items.csv", "fullerene_spool", **{
+        "name": "Pulsar Metronome", "id": "rsl_pulsar_metronome", "tags": "colony_item, no_drop, codex_unlockable",
+        "base price": 150000, "icon": "graphics/rsl/icons/cargo/rsl_pulsar_metronome.png",
+        "plugin params": "waystation", "desc": METRONOME_DESC, "order": 295}))
     g.write_csv("data/campaign/special_items.csv", hdr, rows)
 
 
@@ -311,4 +538,6 @@ def build(g):
     special_items(g)
     industries(g)
     conditions(g)
+    rules(g)
+    bounties(g)
     nexerelin(g)
