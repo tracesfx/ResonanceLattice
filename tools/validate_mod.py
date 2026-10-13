@@ -1503,6 +1503,53 @@ class Validator:
     def _rel(self, p):
         return os.path.relpath(p, self.mod).replace("\\", "/")
 
+    # Fleet callbacks run while the engine iterates the fleet's listener list (CampaignEngine.reportBattleOccurred):
+    # removing a listener or despawning a fleet from inside one throws ConcurrentModificationException = "Fatal: null"
+    # after the battle (Resonance Lattice, 2026-10-13). Vanilla only removes listeners from advance()/end paths.
+    FLEET_CALLBACKS = ("reportBattleOccurred", "reportFleetDespawnedToListener")
+    CALLBACK_MUTATION = re.compile(r"\bremoveEventListener\s*\(|\.despawn\s*\(|\bdespawn\s*\(\s*\)")
+
+    @staticmethod
+    def _method_bodies(src):
+        """{method name: body text} for every method in a Java source (brace matching, comments/strings stripped)."""
+        clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", src, flags=re.S)
+        clean = re.sub(r'"(?:\\.|[^"\\])*"', '""', clean)
+        bodies = {}
+        for m in re.finditer(r"\b(\w+)\s*\([^;{}()]*(?:\([^()]*\)[^;{}()]*)*\)\s*(?:throws\s+[\w.,\s]+)?\{", clean):
+            name = m.group(1)
+            if name in ("if", "for", "while", "switch", "catch", "synchronized", "return", "new"):
+                continue
+            depth, i = 1, m.end()
+            while i < len(clean) and depth:
+                depth += {"{": 1, "}": -1}.get(clean[i], 0)
+                i += 1
+            bodies.setdefault(name, "")
+            bodies[name] += clean[m.end():i]
+        return bodies
+
+    def _check_fleet_callbacks(self, src, rel):
+        bodies = self._method_bodies(src)
+        for cb in self.FLEET_CALLBACKS:
+            if cb not in bodies:
+                continue
+            seen, todo = set(), [cb]
+            while todo:   # follow calls into methods of the same file (helpers like endHunt())
+                name = todo.pop()
+                if name in seen:
+                    continue
+                seen.add(name)
+                body = bodies.get(name, "")
+                hit = self.CALLBACK_MUTATION.search(body)
+                if hit:
+                    via = "" if name == cb else " (via %s())" % name
+                    self.r.error("%s()%s calls %s: the engine is iterating the fleet's listeners, so this throws "
+                                 "ConcurrentModificationException after the battle; queue the fleet and do it in "
+                                 "advance()" % (cb, via, hit.group(0).strip(" (.")), rel)
+                    break
+                for c in re.findall(r"(?<![.\w])(\w+)\s*\(", body):
+                    if c in bodies and c not in seen:
+                        todo.append(c)
+
     def check_java(self):
         r = self.r
         files = self._java_files()
@@ -1560,6 +1607,7 @@ class Validator:
                 for lit in re.findall(r'"(%s[A-Za-z0-9_]+)"' % re.escape(self.prefix), src):
                     if lit not in known and lit not in whitelist:
                         unknown_lits.setdefault(lit, rel)
+            self._check_fleet_callbacks(src, rel)
             if re.search(r"\bjava\.io\.File\b|\bnew\s+File\(|FileInputStream|FileOutputStream|java\.nio\.file|"
                          r"java\.lang\.reflect|Class\.forName\(|MethodHandles", src):
                 r.warn("file I/O or reflection: the game's script classloader restricts these (wiki); use "

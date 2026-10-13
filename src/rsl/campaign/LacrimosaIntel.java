@@ -83,6 +83,12 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     private int echo;
     private SectorEntityToken graveyard;
     private CampaignFleetAPI hush;
+    /**
+     * Fleets to unhook (and retire, if still alive) on the next tick. Never call removeEventListener or despawn from
+     * inside a fleet callback: the engine is iterating that fleet's listener list (ConcurrentModificationException in
+     * CampaignEngine.reportBattleOccurred, seen in game).
+     */
+    private List<CampaignFleetAPI> release = new ArrayList<CampaignFleetAPI>();
     private PersonAPI hushCommander;
 
     // ------------------------------------------------------------------------------------------------- access
@@ -333,8 +339,7 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     }
 
     private void endHunt(boolean beaten) {
-        if (hunter != null) hunter.removeEventListener(this);
-        if (hunter != null && hunter.isAlive()) LacrimosaFleets.retire(hunter);
+        releaseLater(hunter);
         hunter = null;
         stage = Stage.COUNCIL;
         if (!hasCantorateMarket()) resolveWithoutCouncil();
@@ -447,10 +452,7 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     }
 
     private void hushSilenced() {
-        if (hush != null) {
-            hush.removeEventListener(this);
-            if (hush.isAlive()) LacrimosaFleets.retire(hush);
-        }
+        releaseLater(hush);
         hush = null;
         Global.getSector().getMemoryWithoutUpdate().set(RslIds.MEM_HUSH_DONE, true);
         Misc.makeUnimportant(graveyard, "rsl_lacrimosa");
@@ -519,6 +521,15 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     @Override
     protected void advanceImpl(float amount) {
         try {
+            if (release == null) release = new ArrayList<CampaignFleetAPI>();   // saves from before this field
+            if (!release.isEmpty()) {
+                List<CampaignFleetAPI> copy = new ArrayList<CampaignFleetAPI>(release);
+                release.clear();
+                for (CampaignFleetAPI f : copy) {
+                    f.removeEventListener(this);
+                    if (f.isAlive()) LacrimosaFleets.retire(f);
+                }
+            }
             float days = Global.getSector().getClock().convertToDays(amount);
             switch (stage) {
                 case SUNG:
@@ -603,7 +614,8 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
                 if (battle.isPlayerInvolved()) hushSilenced();
             }
         } else if (fleet == scavengers && (scavengers.isEmpty() || !scavengers.isAlive())) {
-            scavengers.removeEventListener(this);
+            releaseLater(scavengers);
+            scavengers = null;
         }
     }
 
@@ -624,6 +636,12 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
         }
     }
 
+    private void releaseLater(CampaignFleetAPI f) {
+        if (f == null) return;
+        if (release == null) release = new ArrayList<CampaignFleetAPI>();
+        if (!release.contains(f)) release.add(f);
+    }
+
     @Override
     protected void notifyEnded() {
         super.notifyEnded();
@@ -631,6 +649,10 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
         if (hush != null) hush.removeEventListener(this);
         if (guard != null) guard.removeEventListener(this);
         if (scavengers != null) scavengers.removeEventListener(this);
+        if (release != null) {
+            for (CampaignFleetAPI f : release) f.removeEventListener(this);
+            release.clear();
+        }
     }
 
     private void sendUpdate(Object param) {

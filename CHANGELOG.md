@@ -30,6 +30,7 @@
   (alone within 1,500: +25% theft and +10% damage; in company: -25% theft), Dead Chorus (Hush only).
 - Unbound Core is no longer known from the start: the Workshop teaches it.
 - Console testing: `runcode rsl.campaign.Lacrimosa.debug("<stage>")` (README).
+- Fix: "Fatal: null" after beating the buoy scavengers (and the same trap after the Special Projects and Hush fights): the quest unhooked/despawned fleets inside the battle callback; now done on the next tick.
 
 ## Unreleased - 2026-10-12 (campaign Stage 4: ambient life, Pitch Glass economy, Luthier's Workshop)
 
