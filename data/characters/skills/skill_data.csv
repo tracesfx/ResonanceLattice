@@ -1,0 +1,2 @@
+id,name,order,tier,reqPoints,reqPointsPerExtraSkill,description,author,combat officer,admiral,admin,tags,icon,
+rsl_concertmaster,Concertmaster,10050,0,,,"""You have ships that sing? Then you need someone who can hear them.""","Odile Marchetti, first chair of the First Chorus",TRUE,,,npc_only,graphics/rsl/icons/skills/rsl_concertmaster.png,

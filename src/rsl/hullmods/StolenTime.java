@@ -149,6 +149,11 @@ public class StolenTime extends BaseHullMod {
         Tip.bad(t, "Theft (not kill refunds) is %s as effective when the ship is not piloted by the player.",
                 "half");
         Tip.end(t);
+        // secret #7, the true name
+        if (ship != null && ship.getName() != null && "Lacrimosa".equalsIgnoreCase(ship.getName().trim())) {
+            t.addPara("Lacrimosa. It remembers its name, and the twelve it was named for.", Tip.PAD,
+                    com.fs.starfarer.api.util.Misc.getGrayColor());
+        }
     }
 
     @Override

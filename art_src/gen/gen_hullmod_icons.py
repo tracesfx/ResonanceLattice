@@ -73,14 +73,15 @@ def screen(a, b):
     return 1 - (1 - np.clip(a, 0, 1)) * (1 - np.clip(b, 0, 1))
 
 
-def finish(img, name, sat=1.45):
+def finish(img, name, sat=1.45, size=32, out=None):
     im = Image.fromarray((np.clip(img, 0, 1) * 255).astype("uint8"), "RGB")
     if sat != 1.0:
         im = ImageEnhance.Color(im).enhance(sat)
-    im = im.resize((32, 32), Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=1, percent=60, threshold=2))
+    im = im.resize((size, size), Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=1, percent=60, threshold=2))
     im = ImageEnhance.Contrast(im).enhance(1.12)
-    os.makedirs(OUT, exist_ok=True)
-    im.convert("RGBA").save(os.path.join(OUT, name + ".png"))
+    out = out or OUT
+    os.makedirs(out, exist_ok=True)
+    im.convert("RGBA").save(os.path.join(out, name + ".png"))
     print(name)
     return im
 
@@ -241,6 +242,20 @@ def dead_chorus():
     return finish(vignette(screen(img, glow_layer(d, 3, 1.0))), "rsl_dead_chorus", sat=1.1)
 
 
+def concertmaster_skill():
+    """Odile Marchetti's skill icon (64x64, vanilla skill-icon size): an unlocked tuning collar around a single clear
+    note, over the Conductor's breech."""
+    base = light(crop("rsl_conductor", 528, 700, 380), strength=0.6) * 0.75
+    def d(dr):
+        dr.arc([22, 22, 106, 106], 200, 500, fill=col(TEAL), width=6)       # the collar, open at the bottom
+        dr.line([(40, 100), (52, 110)], fill=col(TEAL, 0.8), width=4)
+        dr.polygon([(64, 36), (80, 64), (64, 92), (48, 64)], fill=col(WHITE))
+        for k in (-1, 1):
+            dr.line([(64 + k * 24, 64), (64 + k * 40, 64)], fill=col(WHITE, 0.7), width=2)
+    return finish(vignette(screen(base, glow_layer(d, 4, 1.0))), "rsl_concertmaster", sat=1.2, size=64,
+                  out=os.path.join(ROOT, "graphics", "rsl", "icons", "skills"))
+
+
 def main():
     lattice_core()
     conductors_bridge()
@@ -255,6 +270,7 @@ def main():
     chorus_movement()
     solo_movement()
     dead_chorus()
+    concertmaster_skill()
     # review sheet: ours at 4x next to a few vanilla icons
     names = sorted(f for f in os.listdir(OUT) if f.endswith(".png"))
     van = os.path.join(ROOT, "..", "..", "starsector-core", "graphics", "hullmods")

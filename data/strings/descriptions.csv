@@ -125,4 +125,7 @@ rsl_desc_cantor_array,CUSTOM,"A lattice station of six petals around a crystal h
 rsl_desc_buoy,CUSTOM,"A Domain-era listening buoy of the Antiphon Institute, left on the fringe to record the harmonic flux of hyperspace storms. Two centuries later some of them still listen.",,,,,
 rsl_desc_institute,CUSTOM,"The Antiphon Institute: a Domain hyperspace-physics laboratory, a spindle of dark habitat rings around a dock built for one capital ship. The Cantorate's ancestors fled it two centuries ago, and chose to forget where it was.",,,,,
 rsl_desc_echo,CUSTOM,"A Lattice hull of a pattern two centuries old, drifting in the abyss. Its crew are long dead. Its core still keeps time.",,,,,
+rsl_desc_score_cache,CUSTOM,"A Domain-era data cache of the Antiphon Institute, scored with five empty lines like a stave. Someone hid it here on purpose.",,,,,
+rsl_desc_venns_rest,CUSTOM,"A cryogenic vault grown into a cold rock at the edge of the Sector, humming at the edge of hearing. On no chart.",,,,,
+rsl_desc_venn_rock,CUSTOM,"A cold, airless rock circling a dim red star. Its only feature is the vault someone grew into it.",,,,,
 rsl_desc_graveyard,CUSTOM,"Where the First Chorus died. Lattice wrecks hang in a ring in the dark, and the abyss hums with them.",,,,,

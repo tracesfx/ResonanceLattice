@@ -223,7 +223,7 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     }
 
     /** A procgen system nobody lives in: no markets, not hidden, not in the abyss, not Vell. */
-    private static boolean isWildSystem(StarSystemAPI s) {
+    public static boolean isWildSystem(StarSystemAPI s) {
         if (s == null || s.getLocation() == null || s.hasTag(Tags.THEME_HIDDEN) || s.hasTag(Tags.THEME_CORE)) return false;
         if (s.isNebula() || s.getStar() == null || s.getId().startsWith("rsl_") || "Vell".equals(s.getBaseName())) return false;
         if (Misc.getAbyssalDepth(s.getLocation()) > 0f) return false;
@@ -481,7 +481,19 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
 
     /** Console testing (Lacrimosa.debug): plays the beats forward, skipping fights, until {@code target}. */
     void debugJump(String target) {
-        Stage want = Stage.valueOf(target.trim().toUpperCase());
+        Stage want = null;
+        String t = target.trim().toUpperCase();
+        for (Stage s : Stage.values()) {   // prefix match: "buoy", "inst", "hush" ...
+            if (s.name().startsWith(t) || t.startsWith(s.name())) {
+                want = s;
+                break;
+            }
+        }
+        if (want == null) {
+            log.warn("Resonance Lattice: unknown quest stage '" + target + "'; use one of "
+                    + java.util.Arrays.toString(Stage.values()));
+            return;
+        }
         for (int guardLoop = 0; guardLoop < 20 && stage.ordinal() < want.ordinal(); guardLoop++) {
             switch (stage) {
                 case BUOYS:

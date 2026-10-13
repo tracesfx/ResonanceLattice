@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased - 2026-10-13 (campaign Stage 6: secrets and exploration)
+
+- **The Lost Scores**: 8 Antiphon Institute caches in uninhabited systems (discoverable like probes). Each holds one of
+  Saskia Venn's tuning scores (kept in a "Lost Scores" intel entry) and 15 Pitch Glass. The first can start the
+  Lacrimosa questline; the fourth explains the Full Chorus; the eighth reveals Venn's Rest.
+- **Venn's Rest**: a hidden red-dwarf system on the upper-right fringe, created when the eighth Score is read. A sealed
+  Hush (~190 DP, Conductor flagship, 3 S-mods, level-7 elite officers, Dead Chorus) guards Venn's cryo vault. Inside:
+  Venn's last log and **Concertmaster Odile Marchetti**, a unique level-7 officer (every skill elite) with her own
+  skill **Concertmaster**: while her ship is deployed, every allied ship +5% weapon damage and +10% flux dissipation;
+  allied Lattice ships gain Resonance 25% faster and share Sympathy at any range. At the Virtuoso's helm she has a line
+  of her own in Bravura. (The planned "+10% CR recovery after battle" was dropped: officer skills cannot reach the
+  fleet's campaign stats.)
+- **Silent wrecks**: 4 recoverable Lattice frigates/destroyers drifting in uninhabited systems, Pitch Glass in the
+  salvage.
+- **The abandoned Array**: an automated Cantor Array (3 S-mods, alpha-core commander) in the most remote system.
+  Silencing it pays a Cantorate hull blueprint package, 100 Pitch Glass and a Concert Pitch modspec, once.
+- **Full Chorus**: a side that fields a Grace Note, Refrain, Staccato, Cadence, Tremolo, Fermata and Conductor at once
+  gives its Lattice ships +5% weapon damage and +25% Resonance gain.
+- **The pulsar choir**: flying a Virtuoso through Vell's pulsar beam once restores the whole fleet's readiness.
+- **The true name**: a Virtuoso named Lacrimosa has a line of its own in the Stolen Time tooltip.
+- Console: `rsl.world.SecretsGen.debug()`, `rsl.campaign.ScoresIntel.debugReadAll()`; `Lacrimosa.debug` accepts stage
+  prefixes ("buoy" works now).
+
 ## Unreleased - 2026-10-13 (campaign Stage 5: the Lacrimosa questline)
 
 - **Lacrimosa**, the Virtuoso's questline (CAMPAIGN.md section 6), one story intel entry:

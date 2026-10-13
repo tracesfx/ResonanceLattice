@@ -6,7 +6,7 @@ an **Overtone** (an empowered version).
 
 This build has the ships, weapons, the faction and its home system **Vell** (a pulsar on the south-east fringe:
 Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, and the Virtuoso's
-questline **Lacrimosa** (secrets and exploration come next, ROADMAP.md). Spawn everything with Console Commands or
+questline **Lacrimosa** and the exploration secrets (ROADMAP.md: polish and release remain). Spawn everything with Console Commands or
 play the two included missions.
 
 ## Requirements
@@ -118,9 +118,24 @@ runcode rsl.campaign.Lacrimosa.debug("institute")   # buoys | institute | sung |
 additem rsl_pitchglass 700
 addcredits 3000000
 ```
+`debug` also takes a stage prefix (`debug("inst")`); an unknown name is logged with the valid list.
 `debug("council")` passes through the refusal (Special Projects is skipped). `debug("hush")` places the Hush in the
 abyss so you can fight it (the intel shows where); `debug("hunted")` and then waiting 4-14 days brings Special
 Projects.
+
+### Secrets (spoilers)
+
+Placed once per save in uninhabited systems (also in existing saves): 8 **Lost Score** caches (Venn's tuning scores,
+15 Pitch Glass each; the first can start the questline, the fourth explains the Full Chorus, the eighth reveals
+**Venn's Rest**, a hidden system with a sealed Hush and the unique officer **Odile Marchetti**, skill
+*Concertmaster*), 4 recoverable **silent wrecks** (Lattice frigates/destroyers, Pitch Glass in the salvage) and the
+**abandoned Array** (an automated Cantor Array in the most remote system: hull blueprints, 100 Pitch Glass, Concert
+Pitch). **Full Chorus**: field all seven Lattice line hulls together. Fly a Virtuoso through Vell's pulsar beam once.
+
+```
+runcode rsl.world.SecretsGen.debug()               # messages + map markers for every cache, wreck and the Array
+runcode rsl.campaign.ScoresIntel.debugReadAll()    # read all 8 Scores: Venn's Rest appears (intel shows it)
+```
 
 ## Contents
 
@@ -153,8 +168,8 @@ visuals in motion and the station deployment need an in-game session. See BALANC
 On first load the mod creates Vell and sets the Cantorate's starting relations, once per save (sector memory
 flags), so it can be added to an existing save. In a Nexerelin random sector Vell is not created; Nex places the
 Cantorate's markets. Saved classes: `rsl.world.CantorArrayIndustry`, `rsl.world.LatticeNurseries`,
-`rsl.campaign.TunerContractIntel`, `rsl.campaign.LacrimosaIntel` (+ its `Stage`), `rsl.campaign.LacrimosaFleets$BossConfigGen`
-(aliased). The questline's sites and fleets are created when it reaches them, never at worldgen. Ships bought or spawned are ordinary fleet members;
+`rsl.campaign.TunerContractIntel`, `rsl.campaign.LacrimosaIntel` (+ its `Stage`), `rsl.campaign.LacrimosaFleets$BossConfigGen`,
+`rsl.campaign.ScoresIntel`, `rsl.campaign.ArrayListener` (aliased). Officer skill `rsl_concertmaster` (Odile). The questline's sites and fleets are created when it reaches them, never at worldgen. Ships bought or spawned are ordinary fleet members;
 removing the mod from a save that contains them will break that save, as with any ship mod.
 
 ## Credits

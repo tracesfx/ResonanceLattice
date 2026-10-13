@@ -106,7 +106,8 @@ PACKAGES = [
 
 
 INTEL_ICONS = {"rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png",
-               "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png"}
+               "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png",
+               "rsl_scores": "graphics/rsl/icons/intel/rsl_scores.png"}
 
 METRONOME_DESC = (
     "A navigation clock grown around a sliver of lattice crystal and keyed to the beat of a pulsar. Installed in a "
@@ -176,6 +177,11 @@ RULES = [
      ["ShowDefaultVisual", "RslLacrimosa echo"], "", []),
     ("rsl_qGraveyardOpen", "OpenInteractionDialog", ["$customType == rsl_hush_graveyard score:1000"],
      ["ShowDefaultVisual", "RslLacrimosa graveyard"], "", []),
+    # ---- secrets (Stage 6, rsl.rulecmd.RslSecrets)
+    ("rsl_sCacheOpen", "OpenInteractionDialog", ["$customType == rsl_score_cache score:1000"],
+     ["ShowDefaultVisual", "RslSecrets cache"], "", []),
+    ("rsl_sVennOpen", "OpenInteractionDialog", ["$customType == rsl_venns_rest score:1000"],
+     ["ShowDefaultVisual", "RslSecrets vennsrest"], "", []),
 ]
 
 
@@ -200,6 +206,13 @@ CUSTOM_ENTITIES = {
                                      "graphics/illustrations/orbital_construction.jpg", aoran="the"),
     "rsl_hush_echo": entity("Silent Echo", "silent echo", 25, "rsl_desc_echo", "graphics/icons/derelict.png",
                             "graphics/rsl/ships/rsl_gracenote.png", 34, 58, "graphics/illustrations/space_wreckage.jpg"),
+    "rsl_score_cache": dict(entity("Institute Cache", "Institute data cache", 25, "rsl_desc_score_cache",
+                                   "graphics/icons/derelict.png", "graphics/stations/survey_probe.png", 34, 34,
+                                   "graphics/illustrations/space_wreckage.jpg", aoran="an"),
+                            discoverable=True, discoveryXP=400, detectionRange=1200),
+    "rsl_venns_rest": entity("Venn's Rest", "cryo vault", 50, "rsl_desc_venns_rest",
+                             "graphics/icons/station_research_broken.png", "graphics/stations/station_side06.png",
+                             60, 60, "graphics/illustrations/orbital_construction.jpg"),
     "rsl_hush_graveyard": entity("The Hush", "graveyard of the First Chorus", 80, "rsl_desc_graveyard",
                                  "graphics/icons/derelict.png", "graphics/rsl/ships/rsl_conductor.png", 66, 119,
                                  "graphics/illustrations/space_wreckage.jpg", aoran="the"),
@@ -208,6 +221,30 @@ CUSTOM_ENTITIES = {
 
 def custom_entities(g):
     g.write_json("data/config/custom_entities.json", CUSTOM_ENTITIES)
+
+
+# Silent wrecks carry Pitch Glass in their salvage (drop value in credits; Pitch Glass is worth 5)
+def drop_groups(g):
+    g.write_csv("data/campaign/procgen/drop_groups.csv", ["commodity", "group", "freq"],
+                [{"commodity": CURRENCY, "group": "rsl_pitchglass_drop", "freq": 1}])
+
+
+# Concertmaster Odile Marchetti's unique skill (CAMPAIGN.md section 9): npc_only, so nobody else can learn it. Its
+# battle effect is applied by rsl.combat.ChorusEffects; rsl.skills.Concertmaster only describes it.
+def skills(g):
+    hdr = g.V.header("characters/skills/skill_data.csv")
+    r = {c: "" for c in hdr}
+    r.update({"id": "rsl_concertmaster", "name": "Concertmaster", "order": 10050, "tier": 0,
+              "description": "\"You have ships that sing? Then you need someone who can hear them.\"",
+              "author": "Odile Marchetti, first chair of the First Chorus", "combat officer": "TRUE",
+              "tags": "npc_only", "icon": "graphics/rsl/icons/skills/rsl_concertmaster.png"})
+    g.write_csv("data/characters/skills/skill_data.csv", hdr, [r])
+    g.write_json("data/characters/skills/rsl_concertmaster.skill", {
+        "id": "rsl_concertmaster", "governingAptitude": "combat", "compressHullmods": False,
+        "scope": "CUSTOM", "scopeStr": "all ships in the battle, while her ship is deployed",
+        "effectGroups": [{"requiredSkillLevel": 1, "effectBasedOnLevel": False, "effects": [
+            {"type": "SHIP", "script": "rsl.skills.Concertmaster$Level1"},
+            {"type": "SHIP", "script": "rsl.skills.Concertmaster$Level2"}]}]})
 
 
 SASH_DESC = (
@@ -528,6 +565,12 @@ PLACES = {
                           "centuries ago, and chose to forget where it was.",
     "rsl_desc_echo": "A Lattice hull of a pattern two centuries old, drifting in the abyss. Its crew are long dead. Its "
                      "core still keeps time.",
+    "rsl_desc_score_cache": "A Domain-era data cache of the Antiphon Institute, scored with five empty lines like a "
+                            "stave. Someone hid it here on purpose.",
+    "rsl_desc_venns_rest": "A cryogenic vault grown into a cold rock at the edge of the Sector, humming at the edge "
+                           "of hearing. On no chart.",
+    "rsl_desc_venn_rock": "A cold, airless rock circling a dim red star. Its only feature is the vault someone "
+                          "grew into it.",
     "rsl_desc_graveyard": "Where the First Chorus died. Lattice wrecks hang in a ring in the dark, and the abyss hums "
                           "with them.",
 }
@@ -613,5 +656,7 @@ def build(g):
     conditions(g)
     rules(g)
     custom_entities(g)
+    drop_groups(g)
+    skills(g)
     bounties(g)
     nexerelin(g)

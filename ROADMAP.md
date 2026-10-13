@@ -104,7 +104,11 @@ Not done: the "first Lost Score" trigger for beat 1 (Lost Scores are Stage 6).
 - Every quest-critical entity: story-critical + no-decivilization until the quest ends; every dialog option has a
   handler and a way back (validator checks rules).
 
-## Stage 6 — Secrets and exploration
+## Stage 6 — Secrets and exploration — DONE (2026-10-13; `rsl.world.SecretsGen`, `rsl.campaign.ScoresIntel`, `rsl.rulecmd.RslSecrets`, `rsl.combat.ChorusEffects`)
+
+Choices: secrets are placed once per save from `onNewGameAfterProcGen` (+ onGameLoad behind a flag); Venn's Rest is
+created lazily by the eighth Score; Odile's skill is an `npc_only` skill whose battle-wide effect runs in
+`ChorusEffects` (officer skills cannot touch other ships); her "+10% CR recovery" was dropped for that reason.
 
 - Hidden sites and collectibles from the catalogue (procgen-placed derelicts/lab stations in random systems,
   salvage that drops Choir blueprints or lore fragments as intel).

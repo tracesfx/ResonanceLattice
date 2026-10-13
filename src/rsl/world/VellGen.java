@@ -222,7 +222,7 @@ public final class VellGen {
         return p;
     }
 
-    private static Vector2f findFreeHyperspaceLocation(SectorAPI sector, Vector2f preferred) {
+    static Vector2f findFreeHyperspaceLocation(SectorAPI sector, Vector2f preferred) {
         for (int ring = 0; ring < 14; ring++) {
             float r = ring * 1400f;
             int steps = ring == 0 ? 1 : 8 + ring * 4;
@@ -244,7 +244,7 @@ public final class VellGen {
         return true;
     }
 
-    private static void clearHyperspaceAround(StarSystemAPI system) {
+    static void clearHyperspaceAround(StarSystemAPI system) {
         try {
             if (Misc.getHyperspaceTerrain() == null) return;
             HyperspaceTerrainPlugin plugin = (HyperspaceTerrainPlugin) Misc.getHyperspaceTerrain().getPlugin();

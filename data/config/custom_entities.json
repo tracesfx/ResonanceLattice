@@ -95,6 +95,73 @@
             "STATIONS"
         ]
     },
+    "rsl_score_cache": {
+        "defaultName": "Institute Cache",
+        "nameInText": "Institute data cache",
+        "shortName": "cache",
+        "aOrAn": "an",
+        "isOrAre": "is",
+        "defaultRadius": 25,
+        "customDescriptionId": "rsl_desc_score_cache",
+        "interactionImage": "graphics/illustrations/space_wreckage.jpg",
+        "icon": "graphics/icons/derelict.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/stations/survey_probe.png",
+        "spriteWidth": 34,
+        "spriteHeight": 34,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ],
+        "discoverable": true,
+        "discoveryXP": 400,
+        "detectionRange": 1200
+    },
+    "rsl_venns_rest": {
+        "defaultName": "Venn's Rest",
+        "nameInText": "cryo vault",
+        "shortName": "vault",
+        "aOrAn": "a",
+        "isOrAre": "is",
+        "defaultRadius": 50,
+        "customDescriptionId": "rsl_desc_venns_rest",
+        "interactionImage": "graphics/illustrations/orbital_construction.jpg",
+        "icon": "graphics/icons/station_research_broken.png",
+        "iconWidth": 22,
+        "iconHeight": 22,
+        "sprite": "graphics/stations/station_side06.png",
+        "spriteWidth": 60,
+        "spriteHeight": 60,
+        "renderShadow": true,
+        "useLightColor": true,
+        "showInCampaign": true,
+        "showIconOnMap": true,
+        "showNameOnMap": false,
+        "scaleNameWithZoom": false,
+        "scaleIconWithZoom": true,
+        "renderCircleIndicator": true,
+        "renderCircleIndicatorSelectionFlash": true,
+        "tags": [
+            "has_interaction_dialog",
+            "neutrino"
+        ],
+        "layers": [
+            "STATIONS"
+        ]
+    },
     "rsl_hush_graveyard": {
         "defaultName": "The Hush",
         "nameInText": "graveyard of the First Chorus",

@@ -45,6 +45,13 @@ in `rsl.campaign.Lacrimosa`; fleets (scavengers, derelict guard, Special Project
 conditions + entity OpenInteractionDialog rules); hullmods DeadChorus / ChorusMovement / SoloMovement; custom entities
 in campaign_data `CUSTOM_ENTITIES`; sash item `rsl_lacrimosa_sash`.
 
+Stage 6 DONE (2026-10-13, statically verified only): secrets. `rsl.world.SecretsGen` (8 Score caches
+`rsl_score_cache`, 4 recoverable wrecks with the `rsl_pitchglass_drop` drop group, the abandoned Array station fleet +
+`rsl.campaign.ArrayListener`; `createVennsRest` on the 8th Score), `rsl.campaign.ScoresIntel` (Score texts, Venn's last
+log, Odile `rsl_marchetti`), dialogs in `rsl.rulecmd.RslSecrets`, Full Chorus + Concertmaster in
+`rsl.combat.ChorusEffects` (skill `rsl_concertmaster`, npc_only, effect class `rsl.skills.Concertmaster`), pulsar choir
+in the transient `rsl.campaign.RslCampaignScript`. Console: `SecretsGen.debug()`, `ScoresIntel.debugReadAll()`.
+
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
 **Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user

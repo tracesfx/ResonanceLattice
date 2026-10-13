@@ -4,14 +4,18 @@ import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
+import rsl.campaign.ArrayListener;
 import rsl.campaign.LacrimosaFleets;
 import rsl.campaign.LacrimosaIntel;
 import rsl.campaign.RslCampaignListener;
+import rsl.campaign.RslCampaignScript;
+import rsl.campaign.ScoresIntel;
 import rsl.campaign.TunerContractIntel;
 import rsl.world.CantorArrayIndustry;
 import rsl.world.LatticeNurseries;
 import rsl.world.PulsarMetronome;
 import rsl.world.RslRelations;
+import rsl.world.SecretsGen;
 import rsl.world.VellGen;
 
 /**
@@ -43,7 +47,14 @@ public class RslModPlugin extends BaseModPlugin {
     }
 
     @Override
+    public void onNewGameAfterProcGen() {
+        SecretsGen.generate(Global.getSector());
+    }
+
+    @Override
     public void onGameLoad(boolean newGame) {
+        SecretsGen.generate(Global.getSector());   // no-op unless this save predates the secrets
+        Global.getSector().addTransientScript(new RslCampaignScript());
         VellGen.generate(Global.getSector());   // no-op unless this save predates Vell
         RslRelations.applyOnce(newGame);
         Global.getSector().addTransientListener(new RslCampaignListener());   // transient: re-added on every load
@@ -58,5 +69,7 @@ public class RslModPlugin extends BaseModPlugin {
         x.alias("RslLacrimosaIntel", LacrimosaIntel.class);
         x.alias("RslLacrimosaStage", LacrimosaIntel.Stage.class);
         x.alias("RslBossConfigGen", LacrimosaFleets.BossConfigGen.class);
+        x.alias("RslScoresIntel", ScoresIntel.class);
+        x.alias("RslArrayListener", ArrayListener.class);
     }
 }

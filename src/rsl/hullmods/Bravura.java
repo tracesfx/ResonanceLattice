@@ -64,7 +64,16 @@ public class Bravura extends BaseHullMod {
         LatticeData d = LatticeData.get(ship);
         float cr = ship.getCurrentCR();
         boolean enh = RslUtil.enhanced(ship, ID);
-        if (!d.bravura && cr >= (enh ? ENTER_ENHANCED : ENTER)) d.bravura = true;
+        if (!d.bravura && cr >= (enh ? ENTER_ENHANCED : ENTER)) {
+            d.bravura = true;
+            // the Concertmaster at the helm of the Virtuoso (CAMPAIGN.md section 9): once per battle
+            if (rsl.combat.ChorusEffects.isConcertmaster(ship.getCaptain())
+                    && ship.getCustomData().get("rsl_odile_said") == null) {
+                ship.setCustomData("rsl_odile_said", true);
+                engine.addFloatingText(ship.getLocation(), "She is in tune at last.", 32f, java.awt.Color.WHITE, ship,
+                        1f, 3f);
+            }
+        }
         else if (d.bravura && cr < (enh ? EXIT_ENHANCED : EXIT)) d.bravura = false;
         MutableShipStatsAPI s = ship.getMutableStats();
         if (d.bravura) {

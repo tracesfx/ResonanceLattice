@@ -62,3 +62,7 @@ rsl_qEchoOpen,OpenInteractionDialog,$customType == rsl_hush_echo score:1000,"Sho
 RslLacrimosa echo",,,
 rsl_qGraveyardOpen,OpenInteractionDialog,$customType == rsl_hush_graveyard score:1000,"ShowDefaultVisual
 RslLacrimosa graveyard",,,
+rsl_sCacheOpen,OpenInteractionDialog,$customType == rsl_score_cache score:1000,"ShowDefaultVisual
+RslSecrets cache",,,
+rsl_sVennOpen,OpenInteractionDialog,$customType == rsl_venns_rest score:1000,"ShowDefaultVisual
+RslSecrets vennsrest",,,

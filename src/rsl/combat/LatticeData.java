@@ -30,6 +30,9 @@ public class LatticeData {
     /** Lattice Tuning (Luthier's Workshop): gain x TUNED_GAIN, decay x TUNED_DECAY. */
     public static final float TUNED_GAIN = 1.25f;
     public static final float TUNED_DECAY = 0.5f;
+    /** Full Chorus (ChorusEffects) and Concertmaster (Odile Marchetti): Resonance gain multipliers. */
+    public static final float FULL_CHORUS_GAIN = 1.25f;
+    public static final float CONCERT_GAIN = 1.25f;
 
     public float resonance;
     public float sinceGain = 99f;
@@ -56,6 +59,8 @@ public class LatticeData {
     public float soloTimer;
     // The Hush (Dead Chorus ships, or the player's Virtuoso with the Hush seams): violet seam glow
     public boolean hush, hushChecked;
+    // side-wide effects, refreshed twice a second by ChorusEffects
+    public boolean fullChorus, concertmaster;
     // Tremolo
     public Vector2f waveNode;
     public float waveHull;
@@ -107,6 +112,8 @@ public class LatticeData {
         if (RslUtil.enhanced(ship, RslIds.HULLMOD_CORE)) amount *= ENHANCED_GAIN;
         LatticeData d = get(ship);
         if (isTuned(ship, d)) amount *= TUNED_GAIN;
+        if (d.fullChorus) amount *= FULL_CHORUS_GAIN;
+        if (d.concertmaster) amount *= CONCERT_GAIN;
         d.resonance = Math.min(MAX, d.resonance + amount);
         d.sinceGain = 0f;
         if (!share) return;
@@ -122,7 +129,7 @@ public class LatticeData {
                 continue;
             }
             float dx = s.getLocation().x - ship.getLocation().x, dy = s.getLocation().y - ship.getLocation().y;
-            if (dx * dx + dy * dy > range * range) continue;
+            if (!d.concertmaster && dx * dx + dy * dy > range * range) continue;   // Concertmaster: any range
             LatticeData o = get(s);
             o.resonance = Math.min(MAX, o.resonance + amount * share2);
         }

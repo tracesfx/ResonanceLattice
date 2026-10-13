@@ -306,6 +306,33 @@ def lacrimosa_intel():
     return out
 
 
+def scores_intel():
+    """Intel icon (40x40) for the Lost Scores: a five-line stave on a navy plate with one glowing diamond note."""
+    n = 40 * S
+    rgb = np.zeros((n, n, 3))
+    a = np.zeros((n, n))
+    plate = Image.new("L", (n, n), 0)
+    ImageDraw.Draw(plate).polygon([(4 * S, 2 * S), (36 * S, 2 * S), (38 * S, 6 * S), (38 * S, 38 * S),
+                                   (2 * S, 38 * S), (2 * S, 6 * S)], fill=255)
+    pm = np.asarray(plate).astype(float) / 255.0
+    yy = np.mgrid[0:n, 0:n][0] / n
+    col = (NAVY + 10) * (1 - yy[..., None] * 0.4) + np.array([10, 14, 26.0]) * yy[..., None] * 0.4
+    rgb[:] = col * pm[..., None]
+    a[:] = pm
+    lines = Image.new("L", (n, n), 0)
+    d = ImageDraw.Draw(lines)
+    for k in range(5):
+        y = (11 + k * 4.5) * S
+        d.line([(6 * S, y), (34 * S, y)], fill=150, width=S)
+    d.polygon([(22 * S, 12 * S), (27 * S, 20 * S), (22 * S, 28 * S), (17 * S, 20 * S)], fill=255)
+    lm = np.asarray(lines).astype(float) / 255.0
+    glow = np.asarray(lines.filter(ImageFilter.GaussianBlur(S * 1.5))).astype(float) / 255.0
+    rgb = rgb * (1 - glow[..., None] * 0.6) + TEAL * glow[..., None] * 0.6
+    rgb = rgb * (1 - lm[..., None]) + np.array([210, 255, 250.0]) * lm[..., None]
+    im = Image.fromarray(np.dstack([np.clip(rgb, 0, 255), a * 255]).astype(np.uint8), "RGBA")
+    return im.resize((40, 40), Image.LANCZOS)
+
+
 def contract_intel():
     """Intel icon (40x40) for the tuners' contract: the faction crest, as vanilla faction intel does."""
     crest = Image.open(os.path.join(ROOT, "graphics", "rsl", "factions", "rsl_crest.png")).convert("RGBA")
@@ -323,7 +350,8 @@ def main():
     extra = {os.path.join(ROOT, "graphics", "rsl", "icons", "markets", "rsl_lattice_nurseries.png"): nurseries(),
              os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry(),
              os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_contract.png"): contract_intel(),
-             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_lacrimosa.png"): lacrimosa_intel()}
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_lacrimosa.png"): lacrimosa_intel(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_scores.png"): scores_intel()}
     for path, im in extra.items():
         os.makedirs(os.path.dirname(path), exist_ok=True)
         im.save(path)

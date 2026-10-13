@@ -92,6 +92,20 @@ public final class RslIds {
     public static final String PERSON_SUNG = "rsl_sung";
     public static final String GFX_INTEL_LACRIMOSA = "rsl_lacrimosa";
 
+    // Stage 6: secrets and exploration (rsl.world.SecretsGen, rsl.campaign.ScoresIntel, rsl.rulecmd.RslSecrets)
+    public static final String SKILL_CONCERTMASTER = "rsl_concertmaster";
+    public static final String PERSON_MARCHETTI = "rsl_marchetti";
+    public static final String ENTITY_SCORE_CACHE = "rsl_score_cache";
+    public static final String ENTITY_VENNS_REST = "rsl_venns_rest";
+    public static final String VARIANT_CANTOR = "rsl_cantor_Standard";
+    /** Sector memory: the secrets were placed in this save. */
+    public static final String MEM_SECRETS_GENERATED = "$rsl_secretsGenerated";
+    /** Sector memory: the abandoned Array was silenced (its rewards were paid). */
+    public static final String MEM_ARRAY_SILENCED = "$rsl_arraySilenced";
+    /** Sector memory: the pulsar choir easter egg happened. */
+    public static final String MEM_PULSAR_CHOIR = "$rsl_pulsarChoir";
+    public static final String GFX_INTEL_SCORES = "rsl_scores";
+
     public static final String HULL_GRACENOTE = "rsl_gracenote";
     public static final String HULL_CONDUCTOR = "rsl_conductor";
     public static final String HULL_VIRTUOSO = "rsl_virtuoso";

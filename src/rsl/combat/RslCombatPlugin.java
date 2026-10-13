@@ -56,6 +56,7 @@ public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
     public final List<Attached> dots = new ArrayList<>();
     public final List<Attached> spikes = new ArrayList<>();
     private final Vector2f tmp = new Vector2f();
+    private final ChorusEffects chorus = new ChorusEffects();
 
     public static RslCombatPlugin get() {
         CombatEngineAPI e = Global.getCombatEngine();
@@ -138,6 +139,7 @@ public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
                 if (now > a.until || !RslUtil.alive(a.target)) spikes.remove(i);
             }
             RailFx.advanceProjectiles(engine, amount);
+            chorus.advance(engine, amount);
         } catch (Throwable t) {
             broken = true;
             log.error("Resonance Lattice combat plugin disabled after an error", t);

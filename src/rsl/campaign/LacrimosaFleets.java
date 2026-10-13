@@ -182,6 +182,84 @@ public final class LacrimosaFleets {
         return fleet;
     }
 
+    /**
+     * Venn's Rest (secret #5): a sealed remnant of the Hush, smaller than beat 5's (~190 DP), same rules: 3 S-mods,
+     * level-7 elite officers on the cruisers and the flagship, Dead Chorus, violet seams, triple salvage.
+     */
+    public static CampaignFleetAPI hushRemnant(SectorEntityToken anchor) {
+        CampaignFleetAPI fleet = FleetFactoryV3.createEmptyFleet(Factions.DERELICT, FleetTypes.PATROL_LARGE, null);
+        fleet.setName("Sealed Hush");
+        fleet.setNoFactionInName(true);
+        Random r = new Random();
+        FactionAPI choir = Global.getSector().getFaction(RslIds.FACTION_CHOIR);
+        FleetMemberAPI flag = add(fleet, "rsl_conductor_Maestro", 1, 3, r).get(0);
+        flag.setShipName("Requiem Aeternam");
+        List<FleetMemberAPI> big = new ArrayList<FleetMemberAPI>();
+        big.addAll(add(fleet, "rsl_cadence_Battery", 2, 3, r));
+        big.addAll(add(fleet, "rsl_tremolo_Waveform", 2, 3, r));
+        add(fleet, "rsl_staccato_Burst", 2, 3, r);
+        add(fleet, "rsl_refrain_Bulwark", 1, 3, r);
+        add(fleet, "rsl_gracenote_Pluck", 2, 3, r);
+        officers(big, choir, fleet, r);
+        for (FleetMemberAPI m : fleet.getFleetData().getMembersListCopy()) {
+            m.getVariant().addPermaMod(RslIds.HULLMOD_DEAD_CHORUS, false);
+        }
+        PersonAPI cmd = officer(choir, fleet, r);
+        cmd.setPersonality(Personalities.RECKLESS);
+        cmd.setRankId(Ranks.SPACE_COMMANDER);
+        cmd.setPostId(Ranks.POST_FLEET_COMMANDER);
+        commanderSkills(cmd);
+        finish(fleet, flag, cmd);
+        hostile(fleet, "remnant");
+        Misc.makeUnimportant(fleet, "rsl_lacrimosa");
+        fleet.getMemoryWithoutUpdate().set(RslIds.MEM_HUSH_FLEET, true);
+        place(fleet, anchor, 150f);
+        fleet.addAssignment(FleetAssignment.ORBIT_AGGRESSIVE, anchor, 100000f, "keeping the silence");
+        return fleet;
+    }
+
+    /**
+     * The abandoned Array (secret #3): an automated Cantor Array station, petals still firing, as vanilla places a
+     * Remnant battlestation (RemnantThemeGenerator.addBattlestations): station mode, no AI, orbiting, transponder on,
+     * an alpha-core commander. 3 S-mods on the core hull. Rewards come from rsl.campaign.ArrayListener.
+     */
+    public static CampaignFleetAPI abandonedArray(SectorEntityToken anchor, float orbitRadius) {
+        CampaignFleetAPI fleet = FleetFactoryV3.createEmptyFleet(Factions.DERELICT, FleetTypes.BATTLESTATION, null);
+        fleet.setName("Abandoned Cantor Array");
+        fleet.setNoFactionInName(true);
+        FleetMemberAPI m = Global.getFactory().createFleetMember(com.fs.starfarer.api.fleet.FleetMemberType.SHIP,
+                RslIds.VARIANT_CANTOR);
+        fleet.getFleetData().addFleetMember(m);
+        m.setVariant(m.getVariant().clone(), false, false);
+        m.getVariant().setSource(VariantSource.REFIT);
+        sMods(m.getVariant(), 3, new Random());
+        m.setShipName("Antiphon");
+        MemoryAPI mem = fleet.getMemoryWithoutUpdate();
+        mem.set(MEM_ROLE, "array");
+        mem.set(MemFlags.MEMORY_KEY_MAKE_AGGRESSIVE, true);
+        mem.set(MemFlags.MEMORY_KEY_NO_JUMP, true);
+        mem.set(MemFlags.MEMORY_KEY_MAKE_ALLOW_DISENGAGE, true);
+        mem.set(MemFlags.MEMORY_KEY_NO_SHIP_RECOVERY, true);
+        mem.set(MemFlags.FLEET_INTERACTION_DIALOG_CONFIG_OVERRIDE_GEN, new BossConfigGen());
+        fleet.addTag(Tags.NEUTRINO_HIGH);
+        fleet.setStationMode(true);
+        anchor.getContainingLocation().addEntity(fleet);
+        fleet.clearAbilities();
+        fleet.addAbility(com.fs.starfarer.api.impl.campaign.ids.Abilities.TRANSPONDER);
+        fleet.getAbility(com.fs.starfarer.api.impl.campaign.ids.Abilities.TRANSPONDER).activate();
+        fleet.getDetectedRangeMod().modifyFlat("gen", 1000f);
+        fleet.setAI(null);
+        fleet.setCircularOrbitWithSpin(anchor, (float) (Math.random() * 360f), orbitRadius, orbitRadius / 10f, 5f, 5f);
+        PersonAPI cmd = Misc.getAICoreOfficerPlugin(com.fs.starfarer.api.impl.campaign.ids.Commodities.ALPHA_CORE)
+                .createPerson(com.fs.starfarer.api.impl.campaign.ids.Commodities.ALPHA_CORE, Factions.DERELICT,
+                        new Random());
+        fleet.setCommander(cmd);
+        fleet.getFlagship().setCaptain(cmd);
+        m.updateStats();
+        m.getRepairTracker().setCR(m.getRepairTracker().getMaxCR());
+        return fleet;
+    }
+
     /** Chorus path: two Cantorate escorts with S-mods and level-5 officers join the player's fleet for beat 5. */
     public static List<FleetMemberAPI> councilEscorts() {
         List<FleetMemberAPI> out = new ArrayList<FleetMemberAPI>();
