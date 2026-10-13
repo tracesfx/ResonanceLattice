@@ -559,11 +559,24 @@ class Validator:
             return
         if hdr[:1] != ["version file"]:
             r.error("header must be exactly 'version file' (found %s)" % hdr, vf)
-        for row in rows:
+        active = [row for row in rows if (row.get("version file") or "").strip()
+                  and not (row.get("version file") or "").strip().startswith("#")]
+        if not active:
+            r.note("Version Checker row commented out (fine until the .version file is hosted; uncomment it with a real "
+                   "masterVersionFile URL before release)", vf)
+        raw = _read(os.path.join(self.mod, vf)) if os.path.isfile(os.path.join(self.mod, vf)) else ""
+        parked = [{"version file": ln.strip()} for ln in raw.splitlines() if ln.strip().startswith("#")]
+        for row in list(rows) + [p for p in parked if p not in rows]:
             rel = (row.get("version file") or "").strip()
-            if not rel or rel.startswith("#"):
+            commented = rel.startswith("#")
+            if commented:   # still keep a parked .version file in sync with mod_info.json
+                m = re.search(r"([\w./-]+\.version)\b", rel)
+                rel = m.group(1) if m else ""
+            if not rel:
                 continue
             p = os.path.join(self.mod, rel)
+            if commented and not os.path.isfile(p):
+                continue
             if not os.path.isfile(p):
                 r.error("listed .version file does not exist: %s" % rel, vf)
                 continue
@@ -579,8 +592,12 @@ class Validator:
             iv = sslib.version_string(self.info.get("version"))
             if mv and iv and _vtuple(mv) != _vtuple(iv):
                 r.error("modVersion %s does not match mod_info.json version %s" % (mv, iv), rel)
+            if commented:
+                continue
             if str(v.get("masterVersionFile", "")).strip() in ("", "TODO") or "TODO" in str(v.get("masterVersionFile")):
-                r.warn("masterVersionFile is not a real URL yet (point it at the raw .version file you host)", rel)
+                r.warn("masterVersionFile is not a real URL yet: LunaLib's and Nexerelin's version checkers log a "
+                       "MalformedURLException at every launch. Point it at the raw .version file you host, or comment "
+                       "out the row in version_files.csv until then", rel)
 
     # .............................................................................. files: encoding, CSV shape
     def check_files(self):

@@ -235,7 +235,8 @@ def main():
             if why:
                 print("   => " + why)
         last = run[-1]
-        if last.level in ("ERROR", "FATAL") or re.search(r"Exception|Error", last.text()):
+        last_is_noise = any(rx.search(last.msg) for rx in noise_rx)   # e.g. a mistyped console command
+        if not last_is_noise and (last.level in ("ERROR", "FATAL") or re.search(r"Exception|Error", last.text())):
             print("-" * 100)
             print("The launch ENDS on an error at log line %d: that is probably the crash. Read it first." % last.lineno)
         print("-" * 100)
