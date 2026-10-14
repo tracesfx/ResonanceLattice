@@ -107,7 +107,9 @@ PACKAGES = [
 
 INTEL_ICONS = {"rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png",
                "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png",
-               "rsl_scores": "graphics/rsl/icons/intel/rsl_scores.png"}
+               "rsl_scores": "graphics/rsl/icons/intel/rsl_scores.png",
+               "rsl_duel": "graphics/rsl/icons/intel/rsl_duel.png",
+               "rsl_requiem": "graphics/rsl/icons/intel/rsl_requiem.png"}
 
 METRONOME_DESC = (
     "A navigation clock grown around a sliver of lattice crystal and keyed to the beat of a pulsar. Installed in a "
@@ -238,7 +240,17 @@ def skills(g):
               "description": "\"You have ships that sing? Then you need someone who can hear them.\"",
               "author": "Odile Marchetti, first chair of the First Chorus", "combat officer": "TRUE",
               "tags": "npc_only", "icon": "graphics/rsl/icons/skills/rsl_concertmaster.png"})
-    g.write_csv("data/characters/skills/skill_data.csv", hdr, [r])
+    r2 = {c: "" for c in hdr}
+    r2.update({"id": "rsl_second_voice", "name": "Second Voice", "order": 10051, "tier": 0,
+               "description": "\"There have only ever been two. I intend to be the one they remember.\"",
+               "author": "Commander Isolde Raike, Tri-Tachyon Special Projects", "combat officer": "TRUE",
+               "tags": "npc_only", "icon": "graphics/rsl/icons/skills/rsl_second_voice.png"})
+    g.write_csv("data/characters/skills/skill_data.csv", hdr, [r, r2])
+    # Isolde Raike's unique fifteenth skill (rsl.campaign.EncoreFleets): her own ship only
+    g.write_json("data/characters/skills/rsl_second_voice.skill", {
+        "id": "rsl_second_voice", "governingAptitude": "combat", "compressHullmods": False, "scope": "PILOTED_SHIP",
+        "effectGroups": [{"requiredSkillLevel": 1, "effectBasedOnLevel": False, "effects": [
+            {"type": "SHIP", "script": "rsl.skills.SecondVoice$Level1"}]}]})
     g.write_json("data/characters/skills/rsl_concertmaster.skill", {
         "id": "rsl_concertmaster", "governingAptitude": "combat", "compressHullmods": False,
         "scope": "CUSTOM", "scopeStr": "all ships in the battle, while her ship is deployed",

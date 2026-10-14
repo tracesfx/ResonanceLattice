@@ -236,5 +236,56 @@
             "pitch": 1.03,
             "volume": 1.0
         }
+    ],
+    "rsl_bravura_on": [
+        {
+            "file": "sounds/rsl/rsl_bravura_on.ogg",
+            "pitch": 0.97,
+            "volume": 0.9
+        },
+        {
+            "file": "sounds/rsl/rsl_bravura_on.ogg",
+            "pitch": 1.0,
+            "volume": 0.9
+        },
+        {
+            "file": "sounds/rsl/rsl_bravura_on.ogg",
+            "pitch": 1.03,
+            "volume": 0.9
+        }
+    ],
+    "rsl_bravura_off": [
+        {
+            "file": "sounds/rsl/rsl_bravura_off.ogg",
+            "pitch": 0.97,
+            "volume": 0.7
+        },
+        {
+            "file": "sounds/rsl/rsl_bravura_off.ogg",
+            "pitch": 1.0,
+            "volume": 0.7
+        },
+        {
+            "file": "sounds/rsl/rsl_bravura_off.ogg",
+            "pitch": 1.03,
+            "volume": 0.7
+        }
+    ],
+    "rsl_encore": [
+        {
+            "file": "sounds/rsl/rsl_encore.ogg",
+            "pitch": 0.97,
+            "volume": 1.0
+        },
+        {
+            "file": "sounds/rsl/rsl_encore.ogg",
+            "pitch": 1.0,
+            "volume": 1.0
+        },
+        {
+            "file": "sounds/rsl/rsl_encore.ogg",
+            "pitch": 1.03,
+            "volume": 1.0
+        }
     ]
 }

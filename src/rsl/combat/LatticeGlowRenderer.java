@@ -20,7 +20,8 @@ import java.util.Map;
 
 /**
  * Draws the lattice seam glow over every Lattice ship and its moving parts, additively, with brightness following
- * Resonance (the Virtuoso follows combat readiness instead, and cross-fades to its gold Bravura sprite). The Grace
+ * Resonance (the Virtuoso follows combat readiness instead, and cross-fades to its white Bravura sprite; entering
+ * Bravura flares the seams far past full brightness before they cool, leaving it flares the teal seams briefly). The Grace
  * Note's seams shift towards violet in Discord. Also draws embedded Tuning Spikes.
  *
  * Sprites are listed in settings.json under the "rsl_glow" graphics category (keyed by hull or deco weapon id) so
@@ -39,6 +40,12 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
     private static final Color DISCORD = new Color(255, 120, 255, 255);
     /** The Hush: teal seams multiplied towards violet (Dead Chorus ships, or the Virtuoso's bought Hush seams). */
     private static final Color HUSH = new Color(255, 70, 255, 255);
+
+    /** Seconds for the Bravura entry flare / exit flare to fade. */
+    private static final float FLASH_TIME = 2.6f;
+    private static final float COOL_TIME = 1.6f;
+    /** Exit flare tint: the teal seams, running hot as the white burns off. */
+    private static final Color COOL_TINT = new Color(170, 255, 245, 255);
 
     private final RslCombatPlugin plugin;
     private final Map<String, SpriteAPI> sprites = new HashMap<>();
@@ -89,7 +96,9 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
             float target = isVirtuoso(s) ? clamp((s.getCurrentCR() - 0.3f) / 0.7f) : d.resonance / LatticeData.MAX;
             d.glow += (target - d.glow) * Math.min(1f, amount * 3f);
             float b = d.bravura ? 1f : 0f;
-            d.bravuraLevel += (b - d.bravuraLevel) * Math.min(1f, amount * 2f);
+            d.bravuraLevel += (b - d.bravuraLevel) * Math.min(1f, amount * (d.bravura ? 4f : 2f));
+            if (d.bravuraFlash > 0f) d.bravuraFlash = Math.max(0f, d.bravuraFlash - amount / FLASH_TIME);
+            if (d.bravuraCool > 0f) d.bravuraCool = Math.max(0f, d.bravuraCool - amount / COOL_TIME);
         }
     }
 
@@ -160,12 +169,18 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
         if (glow != null && shipSprite != null) {
             draw(glow, shipSprite.getCenterX(), shipSprite.getCenterY(), s.getLocation(), s.getFacing() - 90f,
                     alpha * (1f - bl), tint);
-            if (bl > 0.01f) {
-                SpriteAPI gold = sprite(RslIds.HULL_VIRTUOSO + "_bravura");
-                if (gold != null) {
-                    draw(gold, shipSprite.getCenterX(), shipSprite.getCenterY(), s.getLocation(), s.getFacing() - 90f,
+            if (bl > 0.01f || d.bravuraFlash > 0.01f) {
+                SpriteAPI white = sprite(RslIds.HULL_VIRTUOSO + "_bravura");
+                if (white != null) {
+                    draw(white, shipSprite.getCenterX(), shipSprite.getCenterY(), s.getLocation(), s.getFacing() - 90f,
                             Math.min(1f, alpha * 1.2f) * bl * pulse, Color.WHITE);
+                    flare(white, shipSprite.getCenterX(), shipSprite.getCenterY(), s.getLocation(), s.getFacing() - 90f,
+                            d.bravuraFlash, Color.WHITE, s, viewport);
                 }
+            }
+            if (d.bravuraCool > 0.01f) {
+                flare(glow, shipSprite.getCenterX(), shipSprite.getCenterY(), s.getLocation(), s.getFacing() - 90f,
+                        d.bravuraCool * 0.7f, COOL_TINT, s, viewport);
             }
         }
         List<WeaponAPI> ws = s.getAllWeapons();
@@ -176,13 +191,33 @@ public class LatticeGlowRenderer extends BaseCombatLayeredRenderingPlugin {
             if (g == null) continue;
             draw(g, g.getWidth() / 2f, g.getHeight() / 2f, w.getLocation(), w.getCurrAngle() - 90f, alpha * (1f - bl),
                     tint);
-            if (bl > 0.01f) {
+            if (bl > 0.01f || d.bravuraFlash > 0.01f) {
                 SpriteAPI gb = sprite(w.getId() + "_bravura");
                 if (gb != null) {
                     draw(gb, gb.getWidth() / 2f, gb.getHeight() / 2f, w.getLocation(), w.getCurrAngle() - 90f,
                             Math.min(1f, alpha * 1.2f) * bl * pulse, Color.WHITE);
+                    flare(gb, gb.getWidth() / 2f, gb.getHeight() / 2f, w.getLocation(), w.getCurrAngle() - 90f,
+                            d.bravuraFlash, Color.WHITE, s, viewport);
                 }
             }
+            if (d.bravuraCool > 0.01f) {
+                flare(g, g.getWidth() / 2f, g.getHeight() / 2f, w.getLocation(), w.getCurrAngle() - 90f,
+                        d.bravuraCool * 0.7f, COOL_TINT, s, viewport);
+            }
+        }
+    }
+
+    /**
+     * A transition flare: the seam sprite stacked additively up to three more times (k = 1 saturates the seams to
+     * solid light), eased so it burns bright and then cools.
+     */
+    private static void flare(SpriteAPI sp, float cx, float cy, Vector2f loc, float angle, float k, Color tint,
+                              ShipAPI s, ViewportAPI viewport) {
+        if (k <= 0.01f) return;
+        float a = k * k * s.getCombinedAlphaMult() * viewport.getAlphaMult();
+        for (int i = 0; i < 3 && a > 0.005f; i++) {
+            draw(sp, cx, cy, loc, angle, a, tint);
+            a -= 0.34f * k;
         }
     }
 

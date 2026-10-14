@@ -1,3 +1,12 @@
-Test mission (Resonance Lattice). Every Lattice hull against a mixed Hegemony-style line.
+Location: Vell, in the shadow of Tacet Station
+Date: 206.03.11
 
-Watch the Resonance bar (bottom left) fill as your shields absorb fire and your guns land; at 60 the next ship system use is an Overtone. The Virtuoso starts at 100% CR, i.e. in Bravura.
+No Cantorate hull is built. Each is grown: a lattice core seeded at Glasshouse, fed a year of pulsar light, and only then wrapped in steel. Before a new hull joins the choir it must sing under fire.
+
+For today's proving the Luthiers have hired a Hegemony-pattern battle line from a mercenary company that asks no questions, and fielded the whole book against it: Grace Notes and Staccatos on the flanks, Refrains and a Tremolo in the line, a Cadence, a Fermata and a Conductor behind them.
+
+At the head of the choir flies a ship that is not in the book at all. Its seams burn white.
+
+***
+
+Every Lattice hull, and the finished Virtuoso. Watch the Resonance bar: shields that take fire and guns that land fill it, and at 60 the next ship system use is an Overtone. The Virtuoso starts at 100% combat readiness, in Bravura; every Glissando costs it 1%, and Bravura ends below 92%.

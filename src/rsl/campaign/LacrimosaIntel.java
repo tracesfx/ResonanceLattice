@@ -472,6 +472,8 @@ public class LacrimosaIntel extends BaseIntelPlugin implements FleetEventListene
     public void complete(TextPanelAPI text) {
         stage = Stage.DONE;
         Global.getSector().getMemoryWithoutUpdate().set(RslIds.MEM_VIRTUOSO_UPGRADED, true);
+        Global.getSector().getMemoryWithoutUpdate().set(RslIds.MEM_UPGRADED_AT,
+                Global.getSector().getClock().getTimestamp());
         Misc.makeUnimportant(institute, "rsl_lacrimosa");
         sendUpdate(text);
         endAfterDelay();

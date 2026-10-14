@@ -391,6 +391,8 @@ def weapons():
                                                                                55 if full else 40, 4, 26 if full else 20,
                                                                                14 if full else 10),
                  projectileSpecId=wid + "_shot", fireSoundTwo="rsl_sforzando_fire")
+        if full:   # in Bravura each slug is swapped for its white twin's (rsl.weapons.SforzandoOnFire)
+            w["onFireEffect"] = PKG + "SforzandoOnFire"
         add_weapon(blank_row(name=name, id=wid, tier=3, **{
             "base value": 0, "range": 1200 if full else 1000, "damage/shot": dmg, "impact": 10, "turn rate": turn,
             "OPs": 0,
@@ -405,12 +407,27 @@ def weapons():
                               "+%s damage to fighters and frigates. Skewer: a slug that hits hull or armor passes "
                               "through at full damage into the next target, up to %s ships in a row."),
             "customPrimaryHL": "50% | 12 | +50%" if wid == "rsl_sforzando" else "50% | 3"}), w,
-            # the full lance stands apart from every other Lattice gun: a wide, bright, white-teal slug
-            [bolt(wid + "_shot", 190, 12, [190, 245, 238, 255], core=[255, 255, 255, 255], glow_r=30, hit_glow=36,
+            # the full lance stands apart from every other Lattice gun: a wide, bright slug - teal with a white core
+            # (the Virtuoso's normal colour scheme; its Bravura twin below is pure white)
+            [bolt(wid + "_shot", 190, 12, [110, 232, 218, 255], core=[240, 255, 252, 255], glow_r=30, hit_glow=36,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=112) if full else
              # the Unsung's lance: white as well, a little narrower and dimmer than the full Virtuoso's
              bolt(wid + "_shot", 130, 10, [200, 240, 236, 255], core=[255, 255, 255, 255], glow_r=23, hit_glow=55,
                   on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=104)], text)
+
+    # The Sforzando's Bravura twin (user, 2026-10-13: Bravura = white, normal = teal). Never mounted: in Bravura,
+    # rsl.weapons.SforzandoOnFire replaces each fresh teal slug with one of these, with the same damage; its range is
+    # held to the real lance's by RailFx (this spec's own range is only an upper bound).
+    tw = wpn_base("rsl_sforzando", "ENERGY", "LARGE")
+    tw.update(id="rsl_sforzando_bravura", projectileSpecId="rsl_sforzando_bravura_shot", animationType="NONE")
+    tw.pop("turretGlowSprite", None)
+    tw.pop("hardpointGlowSprite", None)
+    add_weapon(blank_row(name="Sforzando Lance (Bravura)", id="rsl_sforzando_bravura", tier=3, **{
+        "range": 2400, "damage/shot": 160, "impact": 10, "type": "KINETIC", "chargedown": 0.4, "proj speed": 2600,
+        "tags": "SYSTEM", "tech/manufacturer": MFR}), tw,
+        [bolt("rsl_sforzando_bravura_shot", 190, 12, [232, 240, 255, 255], core=[255, 255, 255, 255], glow_r=32,
+              hit_glow=38, on_hit=PKG + "SforzandoOnHit", fade=0.15, glow_a=120)],
+        "The Sforzando at full voice.")
 
     # ---- decorative parts (moving hull parts) ----------------------------------------------------------------
     for wid, size, mount, sprite, glow, effect in (
@@ -604,7 +621,7 @@ HULL_DESC = {
                      "what it marks, the whole chorus strikes.",
     "rsl_virtuoso": "The Cantorate's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its "
                     "shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds "
-                    "on the readiness of everything it wounds. At full voice, its seams burn gold.",
+                    "on the readiness of everything it wounds. At full voice, its seams burn white.",
     "rsl_virtuoso_unsung": "A prototype that sang alone after its chorus died. The sash is bare metal, the lances are "
                            "out of true and half the cells are dark, but it is still the fastest capital you have ever "
                            "seen move, and it still takes what it needs from its enemies.",
@@ -1196,6 +1213,13 @@ HULLMODS = [  # id, name, script, desc, hidden, costs
      "The Precentor's retuning: the Virtuoso's core learns to give as well as take.", False, (0, 0, 0, 10)),
     ("rsl_solo_movement", "Solo Movement", "SoloMovement",
      "Saskia Venn's own tuning: a voice meant to sing alone, and hungrier for it.", False, (0, 0, 0, 10)),
+    # Stage 7 encores: built into the player's Virtuoso as permanent mods when won (never sold, never dropped)
+    ("rsl_ossia", "Ossia", "Ossia",
+     "Isolde Raike's annotations to the Glissando, taken from the Dies Irae: the alternative passage a score offers "
+     "a soloist who can play it.", False, (0, 0, 0, 0)),
+    ("rsl_encore", "Encore", "Encore",
+     "Taken from the heart of the Silence. Once per battle, the Lacrimosa refuses to stop singing.", False,
+     (0, 0, 0, 0)),
 ]
 # S-mod effects (vanilla rule: cheap hullmods get a bonus when built in with a story point, expensive ones a
 # penalty; enhancing a hull's own built-in - nearly free - gets the strongest bonus). %s = getSModDescriptionParam.
@@ -1221,6 +1245,8 @@ HULLMOD_OVERRIDES = {"rsl_concert_pitch": {"tier": 3, "rarity": "", "base value"
 # from the start, never dropped.
 for _hm in ("rsl_unbound", "rsl_chorus_movement", "rsl_solo_movement"):
     HULLMOD_OVERRIDES[_hm] = {"unlocked": "", "tags": "special, no_drop, no_drop_salvage"}
+for _hm in ("rsl_ossia", "rsl_encore"):   # rewards: only ever added by the encore events (perma mods)
+    HULLMOD_OVERRIDES[_hm] = {"unlocked": "", "tags": "special, no_drop, no_drop_salvage, no_build_in"}
 
 
 def hullmods():
@@ -1247,7 +1273,27 @@ def faction():
     campaign_data.build(sys.modules[__name__])
 
 
+# Optional LunaLib settings (read through rsl.RslSettings with these defaults when LunaLib is absent)
+LUNA_HDR = ["fieldID", "fieldName", "fieldType", "defaultValue", "secondaryValue", "fieldDescription", "minValue",
+            "maxValue", "tab"]
+LUNA = [
+    ("rsl_encoreHeader", "Encore events", "Header", "Encore events", "", ""),   # a header shows defaultValue
+    ("rsl_enableDuel", "The Second Voice (duel)", "Boolean", "true", "",
+     "Commander Raike challenges the finished Lacrimosa to a one-on-one duel. Turning it off stops a challenge that "
+     "has not arrived yet."),
+    ("rsl_enableRequiem", "Requiem (the Silence)", "Boolean", "true", "",
+     "The optional end-game fight against a 1,500+ deployment point AI armada. Turning it off stops a challenge "
+     "that has not arrived yet."),
+]
+
+
+def luna_settings():
+    rows = [dict(zip(LUNA_HDR, list(r) + ["", "", ""])) for r in LUNA]
+    write_csv("data/config/LunaSettings.csv", LUNA_HDR, rows)
+
+
 def config():
+    luna_settings()
     glow = {}
     for hid in SHIP_IDS:
         glow[hid] = "graphics/rsl/ships/%s_glow.png" % hid
@@ -1311,11 +1357,15 @@ SOUNDS = {
     "rsl_driver_fire": (["rsl_driver_fire"], 0.75), "rsl_spinal_fire": (["rsl_spinal_fire"], 0.7),
     "rsl_sforzando_fire": (["rsl_sforzando_fire"], 0.6), "rsl_flak_fire": (["rsl_flak_fire"], 0.6),
     "rsl_spike_fire": (["rsl_spike_fire"], 0.3), "rsl_bloom_fire": (["rsl_bloom_fire"], 1.0),
+    # the Virtuoso's Bravura transitions (rsl.hullmods.Bravura) and Encore (rsl.hullmods.Encore)
+    "rsl_bravura_on": (["rsl_bravura_on"], 0.9), "rsl_bravura_off": (["rsl_bravura_off"], 0.7),
+    "rsl_encore": (["rsl_encore"], 1.0),
 }
 # MagicLib trails: projectile id -> visual weight (core wake + ion haze scale with it)
 TRAILS = {"rsl_chime_shot": 0.5, "rsl_chime_bell": 0.6, "rsl_pizzicato_shot": 0.8, "rsl_shard_shot": 0.5,
           "rsl_lance_shot": 1.1, "rsl_flechette_shot": 0.7, "rsl_arpeggio_shot": 0.9, "rsl_sostenuto_shot": 1.1,
           "rsl_harmonic_shot": 1.8, "rsl_harmonic_spinal_shot": 2.4, "rsl_sforzando_shot": 1.3,
+          "rsl_sforzando_bravura_shot": 1.3,
           "rsl_sforzando_untuned_shot": 1.0, "rsl_bloom_shard_shot": 0.5}
 MISSILE_TRAILS = {"rsl_tuningspike_msl": 0.7, "rsl_bloom_msl": 1.6}
 TRAIL_HDR = ["trail", "projectile", "sprite", "minLength", "fadeIn", "duration", "fadeOut", "sizeIn", "sizeOut",
@@ -1358,14 +1408,18 @@ def sounds_and_trails():
                           [90, 210, 220], 0.75, round(length * 0.5), 0))
         rows.append(trail(pid + "_haze", pid, "base_trail_smoke", w, 0.08, 0.7 + 0.2 * w, 7, 20, [100, 230, 220],
                           [150, 110, 230], 0.3, round(length * 0.5), 22 * w, noise=True))
-    for r in rows:   # the Sforzando's slugs pierce whole lines of ships: a white-teal wake that hangs much longer
-        if r["projectile"] in ("rsl_sforzando_shot", "rsl_sforzando_untuned_shot"):
+    # the Sforzando's slugs pierce whole lines of ships: a wake that hangs much longer - teal normally, white for the
+    # Bravura twin (user, 2026-10-13: Bravura = white, normal = teal)
+    sforzando_colors = {"rsl_sforzando_shot": (("[225,255,250]", "[100,225,215]"), ("[140,240,228]", "[70,195,190]")),
+                        "rsl_sforzando_bravura_shot": (("[255,255,255]", "[225,235,250]"),
+                                                       ("[240,245,255]", "[185,200,235]"))}
+    for r in rows:
+        if r["projectile"] in ("rsl_sforzando_shot", "rsl_sforzando_untuned_shot", "rsl_sforzando_bravura_shot"):
             r["distance"] = 0
-        if r["projectile"] == "rsl_sforzando_shot":
+        if r["projectile"] in sforzando_colors:
             r["duration"], r["fadeOut"] = r["duration"] * 4, round(r["fadeOut"] * 3, 2)
             core = r["trail"].endswith("_core")
-            r["colorIn"] = "[245,255,255]" if core else "[215,250,245]"
-            r["colorOut"] = "[190,240,236]" if core else "[130,215,210]"
+            r["colorIn"], r["colorOut"] = sforzando_colors[r["projectile"]][0 if core else 1]
             r["opacity"] = 0.76 if core else 0.36   # user: 20% less vivid than the first gold version
         elif r["projectile"] == "rsl_sforzando_untuned_shot":   # white too, normal length
             core = r["trail"].endswith("_core")
@@ -1387,34 +1441,58 @@ def descriptions():
 
 # ===================================================================================================== missions
 MISSIONS = {
+    # mission_text.txt is laid out as vanilla's (user, 2026-10-13: "mission info needs to look better"): a
+    # Location/Date header, the story, then *** and how to play it. Icons: art_src/gen/gen_mission_icons.py.
     "rsl_proving": dict(
-        title="Lattice: Proving Chorus", difficulty="EASY", bg="graphics/backgrounds/background4.jpg",
-        text="Test mission (Resonance Lattice). Every Lattice hull against a mixed Hegemony-style line.\n\n"
-             "Watch the Resonance bar (bottom left) fill as your shields absorb fire and your guns land; at 60 the next "
-             "ship system use is an Overtone. The Virtuoso starts at 100% CR, i.e. in Bravura.",
+        title="Lattice: Proving Chorus", difficulty="EASY", bg="graphics/backgrounds/background3.jpg",
+        location="Vell, in the shadow of Tacet Station", date="206.03.11",
+        story=[
+            "No Cantorate hull is built. Each is grown: a lattice core seeded at Glasshouse, fed a year of pulsar "
+            "light, and only then wrapped in steel. Before a new hull joins the choir it must sing under fire.",
+            "For today's proving the Luthiers have hired a Hegemony-pattern battle line from a mercenary company "
+            "that asks no questions, and fielded the whole book against it: Grace Notes and Staccatos on the "
+            "flanks, Refrains and a Tremolo in the line, a Cadence, a Fermata and a Conductor behind them.",
+            "At the head of the choir flies a ship that is not in the book at all. Its seams burn white.",
+        ],
+        notes="Every Lattice hull, and the finished Virtuoso. Watch the Resonance bar: shields that take fire and "
+              "guns that land fill it, and at 60 the next ship system use is an Overtone. The Virtuoso starts at "
+              "100% combat readiness, in Bravura; every Glissando costs it 1%, and Bravura ends below 92%.",
         player_tag="A full Cantorate choir, every hull in the book.", enemy_tag="A Hegemony-pattern battle line.",
-        briefing=["Fly the Virtuoso: Glissando (system key) dashes and leaves a string that snaps",
-                  "Switch ships to try every Lattice system",
-                  "Point defense and fighters test the Chime Repeater and Cantus Flak"],
-        player=[("rsl_virtuoso_Standard", "Virtuoso", True), ("rsl_conductor_Standard", None, False),
-                ("rsl_halo_Standard", None, False), ("rsl_cadence_Standard", None, False),
-                ("rsl_tremolo_Standard", None, False), ("rsl_refrain_Standard", None, False),
-                ("rsl_staccato_Standard", None, False), ("rsl_gracenote_Standard", None, False),
-                ("rsl_gracenote_Standard", None, False)],
+        briefing=["Fly the Virtuoso: Glissando (ship system) is a steerable dash that leaves a String behind",
+                  "The String blocks shots, then snaps for damage and steals readiness",
+                  "Stay above 92% CR to keep Bravura: kills refund readiness",
+                  "Switch ships to try every Lattice system"],
+        player=[("rsl_virtuoso_Standard", "Lacrimosa", True), ("rsl_conductor_Standard", "Precentor's Hand", False),
+                ("rsl_halo_Standard", "Fermata", False), ("rsl_cadence_Standard", "Long Line", False),
+                ("rsl_tremolo_Standard", "Waver", False), ("rsl_refrain_Standard", "Ostinato", False),
+                ("rsl_staccato_Standard", "Short Rest", False), ("rsl_gracenote_Standard", "Appoggiatura", False),
+                ("rsl_gracenote_Standard", "Acciaccatura", False)],
         enemy=[("onslaught_Elite", None, False), ("dominator_Assault", None, False), ("eagle_Assault", None, False),
                ("falcon_CS", None, False), ("heron_Strike", None, False), ("hammerhead_Balanced", None, False),
                ("enforcer_Assault", None, False), ("condor_Support", None, False), ("lasher_CS", None, False),
                ("lasher_CS", None, False), ("wolf_CS", None, False), ("wolf_CS", None, False)],
-        cr100="Virtuoso"),
+        cr100="Lacrimosa", nebulas=[(-3000, 2000, 1200), (4000, -2500, 900)], extra="", size=16000,
+        tags=("CCS", "ISS")),
     "rsl_siege": dict(
         title="Lattice: Cantor Siege", difficulty="HARD", bg="graphics/backgrounds/background2.jpg",
-        text="Test mission (Resonance Lattice). A vanilla strike force against the Cantor Array and an AI-flown "
-             "Lattice squadron.\n\nKill a petal and the others go into Overtone (Phase-Locked Petals); the Grand "
-             "Chorus fires lances from every petal at once.",
-        player_tag="Strike force with orders to silence the array.",
+        location="A Cantorate outpost on the fringe", date="206.05.02",
+        story=[
+            "The Hegemony's AI Inspectorate has decided that the Cantor Array guarding this outpost is an unlicensed "
+            "artificial intelligence. The Cantorate's answer - that a lattice core has a pitch, not a will - was "
+            "entered into the record and ignored.",
+            "The Inspectorate cannot spare a fleet of its own, so it has hired one: a strike force of Hegemony "
+            "surplus under a mercenary flagship with a past, an Unsung Virtuoso its captain dragged out of a Domain "
+            "dock and never told anyone about.",
+            "Six petals turn on the Array's ring. They share one phase. When one falls silent, the others sing "
+            "louder.",
+        ],
+        notes="Destroy the Cantor Array. Every petal you kill pushes the others into Overtone (Phase-Locked "
+              "Petals), and the Grand Chorus fires a lance from every petal at once: choose your kill order. An "
+              "AI-flown Lattice squadron screens the station.",
+        player_tag="Strike force with orders to silence the Array.",
         enemy_tag="The Cantor Array and its squadron.",
-        briefing=["Destroy the Cantor Array", "Choose your kill order: every dead petal empowers the rest",
-                  "The Unsung is yours - try the untuned Glissando"],
+        briefing=["Destroy the Cantor Array", "Every dead petal empowers the rest: choose your kill order",
+                  "The Unsung is yours: its Glissando is untuned, but still a dash"],
         player=[("rsl_virtuoso_unsung_Standard", "Unsung", True), ("onslaught_Elite", None, False),
                 ("conquest_Elite", None, False), ("eagle_Assault", None, False), ("eagle_Assault", None, False),
                 ("aurora_Balanced", None, False), ("medusa_Attack", None, False), ("sunder_CS", None, False),
@@ -1423,19 +1501,67 @@ MISSIONS = {
                ("rsl_halo_Standard", None, False), ("rsl_tremolo_Standard", None, False),
                ("rsl_cadence_Standard", None, False), ("rsl_refrain_Standard", None, False),
                ("rsl_staccato_Standard", None, False), ("rsl_gracenote_Standard", None, False)],
-        cr100=None),
+        cr100=None, nebulas=[(-3000, 2000, 1200), (4000, -2500, 900)], extra="", size=16000, tags=("ISS", "CCS")),
+    "rsl_duel": dict(
+        title="Lattice: The Second Voice", difficulty="HARD", bg="graphics/backgrounds/background6.jpg",
+        location="Over the Antiphon Institute", date="206.11.30",
+        story=[
+            "There have only ever been two Virtuosos. The first is the Lacrimosa, finished at last. The second was "
+            "grown by Tri-Tachyon's Special Projects around a cracked core picked out of the Hush's graveyard: the "
+            "Dies Irae, its seams the violet of the dead First Chorus.",
+            "Its pilot is Commander Isolde Raike, the best Special Projects ever paid for, and she has asked for "
+            "exactly one thing: a duel. One ship each. No seconds.",
+        ],
+        notes="One-on-one against a level 15 commander with every combat skill elite and her own Second Voice "
+              "(+10% damage, +25% system recharge, +10% speed), in a Virtuoso with three S-mods. She has Bravura, "
+              "Glissando and Stolen Time too. Starve her of readiness and keep your own above 92%.",
+        player_tag="The Lacrimosa, alone.", enemy_tag="The Dies Irae, alone.",
+        briefing=["Destroy the Dies Irae", "Every hit you land steals her readiness: knock her out of Bravura",
+                  "Glissando through her lances; her String snaps just like yours"],
+        player=[("rsl_virtuoso_Soloist", "Lacrimosa", True)],
+        enemy=[("rsl_virtuoso_Unbound", "Dies Irae", False)],
+        cr100="Lacrimosa", nebulas=[(0, 0, 900)], size=8000, tags=("CCS", "TTS"),
+        extra="""        // the Dies Irae: a Hush core (violet seams), three S-mods, Commander Isolde Raike (level 15)
+        FleetMemberAPI rival = enemyFlag;
+        rival.setVariant(rival.getVariant().clone(), false, false);
+        rival.getVariant().setSource(VariantSource.REFIT);
+        String[] smods = {"hardenedshieldemitter", "fluxdistributor", "reinforcedhull"};
+        for (String id : smods) {
+            rival.getVariant().addMod(id);
+            rival.getVariant().addPermaMod(id, true);
+        }
+        rival.getVariant().addPermaMod("rsl_dead_chorus", false);
+        PersonAPI raike = Global.getFactory().createPerson();
+        raike.setName(new FullName("Isolde", "Raike", FullName.Gender.FEMALE));
+        raike.setPortraitSprite("graphics/portraits/portrait_corporate10.png");
+        raike.setPersonality("aggressive");
+        String[] skills = {"helmsmanship", "combat_endurance", "impact_mitigation", "damage_control",
+                "field_modulation", "point_defense", "target_analysis", "ballistic_mastery", "systems_expertise",
+                "missile_specialization", "gunnery_implants", "energy_weapon_mastery", "ordnance_expert",
+                "polarized_armor"};
+        for (String id : skills) raike.getStats().setSkillLevel(id, 2);
+        raike.getStats().setSkillLevel("rsl_second_voice", 1);
+        raike.getStats().setLevel(15);
+        rival.setCaptain(raike);
+        rival.updateStats();
+        rival.getRepairTracker().setCR(1f);
+"""),
 }
 
 MISSION_JAVA = """package data.missions.%(id)s;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.characters.FullName;
+import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetGoal;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.mission.FleetSide;
 import com.fs.starfarer.api.mission.MissionDefinitionAPI;
 import com.fs.starfarer.api.mission.MissionDefinitionPlugin;
 
-/** Generated by tools/gen_data.py - test mission for Resonance Lattice. */
+/** Generated by tools/gen_data.py - mission for Resonance Lattice. */
 public class MissionDefinition implements MissionDefinitionPlugin {
 
     public void defineMission(MissionDefinitionAPI api) {
@@ -1445,12 +1571,13 @@ public class MissionDefinition implements MissionDefinitionPlugin {
         api.setFleetTagline(FleetSide.ENEMY, "%(enemy_tag)s");
 %(briefing)s
         FleetMemberAPI m;
+        FleetMemberAPI enemyFlag = null;
 %(adds)s
-        float width = 16000f;
-        float height = 16000f;
+%(extra)s
+        float width = %(size)df;
+        float height = %(size)df;
         api.initMap(-width / 2f, width / 2f, -height / 2f, height / 2f);
-        api.addNebula(-3000f, 2000f, 1200f);
-        api.addNebula(4000f, -2500f, 900f);
+%(nebulas)s
     }
 }
 """
@@ -1460,24 +1587,31 @@ def missions():
     rows = [{"mission": mid} for mid in MISSIONS]
     write_csv("data/missions/mission_list.csv", ["mission"], rows)
     from PIL import Image
-    icon = Image.open(P("graphics/rsl/factions/rsl_flag.png")).convert("RGB").resize((256, 160))
+    icon = Image.open(P("graphics/rsl/factions/rsl_flag.png")).convert("RGB").resize((256, 256))
     for mid, m in MISSIONS.items():
         write_json("data/missions/%s/descriptor.json" % mid,
                    {"title": m["title"], "difficulty": m["difficulty"], "icon": "icon.jpg", "background": m["bg"]})
-        write_text("data/missions/%s/mission_text.txt" % mid, m["text"] + "\n")
-        icon.save(P("data/missions/%s/icon.jpg" % mid), quality=92)
+        text = "Location: %s\nDate: %s\n\n%s\n\n***\n\n%s\n" % (m["location"], m["date"], "\n\n".join(m["story"]),
+                                                               m["notes"])
+        write_text("data/missions/%s/mission_text.txt" % mid, text)
+        if not os.path.isfile(P("data/missions/%s/icon.jpg" % mid)):   # gen_mission_icons.py draws the real ones
+            icon.save(P("data/missions/%s/icon.jpg" % mid), quality=92)
         adds = []
         for side, lst in (("PLAYER", m["player"]), ("ENEMY", m["enemy"])):
-            for vid, name, flag in lst:
+            for k, (vid, name, flag) in enumerate(lst):
                 nm = '"%s"' % name if name else "null"
                 adds.append('        m = api.addToFleet(FleetSide.%s, "%s", FleetMemberType.SHIP, %s, %s);'
                             % (side, vid, nm, "true" if flag else "false"))
+                if side == "ENEMY" and k == 0:
+                    adds.append("        enemyFlag = m;")
                 if name and name == m.get("cr100"):
                     adds.append("        m.getRepairTracker().setCR(1f);")
         brief = "\n".join('        api.addBriefingItem("%s");' % b for b in m["briefing"])
+        neb = "\n".join("        api.addNebula(%df, %df, %df);" % n for n in m["nebulas"])
         write_text("data/missions/%s/MissionDefinition.java" % mid, MISSION_JAVA % {
-            "id": mid, "ptag": "CCS" if mid == "rsl_proving" else "ISS", "etag": "ISS" if mid == "rsl_proving" else "CCS",
-            "player_tag": m["player_tag"], "enemy_tag": m["enemy_tag"], "briefing": brief, "adds": "\n".join(adds)})
+            "id": mid, "ptag": m["tags"][0], "etag": m["tags"][1],
+            "player_tag": m["player_tag"], "enemy_tag": m["enemy_tag"], "briefing": brief, "adds": "\n".join(adds),
+            "extra": m["extra"], "nebulas": neb, "size": m["size"]})
 
 
 def main():

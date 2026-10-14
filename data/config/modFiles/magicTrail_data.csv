@@ -19,8 +19,10 @@ rsl_harmonic_shot_core,rsl_harmonic_shot,base_trail_smooth,15,0,0.04,0.3,7.2,2.7
 rsl_harmonic_shot_haze,rsl_harmonic_shot,base_trail_smoke,15,0,0.08,1.06,12.6,36.0,"[100,230,220]","[150,110,230]",0.3,256,-48,TRUE,90,39.6,1,1,TRUE,FALSE,TRUE,0,32.4,0.9,0,10,70,TRUE,FALSE
 rsl_harmonic_spinal_shot_core,rsl_harmonic_spinal_shot,base_trail_smooth,15,0,0.04,0.3,9.6,3.6,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,120,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_harmonic_spinal_shot_haze,rsl_harmonic_spinal_shot,base_trail_smoke,15,0,0.08,1.18,16.8,48.0,"[100,230,220]","[150,110,230]",0.3,256,-48,TRUE,120,52.8,1,1,TRUE,FALSE,TRUE,0,43.2,0.9,0,10,70,TRUE,FALSE
-rsl_sforzando_shot_core,rsl_sforzando_shot,base_trail_smooth,15,0,0.16,0.9,5.2,2.0,"[245,255,255]","[190,240,236]",0.76,256,0,TRUE,0,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
-rsl_sforzando_shot_haze,rsl_sforzando_shot,base_trail_smoke,15,0,0.32,2.88,9.1,26.0,"[215,250,245]","[130,215,210]",0.36,256,-48,TRUE,0,28.6,1,1,TRUE,FALSE,TRUE,0,23.4,0.9,0,10,70,TRUE,FALSE
+rsl_sforzando_shot_core,rsl_sforzando_shot,base_trail_smooth,15,0,0.16,0.9,5.2,2.0,"[225,255,250]","[100,225,215]",0.76,256,0,TRUE,0,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
+rsl_sforzando_shot_haze,rsl_sforzando_shot,base_trail_smoke,15,0,0.32,2.88,9.1,26.0,"[140,240,228]","[70,195,190]",0.36,256,-48,TRUE,0,28.6,1,1,TRUE,FALSE,TRUE,0,23.4,0.9,0,10,70,TRUE,FALSE
+rsl_sforzando_bravura_shot_core,rsl_sforzando_bravura_shot,base_trail_smooth,15,0,0.16,0.9,5.2,2.0,"[255,255,255]","[225,235,250]",0.76,256,0,TRUE,0,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
+rsl_sforzando_bravura_shot_haze,rsl_sforzando_bravura_shot,base_trail_smoke,15,0,0.32,2.88,9.1,26.0,"[240,245,255]","[185,200,235]",0.36,256,-48,TRUE,0,28.6,1,1,TRUE,FALSE,TRUE,0,23.4,0.9,0,10,70,TRUE,FALSE
 rsl_sforzando_untuned_shot_core,rsl_sforzando_untuned_shot,base_trail_smooth,15,0,0.04,0.3,6.4,2.1,"[240,255,255]","[180,232,228]",0.75,256,0,TRUE,0,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE
 rsl_sforzando_untuned_shot_haze,rsl_sforzando_untuned_shot,base_trail_smoke,15,0,0.08,0.9,11.2,28.0,"[200,240,236]","[120,200,196]",0.3,256,-48,TRUE,0,22.0,1,1,TRUE,FALSE,TRUE,0,18.0,0.9,0,10,70,TRUE,FALSE
 rsl_bloom_shard_shot_core,rsl_bloom_shard_shot,base_trail_smooth,15,0,0.04,0.3,2.0,0.8,"[210,255,250]","[90,210,220]",0.75,256,0,TRUE,6,0,1,1,TRUE,FALSE,TRUE,0,0,0,0,0,0,FALSE,FALSE

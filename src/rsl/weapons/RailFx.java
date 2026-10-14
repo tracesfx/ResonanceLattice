@@ -133,6 +133,12 @@ public final class RailFx {
         to.setCustomData(KEY_MAX_RANGE, range);
     }
 
+    /** A replacement slug (see SforzandoOnFire): fly at most {@code range} from {@code origin}. */
+    public static void holdRange(DamagingProjectileAPI p, Vector2f origin, float range) {
+        p.setCustomData(KEY_ORIGIN, new Vector2f(origin));
+        p.setCustomData(KEY_MAX_RANGE, range);
+    }
+
     /** Per frame (from {@link rsl.combat.RslCombatPlugin}): muzzle vent jets on new slugs, motes on slugs in flight. */
     public static void advanceProjectiles(CombatEngineAPI engine, float amount) {
         moteTimer += amount;

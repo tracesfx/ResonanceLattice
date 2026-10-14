@@ -1,5 +1,47 @@
 # Changelog
 
+## Unreleased - 2026-10-13 (Stage 7: polish and encore events)
+
+**The Virtuoso**
+- **Two colour schemes**: teal normally, white in Bravura. The Bravura seam sprite (hull and vanes) is now white
+  instead of gold-white; the Bravura shield is white (it was white-teal); Glissando's flare, afterimages and String are
+  white only in Bravura and white-teal outside it (the Unsung stays dim teal). The Sforzando slugs are teal with a
+  white core normally; in Bravura every slug is pure white with a white wake (each fresh slug is swapped for an
+  identical white twin, `rsl_sforzando_bravura`, with the same damage, range and skewer). Accent arcs: white in
+  Bravura, teal outside it (they were violet).
+- **The Bravura transition is an event**: entering flares the seams far past full brightness for about 2.5 s before
+  they cool to the Bravura glow, with a white shockwave ring, flung motes, the hull shivering with light, a "BRAVURA"
+  callout over the player's ship and a rising chord (`rsl_bravura_on`). Leaving flares the teal seams hot and vents
+  teal heat, with a falling chord (`rsl_bravura_off`). A ship deployed already at 100% simply starts in Bravura.
+- Concert Pitch EMP resistance **90% -> 60%** (user).
+- Bravura hullmod icon: white flare instead of gold.
+
+**Encore events** (after the Lacrimosa questline; both can be turned off in LunaLib's settings)
+- **The Second Voice**: 14 days after the Lacrimosa is completed, Commander Isolde Raike of Tri-Tachyon's Special
+  Projects challenges it to a duel. She flies the *Dies Irae*, a second Virtuoso grown around a Hush core (violet
+  seams, 3 S-mods), and is a **level 15** commander: every combat skill elite plus her own skill, *Second Voice*
+  (+10% damage to ships, +25% system recharge, +10% top speed). She waits at the Antiphon Institute. One ship each:
+  the Lacrimosa must be your flagship, and every other ship is held out of the encounter and given back afterwards.
+  Losing is not fatal: the Lacrimosa yields and leaves the field instead of being disabled, and Raike waits for a
+  rematch at full strength. Winning builds **Ossia** into the Lacrimosa (Glissando costs half the CR, the String
+  snaps once more) and pays 250 Pitch Glass.
+- **Requiem**: 45 days after completion, the **Silence** appears in the wild system farthest from the core: about
+  1,580 deployment points of Omega (4 Tesseracts, Facets, Shards) and Remnant hulls (Radiants, Apexes, Novas,
+  Brilliants and escorts), every hull under an alpha core, an omega-core commander, 2 S-mods per ship, no retreat.
+  It never moves or attacks; it must be ended in one encounter (any number of engagements in one dialog), and if you
+  leave with any of it alive it remakes itself. Optional and meant to be nearly impossible. Ending it builds
+  **Encore** into the Lacrimosa (once per battle a disabling blow is refused: 3 s of invulnerability, hull back to
+  40%, CR to full, straight into Bravura) and pays 1,000 Pitch Glass.
+- Console: `rsl.campaign.DuelIntel.debug()` / `debugWin()`, `rsl.campaign.RequiemIntel.debug()` / `debugWin()`.
+- Optional **LunaLib** settings (`data/config/LunaSettings.csv`): toggles for both events, read through
+  `rsl.RslSettings` with defaults when LunaLib is absent.
+
+**Missions**
+- Mission texts follow vanilla's layout: Location and Date, the story, `***`, then how to play it; better briefing
+  bullets and named ships.
+- New 256x256 mission illustrations (`art_src/gen/gen_mission_icons.py`; the old ones were the faction flag stretched).
+- New mission **Lattice: The Second Voice**: the Lacrimosa against Raike's Dies Irae, one on one.
+
 ## Unreleased - 2026-10-13 (campaign Stage 6: secrets and exploration)
 
 - **The Lost Scores**: 8 Antiphon Institute caches in uninhabited systems (discoverable like probes). Each holds one of

@@ -1,0 +1,4 @@
+fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
+rsl_encoreHeader,Encore events,Header,Encore events,,,,,
+rsl_enableDuel,The Second Voice (duel),Boolean,true,,Commander Raike challenges the finished Lacrimosa to a one-on-one duel. Turning it off stops a challenge that has not arrived yet.,,,
+rsl_enableRequiem,Requiem (the Silence),Boolean,true,,"The optional end-game fight against a 1,500+ deployment point AI armada. Turning it off stops a challenge that has not arrived yet.",,,

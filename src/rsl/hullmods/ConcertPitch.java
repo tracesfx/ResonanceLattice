@@ -18,7 +18,7 @@ public class ConcertPitch extends BaseHullMod {
     public static final float RANGE = 200f;
     public static final float MAX_CR = 0.15f;
     public static final float PEAK = 60f;
-    public static final float EMP_RESIST = 0.9f;
+    public static final float EMP_RESIST = 0.6f;
     /** Built in with a story point: +SMOD_RANGE more. Enhanced as a hull built-in (the Virtuosos): also CR and peak. */
     public static final float SMOD_RANGE = 100f;
     public static final float ENHANCED_MAX_CR = 0.05f;

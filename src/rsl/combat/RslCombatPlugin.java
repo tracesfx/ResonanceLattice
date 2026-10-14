@@ -65,12 +65,16 @@ public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
         return o instanceof RslCombatPlugin ? (RslCombatPlugin) o : null;
     }
 
+    /** The duel against the Dies Irae (null in every other battle). */
+    private EncoreCombat encore;
+
     @Override
     public void init(CombatEngineAPI engine) {
         this.engine = engine;
         engine.getCustomData().put(RslIds.KEY_ENGINE_STATE, this);
         engine.getListenerManager().addListener(new RslDamageListener());
         engine.addLayeredRenderingPlugin(new LatticeGlowRenderer(this));
+        encore = EncoreCombat.create(engine);
     }
 
     // ------------------------------------------------------------------------------------------------ API
@@ -140,6 +144,7 @@ public class RslCombatPlugin extends BaseEveryFrameCombatPlugin {
             }
             RailFx.advanceProjectiles(engine, amount);
             chorus.advance(engine, amount);
+            if (encore != null) encore.advance(engine, amount);
         } catch (Throwable t) {
             broken = true;
             log.error("Resonance Lattice combat plugin disabled after an error", t);

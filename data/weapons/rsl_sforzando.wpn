@@ -44,5 +44,6 @@
         ]
     },
     "projectileSpecId": "rsl_sforzando_shot",
-    "fireSoundTwo": "rsl_sforzando_fire"
+    "fireSoundTwo": "rsl_sforzando_fire",
+    "onFireEffect": "rsl.weapons.SforzandoOnFire"
 }

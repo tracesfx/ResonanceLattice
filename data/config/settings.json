@@ -46,7 +46,9 @@
         "intel": {
             "rsl_contract": "graphics/rsl/icons/intel/rsl_contract.png",
             "rsl_lacrimosa": "graphics/rsl/icons/intel/rsl_lacrimosa.png",
-            "rsl_scores": "graphics/rsl/icons/intel/rsl_scores.png"
+            "rsl_scores": "graphics/rsl/icons/intel/rsl_scores.png",
+            "rsl_duel": "graphics/rsl/icons/intel/rsl_duel.png",
+            "rsl_requiem": "graphics/rsl/icons/intel/rsl_requiem.png"
         }
     },
     "ruleCommandPackages": [

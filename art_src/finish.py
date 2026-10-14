@@ -229,10 +229,11 @@ def finish(spec, rdir, mod, params):
     ga = np.maximum(ga, np.clip(hullgen.blur(ga, 1.4) * params["halo"], 0, 1))
     glow = np.concatenate([np.broadcast_to(seam_col, (H, W, 3)) * (1 - hot * 0.5) + hot * 0.5, ga[..., None]], -1)
     glow_im = Image.fromarray((np.clip(glow, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA")
-    # Bravura (Virtuoso at 100% CR): same seam mask, radiant gold-white; the combat plugin cross-fades the two
+    # Bravura (Virtuoso at 100% CR): same seam mask, radiant white (user 2026-10-13: Bravura = white, normal = teal);
+    # the combat plugin cross-fades the two
     bravura_im = None
     if spec.get("bravura_glow"):
-        gold = np.array([255, 200, 110], np.float32) / 255
+        gold = np.array([246, 251, 255], np.float32) / 255
         gb = np.concatenate([np.broadcast_to(gold, (H, W, 3)) * (1 - hot * 0.3) + hot * 0.3, ga[..., None]], -1)
         bravura_im = Image.fromarray((np.clip(gb, 0, 1) * 255 + 0.5).astype(np.uint8), "RGBA")
 

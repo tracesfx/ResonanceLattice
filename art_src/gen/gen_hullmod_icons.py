@@ -151,10 +151,10 @@ def bravura(name="rsl_bravura", silent=False):
             dr.line([(20, 108), (108, 20)], fill=(150, 40, 40), width=6)
         return finish(screen(img, glow_layer(d, 1, 0.8)), name, sat=0.6)
     def d(dr):
-        for k in range(12):                                  # gold-white flare: the seams burning at full voice
+        for k in range(12):                                  # white flare: the seams burning at full voice
             a = math.radians(k * 30 + 15)
             r = 60 if k % 2 == 0 else 38
-            dr.line([(64, 64), (64 + r * math.cos(a), 64 + r * math.sin(a))], fill=col(GOLD, 0.8), width=2)
+            dr.line([(64, 64), (64 + r * math.cos(a), 64 + r * math.sin(a))], fill=col(WHITE, 0.8), width=2)
         dr.ellipse([52, 52, 76, 76], fill=col(WHITE))
     return finish(vignette(screen(base, glow_layer(d, 4, 1.0))), name, sat=1.25)
 
@@ -242,6 +242,41 @@ def dead_chorus():
     return finish(vignette(screen(img, glow_layer(d, 3, 1.0))), "rsl_dead_chorus", sat=1.1)
 
 
+def ossia():
+    """The duel's prize: the score's alternative passage - a second, fainter staff line branching off the dash."""
+    base = light(crop("rsl_virtuoso", 496, 1100, 420), strength=0.6) * 0.8
+    def d(dr):
+        dr.line([(18, 100), (64, 54), (110, 30)], fill=col(TEAL), width=4)            # the written dash
+        dr.line([(64, 54), (104, 70)], fill=col(WHITE, 0.75), width=3)                # ...and the ossia
+        for x, y in ((18, 100), (110, 30), (104, 70)):
+            dr.ellipse([x - 6, y - 6, x + 6, y + 6], fill=col(WHITE))
+        dr.polygon([(64, 44), (72, 54), (64, 64), (56, 54)], fill=col(WHITE))
+    return finish(vignette(screen(base, glow_layer(d, 3, 1.0))), "rsl_ossia")
+
+
+def encore():
+    """The Silence's prize: a single white note rising out of a dark, closed ring."""
+    base = light(crop("rsl_virtuoso", 496, 600, 440), strength=0.55) * 0.55
+    def d(dr):
+        dr.ellipse([18, 18, 110, 110], outline=col((60, 70, 90), 0.9), width=6)       # the silence
+        dr.arc([18, 18, 110, 110], 250, 290, fill=col(WHITE), width=6)                # broken by one voice
+        dr.line([(64, 104), (64, 20)], fill=col(WHITE, 0.8), width=3)
+        dr.polygon([(64, 14), (76, 30), (64, 46), (52, 30)], fill=col(WHITE))
+    return finish(vignette(screen(base, glow_layer(d, 4, 1.1)), 0.85), "rsl_encore", sat=1.1)
+
+
+def second_voice_skill():
+    """Isolde Raike's skill icon (64x64): two diamond notes, one teal and one Hush violet, crossing blades."""
+    base = light(crop("rsl_virtuoso", 496, 600, 440), strength=0.6) * 0.7
+    def d(dr):
+        dr.line([(24, 104), (104, 24)], fill=col(TEAL), width=5)
+        dr.line([(24, 24), (104, 104)], fill=col(VIOLET), width=5)
+        dr.polygon([(40, 26), (52, 40), (40, 54), (28, 40)], fill=col(WHITE))
+        dr.polygon([(88, 26), (100, 40), (88, 54), (76, 40)], fill=col(VIOLET))
+    return finish(vignette(screen(base, glow_layer(d, 4, 1.0))), "rsl_second_voice", sat=1.2, size=64,
+                  out=os.path.join(ROOT, "graphics", "rsl", "icons", "skills"))
+
+
 def concertmaster_skill():
     """Odile Marchetti's skill icon (64x64, vanilla skill-icon size): an unlocked tuning collar around a single clear
     note, over the Conductor's breech."""
@@ -271,6 +306,9 @@ def main():
     solo_movement()
     dead_chorus()
     concertmaster_skill()
+    ossia()
+    encore()
+    second_voice_skill()
     # review sheet: ours at 4x next to a few vanilla icons
     names = sorted(f for f in os.listdir(OUT) if f.endswith(".png"))
     van = os.path.join(ROOT, "..", "..", "starsector-core", "graphics", "hullmods")

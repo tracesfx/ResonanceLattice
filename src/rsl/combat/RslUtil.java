@@ -23,6 +23,17 @@ public final class RslUtil {
     public static final Color VIOLET = new Color(160, 120, 240, 255);
     public static final Color WHITE = new Color(235, 255, 252, 255);
     public static final Color GOLD = new Color(255, 214, 140, 255);
+    /**
+     * The Virtuoso's two colour schemes (user, 2026-10-13): pure white in Bravura, white-teal otherwise (the Unsung
+     * uses the dimmer {@link #TEAL_DIM} family).
+     */
+    public static final Color BRAVURA_WHITE = new Color(246, 250, 255, 255);
+    public static final Color VIRTUOSO_TEAL = new Color(135, 236, 224, 255);
+
+    /** The Virtuoso's current scheme colour: white in Bravura, white-teal outside it. */
+    public static Color virtuosoColor(LatticeData d) {
+        return d != null && d.bravura ? BRAVURA_WHITE : VIRTUOSO_TEAL;
+    }
 
     public static CombatEngineAPI engine() {
         return Global.getCombatEngine();

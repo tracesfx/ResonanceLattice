@@ -1,6 +1,10 @@
 {
     "prefix": "rsl_",
-    "optional_mods": ["shaderLib", "nexerelin"],
+    "optional_mods": [
+        "shaderLib",
+        "nexerelin",
+        "lunalib"
+    ],
     "literal_whitelist": [],
     "allow_overrides": [],
     "ignore": []

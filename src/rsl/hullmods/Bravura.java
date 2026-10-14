@@ -14,11 +14,16 @@ import rsl.combat.LatticeData;
 import rsl.combat.RslUtil;
 import rsl.weapons.SforzandoOnHit;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import java.awt.Color;
 
 /**
- * Virtuoso: at 100% CR the ship enters Bravura (hysteresis down to 92%). The glow renderer cross-fades the seams to
- * the gold sprite, the wing vanes flare and the shield turns white-teal, all from {@link LatticeData#bravuraLevel}.
+ * Virtuoso: at 100% CR the ship enters Bravura (hysteresis down to 92%). Colour scheme (user, 2026-10-13): teal
+ * normally, white in Bravura - the glow renderer cross-fades the seams to the white sprite, the wing vanes flare and the
+ * shield turns white, all from {@link LatticeData#bravuraLevel}. The transition is an event: entering flares the seams
+ * far past full brightness, then they cool to the Bravura glow ({@link LatticeData#bravuraFlash}), with a white
+ * shockwave and a rising chord; leaving vents teal heat with a falling one ({@link LatticeData#bravuraCool}).
  * Locked on the Unsung.
  *
  * Also carries the full Virtuoso's base tuning (applied before ship creation, so refit stat cards show it): a fast
@@ -42,9 +47,12 @@ public class Bravura extends BaseHullMod {
     /** Virtuoso base: shield turn rate and shield raise (unfold) rate multipliers. */
     public static final float SHIELD_RATE_MULT = 2f;
     public static final float SHIELD_UNFOLD_MULT = 3f;
-    /** Bravura shield: white-teal, mostly white. */
-    private static final Color SHIELD_INNER = new Color(205, 245, 240, 90);
-    private static final Color SHIELD_RING = new Color(240, 255, 252, 255);
+    /** Bravura shield: white. */
+    private static final Color SHIELD_INNER = new Color(225, 235, 250, 90);
+    private static final Color SHIELD_RING = new Color(250, 252, 255, 255);
+    public static final String SOUND_ON = "rsl_bravura_on";
+    public static final String SOUND_OFF = "rsl_bravura_off";
+    private static final Color VENT = new Color(120, 225, 215, 110);
     private static final String ID = "rsl_bravura";
     private static final Object STATUS = new Object();
 
@@ -66,6 +74,7 @@ public class Bravura extends BaseHullMod {
         boolean enh = RslUtil.enhanced(ship, ID);
         if (!d.bravura && cr >= (enh ? ENTER_ENHANCED : ENTER)) {
             d.bravura = true;
+            enterFx(ship, d, engine);
             // the Concertmaster at the helm of the Virtuoso (CAMPAIGN.md section 9): once per battle
             if (rsl.combat.ChorusEffects.isConcertmaster(ship.getCaptain())
                     && ship.getCustomData().get("rsl_odile_said") == null) {
@@ -74,7 +83,10 @@ public class Bravura extends BaseHullMod {
                         1f, 3f);
             }
         }
-        else if (d.bravura && cr < (enh ? EXIT_ENHANCED : EXIT)) d.bravura = false;
+        else if (d.bravura && cr < (enh ? EXIT_ENHANCED : EXIT)) {
+            d.bravura = false;
+            exitFx(ship, d, engine);
+        }
         MutableShipStatsAPI s = ship.getMutableStats();
         if (d.bravura) {
             s.getMaxSpeed().modifyPercent(ID, SPEED);
@@ -105,8 +117,72 @@ public class Bravura extends BaseHullMod {
             s.getDamageToTargetShieldsMult().unmodify(ID);
             s.getSystemRegenBonus().unmodify(ID);
         }
+        if (d.bravuraFlash > 0.05f) {   // the hull shivers with light while the seams flare (renderer decays it)
+            ship.setJitterUnder(STATUS, RslUtil.BRAVURA_WHITE, d.bravuraFlash * d.bravuraFlash, 10, 0f,
+                    16f * d.bravuraFlash);
+        }
         holdCharges(ship.getSystem(), d.bravura);
         tintShield(ship.getShield(), d);
+    }
+
+    /**
+     * Entering Bravura: the seams flare (renderer), a white shockwave rings out from the hull, motes are flung off the
+     * sash, the hull shivers with light for a moment, and a rising chord plays. Not at deployment (a ship that starts
+     * the battle in Bravura simply is in it).
+     */
+    private static void enterFx(ShipAPI ship, LatticeData d, CombatEngineAPI engine) {
+        if (ship.getFullTimeDeployed() < 1f) {
+            d.bravuraLevel = 1f;   // deployed at full CR: already singing, no fanfare
+            return;
+        }
+        d.bravuraFlash = 1f;
+        d.bravuraCool = 0f;
+        Vector2f loc = ship.getLocation();
+        Vector2f vel = ship.getVelocity();
+        float r = ship.getCollisionRadius();
+        Global.getSoundPlayer().playSound(SOUND_ON, 1f, 1f, loc, vel);
+        engine.addHitParticle(loc, vel, r * 2.2f, 0.9f, 0.35f, RslUtil.BRAVURA_WHITE);
+        engine.addSmoothParticle(loc, vel, r * 3.2f, 0.5f, 0.9f, RslUtil.BRAVURA_WHITE);
+        // the shockwave: a ring of bright motes racing outward
+        for (int i = 0; i < 36; i++) {
+            double a = Math.PI * 2.0 * i / 36.0;
+            float c = (float) Math.cos(a), s = (float) Math.sin(a);
+            Vector2f p = new Vector2f(loc.x + c * r * 0.5f, loc.y + s * r * 0.5f);
+            Vector2f v = new Vector2f(vel.x + c * 520f, vel.y + s * 520f);
+            engine.addHitParticle(p, v, 14f, 1f, 0.55f, RslUtil.BRAVURA_WHITE);
+        }
+        for (int i = 0; i < 24; i++) {
+            double a = Math.random() * Math.PI * 2.0;
+            float sp = 60f + (float) Math.random() * 220f;
+            Vector2f p = new Vector2f(loc.x + (float) (Math.random() - 0.5) * r * 0.8f,
+                    loc.y + (float) (Math.random() - 0.5) * r * 0.8f);
+            Vector2f v = new Vector2f(vel.x + (float) Math.cos(a) * sp, vel.y + (float) Math.sin(a) * sp);
+            engine.addSmoothParticle(p, v, 5f + (float) Math.random() * 6f, 1f, 0.8f + (float) Math.random() * 0.8f,
+                    RslUtil.BRAVURA_WHITE);
+        }
+        if (ship == engine.getPlayerShip()) {
+            engine.addFloatingText(new Vector2f(loc.x, loc.y + r * 0.6f), "BRAVURA", 40f, RslUtil.BRAVURA_WHITE, ship,
+                    0.5f, 1.5f);
+        }
+    }
+
+    /** Leaving Bravura: the white burns off as teal heat venting from the hull, with a falling chord. */
+    private static void exitFx(ShipAPI ship, LatticeData d, CombatEngineAPI engine) {
+        d.bravuraFlash = 0f;
+        d.bravuraCool = 1f;
+        Vector2f loc = ship.getLocation();
+        Vector2f vel = ship.getVelocity();
+        float r = ship.getCollisionRadius();
+        Global.getSoundPlayer().playSound(SOUND_OFF, 1f, 1f, loc, vel);
+        for (int i = 0; i < 18; i++) {
+            double a = Math.random() * Math.PI * 2.0;
+            float sp = 40f + (float) Math.random() * 90f;
+            Vector2f p = new Vector2f(loc.x + (float) (Math.random() - 0.5) * r * 0.7f,
+                    loc.y + (float) (Math.random() - 0.5) * r * 0.7f);
+            Vector2f v = new Vector2f(vel.x + (float) Math.cos(a) * sp, vel.y + (float) Math.sin(a) * sp);
+            engine.addNebulaParticle(p, v, 40f + (float) Math.random() * 40f, 2f, 0.1f, 0.3f,
+                    1.2f + (float) Math.random() * 0.8f, VENT);
+        }
     }
 
     /** The .system has CHARGES uses; outside Bravura the last one is held back (it cannot refill or be kept). */
@@ -157,7 +233,7 @@ public class Bravura extends BaseHullMod {
         Tip.good(t, "The Sforzando lances are always Accented: %s damage.",
                 "+" + (int) (SforzandoOnHit.ACCENT_DAMAGE * 100f) + "%");
         Tip.good(t, "The hull repairs %s of its maximum per second.", Tip.pct(HULL_REGEN));
-        Tip.good(t, "The seams burn gold-white and the shield turns white-teal.");
+        Tip.good(t, "The seams, shield, Glissando and lances turn from teal to white.");
         Tip.section(t, "Always (Virtuoso hull)");
         Tip.good(t, "Shield turn rate %s, shield raise rate %s.", "x" + (int) SHIELD_RATE_MULT,
                 "x" + (int) SHIELD_UNFOLD_MULT);

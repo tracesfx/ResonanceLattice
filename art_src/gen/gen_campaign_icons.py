@@ -333,6 +333,41 @@ def scores_intel():
     return im.resize((40, 40), Image.LANCZOS)
 
 
+def _virtuoso_icon(size, tint=None, glow_gain=0.9):
+    """The Virtuoso sprite with its seams lit, optionally re-tinted (violet for the Dies Irae, white for Bravura)."""
+    ship = Image.open(os.path.join(ROOT, "graphics", "rsl", "ships", "rsl_virtuoso.png")).convert("RGBA")
+    glow = Image.open(os.path.join(ROOT, "graphics", "rsl", "ships", "rsl_virtuoso_glow.png")).convert("RGBA")
+    arr = np.asarray(ship).astype(float)
+    g = np.asarray(glow).astype(float)
+    gc = g[..., :3] if tint is None else np.broadcast_to(np.array(tint, float), g[..., :3].shape)
+    arr[..., :3] = np.clip(arr[..., :3] + gc * (g[..., 3:4] / 255.0) * glow_gain, 0, 255)
+    im = Image.fromarray(arr.astype(np.uint8), "RGBA")
+    k = size / max(im.width, im.height)
+    return im.resize((max(1, round(im.width * k)), max(1, round(im.height * k))), Image.LANCZOS)
+
+
+def duel_intel():
+    """Intel icon (40x40) for the duel: two Virtuosos nose to nose, the Lacrimosa teal, the Dies Irae violet."""
+    out = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+    a = _virtuoso_icon(30, tint=(110, 240, 225), glow_gain=2.2).rotate(-90, expand=True, resample=Image.BICUBIC)
+    b = _virtuoso_icon(30, tint=(200, 110, 255), glow_gain=2.2).rotate(90, expand=True, resample=Image.BICUBIC)
+    out.alpha_composite(a, (-6, 2))
+    out.alpha_composite(b, (40 - b.width + 6, 40 - b.height - 2))
+    return out
+
+
+def requiem_intel():
+    """Intel icon (40x40) for the Silence: the Virtuoso in white against a dark ring."""
+    n = 40 * S
+    ring = Image.new("RGBA", (n, n), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ring)
+    d.ellipse([2 * S, 2 * S, 38 * S, 38 * S], fill=(10, 12, 20, 235), outline=(70, 80, 105, 255), width=2 * S)
+    out = ring.resize((40, 40), Image.LANCZOS)
+    v = _virtuoso_icon(32, tint=(246, 251, 255), glow_gain=1.3)
+    out.alpha_composite(v, ((40 - v.width) // 2, (40 - v.height) // 2))
+    return out
+
+
 def contract_intel():
     """Intel icon (40x40) for the tuners' contract: the faction crest, as vanilla faction intel does."""
     crest = Image.open(os.path.join(ROOT, "graphics", "rsl", "factions", "rsl_crest.png")).convert("RGBA")
@@ -351,7 +386,9 @@ def main():
              os.path.join(ROOT, "graphics", "rsl", "icons", "industry", "rsl_cantor_array.png"): cantor_industry(),
              os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_contract.png"): contract_intel(),
              os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_lacrimosa.png"): lacrimosa_intel(),
-             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_scores.png"): scores_intel()}
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_scores.png"): scores_intel(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_duel.png"): duel_intel(),
+             os.path.join(ROOT, "graphics", "rsl", "icons", "intel", "rsl_requiem.png"): requiem_intel()}
     for path, im in extra.items():
         os.makedirs(os.path.dirname(path), exist_ok=True)
         im.save(path)

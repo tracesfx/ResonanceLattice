@@ -5,6 +5,9 @@ import com.fs.starfarer.api.Global;
 import com.thoughtworks.xstream.XStream;
 import org.apache.log4j.Logger;
 import rsl.campaign.ArrayListener;
+import rsl.campaign.DuelIntel;
+import rsl.campaign.RequiemIntel;
+import rsl.campaign.RslCampaignPlugin;
 import rsl.campaign.LacrimosaFleets;
 import rsl.campaign.LacrimosaIntel;
 import rsl.campaign.RslCampaignListener;
@@ -58,6 +61,7 @@ public class RslModPlugin extends BaseModPlugin {
         VellGen.generate(Global.getSector());   // no-op unless this save predates Vell
         RslRelations.applyOnce(newGame);
         Global.getSector().addTransientListener(new RslCampaignListener());   // transient: re-added on every load
+        Global.getSector().registerPlugin(new RslCampaignPlugin());   // transient: encore fleet dialogs
     }
 
     /** Classes stored in saves (industries, conditions, intel, fleet memory). Never rename or move them after release. */
@@ -71,5 +75,7 @@ public class RslModPlugin extends BaseModPlugin {
         x.alias("RslBossConfigGen", LacrimosaFleets.BossConfigGen.class);
         x.alias("RslScoresIntel", ScoresIntel.class);
         x.alias("RslArrayListener", ArrayListener.class);
+        x.alias("RslDuelIntel", DuelIntel.class);
+        x.alias("RslRequiemIntel", RequiemIntel.class);
     }
 }

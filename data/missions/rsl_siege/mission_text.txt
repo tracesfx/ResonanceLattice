@@ -1,3 +1,12 @@
-Test mission (Resonance Lattice). A vanilla strike force against the Cantor Array and an AI-flown Lattice squadron.
+Location: A Cantorate outpost on the fringe
+Date: 206.05.02
 
-Kill a petal and the others go into Overtone (Phase-Locked Petals); the Grand Chorus fires lances from every petal at once.
+The Hegemony's AI Inspectorate has decided that the Cantor Array guarding this outpost is an unlicensed artificial intelligence. The Cantorate's answer - that a lattice core has a pitch, not a will - was entered into the record and ignored.
+
+The Inspectorate cannot spare a fleet of its own, so it has hired one: a strike force of Hegemony surplus under a mercenary flagship with a past, an Unsung Virtuoso its captain dragged out of a Domain dock and never told anyone about.
+
+Six petals turn on the Array's ring. They share one phase. When one falls silent, the others sing louder.
+
+***
+
+Destroy the Cantor Array. Every petal you kill pushes the others into Overtone (Phase-Locked Petals), and the Grand Chorus fires a lance from every petal at once: choose your kill order. An AI-flown Lattice squadron screens the station.

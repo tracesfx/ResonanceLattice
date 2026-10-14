@@ -8,23 +8,23 @@
     "width": 12,
     "fadeTime": 0.15,
     "fringeColor": [
-        190,
-        245,
-        238,
+        110,
+        232,
+        218,
         255
     ],
     "coreColor": [
+        240,
         255,
-        255,
-        255,
+        252,
         255
     ],
     "textureScrollSpeed": 64.0,
     "pixelsPerTexel": 5.0,
     "glowColor": [
-        190,
-        245,
-        238,
+        110,
+        232,
+        218,
         112
     ],
     "glowRadius": 30,

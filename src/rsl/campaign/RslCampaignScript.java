@@ -16,6 +16,10 @@ import rsl.RslIds;
  * Transient campaign script (re-added on every load by RslModPlugin). Secret #6, "the pulsar choir": the first time
  * the player flies a Virtuoso (either hull) through Vell's pulsar beam, every core in the fleet rings with the pulsar,
  * once, and the whole fleet's combat readiness is restored.
+ *
+ * Also opens the encore events once the Lacrimosa is complete: the duel ({@link DuelIntel}) after
+ * {@link DuelIntel#DELAY_DAYS} days with the Virtuoso in the fleet, the Silence ({@link RequiemIntel}) after
+ * {@link RequiemIntel#DELAY_DAYS} days.
  */
 public class RslCampaignScript implements EveryFrameScript {
     private static final Logger log = Global.getLogger(RslCampaignScript.class);
@@ -29,6 +33,7 @@ public class RslCampaignScript implements EveryFrameScript {
         if (!interval.intervalElapsed()) return;
         try {
             pulsarChoir();
+            encores();
         } catch (Throwable t) {
             broken = true;
             log.error("Resonance Lattice: campaign script disabled after an error", t);
@@ -60,6 +65,26 @@ public class RslCampaignScript implements EveryFrameScript {
         Global.getSector().getCampaignUI().addMessage("The pulsar sweeps across the Virtuoso and every hull in your "
                 + "fleet answers it, one clear note held for a full rotation. On Coda, a whole shift of tuners stops "
                 + "to listen. Your fleet's readiness is fully restored.", Misc.getHighlightColor());
+    }
+
+    private static void encores() {
+        com.fs.starfarer.api.campaign.rules.MemoryAPI mem = Global.getSector().getMemoryWithoutUpdate();
+        if (!mem.getBoolean(RslIds.MEM_VIRTUOSO_UPGRADED)) return;
+        if (!mem.contains(RslIds.MEM_UPGRADED_AT)) {   // completed before this version: count from now
+            mem.set(RslIds.MEM_UPGRADED_AT, Global.getSector().getClock().getTimestamp());
+            return;
+        }
+        long at = ((Number) mem.get(RslIds.MEM_UPGRADED_AT)).longValue();
+        float days = Global.getSector().getClock().getElapsedDaysSince(at);
+        if (Global.getSector().getCampaignUI().isShowingDialog()) return;
+        if (days >= DuelIntel.DELAY_DAYS && !DuelIntel.started() && Lacrimosa.findHull(RslIds.HULL_VIRTUOSO) != null
+                && rsl.RslSettings.getBoolean("rsl_enableDuel", true)) {
+            DuelIntel.start();
+        }
+        if (days >= RequiemIntel.DELAY_DAYS && !RequiemIntel.started()
+                && rsl.RslSettings.getBoolean("rsl_enableRequiem", true)) {
+            RequiemIntel.start();
+        }
     }
 
     @Override

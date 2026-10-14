@@ -52,6 +52,17 @@ log, Odile `rsl_marchetti`), dialogs in `rsl.rulecmd.RslSecrets`, Full Chorus + 
 `rsl.combat.ChorusEffects` (skill `rsl_concertmaster`, npc_only, effect class `rsl.skills.Concertmaster`), pulsar choir
 in the transient `rsl.campaign.RslCampaignScript`. Console: `SecretsGen.debug()`, `ScoresIntel.debugReadAll()`.
 
+Stage 7 IN PROGRESS (2026-10-13, statically verified only): polish + encore events (user: "flying the Virtuoso is
+undoubtedly the best part of the mod"). Duel *The Second Voice* (`rsl.campaign.DuelIntel`: Commander Isolde Raike
+`rsl_raike`, level 15 = 14 elite combat skills + `rsl_second_voice`, the Dies Irae at the Antiphon Institute; other
+ships are HELD OUT of the player fleet during the encounter and restored on FIDDelegate.notifyLeave or the next tick;
+`rsl.combat.EncoreCombat` makes the Lacrimosa yield/retreat instead of dying; reward hullmod `rsl_ossia`) and
+*Requiem* (`rsl.campaign.RequiemIntel`: the Silence, 1,500+ DP Omega/Remnant, one encounter or it remakes itself;
+reward `rsl_encore`). Fleets in `EncoreFleets`, dialogs in `rsl.rulecmd.RslEncore` (picked by the transient
+`rsl.campaign.RslCampaignPlugin`, hands over to FleetInteractionDialogPluginImpl). LunaLib toggles via
+`rsl.RslSettings`. Missions: vanilla-style texts, `art_src/gen/gen_mission_icons.py`, new `rsl_duel` mission.
+Remaining Stage 7: README/CREDITS, version bump, review, packaging once the user has tested in game.
+
 **Design proposal: `DESIGN.md`** (theme, 9 hulls incl. the unique Virtuoso, systems/mechanics, weapons, art plan,
 scope, risks). Read it before designing or drawing anything. Names are placeholders; lore will rename them later.
 **Where DESIGN.md and this file disagree on art (colours, shapes), this file wins** — it holds the latest user
@@ -137,8 +148,11 @@ feedback.
   bells/strings as "a musical instrument, not an energy weapon"): no tonal synthesis, keep them vanilla-like. Fighters: `art_src/gen/gen_fighters.py`
   (rsl_trill / rsl_cadenza / rsl_requiem, sheet `art_src/review/fighters_v1.png`, awaiting feedback), wings in
   gen_data `WINGS` (variants `<hull>_Wing`, written after variants() because that clears data/variants/rsl).
-- **Sforzando look (user, 2026-10-12):** white-teal, mostly white - NOT gold/yellow (gold slugs were rejected; gold is
-  only the Bravura seam glow). Keep impact FX subtle (user: big hit flashes read as "a large circle of light").
+- **Virtuoso colour schemes (user, 2026-10-13): teal normally, WHITE in Bravura** - seams (white `_glow_bravura`
+  sprites, finish.py colour 246,251,255), shield, Glissando flare/afterimages/String (`RslUtil.virtuosoColor`), and
+  the Sforzando slugs (teal `rsl_sforzando_shot`; in Bravura `rsl.weapons.SforzandoOnFire` swaps each fresh slug for
+  the white twin weapon `rsl_sforzando_bravura`). No gold/yellow anywhere (gold slugs and the gold-white Bravura glow
+  were both replaced). The Bravura transition is an event (seam flare + shockwave + sound; exit: teal heat vent). Keep impact FX subtle (user: big hit flashes read as "a large circle of light").
   Unsung shows Bravura as `rsl_bravura_locked` (inactive). Concert Pitch (`rsl_concert_pitch`) = rare augment, built
   into both Virtuosos; it owns the EMP resistance.
 - **Descriptions / S-mods / icons (2026-10-12):** hullmod csv `desc` = 1-2 plain sentences (String.format: `%%`);
@@ -159,16 +173,16 @@ Two hulls: Unsung (45 DP, 250 OP, questline start; a full `.ship` derived from t
 (120 DP, 15,000 hull / 1,200 armor - user: keep armor light). Power comes from its kit like the Ziggurat (user):
 Glissando (720-unit steerable dash, 3 charges, 1% CR per use, white afterimages, the String snaps), Stolen Time (CR
 theft + 5-18% CR per kill), Bravura at 100% CR (+75% dissipation, +50% energy ROF, +20% vs shields, 3rd charge,
-0.5%/s hull repair, white-teal shield, gold-white seam glow), Concert Pitch built in (+200 Lattice weapon range,
-+15% max CR, +60 s peak, 90% EMP resistance). Sforzando Lance x2 = built-in kinetic rail turrets (160 dmg, 1,200
-range, white-teal slug width 12, skewers up to 12 ships boring through the hull; Unsung: 144 dmg, 3 ships, width
+0.5%/s hull repair, white shield, white seam glow), Concert Pitch built in (+200 Lattice weapon range,
++15% max CR, +60 s peak, 60% EMP resistance - user cut it from 90%). Sforzando Lance x2 = built-in kinetic rail
+turrets (160 dmg, 1,200 range, teal slug width 12 (white in Bravura), skewers up to 12 ships boring through the hull; Unsung: 144 dmg, 3 ships, width
 10). All balance numbers live in tools/gen_data.py and the Java constants; CHANGELOG.md has every change.
 Quest not designed yet.
 
 ## STANDING ART DIRECTION (all user feedback so far — follow on every hull)
 1. **Colours: clean stainless steel + dark blue + teal seams. NO YELLOW anywhere** (paint, markings; it read as
    caution tape). (Gold edge accents were tried on the Virtuoso v2 and REMOVED by the user: no gold/yellow paint at all.
-   Gold-white exists only as the Bravura seam glow, which the user likes.) Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
+   The Bravura seam glow is now white too, user 2026-10-13.) Graphite machinery underneath. Ivory was replaced (kit material names "ivory"/"ivory2"/"slate" are
    legacy: bright steel / brushed mid steel / gunmetal).
 2. **Never a flat single-colour hull.** Every hull gets its own **livery** that fits its silhouette (UAF Zepporia's
    splinter tones, DA Pandemonium's bold stripes are the references). Splinter bands are **dark blue**, not grey.
@@ -299,7 +313,7 @@ Quest not designed yet.
   Waist = 2 plates with chevron joints parallel to the
   sash, chamfered guard collar, irregular angular mount housings, stepped sponsons/engine block with chevron joints.
   Gradients only on wing tips + spike. Vanes 16×136 at (±86.5,310)×SCALE, angle ∓161.6, Bravura flare +22° outward.
-  `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (gold 255,200,110); preview shows a "bravura" column.
+  `"bravura_glow": true` → finish writes `<id>_glow_bravura.png` (white 246,251,255; was gold); preview shows a "bravura" column.
 - **Virtuoso (Unsung)** `rsl_virtuoso_unsung` (spec `"kind": "skin"`: finish writes the sprite, no `.ship`; the
   data stage makes it a `.skin` of `rsl_virtuoso`), generated by the SAME `gen_virtuoso.py` from deep copies of the
   Virtuoso's parts, so the two always align. Differences: sash painted `steel_dark` (unpainted; the Virtuoso earns the

@@ -106,6 +106,27 @@ public final class RslIds {
     public static final String MEM_PULSAR_CHOIR = "$rsl_pulsarChoir";
     public static final String GFX_INTEL_SCORES = "rsl_scores";
 
+    // Stage 7: encore events after the questline (rsl.campaign.DuelIntel, rsl.campaign.RequiemIntel)
+    /** Sector memory: day stamp (sector clock timestamp) when the Lacrimosa was completed. */
+    public static final String MEM_UPGRADED_AT = "$rsl_upgradedAt";
+    /** Fleet memory on the encore fleets: "duel" or "requiem" (rsl.campaign.RslCampaignPlugin picks the dialog). */
+    public static final String MEM_ENCORE = "$rsl_encore";
+    /** Player fleet memory while a duel encounter is running: the combat side enforces one ship per side. */
+    public static final String MEM_DUEL_ACTIVE = "$rsl_duelActive";
+    /** Sector memory: the duel was won / the Silence was ended (rewards paid once). */
+    public static final String MEM_DUEL_WON = "$rsl_duelWon";
+    public static final String MEM_REQUIEM_WON = "$rsl_requiemWon";
+    public static final String HULLMOD_OSSIA = "rsl_ossia";
+    public static final String HULLMOD_ENCORE = "rsl_encore";
+    public static final String SKILL_SECOND_VOICE = "rsl_second_voice";
+    public static final String VARIANT_DIES_IRAE = "rsl_virtuoso_Unbound";
+    public static final String PERSON_RAIKE = "rsl_raike";
+    public static final String GFX_INTEL_DUEL = "rsl_duel";
+    public static final String GFX_INTEL_REQUIEM = "rsl_requiem";
+    /** The Sforzando's Bravura twin: identical, but its slugs are pure white (spawned in place of the teal ones). */
+    public static final String WEAPON_SFORZANDO_BRAVURA = "rsl_sforzando_bravura";
+    public static final String PROJ_SFORZANDO_BRAVURA = "rsl_sforzando_bravura_shot";
+
     public static final String HULL_GRACENOTE = "rsl_gracenote";
     public static final String HULL_CONDUCTOR = "rsl_conductor";
     public static final String HULL_VIRTUOSO = "rsl_virtuoso";

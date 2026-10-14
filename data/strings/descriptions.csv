@@ -16,6 +16,7 @@ rsl_bloom,WEAPON,"A slow torpedo carrying an unstable lattice bloom. On impact t
 rsl_bloom_shard,WEAPON,A crystal fragment of a Resonance Bloom.,,,,,
 rsl_sforzando,WEAPON,"The Virtuoso's voice. A long twin-rail lance that throws lattice slugs fast enough that nothing has time to move. Once a hull is bare, a slug goes straight through it and on into the next ship in line.",,,,,
 rsl_sforzando_untuned,WEAPON,"The Sforzando as the Unsung carries it: rails out of true, crystal dim. Still a fine gun. Not yet a voice.",,,,,
+rsl_sforzando_bravura,WEAPON,The Sforzando at full voice.,,,,,
 rsl_deco_halo_ring,WEAPON,A moving part of a Lattice hull.,,,,,
 rsl_deco_cantor_ring,WEAPON,A moving part of a Lattice hull.,,,,,
 rsl_deco_refrain_vane_r,WEAPON,A moving part of a Lattice hull.,,,,,
@@ -49,7 +50,7 @@ In battle: a carrier that protects itself. Fermata Field slows incoming fire aro
 rsl_conductor,SHIP,"A long steel blade split into two prongs with the Harmonic Driver set between them. The Conductor's core does not just resonate, it leads: every Lattice ship near it tunes to it, and what it marks, the whole chorus strikes.
 
 In battle: the fleet flagship. Its spinal Harmonic Driver outranges almost anything, and Sympathetic Strike marks a target for every Lattice ship. Conductor's Bridge feeds the whole chorus Resonance. Built in: Stabilized Shields, Operations Center.",,,,,
-rsl_virtuoso,SHIP,"The Cantorate's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds on the readiness of everything it wounds. At full voice, its seams burn gold.
+rsl_virtuoso,SHIP,"The Cantorate's lost first soloist, finished. A rapier of a capital with two Sforzando lances on its shoulders, a drive that skips across space and leaves a string behind it, and a core that feeds on the readiness of everything it wounds. At full voice, its seams burn white.
 
 In battle: a unique duelist capital. Glissando dashes through fire, the Sforzando lances skewer lines of ships, Stolen Time feeds on readiness and kills, and at 100% CR Bravura takes over. Built in: Concert Pitch, Auxiliary Thrusters.",,,,,
 rsl_virtuoso_unsung,SHIP,"A prototype that sang alone after its chorus died. The sash is bare metal, the lances are out of true and half the cells are dark, but it is still the fastest capital you have ever seen move, and it still takes what it needs from its enemies.

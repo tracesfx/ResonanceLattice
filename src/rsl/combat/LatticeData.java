@@ -51,8 +51,10 @@ public class LatticeData {
     public float accentUntil;
     public boolean bravura;
     public float bravuraLevel;
+    /** Bravura transition flares, 1 at the moment of entering / leaving, decaying to 0 (LatticeGlowRenderer). */
+    public float bravuraFlash, bravuraCool;
     public float peakBonus;
-    /** The shield's own colours, captured before Bravura tints them white-teal. */
+    /** The shield's own colours, captured before Bravura tints them white. */
     public java.awt.Color shieldInner, shieldRing;
     /** Solo Movement: no allied ship within range (refreshed twice a second). */
     public boolean soloAlone;

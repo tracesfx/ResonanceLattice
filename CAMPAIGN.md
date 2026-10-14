@@ -362,6 +362,18 @@ Total for a fully upgraded Virtuoso: **~1,300 Pitch Glass + 4,000,000 credits**,
 
 ---
 
+## 12. Encores (Stage 7, user 2026-10-13; after the questline)
+
+Two optional events once the Lacrimosa is complete (`$rsl_virtuosoUpgraded`); LunaLib toggles, both on by default.
+
+| Event | Opens | Where | Rules | Prize |
+|---|---|---|---|---|
+| **The Second Voice** | 14 days after completion, Virtuoso in the fleet | the Antiphon Institute | duel vs **Commander Isolde Raike** (Tri-Tachyon Special Projects, level 15: 14 elite combat skills + *Second Voice*) in the **Dies Irae**, a second Virtuoso grown around a Hush core (violet seams, 3 S-mods). One ship each: the Lacrimosa as flagship, all other ships held out. Losing = the Lacrimosa yields and withdraws; rematch any time | **Ossia** hullmod (Glissando half CR cost, the String snaps once more), 250 Pitch Glass |
+| **Requiem** | 45 days after completion | the wild system farthest from the core | **the Silence**: ~1,580 DP of Omega (4 Tesseracts) and Remnant hulls under AI cores, omega-core commander, 2 S-mods each. Never moves or attacks; must be ended in one encounter or it remakes itself. Nearly impossible by design | **Encore** hullmod (once per battle a disabling blow is refused: 3 s invulnerable, hull to 40%, CR to full), 1,000 Pitch Glass |
+
+Lore: the Domain Navy built the Virtuoso to be the one voice no machine could jam or subvert; Venn's last Score names
+what it was meant to fight. Special Projects picked the Hush's graveyard clean after beat 5 and grew the Dies Irae.
+
 ## 12. Open questions (none blocking Stage 2)
 
 1. Pitch Glass amounts and Workshop prices are starting values; tune once you have played with them (Stage 4).

@@ -1,0 +1,31 @@
+{
+    "id": "rsl_sforzando_bravura",
+    "specClass": "projectile",
+    "type": "ENERGY",
+    "size": "LARGE",
+    "turretSprite": "graphics/rsl/weapons/rsl_sforzando_turret.png",
+    "hardpointSprite": "graphics/rsl/weapons/rsl_sforzando_hardpoint.png",
+    "turretOffsets": [
+        56.0,
+        -0.0
+    ],
+    "turretAngleOffsets": [
+        0
+    ],
+    "hardpointOffsets": [
+        56.0,
+        -0.0
+    ],
+    "hardpointAngleOffsets": [
+        0
+    ],
+    "barrelMode": "ALTERNATING",
+    "glowColor": [
+        100,
+        230,
+        220,
+        255
+    ],
+    "projectileSpecId": "rsl_sforzando_bravura_shot",
+    "animationType": "NONE"
+}

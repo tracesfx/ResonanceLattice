@@ -118,6 +118,9 @@ created lazily by the eighth Score; Odile's skill is an `npc_only` skill whose b
 ## Stage 7 — Polish, review, release
 
 - Optional LunaLib settings (quest/boss toggles), guarded.
+- DONE 2026-10-13 (static only): user polish list - mission texts/icons, Concert Pitch EMP 60%, Bravura transition
+  FX + sounds, teal/white colour schemes (seams, shield, Glissando, Sforzando), encore events (duel, Requiem; CAMPAIGN.md
+  section 12), LunaLib toggles for them.
 - README (spoiler-free), CHANGELOG, CREDITS, version bump.
 - Independent review with `templates/REVIEW_PROMPT.md` (only if the user allows a subagent), fixes, re-review.
 - `package_mod.py --strict`; user runs `templates/SMOKE_TEST.md` + `log_scan.py --mod .`.

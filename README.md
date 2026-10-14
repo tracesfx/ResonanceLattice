@@ -6,14 +6,15 @@ an **Overtone** (an empowered version).
 
 This build has the ships, weapons, the faction and its home system **Vell** (a pulsar on the south-east fringe:
 Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, and the Virtuoso's
-questline **Lacrimosa** and the exploration secrets (ROADMAP.md: polish and release remain). Spawn everything with Console Commands or
-play the two included missions.
+questline **Lacrimosa**, the exploration secrets and two optional encore events after the questline (ROADMAP.md:
+release remains). Spawn everything with Console Commands or play the three included missions.
 
 ## Requirements
 
 - Starsector 0.98a-RC7
 - LazyLib, MagicLib
 - Optional: GraphicsLib (normal/material/surface maps are loaded when it is enabled)
+- Optional: LunaLib (in-game toggles for the encore events; without it both are on)
 - For testing: Console Commands
 
 ## Testing in game
@@ -26,6 +27,7 @@ Main menu -> Missions:
   battle line. Switch ships to try each system.
 - **Lattice: Cantor Siege** - you fly the Virtuoso (Unsung) with a vanilla strike force against the Cantor Array
   station and an AI-flown Lattice squadron.
+- **Lattice: The Second Voice** - the Virtuoso one on one against another Virtuoso flown by a level 15 commander.
 
 ### Console Commands (campaign)
 
@@ -137,6 +139,22 @@ runcode rsl.world.SecretsGen.debug()               # messages + map markers for 
 runcode rsl.campaign.ScoresIntel.debugReadAll()    # read all 8 Scores: Venn's Rest appears (intel shows it)
 ```
 
+### Encore events (spoilers)
+
+After the Lacrimosa is completed: **The Second Voice** (14 days later) - Commander Isolde Raike waits at the Antiphon
+Institute in a second Virtuoso, the Dies Irae, for a duel. The Lacrimosa must be your flagship; your other ships sit
+the encounter out and come back afterwards. Losing makes the Lacrimosa yield and withdraw, never die; rematches any
+time. Prize: the Ossia hullmod, 250 Pitch Glass. **Requiem** (45 days later) - the Silence, ~1,580 DP of Omega and
+Remnant hulls under AI cores, waits in the remote system the intel names. It never comes to you and must be ended in
+one encounter, or it remakes itself. Optional, meant to be nearly impossible. Prize: the Encore hullmod, 1,000 Pitch
+Glass. Both can be switched off in LunaLib's mod settings.
+
+```
+runcode rsl.campaign.DuelIntel.debug()       # Raike's challenge now (needs the Antiphon Institute: quest beat 2+)
+runcode rsl.campaign.RequiemIntel.debug()    # the Silence now
+runcode rsl.campaign.DuelIntel.debugWin()    # the reward without the fight (also RequiemIntel.debugWin())
+```
+
 ## Contents
 
 | Hull | Class | System | Built-in mechanic |
@@ -148,13 +166,13 @@ runcode rsl.campaign.ScoresIntel.debugReadAll()    # read all 8 Scores: Venn's R
 | Tremolo | cruiser | Standing Wave (node, snap back, restore 40% damage) | Overtone: afterimage detonates |
 | Fermata | capital carrier | Fermata Field (slows shots, breaks missile locks) | ring spins up; Tuned Wings |
 | Conductor | capital | Sympathetic Strike (resonant strike + mark +20% damage) | Conductor's Bridge: double Sympathy |
-| Virtuoso | unique capital | Glissando (blink-dash, the String snaps) | Stolen Time (CR theft), Bravura at 100% CR |
+| Virtuoso | unique capital | Glissando (blink-dash, the String snaps) | Stolen Time (CR theft), Bravura at 100% CR (teal -> white) |
 | Virtuoso (Unsung) | prototype | Glissando (Unsung) | Stolen Time, no Bravura |
 | Cantor Array | station | Grand Chorus (every petal fires a lance) | Phase-Locked Petals |
 
 Weapons (doctrine: long-range, high-velocity rails; PD and missiles excepted): Chime Repeater, Pizzicato Lancet,
 Shard Caster, Tuning Spike (+ Pod), Lattice Lance, Crystal Flechette, Arpeggio Pulser, Cantus Flak, Harmonic Driver,
-Sostenuto Rail, Resonance Bloom, Sforzando Lance (+ Untuned). Every sound is synthesised for the mod
+Sostenuto Rail, Resonance Bloom, Sforzando Lance (+ Untuned). Every sound is a processed derivative of vanilla sounds
 (`art_src/gen/gen_sounds.py`); slug trails need MagicLib (a hard dependency already).
 Descriptions are in the Codex / refit tooltips.
 
@@ -169,10 +187,12 @@ On first load the mod creates Vell and sets the Cantorate's starting relations, 
 flags), so it can be added to an existing save. In a Nexerelin random sector Vell is not created; Nex places the
 Cantorate's markets. Saved classes: `rsl.world.CantorArrayIndustry`, `rsl.world.LatticeNurseries`,
 `rsl.campaign.TunerContractIntel`, `rsl.campaign.LacrimosaIntel` (+ its `Stage`), `rsl.campaign.LacrimosaFleets$BossConfigGen`,
-`rsl.campaign.ScoresIntel`, `rsl.campaign.ArrayListener` (aliased). Officer skill `rsl_concertmaster` (Odile). The questline's sites and fleets are created when it reaches them, never at worldgen. Ships bought or spawned are ordinary fleet members;
+`rsl.campaign.ScoresIntel`, `rsl.campaign.ArrayListener`, `rsl.campaign.DuelIntel`, `rsl.campaign.RequiemIntel`
+(aliased). Officer skills `rsl_concertmaster` (Odile) and `rsl_second_voice` (Raike). The questline's sites and fleets are created when it reaches them, never at worldgen. Ships bought or spawned are ordinary fleet members;
 removing the mod from a save that contains them will break that save, as with any ship mod.
 
 ## Credits
 
 All art is original (Blender-rendered hulls, procedural weapons and icons in `art_src/`). Libraries: LazyLib,
-MagicLib, GraphicsLib (optional).
+MagicLib, GraphicsLib (optional), LunaLib (optional). Mission illustrations are composed from the mod's sprites
+over vanilla backgrounds; portraits are vanilla.

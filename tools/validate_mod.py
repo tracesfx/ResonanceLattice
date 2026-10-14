@@ -42,7 +42,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 GROUPS = ["modinfo", "version", "files", "ids", "hulls", "weapons", "variants", "wings", "factions", "roles",
-          "systems", "hullmods", "campaign", "settings", "rules", "java", "graphics", "sounds", "descriptions", "lights"]
+          "systems", "hullmods", "campaign", "settings", "rules", "java", "graphics", "sounds", "descriptions", "lights",
+          "missions"]
 JSON_EXT = (".json", ".ship", ".variant", ".wpn", ".proj", ".system", ".faction", ".skin")
 SKIP_DIRS = {".git", "build", "dist", "__pycache__", ".idea", ".vscode", "node_modules", ".gradle", "out", ".svn"}
 REG_CSV = {  # kind: (path under data/, id column)
@@ -1425,6 +1426,9 @@ class Validator:
                 if fid in seen:
                     r.error("duplicate fieldID '%s'" % fid, luna)
                 seen.add(fid)
+                if (row.get("fieldType") or "").strip() == "Header" and not (row.get("defaultValue") or "").strip():
+                    r.warn("Header '%s' has an empty defaultValue: LunaLib shows defaultValue as the header's "
+                           "title" % fid, luna)
                 if (row.get("fieldType") or "").strip() not in LUNA_TYPES:
                     r.error("fieldType '%s' invalid (LunaLib accepts %s)" % (row.get("fieldType"), ", ".join(sorted(LUNA_TYPES))), luna)
                 if self.prefix and fid and not fid.lower().startswith(self.prefix.lower().rstrip("_")):
@@ -1785,6 +1789,48 @@ class Validator:
                 {d.get("id") for d in self.info.get("dependencies", []) or [] if isinstance(d, dict)}:
             r.error("GraphicsLib data is present but no isModEnabled(\"shaderLib\") guard was found in Java "
                     "(NoClassDefFoundError without GraphicsLib)", "data/lights")
+
+
+    # .............................................................................. missions
+    def check_missions(self):
+        """data/missions: every listed mission has its four files, a difficulty the mission list accepts and a
+        256x256 icon (vanilla's size; other sizes are stretched)."""
+        r = self.r
+        hdr, rows = self.modsrc.csv("data/missions/mission_list.csv")
+        if hdr is None:
+            return
+        for row in rows:
+            mid = (row.get("mission") or "").strip()
+            if not mid:
+                continue
+            d = "data/missions/" + mid
+            for f in ("descriptor.json", "mission_text.txt", "MissionDefinition.java"):
+                if not os.path.isfile(os.path.join(self.mod, d, f)):
+                    r.error("mission '%s' has no %s" % (mid, f), d)
+            desc = self.modsrc.json.get(d + "/descriptor.json") or {}
+            diff = desc.get("difficulty")
+            if diff is not None and diff not in MISSION_DIFFICULTIES:
+                r.error("difficulty '%s' is not one vanilla uses (%s)" % (diff, ", ".join(MISSION_DIFFICULTIES)),
+                        d + "/descriptor.json")
+            icon = desc.get("icon")
+            if icon:
+                ip = os.path.join(self.mod, d, icon)
+                if not os.path.isfile(ip):
+                    r.error("icon '%s' not found (it is relative to the mission folder)" % icon, d + "/descriptor.json")
+                else:
+                    size = image_size(ip)
+                    if size and tuple(size) != (256, 256):
+                        r.warn("mission icon is %dx%d; vanilla's are 256x256 (others are stretched)" % tuple(size),
+                               d + "/" + icon)
+            txt = os.path.join(self.mod, d, "mission_text.txt")
+            if os.path.isfile(txt):
+                t = _read(txt)
+                if "Location:" not in t and len(t) < 600:
+                    r.note("mission text is short and has no 'Location:/Date:' header; vanilla's open with "
+                           "Location and Date, then the story, *** and how to play it", d + "/mission_text.txt")
+
+
+MISSION_DIFFICULTIES = ("EASY", "MEDIUM", "HARD", "IMPOSSIBLE", "VARIABLE")
 
 
 # =============================================================================================== helpers

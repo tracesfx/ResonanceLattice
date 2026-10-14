@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class SforzandoOnHit implements OnHitEffectPlugin {
     public static final float SMALL_BONUS = 0.5f;
-    /** The full lance's colour: white with a teal edge. */
+    /** The full lance's skewer sparks: white with a teal edge. */
     static final Color WHITE_TEAL = new Color(225, 252, 248, 255);
     static final Color TEAL_EDGE = new Color(150, 235, 225, 255);
     /** Ships one slug can pass through (each at full damage) before it stops. */
@@ -105,8 +105,8 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
         if (!shieldHit && pierced < (full ? MAX_PIERCE : MAX_PIERCE_UNTUNED) && proj.getWeapon() != null) {
             double f = Math.toRadians(proj.getFacing());
             Vector2f from = new Vector2f(point.x + (float) Math.cos(f) * 4f, point.y + (float) Math.sin(f) * 4f);
-            Object n = engine.spawnProjectile(src, proj.getWeapon(), proj.getWeapon().getId(), from, proj.getFacing(),
-                    null);
+            Object n = engine.spawnProjectile(src, proj.getWeapon(), SforzandoOnFire.continuationId(proj), from,
+                    proj.getFacing(), null);
             if (n instanceof DamagingProjectileAPI) {
                 DamagingProjectileAPI next = (DamagingProjectileAPI) n;
                 next.setDamageAmount(proj.getDamageAmount());
@@ -126,7 +126,7 @@ public class SforzandoOnHit implements OnHitEffectPlugin {
             ShipAPI other = RslUtil.nearestEnemy(src, point, ACCENT_ARC_RANGE, true, t);
             if (other != null) {
                 engine.spawnEmpArc(src, point, null, other, DamageType.ENERGY, 60f, 250f, ACCENT_ARC_RANGE + 150f,
-                        "system_emp_emitter_impact", 6f, d.bravura ? TEAL_EDGE : RslUtil.VIOLET, RslUtil.WHITE);
+                        "system_emp_emitter_impact", 6f, d.bravura ? RslUtil.BRAVURA_WHITE : TEAL_EDGE, RslUtil.WHITE);
             }
         }
     }

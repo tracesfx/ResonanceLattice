@@ -30,6 +30,12 @@ MINING = "sounds/sfx_wpn_energy/mining_blaster_fire_01.ogg"
 TACHYON = "sounds/sfx_wpn_energy/tachyon_lance_fire_01.ogg"
 PILUM = "sounds/sfx_wpn_missiles/pilum_lrm_fire_01.ogg"
 REAPER = "sounds/sfx_wpn_missiles/reaper_fire_01.ogg"
+HEF_ON = "sounds/sfx_systems/high_energy_focus_activate.ogg"
+HEF_OFF = "sounds/sfx_systems/high_energy_focus_deactivate.ogg"
+TSHELL_ON = "sounds/sfx_systems/temporal_shell_activate.ogg"
+PCLOAK = "sounds/sfx_systems/phase_cloak_activate.ogg"
+NOVA = "sounds/sfx_systems/nova_burst_charge_1.ogg"
+VENT = "sounds/sfx_flux/flux_vent.ogg"
 
 
 def pitch(p):
@@ -115,6 +121,16 @@ def main():
     build("rsl_flak_fire", [(FLAK, 1.25, 1.0, "")], FLANGE)
     build("rsl_spike_fire", [(PILUM, 1.35, 1.0, ""), ghost(PILUM, 2.2, 0.2)], PHASE)
     build("rsl_bloom_fire", [(REAPER, 1.05, 1.0, ""), ghost(REAPER, 1.8, 0.2)], CHORUS)
+    # Bravura (user, 2026-10-13: "the gleams glowing very vibrantly then cooling off, paired with a noise"):
+    # entering - High Energy Focus's surge pitched up, a temporal-shell swell under it and a bright shimmer, doubled
+    # and with a long resonant tail; leaving - the focus winding down, lower, over a flux vent's hiss (cooling off)
+    build("rsl_bravura_on", [(HEF_ON, 1.18, 1.0, ""), (TSHELL_ON, 1.30, 0.55, ""), ghost(HEF_ON, 2.2, 0.3)],
+          CHORUS + ",aecho=0.8:0.55:60|110:0.35|0.2")
+    build("rsl_bravura_off", [(HEF_OFF, 0.86, 0.9, ""), (VENT, 1.15, 0.6, "highpass=f=700")],
+          PHASE + ",lowpass=f=9000")
+    # Encore: the phase-cloak snap and a nova-burst charge, rising - the voice refusing to stop
+    build("rsl_encore", [(PCLOAK, 0.9, 0.9, ""), (NOVA, 1.25, 0.6, ""), ghost(TSHELL_ON, 2.0, 0.3)],
+          CHORUS + "," + RING)
 
 
 if __name__ == "__main__":
