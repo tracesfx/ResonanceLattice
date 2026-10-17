@@ -1828,6 +1828,23 @@ class Validator:
                 if "Location:" not in t and len(t) < 600:
                     r.note("mission text is short and has no 'Location:/Date:' header; vanilla's open with "
                            "Location and Date, then the story, *** and how to play it", d + "/mission_text.txt")
+        # loose data/**/*.java is compiled by Janino at load: it resolves an interface's clone() (ShipVariantAPI,
+        # FleetMemberAPI, ...) against Object.clone() and rejects it unless CloneNotSupportedException is caught
+        # (crash "Error loading [data.missions.x.MissionDefinition]" on the mission screen). Arrays are fine.
+        droot = os.path.join(self.mod, "data")
+        for base, _dirs, files in os.walk(droot):
+            for f in files:
+                if not f.endswith(".java"):
+                    continue
+                fp = os.path.join(base, f)
+                rel = os.path.relpath(fp, self.mod).replace(os.sep, "/")
+                for i, line in enumerate(_read(fp).splitlines(), 1):
+                    code = line.split("//", 1)[0]
+                    if re.search(r"\)\s*\.\s*clone\s*\(\s*\)", code) and "catch" not in _read(fp):
+                        r.error("'.clone()' on a method result in a loose script: Janino (the game's script "
+                                "compiler) treats it as Object.clone() and fails with an uncaught "
+                                "CloneNotSupportedException; move the code into the jar or wrap it in "
+                                "try/catch (line %d)" % i, rel)
 
 
 MISSION_DIFFICULTIES = ("EASY", "MEDIUM", "HARD", "IMPOSSIBLE", "VARIABLE")

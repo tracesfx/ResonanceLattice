@@ -2,6 +2,10 @@
 
 ## Unreleased - 2026-10-13 (Stage 7: polish and encore events)
 
+**Fix (2026-10-14)**: the mission screen crashed with `Error loading [data.missions.rsl_duel.MissionDefinition]`
+(the game's script compiler rejects `getVariant().clone()`). The duel mission now outfits the Dies Irae through
+`EncoreFleets.missionDiesIrae`, compiled into the jar and shared with the campaign fleet.
+
 **The Virtuoso**
 - **Two colour schemes**: teal normally, white in Bravura. The Bravura seam sprite (hull and vanes) is now white
   instead of gold-white; the Bravura shield is white (it was white-teal); Glissando's flare, afterimages and String are

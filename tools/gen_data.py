@@ -1521,30 +1521,9 @@ MISSIONS = {
         player=[("rsl_virtuoso_Soloist", "Lacrimosa", True)],
         enemy=[("rsl_virtuoso_Unbound", "Dies Irae", False)],
         cr100="Lacrimosa", nebulas=[(0, 0, 900)], size=8000, tags=("CCS", "TTS"),
-        extra="""        // the Dies Irae: a Hush core (violet seams), three S-mods, Commander Isolde Raike (level 15)
-        FleetMemberAPI rival = enemyFlag;
-        rival.setVariant(rival.getVariant().clone(), false, false);
-        rival.getVariant().setSource(VariantSource.REFIT);
-        String[] smods = {"hardenedshieldemitter", "fluxdistributor", "reinforcedhull"};
-        for (String id : smods) {
-            rival.getVariant().addMod(id);
-            rival.getVariant().addPermaMod(id, true);
-        }
-        rival.getVariant().addPermaMod("rsl_dead_chorus", false);
-        PersonAPI raike = Global.getFactory().createPerson();
-        raike.setName(new FullName("Isolde", "Raike", FullName.Gender.FEMALE));
-        raike.setPortraitSprite("graphics/portraits/portrait_corporate10.png");
-        raike.setPersonality("aggressive");
-        String[] skills = {"helmsmanship", "combat_endurance", "impact_mitigation", "damage_control",
-                "field_modulation", "point_defense", "target_analysis", "ballistic_mastery", "systems_expertise",
-                "missile_specialization", "gunnery_implants", "energy_weapon_mastery", "ordnance_expert",
-                "polarized_armor"};
-        for (String id : skills) raike.getStats().setSkillLevel(id, 2);
-        raike.getStats().setSkillLevel("rsl_second_voice", 1);
-        raike.getStats().setLevel(15);
-        rival.setCaptain(raike);
-        rival.updateStats();
-        rival.getRepairTracker().setCR(1f);
+        extra="""        // the Dies Irae: a Hush core (violet seams), three S-mods, Commander Isolde Raike (level 15).
+        // Done in the jar: Janino rejects ShipVariantAPI.clone() (CloneNotSupportedException not caught).
+        rsl.campaign.EncoreFleets.missionDiesIrae(enemyFlag);
 """),
 }
 

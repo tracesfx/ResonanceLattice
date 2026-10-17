@@ -73,7 +73,15 @@ public final class EncoreFleets {
     public static PersonAPI raike() {
         PersonAPI p = Global.getSector().getImportantPeople().getPerson(RslIds.PERSON_RAIKE);
         if (p != null) return p;
-        p = Global.getFactory().createPerson();
+        p = newRaike();
+        p.getMemoryWithoutUpdate().set("$rsl_raike", true);
+        Global.getSector().getImportantPeople().addPerson(p);
+        return p;
+    }
+
+    /** A fresh Raike, not registered anywhere (also used by the rsl_duel mission, where there is no sector). */
+    public static PersonAPI newRaike() {
+        PersonAPI p = Global.getFactory().createPerson();
         p.setId(RslIds.PERSON_RAIKE);
         p.setFaction(Factions.TRITACHYON);
         p.setGender(FullName.Gender.FEMALE);
@@ -85,8 +93,6 @@ public final class EncoreFleets {
         for (String s : COMBAT_SKILLS) p.getStats().setSkillLevel(s, 2);
         p.getStats().setSkillLevel(RslIds.SKILL_SECOND_VOICE, 1);
         p.getStats().setLevel(RAIKE_LEVEL);
-        p.getMemoryWithoutUpdate().set("$rsl_raike", true);
-        Global.getSector().getImportantPeople().addPerson(p);
         return p;
     }
 
@@ -96,18 +102,7 @@ public final class EncoreFleets {
         fleet.setName("Dies Irae");
         fleet.setNoFactionInName(true);
         FleetMemberAPI m = fleet.getFleetData().addFleetMember(RslIds.VARIANT_DIES_IRAE);
-        m.setVariant(m.getVariant().clone(), false, false);
-        ShipVariantAPI v = m.getVariant();
-        v.setSource(VariantSource.REFIT);
-        v.addTag(Tags.SHIP_LIMITED_TOOLTIP);
-        v.addTag(Tags.VARIANT_UNBOARDABLE);
-        for (int i = 0; i < DIES_IRAE_SMOD_IDS.length && i < DIES_IRAE_SMODS; i++) {
-            String id = DIES_IRAE_SMOD_IDS[i];
-            if (Global.getSettings().getHullModSpec(id) == null) continue;
-            v.addMod(id);
-            v.addPermaMod(id, true);
-        }
-        v.addPermaMod(RslIds.HULLMOD_DEAD_CHORUS, false);   // a Hush core: violet seams (no allies to mourn)
+        outfitDiesIrae(m);
         m.setShipName("TTS Dies Irae");
         PersonAPI cmd = raike();
         fleet.setCommander(cmd);
@@ -132,6 +127,31 @@ public final class EncoreFleets {
         fleet.setLocation(anchor.getLocation().x + 300f, anchor.getLocation().y + 300f);
         fleet.addAssignment(FleetAssignment.ORBIT_PASSIVE, anchor, 1000000f, "waiting for the Lacrimosa");
         return fleet;
+    }
+
+    /** Own variant copy, limited tooltip, unboardable, the S-mods and the Hush core. */
+    private static void outfitDiesIrae(FleetMemberAPI m) {
+        m.setVariant(m.getVariant().clone(), false, false);
+        ShipVariantAPI v = m.getVariant();
+        v.setSource(VariantSource.REFIT);
+        v.addTag(Tags.SHIP_LIMITED_TOOLTIP);
+        v.addTag(Tags.VARIANT_UNBOARDABLE);
+        for (int i = 0; i < DIES_IRAE_SMOD_IDS.length && i < DIES_IRAE_SMODS; i++) {
+            String id = DIES_IRAE_SMOD_IDS[i];
+            if (Global.getSettings().getHullModSpec(id) == null) continue;
+            v.addMod(id);
+            v.addPermaMod(id, true);
+        }
+        v.addPermaMod(RslIds.HULLMOD_DEAD_CHORUS, false);   // a Hush core: violet seams (no allies to mourn)
+    }
+
+    /** The rsl_duel mission's Dies Irae: same outfit, a fresh Raike. Lives in the jar because Janino (which
+     *  compiles mission scripts) rejects {@code ShipVariantAPI.clone()} as throwing CloneNotSupportedException. */
+    public static void missionDiesIrae(FleetMemberAPI m) {
+        outfitDiesIrae(m);
+        m.setCaptain(newRaike());
+        m.updateStats();
+        m.getRepairTracker().setCR(1f);
     }
 
     /** Back to full strength between attempts: full hull, armor and CR (Raike's crew works fast). */
