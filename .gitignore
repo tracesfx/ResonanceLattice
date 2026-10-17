@@ -10,3 +10,10 @@ Thumbs.db
 art_src/renders/
 art_src/**/__pycache__/
 dist/
+
+# dev notes (private)
+CLAUDE.md
+DESIGN.md
+ROADMAP.md
+CAMPAIGN.md
+BALANCE.md
