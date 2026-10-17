@@ -6,8 +6,8 @@ an **Overtone** (an empowered version).
 
 This build has the ships, weapons, the faction and its home system **Vell** (a pulsar on the south-east fringe:
 Coda with the Cantor Array, Glasshouse, Tacet Station), the Workshop, contracts and bounties, and the Virtuoso's
-questline **Lacrimosa**, the exploration secrets and two optional encore events after the questline (
-release remains). Spawn everything with Console Commands or play the three included missions.
+questline **Lacrimosa**, the exploration secrets and two optional encore events after the questline.
+Spawn everything with Console Commands or play the three included missions.
 
 ## Requirements
 
