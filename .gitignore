@@ -9,3 +9,4 @@ __pycache__/
 Thumbs.db
 art_src/renders/
 art_src/**/__pycache__/
+dist/

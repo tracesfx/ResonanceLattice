@@ -1,2 +1,2 @@
 version file
-# resonance_lattice.version   <- uncomment once masterVersionFile is a real URL (the TODO URL makes LunaLib and Nexerelin log MalformedURLException)
+resonance_lattice.version

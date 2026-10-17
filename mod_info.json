@@ -1,7 +1,7 @@
 {
     "id": "resonance_lattice",
     "name": "Resonance Lattice",
-    "author": "Unknown",
+    "author": "tracesfx",
     "version": "0.1.0",
     "description": "The Resonance Choir: lattice-cored ships, weapons and hullmods built around Resonance and fleet sympathy. Ships-and-weapons build: spawn them with Console Commands or play the included missions.",
     "gameVersion": "0.98a-RC7",

@@ -1,5 +1,5 @@
 {
-    "masterVersionFile": "TODO(scaffold): raw URL of this file once it is hosted, e.g. https://raw.githubusercontent.com/<user>/<repo>/main/resonance_lattice.version",
+    "masterVersionFile": "https://raw.githubusercontent.com/tracesfx/ResonanceLattice/main/resonance_lattice.version",
     "modName": "Resonance Lattice",
     "modVersion": {
         "major": 0,

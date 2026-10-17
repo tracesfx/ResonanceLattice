@@ -196,3 +196,14 @@ removing the mod from a save that contains them will break that save, as with an
 All art is original (Blender-rendered hulls, procedural weapons and icons in `art_src/`). Libraries: LazyLib,
 MagicLib, GraphicsLib (optional), LunaLib (optional). Mission illustrations are composed from the mod's sprites
 over vanilla backgrounds; portraits are vanilla.
+
+## Installation
+
+Download `ResonanceLattice-<version>.zip` from the [Releases](https://github.com/tracesfx/ResonanceLattice/releases)
+page, extract the `ResonanceLattice` folder into `Starsector/mods/`, and enable it (with LazyLib and MagicLib) in the
+launcher. Building from source: `./build.sh` (see `tools/`).
+
+## License
+
+Code: MIT (`LICENSE`). Original art and text: CC BY-NC 4.0; the sounds are derived from vanilla Starsector and are not
+relicensed (`LICENSE-ASSETS.md`).
