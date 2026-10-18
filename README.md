@@ -1,4 +1,5 @@
 # Resonance Lattice
+<img width="1456" height="819" alt="download (19)" src="https://github.com/user-attachments/assets/2951ba76-c8ed-4440-b6a5-854668aeccc3" />
 
 The Cantorate of Vell: a refugee polity whose ships are grown around crystalline lattice cores. Every hull builds **Resonance** from shield hits
 and from landing its own guns, shares it with nearby Lattice ships, and at 60+ Resonance its next ship-system use is
